@@ -1,8 +1,13 @@
 package cn.hyperchain.sdk.account;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum Version {
+    @SerializedName("1.0")
     V1("1.0"),
+    @SerializedName("2.0")
     V2("2.0"),
+    @SerializedName("3.0")
     V3("3.0");
 
     private String v;

@@ -1,16 +1,28 @@
 package cn.hyperchain.sdk.account;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum Algo {
+    @SerializedName("0x01")
     ECKDF2("0x01"),
+    @SerializedName("0x02")
     ECDES("0x02"),
+    @SerializedName("0x03")
     ECRAW("0x03"),
+    @SerializedName("0x04")
     ECAES("0x04"),
+    @SerializedName("0x05")
     EC3DES("0x05"),
 
+    @SerializedName("0x11")
     SMSM4("0x11"),
+    @SerializedName("0x12")
     SMDES("0x12"),
+    @SerializedName("0x13")
     SMRAW("0x13"),
+    @SerializedName("0x14")
     SMAES("0x14"),
+    @SerializedName("0x15")
     SM3DES("0x15");
 
     private String algo;
