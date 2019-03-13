@@ -1,5 +1,7 @@
 package cn.hyperchain.sdk.provider;
 
+import cn.hyperchain.sdk.exception.RequestException;
+
 import java.util.Map;
 
 /**
@@ -10,5 +12,7 @@ import java.util.Map;
  */
 
 public interface HttpProvider {
-    String post(String body, Map<String, String> headers);
+    String post(String body, Map<String, String> headers) throws RequestException;
+
+    PStatus getStatus();
 }
