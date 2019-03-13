@@ -33,13 +33,4 @@ public class ContractRequest<T extends Response> extends Request<T> {
         return response;
     }
 
-    @Override
-    public String requestBody() {
-        return "{" +
-                "\"jsonrpc\":\"" + this.getJsonrpc() + "\"," +
-                "\"namespace\":\"" + this.getNamespace() + "\"," +
-                "\"method\":\"" + this.getMethod() + "\"," +
-                "\"params\":" + this.getParams() + "," +
-                "\"id\":" + this.getId() + "}";
-    }
 }

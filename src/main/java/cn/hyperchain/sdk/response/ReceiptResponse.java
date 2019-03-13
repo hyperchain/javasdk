@@ -14,7 +14,6 @@ import java.util.Arrays;
 
 public class ReceiptResponse extends Response {
 
-
     public class Receipt {
         private String contractAddress;
         private String ret;

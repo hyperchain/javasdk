@@ -39,6 +39,7 @@ public class ProviderManager {
     }
 
     public <K extends Response> String sendRequest(Request<K> kRequest, int[] nodeIdxs) {
+        System.out.println(kRequest.requestBody());
         return null;
     }
 }

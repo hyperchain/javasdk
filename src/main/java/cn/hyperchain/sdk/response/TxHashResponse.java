@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.response;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,9 +17,14 @@ public class TxHashResponse extends Response {
     private String txHash;
     private ProviderManager providerManager;
     private Transaction transaction;
+    private ContractService contractService;
 
     public TxHashResponse() {
 
+    }
+
+    public void setContractService(ContractService contractService) {
+        this.contractService = contractService;
     }
 
     public void setProviderManager(ProviderManager providerManager) {
@@ -30,6 +36,7 @@ public class TxHashResponse extends Response {
     }
 
     public ReceiptResponse polling() {
+
         return null;
     }
 

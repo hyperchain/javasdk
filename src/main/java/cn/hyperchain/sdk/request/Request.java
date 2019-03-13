@@ -48,7 +48,14 @@ public abstract class Request<K extends Response> {
         });
     }
 
-    public abstract String requestBody();
+    public String requestBody() {
+        return "{" +
+                "\"jsonrpc\":\"" + this.getJsonrpc() + "\"," +
+                "\"namespace\":\"" + this.getNamespace() + "\"," +
+                "\"method\":\"" + this.getMethod() + "\"," +
+                "\"params\":" + this.getParams() + "," +
+                "\"id\":" + this.getId() + "}";
+    }
 
     final public String getJsonrpc() {
         return jsonrpc;
