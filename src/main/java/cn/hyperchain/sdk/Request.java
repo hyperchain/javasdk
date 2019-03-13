@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk;
 
+import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.Response;
 
@@ -11,17 +12,17 @@ import cn.hyperchain.sdk.response.Response;
  */
 
 public class Request<K extends Response> {
-    private HyperchainAPI hyperchainAPI;
+    private ProviderManager providerManager;
     private boolean simulate;
     private Class<K> clazz;
 
-    public Request(HyperchainAPI hyperchainAPI, Class<K> clazz) {
+    public Request(ProviderManager hyperchainAPI, Class<K> clazz) {
         this.clazz = clazz;
-        this.hyperchainAPI = hyperchainAPI;
+        this.providerManager = hyperchainAPI;
     }
 
     public K send() {
-        String res = hyperchainAPI.send();
+        String res = providerManager.send(this);
         ReceiptResponse receiptResponse = null;
         if (simulate) {
             receiptResponse = new ReceiptResponse();

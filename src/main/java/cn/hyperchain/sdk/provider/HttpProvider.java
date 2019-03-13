@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.provider;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,5 +11,5 @@ import java.util.Map;
  */
 
 public interface HttpProvider {
-    String post(String url, Map<String, String> header, String body) throws Exception;
+    String post(String body, Map<String, String> headers);
 }
