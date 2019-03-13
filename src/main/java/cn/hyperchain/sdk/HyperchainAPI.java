@@ -1,7 +1,11 @@
 package cn.hyperchain.sdk;
 
 import cn.hyperchain.sdk.provider.HttpProvider;
-import cn.hyperchain.sdk.response.Response;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @ClassName: HyperchainAPI
@@ -11,15 +15,35 @@ import cn.hyperchain.sdk.response.Response;
  */
 
 public class HyperchainAPI {
-    private HttpProvider provider;
-    // load balance
-    // reconnect
-    public HyperchainAPI(HttpProvider httpProvider) {
+
+    private List<HttpProvider> httpProviders;
+
+    HyperchainAPI(HttpProvider... providers) {
+        this.httpProviders = Arrays.asList(providers);
     }
 
-    public String send() {
+    public String sendRequest(Request request, int... ids) throws Exception {
+        List<HttpProvider> providers = null;
+        if (ids == null) {
+            providers = this.httpProviders;
+        } else {
+            providers = new ArrayList<>();
+            for (int i = 0; i < ids.length; i++) {
+                providers.add(this.httpProviders.get(ids[i]));
+            }
+        }
+        String errMsg = null;
         // load balance
-        Request<String, Response<String>> req = new Request<String, Response<String>>();
-        return provider.post();
+        for (int i = 0; i < providers.size(); i++) {
+            int index = new Random(System.currentTimeMillis()).nextInt() % providers.size();
+            try {
+                return providers.get(index).post(null, request.requestBody());
+            } catch (Exception e) {
+                errMsg = e.getMessage();
+                providers.remove(index);
+            }
+        }
+        // TODO(tkk) replace with more specific type of exception
+        throw new Exception("request failed: " + errMsg);
     }
 }
