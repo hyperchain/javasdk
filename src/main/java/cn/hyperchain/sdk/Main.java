@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk;
 
+import cn.hyperchain.sdk.provider.OkhttpHttpProvidor;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -15,9 +16,15 @@ import cn.hyperchain.sdk.transaction.Transaction;
  */
 
 public class Main {
+    public static String DEFAULTE_URL = "";
+
     public static void main(String[] args) {
         // 1. build provider manager
-        ProviderManager providerManager = new ProviderManager();
+        OkhttpHttpProvidor okhttpHttpProvidor = OkhttpHttpProvidor.getInstance(DEFAULTE_URL);
+        ProviderManager providerManager = new ProviderManager.Builder()
+                .addHttpProviders(okhttpHttpProvidor)
+                .build();
+
         // 2. build service
         ContractService contractService = ContractService.getInstance(providerManager);
         // 3. build transaction
