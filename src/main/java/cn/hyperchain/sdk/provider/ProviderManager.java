@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.provider;
 
-import cn.hyperchain.sdk.Request;
+import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,10 @@ public class ProviderManager {
 
     private Map<String, String> getHeaders(String body){
         return new HashMap<>();
+    }
+
+    public <K extends Response> String sendRequest(Request<K> kRequest, int[] nodeIdxs) {
+        return null;
     }
 }
 

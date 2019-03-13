@@ -1,11 +1,11 @@
 package cn.hyperchain.sdk;
 
-import cn.hyperchain.sdk.provider.HttpProvider;
+import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.service.ContractService;
-
-import java.util.Map;
+import cn.hyperchain.sdk.transaction.Transaction;
 
 /**
  * @ClassName: Main
@@ -16,14 +16,18 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        HyperchainAPI hyperchainAPI = new HyperchainAPI(new HttpProvider() {
-            @Override
-            public String post(String url, Map<String, String> header, String body) throws Exception {
-                return null;
-            }
-        });
-        ContractService contractService = ContractService.getInstance(hyperchainAPI);
-        TxHashResponse request = contractService.deploy().send();
-        ReceiptResponse receiptResponse = request.polling();
+        // 1. build provider manager
+        ProviderManager providerManager = new ProviderManager();
+        // 2. build service
+        ContractService contractService = ContractService.getInstance(providerManager);
+        // 3. build transaction
+        Transaction transaction = new Transaction.HVMBuilder("from").deploy("/Users/tomkk/Documents/workspace/GoLang/src/github.com/hyperchain/hvmd/hvm/hvm-boot/student/build/libs/student_demo-1.0-SNAPSHOT.jar").build();
+        // 4. get request
+        Request<TxHashResponse> request = contractService.deploy(transaction);
+        // 5. send request
+        TxHashResponse txHashResponse = request.send();
+        System.out.println(txHashResponse.getTxHash());
+        // 6. polling
+        ReceiptResponse receiptResponse = txHashResponse.polling();
     }
 }

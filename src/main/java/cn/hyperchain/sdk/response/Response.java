@@ -8,4 +8,12 @@ package cn.hyperchain.sdk.response;
  */
 
 public class Response {
+    protected String jsonrpc;
+    protected String id;
+    protected int code;
+    protected String message;
+
+    public Response() {
+
+    }
 }
