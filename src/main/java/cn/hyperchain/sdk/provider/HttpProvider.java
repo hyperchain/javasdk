@@ -1,6 +1,5 @@
 package cn.hyperchain.sdk.provider;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

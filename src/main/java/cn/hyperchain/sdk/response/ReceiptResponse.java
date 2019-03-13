@@ -21,8 +21,4 @@ public class ReceiptResponse extends Response {
     public ReceiptResponse() {
 
     }
-
-    public void polling() {
-
-    }
 }
