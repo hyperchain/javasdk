@@ -1,6 +1,6 @@
 package cn.hyperchain.sdk;
 
-import cn.hyperchain.sdk.provider.OkhttpHttpProvidor;
+import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -20,9 +20,10 @@ public class Main {
 
     public static void main(String[] args) {
         // 1. build provider manager
-        OkhttpHttpProvidor okhttpHttpProvidor = OkhttpHttpProvidor.getInstance(DEFAULTE_URL);
+        // TODO: provider 变为builder, ProviderManager
+        DefaultHttpProvider okhttpHttpProvider = DefaultHttpProvider.getInstance(DEFAULTE_URL);
         ProviderManager providerManager = new ProviderManager.Builder()
-                .addHttpProviders(okhttpHttpProvidor)
+                .setHttpProviders(okhttpHttpProvider)
                 .build();
 
         // 2. build service
@@ -36,5 +37,6 @@ public class Main {
         System.out.println(txHashResponse.getTxHash());
         // 6. polling
         ReceiptResponse receiptResponse = txHashResponse.polling();
+
     }
 }

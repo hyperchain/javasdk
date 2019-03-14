@@ -1,37 +1,39 @@
 package cn.hyperchain.sdk.provider;
 
-import cn.hyperchain.sdk.exception.Code9996Exception;
-import cn.hyperchain.sdk.exception.Code9999Exception;
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.exception.Code9995Exception;
-import com.squareup.okhttp.*;
+import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.Request;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class OkhttpHttpProvidor implements HttpProvider {
+public class DefaultHttpProvider implements HttpProvider {
     private String url;
     private volatile PStatus status;
-    private String namespace;
 
-    private static Logger logger = Logger.getLogger(OkhttpHttpProvidor.class);
+    private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
     //media type
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public OkHttpClient httpClient = new OkHttpClient();
+    public OkHttpClient httpClient = new OkHttpClient.Builder()
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .build();
 
 
-    private OkhttpHttpProvidor(String url){
-        this.httpClient.setReadTimeout(60, TimeUnit.SECONDS);
-        this.httpClient.setWriteTimeout(60, TimeUnit.SECONDS);
-        this.httpClient.setConnectTimeout(60, TimeUnit.SECONDS);
+    private DefaultHttpProvider(String url) {
         this.url = url;
     }
 
-    public static OkhttpHttpProvidor getInstance(String url){
-        return new OkhttpHttpProvidor(url);
+    public static DefaultHttpProvider getInstance(String url) {
+        return new DefaultHttpProvider(url);
     }
 
     @Override
@@ -44,7 +46,6 @@ public class OkhttpHttpProvidor implements HttpProvider {
                 .post(requestBody)
                 .build();
 
-
         try {
             response = this.httpClient.newCall(request).execute();
         } catch (IOException e) {
@@ -52,7 +53,7 @@ public class OkhttpHttpProvidor implements HttpProvider {
             runNodeReconnect();
 
             logger.info("Connect the node " + url + " failed. The reason is " + e.getMessage() + ". Please check. Now try send other node...");
-            throw new Code9999Exception("network problem, request failed, please try again.");
+            throw new RequestException(RequestExceptionCode.NETWORK_PROBLEM);
         }
         if (response.isSuccessful()) {
             try {
@@ -61,15 +62,15 @@ public class OkhttpHttpProvidor implements HttpProvider {
                 this.status = PStatus.BAD;
                 runNodeReconnect();
                 logger.info("Connect the node " + url + " failed. The reason is " + e.getMessage() + ". Please check. Now try send other node...");
-                throw new Code9999Exception("Get response body failed!");
+                throw new RequestException(RequestExceptionCode.NETWORK_GETBODY_FAILED);
             }
         } else {
             String errMsg = response.message();
             logger.error("Request failed, the reason is : " + errMsg);
             if (errMsg.matches("^(Request Entity Too Large).*")) {
-                throw new Code9995Exception("Request failed! " + errMsg.trim());
+                throw new RequestException(-9995, errMsg.trim());
             }
-            throw new Code9996Exception("Request failed! " + errMsg.trim());
+            throw new RequestException(-9996, errMsg.trim());
         }
     }
 
@@ -81,21 +82,6 @@ public class OkhttpHttpProvidor implements HttpProvider {
     public Request.Builder getBuilderHead() {
         return new Request.Builder().header("User-Agent", "Mozilla/5.0");
     }
-
-    private String buildResponse(String code, String message){
-        return "{\"jsonrpc\":\"2.0\",\"namespace\":\"" + namespace + "\",\"id\":\"-1\",\"code\":\"" + code + "\",\"message\":\"" + message + "\"}";
-    }
-
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-
-
 
     public void runNodeReconnect() {
 //        final String nodeUrl = url;
