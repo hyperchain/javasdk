@@ -15,4 +15,6 @@ public interface HttpProvider {
     String post(String body, Map<String, String> headers) throws RequestException;
 
     PStatus getStatus();
+
+    String getUrl();
 }

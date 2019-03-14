@@ -79,6 +79,11 @@ public class DefaultHttpProvider implements HttpProvider {
         return status;
     }
 
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
     public Request.Builder getBuilderHead() {
         return new Request.Builder().header("User-Agent", "Mozilla/5.0");
     }

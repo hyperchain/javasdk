@@ -2,7 +2,8 @@ package cn.hyperchain.sdk.exception;
 
 public enum RequestExceptionCode {
     NETWORK_PROBLEM(-9999, "network problem, request failed"),
-    NETWORK_GETBODY_FAILED(-9999, "Get response body failed!");
+    NETWORK_GETBODY_FAILED(-9999, "Get response body failed"),
+    PARAM_ERROR(-4000, "Request params error");
 
 
     private Integer code;
