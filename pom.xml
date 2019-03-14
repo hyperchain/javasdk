@@ -116,10 +116,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.tomkk</groupId>
+            <groupId>com.hvm</groupId>
             <artifactId>contract</artifactId>
             <scope>system</scope>
-            <systemPath>/Users/tomkk/Documents/workspace/GoLang/src/github.com/hyperchain/hvmd/hvm/hvm-boot/student/build/libs/student_demo-1.0-SNAPSHOT.jar</systemPath>
+            <systemPath>${basedir}/src/test/resources/hvm-jar/hvmbasic-1.0.0-student.jar</systemPath>
         </dependency>
     </dependencies>
 
