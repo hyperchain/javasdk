@@ -16,8 +16,8 @@ public class PollingRequest<T extends ReceiptResponse> extends Request<T> {
     private long sleepTime = 50;
     private long stepSize = 50;
 
-    public PollingRequest(ProviderManager providerManager, Class<T> clazz, int... nodeIdxs) {
-        super(providerManager, clazz, nodeIdxs);
+    public PollingRequest(String method, ProviderManager providerManager, Class<T> clazz, int... nodeIdxs) {
+        super(method, providerManager, clazz, nodeIdxs);
     }
 
     public PollingRequest<T> setAttempt(int attempt) {
@@ -64,6 +64,6 @@ public class PollingRequest<T extends ReceiptResponse> extends Request<T> {
                 }
             }
         }
-        throw new RequestException(-9999, "can't get receipt from server after  " + attempt + " times attempts");
+        throw new RequestException(-9999, "can't get receipt from server after  " + attempt + " times attempt");
     }
 }
