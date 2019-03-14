@@ -9,9 +9,7 @@ import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +23,8 @@ public class ContractService {
     private ProviderManager providerManager;
     private Gson gson;
     private final String CONTRACT_PREFIX = "contract_";
+    private String namespace = "global";
+    private String jsonrpc = "2.0";
 
     private ContractService(ProviderManager providerManager) {
         this.providerManager = providerManager;
@@ -38,12 +38,12 @@ public class ContractService {
     public Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds) {
         ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(providerManager, TxHashResponse.class, transaction, nodeIds);
 
-        List<Object> params = new ArrayList<>();
         Map<String, Object> txParamMap = commonParamMap(transaction);
-        params.add(txParamMap);
 
-        txHashResponseContractRequest.setParams(gson.toJson(params));
+        txHashResponseContractRequest.addParams(txParamMap);
         txHashResponseContractRequest.setMethod(methodName("deployContract"));
+        txHashResponseContractRequest.setJsonrpc(jsonrpc);
+        txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
     }
@@ -51,25 +51,24 @@ public class ContractService {
     public Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds) {
         ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(providerManager, TxHashResponse.class, transaction, nodeIds);
 
-        List<Object> params = new ArrayList<>();
         Map<String, Object> txParamMap = commonParamMap(transaction);
         txParamMap.put("to", transaction.getTo());
-        params.add(txParamMap);
 
-        txHashResponseContractRequest.setParams(gson.toJson(params));
+        txHashResponseContractRequest.addParams(txParamMap);
         txHashResponseContractRequest.setMethod(methodName("invokeContract"));
+        txHashResponseContractRequest.setJsonrpc(jsonrpc);
+        txHashResponseContractRequest.setJsonrpc(namespace);
 
         return txHashResponseContractRequest;
     }
 
     public Request<ReceiptResponse> polling(String txHash, int... nodeIds) {
-        PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>(providerManager, ReceiptResponse.class, txHash, nodeIds);
+        PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>(providerManager, ReceiptResponse.class, nodeIds);
 
-        List<Object> params = new ArrayList<>();
-        params.add(txHash);
-
-        receiptResponsePollingRequest.setParams(gson.toJson(params));
+        receiptResponsePollingRequest.addParams(txHash);
         receiptResponsePollingRequest.setMethod(methodName("getTransactionReceipt"));
+        receiptResponsePollingRequest.setJsonrpc(jsonrpc);
+        receiptResponsePollingRequest.setJsonrpc(namespace);
 
         return receiptResponsePollingRequest;
     }

@@ -12,10 +12,7 @@ import cn.hyperchain.sdk.response.ReceiptResponse;
 
 public class PollingRequest<T extends ReceiptResponse> extends Request<T> {
 
-    public PollingRequest(ProviderManager providerManager, Class<T> clazz, String txHash, int... nodeIdxs) {
+    public PollingRequest(ProviderManager providerManager, Class<T> clazz, int... nodeIdxs) {
         super(providerManager, clazz, nodeIdxs);
-        this.setMethod("getTransactionReceipt");
-
     }
-
 }

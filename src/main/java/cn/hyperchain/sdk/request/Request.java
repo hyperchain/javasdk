@@ -5,6 +5,8 @@ import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -18,24 +20,25 @@ import java.util.concurrent.Future;
 public abstract class Request<K extends Response> {
     protected ProviderManager providerManager;
     protected Class<K> clazz;
-    private int[] nodeIdxs;
+    protected int[] nodeIds;
+    private int id = 1;
     private Gson gson;
     // rpc request
     private String jsonrpc = "2.0";
     private String namespace = "global";
     private String method;
-    private String params;
-    private int id = 1;
+    private List<Object> params;
 
-    Request(ProviderManager providerManager, Class<K> clazz, int... nodeIdxs) {
+    Request(ProviderManager providerManager, Class<K> clazz, int... nodeIds) {
         gson = new Gson();
         this.clazz = clazz;
         this.providerManager = providerManager;
-        this.nodeIdxs = nodeIdxs;
+        this.nodeIds = nodeIds;
+        this.params = new ArrayList<>();
     }
 
     public K send() {
-        String res = providerManager.sendRequest(this, nodeIdxs);
+        String res = providerManager.sendRequest(this, nodeIds);
         return gson.fromJson(res, clazz);
     }
 
@@ -82,11 +85,11 @@ public abstract class Request<K extends Response> {
     }
 
     final public String getParams() {
-        return params;
+        return gson.toJson(params);
     }
 
-    final public void setParams(String params) {
-        this.params = params;
+    final public void addParams(Object params) {
+        this.params.add(params);
     }
 
     final public int getId() {

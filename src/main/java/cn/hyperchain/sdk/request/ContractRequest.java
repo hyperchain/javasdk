@@ -1,7 +1,6 @@
 package cn.hyperchain.sdk.request;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
-import cn.hyperchain.sdk.response.Response;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 
@@ -12,7 +11,7 @@ import cn.hyperchain.sdk.transaction.Transaction;
  * @date: 2019-03-13
  */
 
-public class ContractRequest<T extends Response> extends Request<T> {
+public class ContractRequest<T extends TxHashResponse> extends Request<T> {
     private Transaction transaction;
 
     public ContractRequest(ProviderManager providerManager, Class<T> clazz, Transaction transaction, int... ids) {
@@ -23,12 +22,8 @@ public class ContractRequest<T extends Response> extends Request<T> {
     @Override
     public T send() {
         T response = super.send();
-        if (TxHashResponse.class.equals(clazz)) {
-            TxHashResponse txHashResponse = (TxHashResponse) response;
-            txHashResponse.setProviderManager(this.providerManager);
-            txHashResponse.setTransaction(this.transaction);
-            return (T) txHashResponse;
-        }
+        response.setTransaction(this.transaction);
+        response.setNodeIds(this.nodeIds);
 
         return response;
     }

@@ -7,7 +7,7 @@ package cn.hyperchain.sdk.response;
  * @date: 2019-03-12
  */
 
-public class Response {
+public abstract class Response {
     protected String jsonrpc;
     protected String id;
     protected int code;
@@ -15,5 +15,20 @@ public class Response {
 
     public Response() {
 
+    }
+
+    public Response(Response response) {
+        this.jsonrpc = response.jsonrpc;
+        this.id = response.id;
+        this.code = response.code;
+        this.message = response.message;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getJsonrpc() {
+        return jsonrpc;
     }
 }

@@ -1,8 +1,5 @@
 package cn.hyperchain.sdk.response;
 
-import cn.hyperchain.sdk.provider.ProviderManager;
-import cn.hyperchain.sdk.transaction.Transaction;
-
 import java.util.Arrays;
 
 /**
@@ -42,12 +39,12 @@ public class ReceiptResponse extends Response {
 
     private Receipt result;
 
-
     public ReceiptResponse() {
     }
 
-    void polling() {
-
+    public ReceiptResponse(Response response, Receipt receipt) {
+        super(response);
+        this.result = receipt;
     }
 
     public String getContractAddress() {

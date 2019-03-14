@@ -1,9 +1,9 @@
 package cn.hyperchain.sdk.response;
 
-import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 /**
  * @ClassName: TxHashResponse
@@ -13,34 +13,48 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class TxHashResponse extends Response {
-    @SerializedName(value = "txHash", alternate = "result")
-    private String txHash;
-    private ProviderManager providerManager;
+    private JsonElement result;
     private Transaction transaction;
     private ContractService contractService;
+    private Gson gson;
+    private int[] nodeIds;
 
     public TxHashResponse() {
-
-    }
-
-    public void setContractService(ContractService contractService) {
-        this.contractService = contractService;
-    }
-
-    public void setProviderManager(ProviderManager providerManager) {
-        this.providerManager = providerManager;
+        this.gson = new Gson();
     }
 
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
     }
 
-    public ReceiptResponse polling() {
+    public void setNodeIds(int... nodeIds) {
+        this.nodeIds = nodeIds;
+    }
 
-        return null;
+    public ReceiptResponse polling() {
+        // simulate
+        if (!result.isJsonPrimitive()) {
+            ReceiptResponse.Receipt receipt = gson.fromJson(result, ReceiptResponse.Receipt.class);
+            return new ReceiptResponse(this, receipt);
+        }
+
+        return contractService.polling(getTxHash(), this.nodeIds).send();
     }
 
     public String getTxHash() {
-        return txHash;
+        if (result.isJsonPrimitive()) {
+            return result.getAsString();
+        }
+
+        return result.getAsJsonObject().get("txHash").getAsString();
+    }
+
+    @Override
+    public String toString() {
+        return "TxHashResponse{" +
+                "result=" + getTxHash() +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                '}';
     }
 }

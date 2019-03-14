@@ -36,5 +36,7 @@ public class Main {
         System.out.println(txHashResponse.getTxHash());
         // 6. polling
         ReceiptResponse receiptResponse = txHashResponse.polling();
+        // 7. get result
+        System.out.println(receiptResponse.getRet());
     }
 }
