@@ -37,12 +37,13 @@ public abstract class Request<K extends Response> {
     @Expose
     private List<Object> params;
 
-    Request(ProviderManager providerManager, Class<K> clazz, int... nodeIds) {
+    Request(String method, ProviderManager providerManager, Class<K> clazz, int... nodeIds) {
         this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         this.clazz = clazz;
         this.providerManager = providerManager;
         this.nodeIds = nodeIds;
         this.params = new ArrayList<>();
+        this.method = method;
     }
 
     public K send() throws RequestException {

@@ -17,8 +17,8 @@ public class ContractRequest<T extends TxHashResponse> extends Request<T> {
     private Transaction transaction;
     private ContractService contractService;
 
-    public ContractRequest(ProviderManager providerManager, Class<T> clazz, Transaction transaction, int... ids) {
-        super(providerManager, clazz, ids);
+    public ContractRequest(String method, ProviderManager providerManager, Class<T> clazz, Transaction transaction, int... ids) {
+        super(method, providerManager, clazz, ids);
         this.transaction = transaction;
     }
 

@@ -32,12 +32,11 @@ public class ContractServiceImpl implements ContractService {
     }
 
     public Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds) {
-        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(methodName("deployContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = commonParamMap(transaction);
 
         txHashResponseContractRequest.addParams(txParamMap);
-        txHashResponseContractRequest.setMethod(methodName("deployContract"));
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setNamespace(namespace);
         txHashResponseContractRequest.setContractService(this);
@@ -46,13 +45,12 @@ public class ContractServiceImpl implements ContractService {
     }
 
     public Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds) {
-        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(methodName("invokeContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = commonParamMap(transaction);
         txParamMap.put("to", transaction.getTo());
 
         txHashResponseContractRequest.addParams(txParamMap);
-        txHashResponseContractRequest.setMethod(methodName("invokeContract"));
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setJsonrpc(namespace);
         txHashResponseContractRequest.setContractService(this);
@@ -61,10 +59,9 @@ public class ContractServiceImpl implements ContractService {
     }
 
     public Request<ReceiptResponse> polling(String txHash, int... nodeIds) {
-        PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>(providerManager, ReceiptResponse.class, nodeIds);
+        PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
 
         receiptResponsePollingRequest.addParams(txHash);
-        receiptResponsePollingRequest.setMethod("tx_getTransactionReceipt");
         receiptResponsePollingRequest.setJsonrpc(jsonrpc);
         receiptResponsePollingRequest.setJsonrpc(namespace);
 
