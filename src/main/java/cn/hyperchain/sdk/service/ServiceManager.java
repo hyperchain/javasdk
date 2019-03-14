@@ -13,4 +13,8 @@ public class ServiceManager {
     public static ContractService getContractService(ProviderManager providerManager) {
         return new ContractServiceImpl(providerManager);
     }
+
+    public static AccountService getAccountService(ProviderManager providerManager) {
+        return new AccountServiceImpl();
+    }
 }
