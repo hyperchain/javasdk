@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.common.utils;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class ByteUtil {
 
@@ -17,6 +18,10 @@ public class ByteUtil {
         if (hex.startsWith("0x")) hex = hex.substring(2);
         if ((hex.length() & 1) == 1) hex = "0" + hex;
         return Hex.decode(hex);
+    }
+
+    public static String decodeHex(String hex) {
+        return new String(toBytes(hex), StandardCharsets.UTF_8);
     }
 
     public static byte[] shortToBytes(short n) {

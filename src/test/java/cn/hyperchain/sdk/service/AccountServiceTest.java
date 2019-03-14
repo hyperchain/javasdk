@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 public class AccountServiceTest {
 
-    AccountService accountService = AccountService.getInstance();
+    private AccountService accountService = ServiceManager.getAccountService(null);
 
     @Test
     public void genSM2Account() {

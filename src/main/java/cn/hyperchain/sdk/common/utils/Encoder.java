@@ -4,13 +4,16 @@ import cn.hyperchain.contract.BaseInvoke;
 import com.google.gson.Gson;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassLoaderRepository;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.jar.JarFile;
 
-public class FunctionUtil {
+public class Encoder {
+
+    private static final Logger logger = Logger.getLogger(Encoder.class);
 
     public static boolean isAbsolutePath(String path) {
         return path.startsWith("/") || path.startsWith("file:/") || path.contains(":\\");
@@ -21,8 +24,6 @@ public class FunctionUtil {
      *
      * @param path contract jar path
      * @return payload
-     * @throws IOException        not found or the file is not contract jar
-     * @throws URISyntaxException not found jar
      */
     public static String encodeDeployJar(String path) {
         JarFile jar = null;
@@ -60,12 +61,9 @@ public class FunctionUtil {
             }
             return ByteUtil.toHex(buffer);
         } catch (IOException | URISyntaxException e ) {
-            return "";
+            throw new RuntimeException(e);
         } finally {
             try {
-                if (jar != null) {
-                    jar.close();
-                }
                 if (fis != null) {
                     fis.close();
                 }
@@ -76,7 +74,7 @@ public class FunctionUtil {
                     baos.close();
                 }
             } catch (IOException e) {
-
+                logger.error("close stream fail, " + e.getMessage());
             }
         }
     }
@@ -86,8 +84,6 @@ public class FunctionUtil {
      *
      * @param bean invoke bean
      * @return payload
-     * @throws ClassNotFoundException
-     * @throws IOException
      */
     public static String encodeInvokeBeanJava(BaseInvoke bean) {
         try {
@@ -122,8 +118,7 @@ public class FunctionUtil {
             sb.append(ByteUtil.toHex(beanBin));
             return sb.toString();
         } catch (ClassNotFoundException | IOException e) {
-            // logger
-            return "";
+            throw new RuntimeException(e);
         }
     }
 }

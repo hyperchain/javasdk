@@ -1,7 +1,7 @@
 package cn.hyperchain.sdk;
 
 import cn.hyperchain.sdk.account.Account;
-import cn.hyperchain.sdk.common.utils.DecoderUtil;
+import cn.hyperchain.sdk.common.utils.Decoder;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
@@ -45,6 +45,6 @@ public class Main {
         ReceiptResponse receiptResponse = txHashResponse.polling();
         // 7. get result && decode result
         System.out.println(receiptResponse.getRet());
-        System.out.println(DecoderUtil.decodeHVM(receiptResponse.getRet(), String.class));
+        System.out.println(Decoder.decodeHVM(receiptResponse.getRet(), String.class));
     }
 }

@@ -1,7 +1,7 @@
 package cn.hyperchain.sdk.transaction;
 
 import cn.hyperchain.contract.BaseInvoke;
-import cn.hyperchain.sdk.common.utils.FunctionUtil;
+import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.Utils;
 import org.apache.log4j.Logger;
 
@@ -61,14 +61,14 @@ public class Transaction {
         }
 
         public Builder deploy(String jarPath) {
-            String payload = FunctionUtil.encodeDeployJar(jarPath);
+            String payload = Encoder.encodeDeployJar(jarPath);
             super.transaction.setTo("0x");
             super.transaction.setPayload(payload);
             return this;
         }
 
         public Builder invoke(String contractAddress, BaseInvoke baseInvoke) {
-            String payload = FunctionUtil.encodeInvokeBeanJava(baseInvoke);
+            String payload = Encoder.encodeInvokeBeanJava(baseInvoke);
             super.transaction.setTo(contractAddress);
             super.transaction.setPayload(payload);
             return this;
