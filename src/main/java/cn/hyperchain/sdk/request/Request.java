@@ -4,6 +4,8 @@ import cn.hyperchain.sdk.common.utils.Async;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +23,21 @@ public abstract class Request<K extends Response> {
     protected ProviderManager providerManager;
     protected Class<K> clazz;
     protected int[] nodeIds;
-    private int id = 1;
     private Gson gson;
     // rpc request
+    @Expose
+    private int id = 1;
+    @Expose
     private String jsonrpc = "2.0";
+    @Expose
     private String namespace = "global";
+    @Expose
     private String method;
+    @Expose
     private List<Object> params;
 
     Request(ProviderManager providerManager, Class<K> clazz, int... nodeIds) {
-        gson = new Gson();
+        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         this.clazz = clazz;
         this.providerManager = providerManager;
         this.nodeIds = nodeIds;
@@ -52,12 +59,7 @@ public abstract class Request<K extends Response> {
     }
 
     public String requestBody() {
-        return "{" +
-                "\"jsonrpc\":\"" + this.getJsonrpc() + "\"," +
-                "\"namespace\":\"" + this.getNamespace() + "\"," +
-                "\"method\":\"" + this.getMethod() + "\"," +
-                "\"params\":" + this.getParams() + "," +
-                "\"id\":" + this.getId() + "}";
+        return gson.toJson(this);
     }
 
     final public String getJsonrpc() {

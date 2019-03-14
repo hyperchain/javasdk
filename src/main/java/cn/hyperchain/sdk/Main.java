@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.service.ContractService;
+import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
 
 /**
@@ -26,7 +27,7 @@ public class Main {
                 .build();
 
         // 2. build service
-        ContractService contractService = ContractService.getInstance(providerManager);
+        ContractService contractService = ServiceManager.getContractService(providerManager);
         // 3. build transaction
         Transaction transaction = new Transaction.HVMBuilder("from").deploy("/Users/tomkk/Documents/workspace/GoLang/src/github.com/hyperchain/hvmd/hvm/hvm-boot/student/build/libs/student_demo-1.0-SNAPSHOT.jar").build();
         // 4. get request
