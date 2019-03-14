@@ -23,11 +23,12 @@ public class ProviderManager {
     }
 
     private List<HttpProvider> checkIds(int... ids) throws RequestException {
-        List<HttpProvider> providers = new ArrayList<>();
+        // use all with null
         if (ids == null || ids.length == 0){
-            throw new RequestException(RequestExceptionCode.PARAM_ERROR, "no ids found");
+            return httpProviders;
         }
 
+        List<HttpProvider> providers = new ArrayList<>();
         for (int id : ids){
             if(id > 0 &&id < httpProviders.size()){
                 providers.add(httpProviders.get(id));
@@ -35,7 +36,7 @@ public class ProviderManager {
                 throw new RequestException(RequestExceptionCode.PARAM_ERROR, "id is ouf of range");
             }
         }
-        return httpProviders;
+        return providers;
     }
 
     public String send(Request request, int... ids) throws RequestException {
