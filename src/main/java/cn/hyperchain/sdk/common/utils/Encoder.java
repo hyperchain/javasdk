@@ -7,8 +7,11 @@ import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class Encoder {
@@ -40,10 +43,25 @@ public class Encoder {
                     throw new IOException("Jar: " + path + " not found.");
                 }
 
-                jar = new JarFile(new File(url.toURI()));
-                fis = ClassLoader.getSystemClassLoader().getResourceAsStream(path);
+                if (url.toString().startsWith("jar")) {
+                    JarURLConnection connection = (JarURLConnection) url.openConnection();
+                    JarFile jarFile = connection.getJarFile();
+                    Enumeration enu = jarFile.entries();
+                    while (enu.hasMoreElements()) {
+                        JarEntry jarEntry = (JarEntry) enu.nextElement();
+                        String name = jarEntry.getName();
+                        if (name.startsWith(path)) {
+                            if (name.endsWith(".jar")) {
+                                fis = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+                            }
+                        }
+                    }
+                } else {
+                    jar = new JarFile(new File(url.toURI()));
+                    fis = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+                }
             }
-            if (jar.getManifest().getMainAttributes().getValue("Main-Class") == null) {
+            if (jar != null && jar.getManifest().getMainAttributes().getValue("Main-Class") == null) {
                 throw new IOException("the path does not point to a contract jar");
             }
 

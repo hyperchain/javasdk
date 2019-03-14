@@ -13,7 +13,7 @@ public class DefaultHttpProviderTest {
 
     @Test
     public void post() {
-        DefaultHttpProvider defaultHttpProvider = DefaultHttpProvider.getInstance(ProviderManagerTest.DEFAULTE_URL);
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(ProviderManagerTest.DEFAULT_URL).build();
         try {
             String body = "{\"jsonrpc\":\"2.0\",\"namespace\":\"global\",\"method\":\"node_getNodeHash\",\"params\":[],\"id\":1}";
             String result = defaultHttpProvider.post(body, null);

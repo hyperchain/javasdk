@@ -7,14 +7,12 @@ import static org.junit.Assert.*;
 
 public class ProviderManagerTest {
     public ProviderManager providerManager;
-    public static String DEFAULTE_URL = "http://localhost:8081";
+    public static String DEFAULT_URL = "localhost:8081";
 
     @Before
     public void setUp() throws Exception {
-        DefaultHttpProvider defaultHttpProvider = DefaultHttpProvider.getInstance(DEFAULTE_URL);
-        providerManager = new ProviderManager.Builder()
-                .setHttpProviders(defaultHttpProvider)
-                .build();
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+        providerManager = ProviderManager.createManager(defaultHttpProvider);
     }
 
     @Test

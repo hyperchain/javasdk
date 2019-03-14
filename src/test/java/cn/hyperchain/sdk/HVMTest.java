@@ -15,15 +15,13 @@ import org.junit.Test;
 
 public class HVMTest {
 
-    public static String DEFAULT_URL = "http://localhost:9999";
+    public static String DEFAULT_URL = "localhost:9999";
 
     @Test
     public void testHVM() throws RequestException {
         // 1. build provider manager
-        DefaultHttpProvider defaultHttpProvider = DefaultHttpProvider.getInstance(DEFAULT_URL);
-        ProviderManager providerManager = new ProviderManager.Builder()
-                .setHttpProviders(defaultHttpProvider)
-                .build();
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
 
         // 2. build service
         ContractService contractService = ServiceManager.getContractService(providerManager);

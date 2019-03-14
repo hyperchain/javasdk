@@ -14,50 +14,69 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class DefaultHttpProvider implements HttpProvider {
+    private static final String HTTP = "http://";
+    private static final String HTTPS = "https://";
+
     private String url;
     private String config;
     private volatile PStatus status;
+    private String httpPrefix;
+
+    private DefaultHttpProvider() {
+    }
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
     //media type
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public OkHttpClient httpClient = new OkHttpClient.Builder()
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
+    public Request.Builder getBuilderHead() {
+        return new Request.Builder().header("User-Agent", "Mozilla/5.0");
+    }
+
+    private OkHttpClient httpClient = new OkHttpClient.Builder()
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .connectTimeout(20, TimeUnit.SECONDS)
             .build();
 
+    public static class Builder {
+        private DefaultHttpProvider defaultHttpProvider;
 
-    private DefaultHttpProvider(String url) {
-        this.url = url;
-        this.status = PStatus.GOOD;
-    }
+        public Builder() {
+            defaultHttpProvider = new DefaultHttpProvider();
+            defaultHttpProvider.httpPrefix = HTTP;
+        }
 
-    private DefaultHttpProvider(Builder builder) {
-        this.url = builder.url;
-        this.config = builder.config;
-        this.status = PStatus.GOOD;
-    }
+        public Builder setUrl(String url) {
+            defaultHttpProvider.setUrl(url);
+            return this;
+        }
 
-    public static DefaultHttpProvider getInstance(String url) {
-        return new DefaultHttpProvider(url);
+        public Builder setConfig(String config) {
+            defaultHttpProvider.setConfig(config);
+            return this;
+        }
+
+        public DefaultHttpProvider build() {
+            defaultHttpProvider.status = PStatus.NORMAL;
+            return defaultHttpProvider;
+        }
     }
 
     @Override
     public String post(String body, Map<String, String> headers) throws RequestException {
-        //todo: chech headers size
+        //todo: check headers size
         RequestBody requestBody = RequestBody.create(JSON, body);
         Response response;
         Request request = getBuilderHead()
-                .url(url)
+                .url(httpPrefix + url)
                 .post(requestBody)
                 .build();
 
         try {
             response = this.httpClient.newCall(request).execute();
         } catch (IOException e) {
-            this.status = PStatus.BAD;
+            this.status = PStatus.ABNORMAL;
             runNodeReconnect();
 
             logger.info("Connect the node " + url + " failed. The reason is " + e.getMessage() + ". Please check. Now try send other node...");
@@ -67,7 +86,7 @@ public class DefaultHttpProvider implements HttpProvider {
             try {
                 return response.body().string();
             } catch (IOException e) {
-                this.status = PStatus.BAD;
+                this.status = PStatus.ABNORMAL;
                 runNodeReconnect();
                 logger.info("Connect the node " + url + " failed. The reason is " + e.getMessage() + ". Please check. Now try send other node...");
                 throw new RequestException(RequestExceptionCode.NETWORK_GETBODY_FAILED);
@@ -92,8 +111,16 @@ public class DefaultHttpProvider implements HttpProvider {
         return url;
     }
 
-    public Request.Builder getBuilderHead() {
-        return new Request.Builder().header("User-Agent", "Mozilla/5.0");
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getConfig() {
+        return config;
+    }
+
+    public void setConfig(String config) {
+        this.config = config;
     }
 
     public void runNodeReconnect() {
@@ -120,7 +147,7 @@ public class DefaultHttpProvider implements HttpProvider {
 //                        try {
 //                            response.body().string();
 //
-//                            status = PStatus.GOOD;
+//                            status = PStatus.NORMAL;
 //                            logger.info("Node " + nodeUrl + " Reconnect Success!");
 //
 //                            return;
@@ -137,28 +164,5 @@ public class DefaultHttpProvider implements HttpProvider {
 //                }
 //            }
 //        }).start();
-    }
-
-    public static class Builder {
-        private String url;
-        private String config; //todo : config class
-        public Builder(){
-
-        }
-
-        public Builder setUrl(String url){
-            this.url = url;
-            return this;
-        }
-
-        public Builder setConfig(String config){
-            this.config = config;
-            return this;
-        }
-
-        public DefaultHttpProvider build(){
-            return new DefaultHttpProvider(this);
-        }
-
     }
 }
