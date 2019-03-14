@@ -20,6 +20,12 @@ public class RequestException extends Exception{
         this.msg = rsCode.getMsg();
     }
 
+    public RequestException(RequestExceptionCode rsCode, String addMsg){
+        super(rsCode.getMsg() + " cause: " + addMsg);
+        this.code = rsCode.getCode();
+        this.msg = rsCode.getMsg() + " cause: " + addMsg;
+    }
+
 
     public Integer getCode() {
         return code;

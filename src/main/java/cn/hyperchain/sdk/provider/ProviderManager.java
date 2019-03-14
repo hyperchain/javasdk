@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.provider;
 
 import cn.hyperchain.sdk.exception.AllNodesBadException;
 import cn.hyperchain.sdk.exception.RequestException;
+import cn.hyperchain.sdk.exception.RequestExceptionCode;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.Response;
 import org.apache.log4j.Logger;
@@ -13,7 +14,7 @@ import java.util.*;
  */
 public class ProviderManager {
     public List<HttpProvider> httpProviders;
-    public int requestIndex; // todo: requestIndex需要和Request进行绑定
+    //public int requestIndex; // todo: requestIndex需要和Request进行绑定
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
 
@@ -21,19 +22,36 @@ public class ProviderManager {
         this.httpProviders = builder.httpProviders;
     }
 
+    private List<HttpProvider> checkIds(int... ids) throws RequestException {
+        // use all with null
+        if (ids == null || ids.length == 0){
+            return httpProviders;
+        }
+
+        List<HttpProvider> providers = new ArrayList<>();
+        for (int id : ids){
+            if(id > 0 &&id < httpProviders.size()){
+                providers.add(httpProviders.get(id));
+            }else{
+                throw new RequestException(RequestExceptionCode.PARAM_ERROR, "id is ouf of range");
+            }
+        }
+        return providers;
+    }
+
     public String send(Request request, int... ids) throws RequestException {
+        List<HttpProvider> hProviders = checkIds(ids);
         // todo: 考虑负载均衡和断线重连
         // todo: 考虑切换节点
-
-        for (int id : ids) {
-            if (httpProviders.get(id).getStatus() == PStatus.GOOD) {
+        for (HttpProvider hProvider : hProviders) {
+            if (hProvider.getStatus() == PStatus.GOOD) {
                 // todo: 将选择好的节点记录到request的 providerIndex变量中，便于重发等操作
 //                request.setRequestNode(id);
                 try {
-                    return sendTo(request, id);
+                    return sendTo(request, hProvider);
                 } catch (RequestException e) {
                     if (e.getCode() == -9999) {
-                        logger.debug("send to id: " + id + " failed");
+                        logger.debug("send to provider: " + hProvider.getUrl() + " failed");
                         continue;
                     }
                     // other exception rethrow
@@ -46,12 +64,12 @@ public class ProviderManager {
         throw new AllNodesBadException("No node to connect!");
     }
 
-    private String sendTo(Request request, int id) throws RequestException {
+    private String sendTo(Request request, HttpProvider Provider) throws RequestException {
         String body = getRequestBody(request);
         Map<String, String> headers = getHeaders(body);
 
         // todo: 将选择好的节点记录到request的 providerIndex变量中，便于重发等操作
-        return httpProviders.get(id).post(body, headers);
+        return Provider.post(body, headers);
     }
 
     private String getRequestBody(Request request) {
