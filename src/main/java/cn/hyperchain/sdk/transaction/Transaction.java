@@ -22,6 +22,7 @@ public class Transaction {
     private String extra;
     private long timestamp;
     private long nonce;
+    private String signature = "default";
 
     public static class Builder {
         Transaction transaction;
@@ -167,5 +168,13 @@ public class Transaction {
 
     public void setNonce(long nonce) {
         this.nonce = nonce;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 }

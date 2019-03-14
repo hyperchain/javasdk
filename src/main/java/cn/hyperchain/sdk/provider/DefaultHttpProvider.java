@@ -30,6 +30,7 @@ public class DefaultHttpProvider implements HttpProvider {
 
     private DefaultHttpProvider(String url) {
         this.url = url;
+        this.status = PStatus.GOOD;
     }
 
     public static DefaultHttpProvider getInstance(String url) {

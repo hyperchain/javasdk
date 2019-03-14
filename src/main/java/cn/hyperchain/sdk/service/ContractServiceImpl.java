@@ -40,6 +40,7 @@ public class ContractServiceImpl implements ContractService {
         txHashResponseContractRequest.setMethod(methodName("deployContract"));
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setNamespace(namespace);
+        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
@@ -54,6 +55,7 @@ public class ContractServiceImpl implements ContractService {
         txHashResponseContractRequest.setMethod(methodName("invokeContract"));
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setJsonrpc(namespace);
+        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
@@ -62,7 +64,7 @@ public class ContractServiceImpl implements ContractService {
         PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>(providerManager, ReceiptResponse.class, nodeIds);
 
         receiptResponsePollingRequest.addParams(txHash);
-        receiptResponsePollingRequest.setMethod(methodName("getTransactionReceipt"));
+        receiptResponsePollingRequest.setMethod("tx_getTransactionReceipt");
         receiptResponsePollingRequest.setJsonrpc(jsonrpc);
         receiptResponsePollingRequest.setJsonrpc(namespace);
 
@@ -80,7 +82,7 @@ public class ContractServiceImpl implements ContractService {
             map.put("extra", transaction.getExtra());
         }
         map.put("simulate", transaction.isSimulate());
-        map.put("signature", "");
+        map.put("signature", transaction.getSignature());
         return map;
     }
 

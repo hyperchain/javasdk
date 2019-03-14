@@ -1,5 +1,7 @@
 package cn.hyperchain.sdk.response;
 
+import cn.hyperchain.sdk.exception.RequestException;
+import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.Gson;
@@ -33,7 +35,11 @@ public class TxHashResponse extends Response {
         this.nodeIds = nodeIds;
     }
 
-    public ReceiptResponse polling() {
+    public void setContractService(ContractService contractService) {
+        this.contractService = contractService;
+    }
+
+    public ReceiptResponse polling() throws RequestException {
         // simulate
         if (!result.isJsonPrimitive()) {
             ReceiptResponse.Receipt receipt = gson.fromJson(result, ReceiptResponse.Receipt.class);

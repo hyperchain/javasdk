@@ -37,4 +37,12 @@ public abstract class Response {
     public String getJsonrpc() {
         return jsonrpc;
     }
+
+    public int getCode() {
+        return this.code;
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
 }

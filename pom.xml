@@ -114,6 +114,13 @@
             <artifactId>okhttp</artifactId>
             <version>3.13.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.tomkk</groupId>
+            <artifactId>contract</artifactId>
+            <scope>system</scope>
+            <systemPath>/Users/tomkk/Documents/workspace/GoLang/src/github.com/hyperchain/hvmd/hvm/hvm-boot/student/build/libs/student_demo-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
     </dependencies>
 
 </project>

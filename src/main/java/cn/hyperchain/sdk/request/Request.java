@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.request;
 
 import cn.hyperchain.sdk.common.utils.Async;
+import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
@@ -44,26 +45,15 @@ public abstract class Request<K extends Response> {
         this.params = new ArrayList<>();
     }
 
-    public K send() {
-//        String res = providerManager.sendRequest(this, nodeIds);
-        String res = "{\n" +
-                "\t\"jsonrpc\": \"2.0\",\n" +
-                "\t\"namespace\": \"global\",\n" +
-                "\t\"id\": 1,\n" +
-                "\t\"code\": 0,\n" +
-                "\t\"message\": \"SUCCESS\",\n" +
-                "\t\"result\": {\n" +
-                "\t\t\"version\": \"1.4\",\n" +
-                "\t\t\"txHash\": \"0x2628196345e75e289837de674cfec194b6130199e37d5824a976fe0f0e529f2c\",\n" +
-                "\t\t\"vmType\": \"2\",\n" +
-                "\t\t\"contractAddress\": \"0x4e14ead4fae0129479517a14dcb177bba48f4e21\",\n" +
-                "\t\t\"gasUsed\": 100000,\n" +
-                "\t\t\"ret\": \"0x73756363657373\",\n" +
-                "\t\t\"log\": []\n" +
-                "\t}\n" +
-                "}";
+    public K send() throws RequestException {
+        String res = providerManager.send(this, nodeIds);
 
-        return gson.fromJson(res, clazz);
+        K response = gson.fromJson(res, clazz);
+        if (response.getCode() != 0) {
+            throw new RequestException(response.getCode(), response.getMessage());
+        }
+
+        return response;
     }
 
     final public Future<K> sendAsync() {
