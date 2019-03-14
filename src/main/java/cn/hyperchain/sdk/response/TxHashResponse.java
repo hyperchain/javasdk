@@ -1,7 +1,6 @@
 package cn.hyperchain.sdk.response;
 
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.Gson;
@@ -46,7 +45,7 @@ public class TxHashResponse extends Response {
             return new ReceiptResponse(this, receipt);
         }
 
-        return contractService.polling(getTxHash(), this.nodeIds).send();
+        return contractService.getReceipt(getTxHash(), this.nodeIds).send();
     }
 
     public String getTxHash() {

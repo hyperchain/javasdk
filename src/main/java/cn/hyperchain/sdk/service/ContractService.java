@@ -17,5 +17,5 @@ public interface ContractService {
 
     Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
 
-    Request<ReceiptResponse> polling(String txHash, int... nodeIds);
+    Request<ReceiptResponse> getReceipt(String txHash, int... nodeIds);
 }

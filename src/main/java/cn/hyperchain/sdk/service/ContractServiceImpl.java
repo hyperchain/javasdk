@@ -58,7 +58,7 @@ public class ContractServiceImpl implements ContractService {
         return txHashResponseContractRequest;
     }
 
-    public Request<ReceiptResponse> polling(String txHash, int... nodeIds) {
+    public Request<ReceiptResponse> getReceipt(String txHash, int... nodeIds) {
         PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
 
         receiptResponsePollingRequest.addParams(txHash);
