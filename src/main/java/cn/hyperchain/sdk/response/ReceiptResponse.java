@@ -1,7 +1,6 @@
 package cn.hyperchain.sdk.response;
 
-import cn.hyperchain.sdk.provider.ProviderManager;
-import cn.hyperchain.sdk.transaction.Transaction;
+import com.google.gson.annotations.Expose;
 
 import java.util.Arrays;
 
@@ -14,14 +13,20 @@ import java.util.Arrays;
 
 public class ReceiptResponse extends Response {
 
-
     public class Receipt {
+        @Expose
         private String contractAddress;
+        @Expose
         private String ret;
+        @Expose
         private String txHash;
+        @Expose
         private String[] log;
+        @Expose
         private String vmType;
+        @Expose
         private long gasUsed;
+        @Expose
         private String version;
 
         public Receipt() {
@@ -41,14 +46,15 @@ public class ReceiptResponse extends Response {
         }
     }
 
+    @Expose
     private Receipt result;
-
 
     public ReceiptResponse() {
     }
 
-    void polling() {
-
+    public ReceiptResponse(Response response, Receipt receipt) {
+        super(response);
+        this.result = receipt;
     }
 
     public String getContractAddress() {

@@ -6,16 +6,13 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.Response;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ProviderManager负责负载均衡，封装header等
  */
 public class ProviderManager {
-    public ArrayList<HttpProvider> httpProviders;
+    public List<HttpProvider> httpProviders;
     public int requestIndex; // todo: requestIndex需要和Request进行绑定
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
@@ -66,16 +63,17 @@ public class ProviderManager {
     }
 
     public <K extends Response> String sendRequest(Request<K> kRequest, int[] nodeIdxs) {
+        System.out.println(kRequest.requestBody());
         return null;
     }
 
 
     public static class Builder {
-        private ArrayList<HttpProvider> httpProviders = new ArrayList<>();
+        private List<HttpProvider> httpProviders;
         //todo : add config and more
 
-        public Builder() {
-
+        public Builder(){
+            this.httpProviders = new ArrayList<>();
         }
 
         public Builder setHttpProviders(HttpProvider... providers) {

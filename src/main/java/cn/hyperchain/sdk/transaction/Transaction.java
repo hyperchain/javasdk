@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
 import java.util.Date;
 
 public class Transaction {
+    private Transaction() {}
+
     private static final Logger logger = Logger.getLogger(Transaction.class);
 
     private String from;
