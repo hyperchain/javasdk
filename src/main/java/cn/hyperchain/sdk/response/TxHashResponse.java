@@ -4,6 +4,7 @@ import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.annotations.Expose;
 
 /**
  * @ClassName: TxHashResponse
@@ -13,6 +14,7 @@ import com.google.gson.JsonElement;
  */
 
 public class TxHashResponse extends Response {
+    @Expose
     private JsonElement result;
     private Transaction transaction;
     private ContractService contractService;

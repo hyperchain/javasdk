@@ -1,5 +1,7 @@
 package cn.hyperchain.sdk.response;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * @ClassName: Response
  * @Description:
@@ -8,9 +10,13 @@ package cn.hyperchain.sdk.response;
  */
 
 public abstract class Response {
+    @Expose
     protected String jsonrpc;
+    @Expose
     protected String id;
+    @Expose
     protected int code;
+    @Expose
     protected String message;
 
     public Response() {
