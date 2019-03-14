@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DefaultHttpProvider implements HttpProvider {
     private String url;
+    private String config;
     private volatile PStatus status;
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
@@ -30,6 +31,12 @@ public class DefaultHttpProvider implements HttpProvider {
 
     private DefaultHttpProvider(String url) {
         this.url = url;
+        this.status = PStatus.GOOD;
+    }
+
+    private DefaultHttpProvider(Builder builder) {
+        this.url = builder.url;
+        this.config = builder.config;
         this.status = PStatus.GOOD;
     }
 
@@ -130,5 +137,28 @@ public class DefaultHttpProvider implements HttpProvider {
 //                }
 //            }
 //        }).start();
+    }
+
+    public static class Builder {
+        private String url;
+        private String config; //todo : config class
+        public Builder(){
+
+        }
+
+        public Builder setUrl(String url){
+            this.url = url;
+            return this;
+        }
+
+        public Builder setConfig(String config){
+            this.config = config;
+            return this;
+        }
+
+        public DefaultHttpProvider build(){
+            return new DefaultHttpProvider(this);
+        }
+
     }
 }

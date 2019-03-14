@@ -26,7 +26,6 @@ public class Main {
 
     public static void main(String[] args) throws RequestException {
         // 1. build provider manager
-        // TODO: provider 变为builder, ProviderManager
         DefaultHttpProvider okhttpHttpProvider = DefaultHttpProvider.getInstance(DEFAULTE_URL);
         ProviderManager providerManager = new ProviderManager.Builder()
                 .setHttpProviders(okhttpHttpProvider)
