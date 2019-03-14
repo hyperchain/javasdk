@@ -26,9 +26,9 @@ public class Main {
 
     public static void main(String[] args) throws RequestException {
         // 1. build provider manager
-        DefaultHttpProvider okhttpHttpProvider = DefaultHttpProvider.getInstance(DEFAULTE_URL);
+        DefaultHttpProvider defaultHttpProvider = DefaultHttpProvider.getInstance(DEFAULTE_URL);
         ProviderManager providerManager = new ProviderManager.Builder()
-                .setHttpProviders(okhttpHttpProvider)
+                .setHttpProviders(defaultHttpProvider)
                 .build();
 
         // 2. build service

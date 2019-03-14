@@ -11,9 +11,9 @@ public class ProviderManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        DefaultHttpProvider okhttpHttpProvider = DefaultHttpProvider.getInstance(DEFAULTE_URL);
+        DefaultHttpProvider defaultHttpProvider = DefaultHttpProvider.getInstance(DEFAULTE_URL);
         providerManager = new ProviderManager.Builder()
-                .setHttpProviders(okhttpHttpProvider)
+                .setHttpProviders(defaultHttpProvider)
                 .build();
     }
 
