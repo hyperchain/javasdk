@@ -18,7 +18,7 @@ public class Encoder {
 
     private static final Logger logger = Logger.getLogger(Encoder.class);
 
-    public static boolean isAbsolutePath(String path) {
+    private static boolean isAbsolutePath(String path) {
         return path.startsWith("/") || path.startsWith("file:/") || path.contains(":\\");
     }
 
@@ -38,7 +38,7 @@ public class Encoder {
                 jar = new JarFile(path, true);
                 fis = new FileInputStream(path);
             } else {
-                URL url = ClassLoader.getSystemClassLoader().getResource(path);
+                URL url = Thread.currentThread().getContextClassLoader().getResource(path);
                 if (url == null) {
                     throw new IOException("Jar: " + path + " not found.");
                 }
@@ -106,7 +106,7 @@ public class Encoder {
     public static String encodeInvokeBeanJava(BaseInvoke bean) {
         try {
             //1. get the bean class bytes
-            ClassLoaderRepository repository = new ClassLoaderRepository(ClassLoader.getSystemClassLoader());
+            ClassLoaderRepository repository = new ClassLoaderRepository(Thread.currentThread().getContextClassLoader());
             JavaClass beanClass = repository.loadClass(bean.getClass());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             beanClass.dump(baos);
