@@ -1,11 +1,9 @@
-// $Id: KeccakCore.java 258 2011-07-15 22:16:50Z tp $
-
 package cn.hyperchain.sdk.crypto.cryptohash;
 
 /**
  * This class implements the core operations for the Keccak digest
  * algorithm.
- * <p>
+ *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *

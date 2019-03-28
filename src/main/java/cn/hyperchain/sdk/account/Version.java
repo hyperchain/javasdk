@@ -19,6 +19,11 @@ public enum Version {
         return v;
     }
 
+    /**
+     * get {@link Version} by version value.
+     * @param v string value
+     * @return {@link Version}
+     */
     public static Version getVersion(String v) {
         switch (v) {
             case "1.0": return V1;

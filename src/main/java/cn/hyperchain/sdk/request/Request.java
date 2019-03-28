@@ -14,10 +14,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
- * @ClassName: Request
- * @Description:
- * @author: tomkk
- * @date: 2019-03-12
+ * <p>call param, will return a {@link Response}</p>.
+ *
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public abstract class Request<K extends Response> {
@@ -46,6 +46,11 @@ public abstract class Request<K extends Response> {
         this.method = method;
     }
 
+    /**
+     * default send by provider manager.
+     * @return {@link Response}
+     * @throws RequestException -
+     */
     public K send() throws RequestException {
         String res = providerManager.send(this, nodeIds);
 
@@ -57,7 +62,11 @@ public abstract class Request<K extends Response> {
         return response;
     }
 
-    final public Future<K> sendAsync() {
+    /**
+     * default async send.
+     * @return future of {@link Response}
+     */
+    public final Future<K> sendAsync() {
         return Async.run(new Callable<K>() {
             @Override
             public K call() throws Exception {
@@ -70,43 +79,43 @@ public abstract class Request<K extends Response> {
         return gson.toJson(this);
     }
 
-    final public String getJsonrpc() {
+    public final String getJsonrpc() {
         return jsonrpc;
     }
 
-    final public void setJsonrpc(String jsonrpc) {
+    public final void setJsonrpc(String jsonrpc) {
         this.jsonrpc = jsonrpc;
     }
 
-    final public String getNamespace() {
+    public final String getNamespace() {
         return namespace;
     }
 
-    final public void setNamespace(String namespace) {
+    public final void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    final public String getMethod() {
+    public final String getMethod() {
         return method;
     }
 
-    final public void setMethod(String method) {
+    public final void setMethod(String method) {
         this.method = method;
     }
 
-    final public String getParams() {
+    public final String getParams() {
         return gson.toJson(params);
     }
 
-    final public void addParams(Object params) {
+    public final void addParams(Object params) {
         this.params.add(params);
     }
 
-    final public int getId() {
+    public final int getId() {
         return id;
     }
 
-    final public void setId(int id) {
+    public final void setId(int id) {
         this.id = id;
     }
 }

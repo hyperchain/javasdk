@@ -3,10 +3,10 @@ package cn.hyperchain.sdk.response;
 import com.google.gson.annotations.Expose;
 
 /**
- * @ClassName: Response
- * @Description:
- * @author: tomkk
- * @date: 2019-03-12
+ * <p>{@link cn.hyperchain.sdk.request.Request} will return a Response.</p>
+ *
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public abstract class Response {
@@ -23,6 +23,10 @@ public abstract class Response {
 
     }
 
+    /**
+     * create instance from a {@link Response}.
+     * @param response {@link Response}
+     */
     public Response(Response response) {
         this.jsonrpc = response.jsonrpc;
         this.id = response.id;

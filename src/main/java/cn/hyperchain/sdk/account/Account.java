@@ -1,7 +1,7 @@
 package cn.hyperchain.sdk.account;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
-import cn.hyperchain.sdk.common.utils.HashUtil;
+import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.CipherUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -10,13 +10,21 @@ import com.google.gson.JsonParser;
 import java.util.Arrays;
 
 public class Account {
-    private String address;  //用户地址
-    private String publicKey;  //公钥
-    private String privateKey;  //私钥
-    private boolean privateKeyEncrypted;  //私钥是否加密
+    private String address;
+    private String publicKey;
+    private String privateKey;
+    private boolean privateKeyEncrypted;
     private Version version;
     private Algo algo;
 
+    /**
+     * create account json instance by param.
+     * @param publicKey public key hex
+     * @param privateKey private key hex
+     * @param password password
+     * @param version account version
+     * @param algo account private key algorithm
+     */
     public Account(String publicKey, String privateKey, String password, Version version, Algo algo) {
         this.publicKey = publicKey.toUpperCase();
         switch (algo) {
@@ -48,6 +56,10 @@ public class Account {
         this.algo = algo;
     }
 
+    /**
+     * get account from account json.
+     * @param accountJson account json
+     */
     public Account(String accountJson) {
         JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
         this.address = jsonObject.get("address").getAsString();
@@ -62,6 +74,12 @@ public class Account {
         }
     }
 
+    /**
+     * decode account json to raw.
+     * @param accountJson account json encrypted by algorithm
+     * @param password password
+     * @return account raw json
+     */
     public static String decodeAccount(String accountJson, String password) {
         Account account = new Account(accountJson);
         if (account.version == null) {
@@ -130,14 +148,14 @@ public class Account {
         } else if (this.algo == null && ! this.isPrivateKeyEncrypted()) {
             this.algo = Algo.SMRAW;
         }
-        return "{" +
-                "address='" + address + '\'' +
-                ", publicKey='" + publicKey + '\'' +
-                ", privateKey='" + privateKey + '\'' +
-                ", privateKeyEncrypted=" + privateKeyEncrypted +
-                ", version='" + version.getV() + '\'' +
-                ", algo='" + algo.getAlgo() + '\'' +
-                '}';
+        return "{"
+                + "address='" + address + '\''
+                + ", publicKey='" + publicKey + '\''
+                + ", privateKey='" + privateKey + '\''
+                + ", privateKeyEncrypted=" + privateKeyEncrypted
+                + ", version='" + version.getV() + '\''
+                + ", algo='" + algo.getAlgo() + '\''
+                + '}';
     }
 
     public String toJson() {

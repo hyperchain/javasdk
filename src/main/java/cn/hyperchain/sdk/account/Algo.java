@@ -34,6 +34,11 @@ public enum Algo {
         return algo;
     }
 
+    /**
+     * get {@link Algo} by algo value.
+     * @param algo string value
+     * @return {@link Algo}
+     */
     public static Algo getAlog(String algo) {
         switch (algo) {
             case "0x01": return ECKDF2;

@@ -32,22 +32,41 @@ public class Transaction {
             transaction.setFrom(from);
         }
 
+        /**
+         * create a transform transaction from account A to account B.
+         * @param to origin account
+         * @param value goal account
+         * @return {@link Builder}
+         */
         public Builder transfer(String to, long value) {
             transaction.setTo(to);
             transaction.setValue(value);
             return this;
         }
 
+        /**
+         * make transaction status is simulate.
+         * @return {@link Builder}
+         */
         public Builder simulate() {
             transaction.setSimulate(true);
             return this;
         }
 
+        /**
+         * add transaction extra info.
+         * @param extra extra data
+         * @return {@link Builder}
+         */
         public Builder extra(String extra) {
             transaction.setExtra(extra);
             return this;
         }
 
+        /**
+         * build transaction instance.
+         * @return {@link Transaction}
+         */
         public Transaction build() {
             transaction.setTimestamp(genTimestamp());
             transaction.setNonce(genNonce());
@@ -61,6 +80,11 @@ public class Transaction {
             super.transaction.setVmType(VMType.HVM);
         }
 
+        /**
+         * create deployment transaction for {@link VMType} HVM.
+         * @param jarPath hvm contract jar
+         * @return {@link Builder}
+         */
         public Builder deploy(String jarPath) {
             String payload = Encoder.encodeDeployJar(jarPath);
             super.transaction.setTo("0x");
@@ -68,6 +92,12 @@ public class Transaction {
             return this;
         }
 
+        /**
+         * create invoking transaction for {@link VMType} HVM.
+         * @param contractAddress contract address in chain
+         * @param baseInvoke an instance of {@link BaseInvoke}
+         * @return {@link Builder}
+         */
         public Builder invoke(String contractAddress, BaseInvoke baseInvoke) {
             String payload = Encoder.encodeInvokeBeanJava(baseInvoke);
             super.transaction.setTo(contractAddress);
@@ -87,8 +117,6 @@ public class Transaction {
     private static Long genTimestamp() {
         return new Date().getTime() * 1000000 + Utils.randInt(1000, 1000000);
     }
-
-    /******** getter and setter *********/
 
     public String getFrom() {
         return from;

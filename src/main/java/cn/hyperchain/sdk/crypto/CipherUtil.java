@@ -19,6 +19,12 @@ public class CipherUtil {
         Security.addProvider(new BouncyCastleProvider());
     }
 
+    /**
+     * encrypt data use DES algorithm.
+     * @param content need to be encrypted data
+     * @param password password
+     * @return encrypted data
+     */
     @Deprecated
     public static byte[] encryptDES(byte[] content, String password) {
         if (password.length() > 16) {
@@ -44,17 +50,16 @@ public class CipherUtil {
             //现在，获取数据并加密
             //正式执行加密操作
             return cipher.doFinal(content);
-        } catch (Throwable e) {
+        } catch (Throwable exception) {
             return null;
         }
     }
 
     /**
-     * 解密
-     *
-     * @param content      byte[]
-     * @param password String
-     * @return byte[]
+     * decrypt data by DES algorithm.
+     * @param content  origin data
+     * @param password password
+     * @return result bytes
      */
     @Deprecated
     public static byte[] decryptDES(byte[] content, String password) {
@@ -83,16 +88,16 @@ public class CipherUtil {
             cipher.init(Cipher.DECRYPT_MODE, securekey, random);
             // 真正开始解密操作
             return cipher.doFinal(content);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             return null;
         }
     }
 
     /**
-     * 加密
-     * @param content  需要加密的内容
-     * @param password  加密密码 128/192/256 bits | 16/24/32 bytes
-     * @return
+     * encrypt data by AES algorithm.
+     * @param content need to be encrypted data
+     * @param password password 128/192/256 bits | 16/24/32 bytes
+     * @return result bytes
      */
     public static byte[] encryptAES(byte[] content, String password) {
         byte[] keyBytes = getPassword(password, 32);
@@ -101,16 +106,16 @@ public class CipherUtil {
             Cipher in = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
             in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(getIV(keyBytes, 16)));
             return in.doFinal(content);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             return null;
         }
     }
 
     /**
-     * 解密
-     * @param content 待解密内容
-     * @param password 解密密钥 128/192/256 bits | 16/24/32 bytes
-     * @return
+     * decrypt data by AES algorithm.
+     * @param content origin data
+     * @param password password 128/192/256 bits | 16/24/32 bytes
+     * @return result bytes
      */
     public static byte[] decryptAES(byte[] content, String password) {
         byte[] keyBytes = getPassword(password, 32);
@@ -119,11 +124,17 @@ public class CipherUtil {
             Cipher out = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
             out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(getIV(keyBytes, 16)));
             return out.doFinal(content);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             return ByteUtil.EMPTY_BYTE_ARRAY;
         }
     }
 
+    /**
+     * encrypt data by 3DES algorithm.
+     * @param content need to be encrypted data
+     * @param password password 24 bytes
+     * @return result bytes
+     */
     public static byte[] encrypt3DES(byte[] content, String password) {
         byte[] keyBytes = getPassword(password, 24);
         Key key = new SecretKeySpec(keyBytes, "DESede");
@@ -131,11 +142,17 @@ public class CipherUtil {
             Cipher in = Cipher.getInstance("DESede/CBC/PKCS5Padding", "BC");
             in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(getIV(keyBytes, 8)));
             return in.doFinal(content);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             return null;
         }
     }
 
+    /**
+     * decrypted data by 3DES algorithm.
+     * @param content origin data
+     * @param password password 24 bytes
+     * @return result bytes
+     */
     public static byte[] decrypt3DES(byte[] content, String password) {
         byte[] keyBytes = getPassword(password, 24);
         Key key = new SecretKeySpec(keyBytes, "DESede");
@@ -143,7 +160,7 @@ public class CipherUtil {
             Cipher out = Cipher.getInstance("DESede/CBC/PKCS5Padding", "BC");
             out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(getIV(keyBytes, 8)));
             return out.doFinal(content);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             return ByteUtil.EMPTY_BYTE_ARRAY;
         }
     }

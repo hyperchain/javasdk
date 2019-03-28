@@ -8,10 +8,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 
 /**
- * @ClassName: TxHashResponse
- * @Description:
- * @author: tomkk
- * @date: 2019-03-13
+ * TxHashResponse get transaction hash.
+ *
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public class TxHashResponse extends Response {
@@ -38,6 +38,11 @@ public class TxHashResponse extends Response {
         this.contractService = contractService;
     }
 
+    /**
+     * polling to get receipt by txHash.
+     * @return {@link ReceiptResponse}
+     * @throws RequestException -
+     */
     public ReceiptResponse polling() throws RequestException {
         // simulate
         if (!result.isJsonPrimitive()) {
@@ -48,6 +53,10 @@ public class TxHashResponse extends Response {
         return contractService.getReceipt(getTxHash(), this.nodeIds).send();
     }
 
+    /**
+     * get transaction hash.
+     * @return hash
+     */
     public String getTxHash() {
         if (result.isJsonPrimitive()) {
             return result.getAsString();
@@ -58,10 +67,10 @@ public class TxHashResponse extends Response {
 
     @Override
     public String toString() {
-        return "TxHashResponse{" +
-                "result=" + getTxHash() +
-                ", jsonrpc='" + jsonrpc + '\'' +
-                ", id='" + id + '\'' +
-                '}';
+        return "TxHashResponse{"
+                + "result=" + getTxHash()
+                + ", jsonrpc='" + jsonrpc + '\''
+                + ", id='" + id + '\''
+                + '}';
     }
 }

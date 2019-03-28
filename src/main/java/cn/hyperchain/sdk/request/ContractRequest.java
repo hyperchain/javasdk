@@ -7,10 +7,9 @@ import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 
 /**
- * @ClassName: ContractRequest
- * @Description:
- * @author: tomkk
- * @date: 2019-03-13
+ * contract result.
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public class ContractRequest<T extends TxHashResponse> extends Request<T> {

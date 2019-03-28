@@ -6,7 +6,12 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -23,7 +28,7 @@ public class Encoder {
     }
 
     /**
-     * get deploy payload
+     * get deploy payload.
      *
      * @param path contract jar path
      * @return payload
@@ -98,7 +103,7 @@ public class Encoder {
     }
 
     /**
-     * get hvm invoke payload
+     * get hvm invoke payload.
      *
      * @param bean invoke bean
      * @return payload

@@ -9,7 +9,7 @@ public enum RequestExceptionCode {
     private Integer code;
     private String msg;
 
-    RequestExceptionCode(Integer code, String msg){
+    RequestExceptionCode(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }

@@ -6,10 +6,9 @@ import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 
 /**
- * @ClassName: ContractService
- * @Description:
- * @author: tomkk
- * @date: 2019-03-12
+ * contract service interface.
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public interface ContractService {

@@ -1,5 +1,3 @@
-// $Id: Digest.java 232 2010-06-17 14:19:24Z tp $
-
 package cn.hyperchain.sdk.crypto.cryptohash;
 
 /**
@@ -9,7 +7,7 @@ package cn.hyperchain.sdk.crypto.cryptohash;
  * order to provide compatibility with reduced Java implementations such
  * as J2ME. Implementing a {@code java.security.Provider} compatible
  * with Sun's JCA ought to be easy.</p>
- * <p>
+ *
  * <p>A {@code Digest} object maintains a running state for a hash
  * function computation. Data is inserted with {@code update()} calls;
  * the result is obtained from a {@code digest()} method (where some
@@ -19,11 +17,11 @@ package cn.hyperchain.sdk.crypto.cryptohash;
  * can be cloned with the {@link #copy} method; this can be used to get
  * a partial hash result without interrupting the complete
  * computation.</p>
- * <p>
+ *
  * <p>{@code Digest} objects are stateful and hence not thread-safe;
  * however, distinct {@code Digest} objects can be accessed concurrently
  * without any problem.</p>
- * <p>
+ *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *
@@ -141,7 +139,7 @@ public interface Digest {
      * (Merkle-Damgard). It is used in HMAC (that's what the
      * <a href="http://tools.ietf.org/html/rfc2104">HMAC specification</a>
      * names the "{@code B}" parameter).</p>
-     * <p>
+     *
      * <p>If the function is "block-less" then this function may
      * return {@code -n} where {@code n} is an integer such that the
      * block length for HMAC ("{@code B}") will be inferred from the

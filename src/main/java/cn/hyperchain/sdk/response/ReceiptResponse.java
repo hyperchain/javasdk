@@ -5,10 +5,10 @@ import com.google.gson.annotations.Expose;
 import java.util.Arrays;
 
 /**
- * @ClassName: ReceiptResponse
- * @Description:
- * @author: tomkk
- * @date: 2019-03-12
+ * call receipt.
+ *
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public class ReceiptResponse extends Response {
@@ -34,15 +34,15 @@ public class ReceiptResponse extends Response {
 
         @Override
         public String toString() {
-            return "Receipt{" +
-                    "contractAddress='" + contractAddress + '\'' +
-                    ", ret='" + ret + '\'' +
-                    ", txHash='" + txHash + '\'' +
-                    ", log=" + Arrays.toString(log) +
-                    ", vmType='" + vmType + '\'' +
-                    ", gasUsed=" + gasUsed +
-                    ", version='" + version + '\'' +
-                    '}';
+            return "Receipt{"
+                    + "contractAddress='" + contractAddress + '\''
+                    + ", ret='" + ret + '\''
+                    + ", txHash='" + txHash + '\''
+                    + ", log=" + Arrays.toString(log)
+                    + ", vmType='" + vmType + '\''
+                    + ", gasUsed=" + gasUsed
+                    + ", version='" + version + '\''
+                    + '}';
         }
     }
 
@@ -87,12 +87,12 @@ public class ReceiptResponse extends Response {
 
     @Override
     public String toString() {
-        return "ReceiptResponse{" +
-                "result=" + result +
-                ", jsonrpc='" + jsonrpc + '\'' +
-                ", id='" + id + '\'' +
-                ", code=" + code +
-                ", message='" + message + '\'' +
-                '}';
+        return "ReceiptResponse{"
+                + "result=" + result
+                + ", jsonrpc='" + jsonrpc + '\''
+                + ", id='" + id + '\''
+                + ", code=" + code
+                + ", message='" + message + '\''
+                + '}';
     }
 }

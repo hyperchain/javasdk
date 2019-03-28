@@ -7,10 +7,14 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.Response;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
- * ProviderManager负责负载均衡，封装header等
+ * ProviderManager responsible for load balancing, encapsulating headers, etc.
  */
 public class ProviderManager {
     public List<HttpProvider> httpProviders;
@@ -21,6 +25,11 @@ public class ProviderManager {
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
 
+    /**
+     * create provider manager by {@link HttpProvider}.
+     * @param httpProviders {@link HttpProvider}
+     * @return provider manager
+     */
     public static ProviderManager createManager(HttpProvider... httpProviders) {
         if (httpProviders == null || httpProviders.length == 0) {
             throw new IllegalStateException("can't initialize a ProviderManager instance with empty HttpProviders");
@@ -39,7 +48,7 @@ public class ProviderManager {
 
         List<HttpProvider> providers = new ArrayList<>();
         for (int id : ids) {
-            if (id > 0 && id < httpProviders.size()) {
+            if (id >= 0 && id < httpProviders.size()) {
                 providers.add(httpProviders.get(id));
             } else {
                 throw new RequestException(RequestExceptionCode.PARAM_ERROR, "id is ouf of range");
@@ -48,6 +57,13 @@ public class ProviderManager {
         return providers;
     }
 
+    /**
+     * send request to node and get response.
+     * @param request request
+     * @param ids specific ids
+     * @return response string
+     * @throws RequestException -
+     */
     public String send(Request request, int... ids) throws RequestException {
         List<HttpProvider> hProviders = checkIds(ids);
         // todo: 考虑负载均衡和断线重连
@@ -73,12 +89,12 @@ public class ProviderManager {
         throw new AllNodesBadException("No node to connect!");
     }
 
-    private String sendTo(Request request, HttpProvider Provider) throws RequestException {
+    private String sendTo(Request request, HttpProvider provider) throws RequestException {
         String body = getRequestBody(request);
         Map<String, String> headers = getHeaders(body);
 
         // todo: 将选择好的节点记录到request的 providerIndex变量中，便于重发等操作
-        return Provider.post(body, headers);
+        return provider.post(body, headers);
     }
 
     private String getRequestBody(Request request) {

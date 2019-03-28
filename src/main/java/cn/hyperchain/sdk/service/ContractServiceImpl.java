@@ -13,16 +13,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @ClassName: ContractServiceImpl
- * @Description:
- * @author: tomkk
- * @date: 2019-03-14
+ * default contract service interface's implement.
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public class ContractServiceImpl implements ContractService {
     private ProviderManager providerManager;
     private Gson gson;
-    private final String CONTRACT_PREFIX = "contract_";
+    private static final String CONTRACT_PREFIX = "contract_";
     private String namespace = "global";
     private String jsonrpc = "2.0";
 
@@ -31,6 +30,12 @@ public class ContractServiceImpl implements ContractService {
         this.gson = new Gson();
     }
 
+    /**
+     * deploy a contract.
+     * @param transaction deploy transaction
+     * @param nodeIds specific ids
+     * @return {@link Request} of {@link TxHashResponse}
+     */
     public Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds) {
         ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(methodName("deployContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
@@ -44,6 +49,12 @@ public class ContractServiceImpl implements ContractService {
         return txHashResponseContractRequest;
     }
 
+    /**
+     * invoke a contract.
+     * @param transaction invoke transaction
+     * @param nodeIds specific ids
+     * @return {@link Request} of {@link TxHashResponse}
+     */
     public Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds) {
         ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(methodName("invokeContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
@@ -58,6 +69,12 @@ public class ContractServiceImpl implements ContractService {
         return txHashResponseContractRequest;
     }
 
+    /**
+     * get transaction receipt by txHash.
+     * @param txHash transaction hash
+     * @param nodeIds specific ids
+     * @return {@link Request} of {@link ReceiptResponse}
+     */
     public Request<ReceiptResponse> getReceipt(String txHash, int... nodeIds) {
         PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
 

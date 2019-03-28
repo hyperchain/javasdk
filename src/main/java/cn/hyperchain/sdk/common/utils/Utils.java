@@ -24,12 +24,22 @@ public class Utils {
         return random;
     }
 
+    /**
+     * create transaction random nonce.
+     * @return nonce
+     */
     public static long genNonce() {
         String nonceString = new BigInteger(120, random).toString(10);
         nonceString = nonceString.substring(0, 16);
         return Long.parseLong(nonceString);
     }
 
+    /**
+     * create create random int value in range.
+     * @param min range start
+     * @param max range end
+     * @return result
+     */
     public static int randInt(int min, int max) {
         Random rand = getRandomInstance();
         return rand.nextInt((max - min) + 1) + min;

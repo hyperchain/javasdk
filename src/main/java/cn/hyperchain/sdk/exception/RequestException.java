@@ -1,6 +1,6 @@
 package cn.hyperchain.sdk.exception;
 
-public class RequestException extends Exception{
+public class RequestException extends Exception {
     private Integer code;
     private String msg;
 
@@ -8,19 +8,33 @@ public class RequestException extends Exception{
 
     }
 
+    /**
+     * create RequestException by code and msg.
+     * @param code code
+     * @param msg message
+     */
     public RequestException(Integer code, String msg) {
         super(msg);
         this.code = code;
         this.msg = msg;
     }
 
-    public RequestException(RequestExceptionCode rsCode){
+    /**
+     * create RequestException by {@link RequestExceptionCode}.
+     * @param rsCode {@link RequestExceptionCode}
+     */
+    public RequestException(RequestExceptionCode rsCode) {
         super(rsCode.getMsg());
         this.code = rsCode.getCode();
         this.msg = rsCode.getMsg();
     }
 
-    public RequestException(RequestExceptionCode rsCode, String addMsg){
+    /**
+     * create RequestException by rsCode and msg.
+     * @param rsCode {@link RequestExceptionCode}
+     * @param addMsg message
+     */
+    public RequestException(RequestExceptionCode rsCode, String addMsg) {
         super(rsCode.getMsg() + " cause: " + addMsg);
         this.code = rsCode.getCode();
         this.msg = rsCode.getMsg() + " cause: " + addMsg;

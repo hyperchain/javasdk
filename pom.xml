@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
         <litesdk.version>0.0.1</litesdk.version>
+        <maven.checkstyle.version>3.0.0</maven.checkstyle.version>
+        <maven.javadoc.version>2.9.1</maven.javadoc.version>
     </properties>
 
     <groupId>cn.hyperchain</groupId>
     <artifactId>litesdk</artifactId>
     <version>${litesdk.version}</version>
+    <packaging>jar</packaging>
+
+    <name>Hyperchain LiteSDK</name>
+    <description>A Java client tool for Hyperchain</description>
+    <url>https://www.hyperchain.cn/</url>
+
+    <scm>
+        <url>scm:git:git://github.com/hyperchain/javasdk</url>
+        <developerConnection>scm:git:ssh://github.com:/hyperchain/javasdk.git</developerConnection>
+        <connection>git@github.com:hyperchain/javasdk.git</connection>
+    </scm>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -103,10 +120,6 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.4.1</version>
                 <configuration>
-                    <excludes>
-                        <exclude>*.properties</exclude>
-                        <exclude>*.jar</exclude>
-                    </excludes>
                     <!-- get all project dependencies -->
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -117,7 +130,6 @@
                             <mainClass>cn.hyperchain.sdk</mainClass>
                         </manifest>
                     </archive>
-
                 </configuration>
                 <executions>
                     <execution>
@@ -130,51 +142,44 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.version}</version>
+                <configuration>
+                    <reportOutputDirectory>${basedir}/target/javadocs</reportOutputDirectory>
+                    <destDir>lite-docs</destDir>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>nexus</id>
-            <name>nexus</name>
-            <url>http://172.16.4.1:8081/repository/hyperchain/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>nexus</id>
-            <name>Nexus</name>
-            <url> http://172.16.4.1:8081/repository/hyperchain/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>maven-releases</id>
-            <name>Nexus Releases</name>
-            <!-- releases address in maven repository -->
-            <url>http://maven.internal.hyperchain.cn:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>maven-snapshots</id>
-            <name>Nexus Snapshots</name>
-            <!-- snapshots address in maven repository -->
-            <url>http://maven.internal.hyperchain.cn:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencies>
 
@@ -223,6 +228,7 @@
             <version>3.13.1</version>
         </dependency>
 
+        <!-- ignore when deploy -->
         <!-- test hvm jar -->
         <dependency>
             <groupId>com.hvm</groupId>

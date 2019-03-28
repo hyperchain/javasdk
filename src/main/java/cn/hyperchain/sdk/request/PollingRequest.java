@@ -5,10 +5,9 @@ import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 
 /**
- * @ClassName: PollingRequest
- * @Description:
- * @author: tomkk
- * @date: 2019-03-13
+ * request need to get receipt by polling.
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public class PollingRequest<T extends ReceiptResponse> extends Request<T> {

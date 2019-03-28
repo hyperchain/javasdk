@@ -3,10 +3,9 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.provider.ProviderManager;
 
 /**
- * @ClassName: ServiceManager
- * @Description:
- * @author: tomkk
- * @date: 2019-03-14
+ * service implements manager.
+ * @author tomkk
+ * @version 0.0.1
  */
 
 public class ServiceManager {

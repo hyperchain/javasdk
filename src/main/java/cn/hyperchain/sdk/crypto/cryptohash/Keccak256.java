@@ -1,11 +1,9 @@
-// $Id: Keccak256.java 189 2010-05-14 21:21:46Z tp $
-
 package cn.hyperchain.sdk.crypto.cryptohash;
 
 /**
  * <p>This class implements the Keccak-256 digest algorithm under the
  * {@link cn.hyperchain.sdk.crypto.cryptohash.Digest} API.</p>
- * <p>
+ *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *

@@ -75,20 +75,20 @@ public class DefaultHttpProvider implements HttpProvider {
 
         try {
             response = this.httpClient.newCall(request).execute();
-        } catch (IOException e) {
+        } catch (IOException exception) {
             this.status = PStatus.ABNORMAL;
             runNodeReconnect();
 
-            logger.info("Connect the node " + url + " failed. The reason is " + e.getMessage() + ". Please check. Now try send other node...");
+            logger.info("Connect the node " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
             throw new RequestException(RequestExceptionCode.NETWORK_PROBLEM);
         }
         if (response.isSuccessful()) {
             try {
                 return response.body().string();
-            } catch (IOException e) {
+            } catch (IOException exception) {
                 this.status = PStatus.ABNORMAL;
                 runNodeReconnect();
-                logger.info("Connect the node " + url + " failed. The reason is " + e.getMessage() + ". Please check. Now try send other node...");
+                logger.info("Connect the node " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
                 throw new RequestException(RequestExceptionCode.NETWORK_GETBODY_FAILED);
             }
         } else {
@@ -123,6 +123,9 @@ public class DefaultHttpProvider implements HttpProvider {
         this.config = config;
     }
 
+    /**
+     * when request error, need to reconnect the node.
+     */
     public void runNodeReconnect() {
 //        final String nodeUrl = url;
 //        final APIRequest apiRequest = new APIRequest(RPCVersion.V2_0, namespace, APIType.NODE, "getNodes", "[]", 1);

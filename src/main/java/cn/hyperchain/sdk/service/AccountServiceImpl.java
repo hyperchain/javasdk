@@ -9,6 +9,10 @@ public class AccountServiceImpl implements AccountService {
 
     AccountServiceImpl() {}
 
+    /**
+     * generate a sm2 account.
+     * @return {@link Account} sm2 account
+     */
     public Account genSM2Account() {
         String[] result = new String[5];
         SM2Util.generateKeyPair(result);

@@ -1,5 +1,3 @@
-// $Id: DigestEngine.java 229 2010-06-16 20:22:27Z tp $
-
 package cn.hyperchain.sdk.crypto.cryptohash;
 
 /**
@@ -7,7 +5,7 @@ package cn.hyperchain.sdk.crypto.cryptohash;
  * functions. It takes care of some of the API, and also provides an
  * internal data buffer whose length is equal to the hash function
  * internal block length.</p>
- * <p>
+ *
  * <p>Classes which use this template MUST provide a working {@link
  * #getBlockLength} method even before initialization (alternatively,
  * they may define a custom {@link #getInternalBlockLength} which does
@@ -15,7 +13,7 @@ package cn.hyperchain.sdk.crypto.cryptohash;
  * also be operational from the beginning, but it is acceptable that it
  * returns 0 while the {@link #doInit} method has not been called
  * yet.</p>
- * <p>
+ *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *

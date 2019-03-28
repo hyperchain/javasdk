@@ -20,19 +20,24 @@ import java.security.SecureRandom;
 public class SM2Util {
 
     public static final SM2P256V1Curve CURVE = new SM2P256V1Curve();
-    public final static BigInteger SM2_ECC_P = CURVE.getQ();
-    public final static BigInteger SM2_ECC_A = CURVE.getA().toBigInteger();
-    public final static BigInteger SM2_ECC_B = CURVE.getB().toBigInteger();
-    public final static BigInteger SM2_ECC_N = CURVE.getOrder();
-    public final static BigInteger SM2_ECC_H = CURVE.getCofactor();
-    public final static BigInteger SM2_ECC_GX = new BigInteger(
+    public static final BigInteger SM2_ECC_P = CURVE.getQ();
+    public static final BigInteger SM2_ECC_A = CURVE.getA().toBigInteger();
+    public static final BigInteger SM2_ECC_B = CURVE.getB().toBigInteger();
+    public static final BigInteger SM2_ECC_N = CURVE.getOrder();
+    public static final BigInteger SM2_ECC_H = CURVE.getCofactor();
+    public static final BigInteger SM2_ECC_GX = new BigInteger(
             "32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", 16);
-    public final static BigInteger SM2_ECC_GY = new BigInteger(
+    public static final BigInteger SM2_ECC_GY = new BigInteger(
             "BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", 16);
     public static final ECPoint G_POINT = CURVE.createPoint(SM2_ECC_GX, SM2_ECC_GY);
     public static final ECDomainParameters DOMAIN_PARAMS = new ECDomainParameters(CURVE, G_POINT,
             SM2_ECC_N, SM2_ECC_H);
 
+    /**
+     * create a random key pair of sm.
+     * @param keyPair result
+     * @return create is successful
+     */
     public static boolean generateKeyPair(String[] keyPair) {
         if (keyPair.length < 5) {
             return false;
@@ -51,9 +56,9 @@ public class SM2Util {
         ECParameterSpec ecSpec = new ECParameterSpec(CURVE, G_POINT, SM2_ECC_N);
         JCEECPublicKey jpub = new JCEECPublicKey("EC", (ECPublicKeyParameters) key.getPublic(), ecSpec);
         JCEECPrivateKey jpriv = new JCEECPrivateKey("EC", (ECPrivateKeyParameters) key.getPrivate(), jpub, ecSpec);
-        KeyPair aKeypair = new KeyPair(jpub, jpriv);
-        byte[] jPubBytes = aKeypair.getPublic().getEncoded();
-        keyPair[4] = ByteUtil.toHex(jPubBytes);
+        KeyPair keypair = new KeyPair(jpub, jpriv);
+        byte[] pubBytes = keypair.getPublic().getEncoded();
+        keyPair[4] = ByteUtil.toHex(pubBytes);
         return true;
     }
 
