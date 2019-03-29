@@ -1,0 +1,22 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+dist: trusty
+
+install:
+  - docker pull hyperchaincn/hvmd
+  - docker run -d --rm --name=hvmd -p 9999:9999 hyperchaincn/hvmd
+
+before_script:
+  - mvn --version
+  - mvn clean
+
+script:
+  - mvn validate
+  - mvn install
+  - mvn test
+
+after_success:
+  - mvn jacoco:report coveralls:report

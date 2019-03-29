@@ -6,6 +6,8 @@
         <litesdk.version>0.0.1</litesdk.version>
         <maven.checkstyle.version>3.0.0</maven.checkstyle.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <groupId>cn.hyperchain</groupId>
@@ -50,6 +52,12 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
             </plugin>
 
             <plugin>
