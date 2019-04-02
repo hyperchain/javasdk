@@ -6,3 +6,16 @@
 This is a light JavaSDK for [Hyperchain](http://www.hyperchain.cn).
 
 To get more information you can view [docs](http://docs.hyperchain.cn), use `hvmd` and `listSDK` to start a enjoyable journey.
+
+## Get started
+
+1. maven
+
+```
+<dependency>
+    <groupId>cn.hyperchain</groupId>
+    <artifactId>litesdk</artifactId>
+    <version>0.0.1</version>
+</dependency>
+
+```
