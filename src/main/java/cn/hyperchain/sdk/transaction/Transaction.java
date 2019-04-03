@@ -1,10 +1,13 @@
 package cn.hyperchain.sdk.transaction;
 
 import cn.hyperchain.contract.BaseInvoke;
+import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.Utils;
 import org.apache.log4j.Logger;
 
+import java.nio.charset.Charset;
 import java.util.Date;
 
 public class Transaction {
@@ -19,17 +22,23 @@ public class Transaction {
     private boolean simulate;
     private VMType vmType;
     private int opCode;
-    private String extra;
+    private String extra = "";
     private long timestamp;
     private long nonce;
     private String signature = "default";
+    private String needHashString;
 
     public static class Builder {
         Transaction transaction;
 
-        Builder(String from) {
+        /**
+         * create transfer or generate transaction.
+         * @param from account address
+         */
+        public Builder(String from) {
             transaction = new Transaction();
-            transaction.setFrom(from);
+            transaction.setFrom(chPrefix(from));
+            transaction.setVmType(VMType.EVM);
         }
 
         /**
@@ -70,6 +79,7 @@ public class Transaction {
         public Transaction build() {
             transaction.setTimestamp(genTimestamp());
             transaction.setNonce(genNonce());
+            transaction.setNeedHashString();
             return transaction;
         }
     }
@@ -87,7 +97,7 @@ public class Transaction {
          */
         public Builder deploy(String jarPath) {
             String payload = Encoder.encodeDeployJar(jarPath);
-            super.transaction.setTo("0x");
+            super.transaction.setTo("0x0");
             super.transaction.setPayload(payload);
             return this;
         }
@@ -106,8 +116,25 @@ public class Transaction {
         }
     }
 
-    private void sign() {
-        throw new UnsupportedOperationException();
+    private void setNeedHashString() {
+        String value = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
+        this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
+                            + "&to=" + chPrefix(this.to.toLowerCase())
+                            + "&value=" + value
+                            + "&timestamp=0x" + Long.toHexString(this.timestamp)
+                            + "&nonce=0x" + Long.toHexString(this.nonce)
+                            + "&opcode=" + this.opCode
+                            + "&extra=" + this.extra
+                            + "&vmtype=" + this.vmType.getType();
+    }
+
+    public void sign(Account account) {
+        byte[] sourceData = this.needHashString.getBytes(Charset.forName("UTF-8"));
+        this.signature = ByteUtil.toHex(account.sign(sourceData));
+    }
+
+    private static String chPrefix(String origin) {
+        return origin.startsWith("0x") ? origin : "0x" + origin;
     }
 
     private static Long genNonce() {

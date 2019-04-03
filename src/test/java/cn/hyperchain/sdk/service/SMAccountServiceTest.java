@@ -3,9 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.account.Account;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class AccountServiceTest {
+public class SMAccountServiceTest {
 
     private AccountService accountService = ServiceManager.getAccountService(null);
 

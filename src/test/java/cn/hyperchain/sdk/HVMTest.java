@@ -27,8 +27,9 @@ public class HVMTest {
         ContractService contractService = ServiceManager.getContractService(providerManager);
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         // 3. build transaction
-        Account account = accountService.genSM2Account();
+        Account account = accountService.genECAccount();
         Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy("hvm-jar/hvmbasic-1.0.0-student.jar").build();
+        transaction.sign(account);
         // 4. get request
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
         // 5. polling && get result && decode result
@@ -36,7 +37,9 @@ public class HVMTest {
         System.out.println("部署返回(未解码): " + receiptResponse.getRet());
         System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
         // 6. invoke
+        account = accountService.genSM2Account();
         Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(receiptResponse.getContractAddress(), new StudentInvoke()).build();
+        transaction1.sign(account);
         // 7. request
         ReceiptResponse receiptResponse1 = contractService.invoke(transaction1).send().polling();
         // 8. get result & decode result

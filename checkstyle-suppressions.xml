@@ -7,4 +7,8 @@
 <suppressions>
     <suppress checks="Check"
               files="cn.hyperchain.sdk.crypto.cryptohash.*"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.crypto.ecdsa.ECKey"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.crypto.jce"/>
 </suppressions>

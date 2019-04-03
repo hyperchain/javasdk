@@ -14,7 +14,7 @@ public class Utils {
 
     static {
         try {
-            random = SecureRandom.getInstance("SHA1PRNG");
+            random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
             logger.error(e);
         }
@@ -43,5 +43,14 @@ public class Utils {
     public static int randInt(int min, int max) {
         Random rand = getRandomInstance();
         return rand.nextInt((max - min) + 1) + min;
+    }
+
+    /**
+     * judge String is null or "".
+     * @param str source str
+     * @return is blank
+     */
+    public static boolean isBlank(String str) {
+        return str == null || "".equals(str);
     }
 }
