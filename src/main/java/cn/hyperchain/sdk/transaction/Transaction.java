@@ -7,7 +7,6 @@ import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.Utils;
 import org.apache.log4j.Logger;
 
-import java.nio.charset.Charset;
 import java.util.Date;
 
 public class Transaction {
@@ -129,7 +128,7 @@ public class Transaction {
     }
 
     public void sign(Account account) {
-        byte[] sourceData = this.needHashString.getBytes(Charset.forName("UTF-8"));
+        byte[] sourceData = this.needHashString.getBytes(Utils.DEFAULT_CHARSET);
         this.signature = ByteUtil.toHex(account.sign(sourceData));
     }
 
@@ -231,5 +230,9 @@ public class Transaction {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getNeedHashString() {
+        return needHashString;
     }
 }

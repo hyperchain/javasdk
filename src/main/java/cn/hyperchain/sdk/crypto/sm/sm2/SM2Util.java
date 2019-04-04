@@ -6,6 +6,7 @@ import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.math.ec.ECPoint;
@@ -54,5 +55,34 @@ public class SM2Util {
         signer.init(true, param);
         signer.update(srcData, 0, srcData.length);
         return signer.generateSignature();
+    }
+
+    /**
+     * verify sm2 signature.
+     *
+     * @param publicKey publicKey bytes
+     * @param sourceData source data
+     * @param signature signature
+     * @return is legal
+     */
+    public static boolean verify(byte[] sourceData, byte[] signature, byte[] publicKey) {
+        ECPoint ecPoint = CURVE.decodePoint(publicKey);
+        ECPublicKeyParameters ecPublicKeyParameters = new ECPublicKeyParameters(ecPoint, DOMAIN_PARAMS);
+        return verify(sourceData, signature, ecPublicKeyParameters);
+    }
+
+    /**
+     * verify sm2 signature.
+     *
+     * @param ecPublicKeyParameters ecPublicKey param
+     * @param sourceData source data
+     * @param signature signature
+     * @return is legal
+     */
+    public static boolean verify(byte[] sourceData, byte[] signature, ECPublicKeyParameters ecPublicKeyParameters) {
+        SM2Signer signer = new SM2Signer();
+        signer.init(false, ecPublicKeyParameters);
+        signer.update(sourceData, 0, sourceData.length);
+        return signer.verifySignature(signature);
     }
 }
