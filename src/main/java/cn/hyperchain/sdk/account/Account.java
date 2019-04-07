@@ -2,17 +2,30 @@ package cn.hyperchain.sdk.account;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.crypto.CipherUtil;
+import cn.hyperchain.sdk.crypto.HashUtil;
+import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
+import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
+import cn.hyperchain.sdk.exception.AccountException;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 import org.apache.log4j.Logger;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.math.ec.ECPoint;
+
+import java.math.BigInteger;
 
 public abstract class Account {
     protected final Logger logger = Logger.getLogger(Account.class);
 
     protected static final byte[] ECFlag = new byte[] {0};
     protected static final byte[] SMFlag = new byte[] {1};
+
+    private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     @Expose
     protected String address;
@@ -29,34 +42,11 @@ public abstract class Account {
      * create account json instance by param.
      * @param publicKey public key hex
      * @param privateKey private key hex
-     * @param password password
      * @param version account version
      * @param algo account private key algorithm
      */
-    public Account(String address, String publicKey, String privateKey, String password, Version version, Algo algo) {
-        switch (algo) {
-            case ECRAW:
-            case SMRAW:
-                this.privateKey = privateKey;
-                break;
-            case ECDES:
-            case SMDES:
-                this.privateKey = ByteUtil.toHex(CipherUtil.encryptDES(ByteUtil.fromHex(privateKey), password));
-                break;
-            case ECAES:
-            case SMAES:
-                this.privateKey = ByteUtil.toHex(CipherUtil.encryptAES(ByteUtil.fromHex(privateKey), password));
-                break;
-            case SMSM4:
-                throw new UnsupportedOperationException();
-            case EC3DES:
-            case SM3DES:
-                this.privateKey = ByteUtil.toHex(CipherUtil.encrypt3DES(ByteUtil.fromHex(privateKey), password));
-                break;
-            case ECKDF2:
-            default:
-                throw new RuntimeException("illegal algo type");
-        }
+    public Account(String address, String publicKey, String privateKey, Version version, Algo algo) {
+        this.privateKey = privateKey;
         this.publicKey = publicKey;
         this.address = address;
         this.version = version;
@@ -66,53 +56,94 @@ public abstract class Account {
     /**
      * get account from account json.
      * @param accountJson account json
+     * @param password password
+     * @return {@link Account}
      */
-    public Account(String accountJson) {
+    public static Account fromAccountJson(String accountJson, String password) {
         JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
-        this.address = jsonObject.get("address").getAsString();
-        this.publicKey = jsonObject.get("publicKey").getAsString();
-        this.privateKey = jsonObject.get("privateKey").getAsString();
-        if (jsonObject.has("version")) {
-            this.version = Version.getVersion(jsonObject.get("version").getAsString());
-        }
-        if (jsonObject.has("algo")) {
-            this.algo = Algo.getAlog(jsonObject.get("algo").getAsString());
+        String addressHex = jsonObject.get("address").getAsString();
+        String publicKeyHex = jsonObject.get("publicKey").getAsString();
+        String privateKeyHex = jsonObject.get("privateKey").getAsString();
+        Version version = Version.getVersion(jsonObject.get("version").getAsString());
+        Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
+        byte[] privateKey = decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password);
+        if (algo.isSM()) {
+            ECPoint ecPoint = SM2Util.CURVE.decodePoint(ByteUtil.fromHex(publicKeyHex));
+            ECPublicKeyParameters publicKeyParameters = new ECPublicKeyParameters(ecPoint, SM2Util.DOMAIN_PARAMS);
+            ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, ByteUtil.fromHex(privateKeyHex)), SM2Util.DOMAIN_PARAMS);
+            AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(publicKeyParameters, privateKeyParameters);
+            if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParameters.getQ().getEncoded(false))))) {
+                throw new AccountException("account address is not matching with private key");
+            }
+            return new SMAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
+        } else {
+            ECKey ecKey = ECKey.fromPrivate(privateKey);
+            if (!addressHex.equals(ByteUtil.toHex(ecKey.getAddress()))) {
+                throw new AccountException("account address is not matching with private key");
+            }
+            return new ECAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, ecKey);
         }
     }
 
     /**
-     * decode account json to raw.
-     * @param accountJson account json encrypted by algorithm
+     * decode private key by password and specific account algo.
+     * @param privateKey private key bytes
+     * @param algo algo
      * @param password password
-     * @return account raw json
+     * @return decoded private key
      */
-    public static String decodeAccount(String accountJson, String password) {
-//        Account account = new Account(accountJson);
-//        if (account.version == null) {
-//            account.version = Version.V3;
-//        }
-//        String privateKey = account.getPrivateKey();
-//        switch (account.getAlgo()) {
-//            case SMRAW:
-//                break;
-//            case SMDES:
-//                account.privateKey = ByteUtil.toHex(CipherUtil.decryptDES(ByteUtil.toBytes(privateKey), password));
-//                break;
-//            case SMAES:
-//                account.privateKey = ByteUtil.toHex(CipherUtil.decryptAES(ByteUtil.toBytes(privateKey), password));
-//                break;
-//            case SMSM4:
-//                throw new UnsupportedOperationException();
-//            case SM3DES:
-//                account.privateKey = ByteUtil.toHex(CipherUtil.decrypt3DES(ByteUtil.toBytes(privateKey), password));
-//                break;
-//            default:
-//                break;
-//        }
-//        account.algo = Algo.SMRAW;
-//        account.privateKey = account.privateKey.toUpperCase();
-//        return new Gson().toJson(account);
-        return "";
+    public static byte[] decodePrivateKey(byte[] privateKey, Algo algo, String password) {
+        switch (algo) {
+            case ECRAW:
+            case SMRAW:
+                break;
+            case ECDES:
+            case SMDES:
+                privateKey = CipherUtil.decryptDES(privateKey, password);
+                break;
+            case ECAES:
+            case SMAES:
+                privateKey = CipherUtil.decryptAES(privateKey, password);
+                break;
+            case EC3DES:
+            case SM3DES:
+                privateKey = CipherUtil.decrypt3DES(privateKey, password);
+                break;
+            default:
+                throw new AccountException("illegal account type");
+        }
+        return privateKey;
+    }
+
+    /**
+     * encode private key by password and specific account algo.
+     * @param privateKey private key bytes
+     * @param algo algo
+     * @param password password
+     * @return encoded private key
+     */
+    public static byte[] encodePrivateKey(byte[] privateKey, Algo algo, String password) {
+        switch (algo) {
+            case ECRAW:
+            case SMRAW:
+                break;
+            case ECDES:
+            case SMDES:
+                privateKey = CipherUtil.encryptDES(privateKey, password);
+                break;
+            case ECAES:
+            case SMAES:
+                privateKey = CipherUtil.encryptAES(privateKey, password);
+                break;
+            case EC3DES:
+            case SM3DES:
+                privateKey = CipherUtil.encrypt3DES(privateKey, password);
+                break;
+            case SMSM4:
+            default:
+                throw new AccountException("illegal account type");
+        }
+        return privateKey;
     }
 
     public String getAddress() {
@@ -141,9 +172,6 @@ public abstract class Account {
 
     @Override
     public String toString() {
-        if (this.version == null) {
-            this.version = Version.V3;
-        }
         return "{"
                 + "address='" + address + '\''
                 + ", publicKey='" + publicKey + '\''
@@ -154,6 +182,6 @@ public abstract class Account {
     }
 
     public String toJson() {
-        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(this);
+        return gson.toJson(this);
     }
 }

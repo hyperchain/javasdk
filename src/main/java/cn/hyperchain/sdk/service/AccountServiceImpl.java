@@ -9,6 +9,7 @@ import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
+import cn.hyperchain.sdk.exception.AccountException;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
@@ -20,30 +21,50 @@ public class AccountServiceImpl implements AccountService {
 
     AccountServiceImpl() {}
 
-    /**
-     * generate a sm2 account.
-     * @return {@link Account} sm2 account
-     */
-    public Account genSM2Account() {
-        AsymmetricCipherKeyPair keyPair = SM2Util.generateKeyPair();
-        ECPrivateKeyParameters ecPriv = (ECPrivateKeyParameters) keyPair.getPrivate();
-        ECPublicKeyParameters ecPub = (ECPublicKeyParameters) keyPair.getPublic();
-        BigInteger privateKey = ecPriv.getD();
-
-        byte[] publicKey = ecPub.getQ().getEncoded(false);
-        String publicKeyHex = ByteUtil.toHex(publicKey);
-        String privateKeyHex = ByteUtil.toHex(privateKey.toByteArray());
-        String address = ByteUtil.toHex(HashUtil.sha3omit12(publicKey));
-
-        return new SMAccount(address, publicKeyHex, privateKeyHex, "", Version.V3, Algo.SMRAW, keyPair);
+    @Override
+    public Account genAccount(Algo algo) {
+        switch (algo) {
+            case ECRAW:
+            case SMRAW:
+                return this.genAccount(algo, null);
+            default:
+                throw new AccountException("illegal account type, you can only generate raw account type");
+        }
     }
 
     @Override
-    public Account genECAccount() {
-        ECKey ecKey = new ECKey(new SecureRandom());
-        String address = ByteUtil.toHex(ecKey.getAddress());
-        String publicKeyHex = ByteUtil.toHex(ecKey.getPubKey());
-        String privateKeyHex = ByteUtil.toHex(ecKey.getPrivKeyBytes());
-        return new ECAccount(address, publicKeyHex, privateKeyHex, "", Version.V3, Algo.ECRAW, ecKey);
+    public Account genAccount(Algo algo, String password) {
+        byte[] address;
+        byte[] publicKey;
+        byte[] privateKey;
+        ECKey ecKey;
+        AsymmetricCipherKeyPair keyPair;
+        if (algo.isSM()) {
+            keyPair = SM2Util.generateKeyPair();
+            ECPrivateKeyParameters ecPriv = (ECPrivateKeyParameters) keyPair.getPrivate();
+            ECPublicKeyParameters ecPub = (ECPublicKeyParameters) keyPair.getPublic();
+            BigInteger privateKeyBI = ecPriv.getD();
+
+            publicKey = ecPub.getQ().getEncoded(false);
+            privateKey = Account.encodePrivateKey((ByteUtil.biConvert32Bytes(privateKeyBI)), algo, password);
+            address = HashUtil.sha3omit12(publicKey);
+            return new SMAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V3, algo, keyPair);
+        } else {
+            ecKey = new ECKey(new SecureRandom());
+            address = ecKey.getAddress();
+            publicKey = ecKey.getPubKey();
+            privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
+            return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V3, algo, ecKey);
+        }
+    }
+
+    @Override
+    public Account fromAccountJson(String accountJson) {
+        return this.fromAccountJson(accountJson, null);
+    }
+
+    @Override
+    public Account fromAccountJson(String accountJson, String password) {
+        return Account.fromAccountJson(accountJson, password);
     }
 }

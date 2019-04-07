@@ -13,8 +13,8 @@ public class SMAccount extends Account {
     @Expose(serialize = false, deserialize = false)
     private AsymmetricCipherKeyPair keyPair;
 
-    public SMAccount(String address, String publicKey, String privateKey, String password, Version version, Algo algo, AsymmetricCipherKeyPair keyPair) {
-        super(address, publicKey, privateKey, password, version, algo);
+    public SMAccount(String address, String publicKey, String privateKey, Version version, Algo algo, AsymmetricCipherKeyPair keyPair) {
+        super(address, publicKey, privateKey, version, algo);
         this.keyPair = keyPair;
     }
 

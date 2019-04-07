@@ -1,9 +1,14 @@
 package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.Algo;
 
 public interface AccountService {
-    Account genSM2Account();
+    Account genAccount(Algo algo);
 
-    Account genECAccount();
+    Account genAccount(Algo algo, String password);
+
+    Account fromAccountJson(String accountJson);
+
+    Account fromAccountJson(String accountJson, String password);
 }

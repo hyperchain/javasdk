@@ -10,8 +10,8 @@ public class ECAccount extends Account {
 
     private ECKey ecKey;
 
-    public ECAccount(String address, String publicKey, String privateKey, String password, Version version, Algo algo, ECKey ecKey) {
-        super(address, publicKey, privateKey, password, version, algo);
+    public ECAccount(String address, String publicKey, String privateKey, Version version, Algo algo, ECKey ecKey) {
+        super(address, publicKey, privateKey, version, algo);
         this.ecKey = ecKey;
     }
 

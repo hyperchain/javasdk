@@ -51,7 +51,11 @@ public enum Algo {
             case "0x13": return SMRAW;
             case "0x14": return SMAES;
             case "0x15": return SM3DES;
-            default: return null;
+            default: return ECRAW;
         }
+    }
+
+    public boolean isSM() {
+        return this.algo.startsWith("0x1");
     }
 }

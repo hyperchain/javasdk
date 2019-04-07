@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk;
 
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Decoder;
 import cn.hyperchain.sdk.crypto.SignerUtil;
@@ -30,9 +31,9 @@ public class HVMTest {
         ContractService contractService = ServiceManager.getContractService(providerManager);
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         // 3. build transaction
-        Account account = accountService.genSM2Account();
+        Account account = accountService.genAccount(Algo.SMRAW);
         Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy("hvm-jar/hvmbasic-1.0.0-student.jar").build();
-        transaction.sign(account);
+        transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
         Assert.assertTrue(SignerUtil.verifySign(transaction.getNeedHashString(), transaction.getSignature(), account.getPublicKey()));
         // 4. get request
@@ -42,9 +43,9 @@ public class HVMTest {
         System.out.println("部署返回(未解码): " + receiptResponse.getRet());
         System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
         // 6. invoke
-        account = accountService.genECAccount();
+        account = accountService.genAccount(Algo.ECRAW);
         Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(receiptResponse.getContractAddress(), new StudentInvoke()).build();
-        transaction1.sign(account);
+        transaction1.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction1.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction1.getSignature())));
         Assert.assertTrue(SignerUtil.verifySign(transaction1.getNeedHashString(), transaction1.getSignature(), account.getPublicKey()));
         // 7. request
