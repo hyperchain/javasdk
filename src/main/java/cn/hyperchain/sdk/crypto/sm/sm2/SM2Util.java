@@ -1,20 +1,18 @@
 package cn.hyperchain.sdk.crypto.sm.sm2;
 
-import cn.hyperchain.sdk.common.utils.ByteUtil;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.CipherParameters;
+import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
-import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
-import org.bouncycastle.jce.provider.JCEECPrivateKey;
-import org.bouncycastle.jce.provider.JCEECPublicKey;
-import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.crypto.params.ParametersWithRandom;
+import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 
 import java.math.BigInteger;
-import java.security.KeyPair;
 import java.security.SecureRandom;
 
 public class SM2Util {
@@ -25,48 +23,66 @@ public class SM2Util {
     public static final BigInteger SM2_ECC_B = CURVE.getB().toBigInteger();
     public static final BigInteger SM2_ECC_N = CURVE.getOrder();
     public static final BigInteger SM2_ECC_H = CURVE.getCofactor();
-    public static final BigInteger SM2_ECC_GX = new BigInteger(
-            "32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", 16);
-    public static final BigInteger SM2_ECC_GY = new BigInteger(
-            "BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", 16);
+    public static final BigInteger SM2_ECC_GX = new BigInteger("32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", 16);
+    public static final BigInteger SM2_ECC_GY = new BigInteger("BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", 16);
     public static final ECPoint G_POINT = CURVE.createPoint(SM2_ECC_GX, SM2_ECC_GY);
-    public static final ECDomainParameters DOMAIN_PARAMS = new ECDomainParameters(CURVE, G_POINT,
-            SM2_ECC_N, SM2_ECC_H);
+    public static final ECDomainParameters DOMAIN_PARAMS = new ECDomainParameters(CURVE, G_POINT, SM2_ECC_N, SM2_ECC_H);
 
     /**
      * create a random key pair of sm.
-     * @param keyPair result
-     * @return create is successful
+     *
+     * @return String array of publicKey and privateKey
      */
-    public static boolean generateKeyPair(String[] keyPair) {
-        if (keyPair.length < 5) {
-            return false;
-        }
-        AsymmetricCipherKeyPair key = generateKeyPairParameter();
-        ECPrivateKeyParameters ecpriv = (ECPrivateKeyParameters) key.getPrivate();
-        ECPublicKeyParameters ecpub = (ECPublicKeyParameters) key.getPublic();
-        BigInteger privateKey = ecpriv.getD();
-
-        keyPair[0] = ByteUtil.toHex(ecpub.getQ().getEncoded(false));
-        keyPair[1] = ByteUtil.toHex(ecpub.getQ().getAffineXCoord().toBigInteger().toByteArray());
-        keyPair[2] = ByteUtil.toHex(ecpub.getQ().getAffineYCoord().toBigInteger().toByteArray());
-        keyPair[3] = ByteUtil.toHex(privateKey.toByteArray());
-
-        //ECPoint to der
-        ECParameterSpec ecSpec = new ECParameterSpec(CURVE, G_POINT, SM2_ECC_N);
-        JCEECPublicKey jpub = new JCEECPublicKey("EC", (ECPublicKeyParameters) key.getPublic(), ecSpec);
-        JCEECPrivateKey jpriv = new JCEECPrivateKey("EC", (ECPrivateKeyParameters) key.getPrivate(), jpub, ecSpec);
-        KeyPair keypair = new KeyPair(jpub, jpriv);
-        byte[] pubBytes = keypair.getPublic().getEncoded();
-        keyPair[4] = ByteUtil.toHex(pubBytes);
-        return true;
-    }
-
-    private static AsymmetricCipherKeyPair generateKeyPairParameter() {
+    public static AsymmetricCipherKeyPair generateKeyPair() {
         SecureRandom random = new SecureRandom();
         ECKeyGenerationParameters keyGenerationParams = new ECKeyGenerationParameters(DOMAIN_PARAMS, random);
         ECKeyPairGenerator keyGen = new ECKeyPairGenerator();
         keyGen.init(keyGenerationParams);
         return keyGen.generateKeyPair();
+    }
+
+    /**
+     * get signature by sm2 key pair, use default userID.
+     *
+     * @param keyPair ECC key pair
+     * @param srcData source data
+     * @return signature bytes
+     * @throws CryptoException -
+     */
+    public static byte[] sign(AsymmetricCipherKeyPair keyPair, byte[] srcData) throws CryptoException {
+        SM2Signer signer = new SM2Signer();
+        CipherParameters param = new ParametersWithRandom(keyPair.getPrivate(), new SecureRandom());
+        signer.init(true, param);
+        signer.update(srcData, 0, srcData.length);
+        return signer.generateSignature();
+    }
+
+    /**
+     * verify sm2 signature.
+     *
+     * @param publicKey publicKey bytes
+     * @param sourceData source data
+     * @param signature signature
+     * @return is legal
+     */
+    public static boolean verify(byte[] sourceData, byte[] signature, byte[] publicKey) {
+        ECPoint ecPoint = CURVE.decodePoint(publicKey);
+        ECPublicKeyParameters ecPublicKeyParameters = new ECPublicKeyParameters(ecPoint, DOMAIN_PARAMS);
+        return verify(sourceData, signature, ecPublicKeyParameters);
+    }
+
+    /**
+     * verify sm2 signature.
+     *
+     * @param ecPublicKeyParameters ecPublicKey param
+     * @param sourceData source data
+     * @param signature signature
+     * @return is legal
+     */
+    public static boolean verify(byte[] sourceData, byte[] signature, ECPublicKeyParameters ecPublicKeyParameters) {
+        SM2Signer signer = new SM2Signer();
+        signer.init(false, ecPublicKeyParameters);
+        signer.update(sourceData, 0, sourceData.length);
+        return signer.verifySignature(signature);
     }
 }

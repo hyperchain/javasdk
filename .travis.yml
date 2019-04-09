@@ -7,7 +7,7 @@ dist: trusty
 
 install:
   - docker pull hyperchaincn/hvmd
-  - docker run -d --rm --name=hvmd -p 9999:9999 hyperchaincn/hvmd
+  - docker run -d --rm --name=hvmd -p 8081:9999 hyperchaincn/hvmd
 
 before_script:
   - mvn --version
