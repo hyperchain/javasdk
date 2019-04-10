@@ -5,7 +5,7 @@
 
 This is a light JavaSDK for [Hyperchain](http://www.hyperchain.cn).
 
-To get more information you can view [docs](http://docs.hyperchain.cn), use `hvmd` and `listSDK` to start a enjoyable journey.
+To get more information you can view [docs](http://docs.hyperchain.cn), use `hvmd` and `liteSDK` to start a enjoyable journey.
 
 ## Get started
 
@@ -65,7 +65,7 @@ Transaction builder can create different transaction by different style of initi
 ```java
 // deploy
 Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy("hvm-jar/hvmbasic-1.0.0-student.jar").build();
-transaction.sign(accountService.fromAccountJson(account.toJson()));
+transaction.sign(account);
 
 // invoke
 Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(receiptResponse.getContractAddress(), new StudentInvoke()).build();
