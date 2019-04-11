@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 public class ProviderManagerTest {
     public ProviderManager providerManager;
-    public static String DEFAULT_URL = "localhost:9999";
+    public static String DEFAULT_URL = "localhost:8081";
 
     @Before
     public void setUp() throws Exception {
