@@ -27,9 +27,9 @@ public class DefaultHttpProvider implements HttpProvider {
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
     //media type
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public Request.Builder getBuilderHead() {
+    private Request.Builder getBuilderHead() {
         return new Request.Builder().header("User-Agent", "Mozilla/5.0");
     }
 
@@ -73,18 +73,22 @@ public class DefaultHttpProvider implements HttpProvider {
                 .post(requestBody)
                 .build();
 
+        logger.debug("[REQUEST] " + body);
+
         try {
             response = this.httpClient.newCall(request).execute();
         } catch (IOException exception) {
             this.status = PStatus.ABNORMAL;
             runNodeReconnect();
 
-            logger.info("Connect the node " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
+            logger.error("Connect the node " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
             throw new RequestException(RequestExceptionCode.NETWORK_PROBLEM);
         }
         if (response.isSuccessful()) {
             try {
-                return response.body().string();
+                String result = response.body().string();
+                logger.debug("[RESPONSE] " + result);
+                return result;
             } catch (IOException exception) {
                 this.status = PStatus.ABNORMAL;
                 runNodeReconnect();

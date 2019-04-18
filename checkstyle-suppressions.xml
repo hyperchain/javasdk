@@ -11,4 +11,6 @@
               files="cn.hyperchain.sdk.crypto.ecdsa.ECKey"/>
     <suppress checks="Check"
               files="cn.hyperchain.sdk.crypto.jce"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.common.solidity"/>
 </suppressions>

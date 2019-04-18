@@ -23,10 +23,6 @@ public class Encoder {
 
     private static final Logger logger = Logger.getLogger(Encoder.class);
 
-    private static boolean isAbsolutePath(String path) {
-        return path.startsWith("/") || path.startsWith("file:/") || path.contains(":\\");
-    }
-
     /**
      * get deploy payload.
      *
@@ -39,7 +35,7 @@ public class Encoder {
         BufferedInputStream bis = null;
         ByteArrayOutputStream baos = null;
         try {
-            if (isAbsolutePath(path)) {
+            if (Utils.isAbsolutePath(path)) {
                 jar = new JarFile(path, true);
                 fis = new FileInputStream(path);
             } else {

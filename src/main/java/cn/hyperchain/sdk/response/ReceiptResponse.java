@@ -21,7 +21,7 @@ public class ReceiptResponse extends Response {
         @Expose
         private String txHash;
         @Expose
-        private String[] log;
+        private EventLog[] log;
         @Expose
         private String vmType;
         @Expose
@@ -69,7 +69,7 @@ public class ReceiptResponse extends Response {
         return result.txHash;
     }
 
-    public String[] getLog() {
+    public EventLog[] getLog() {
         return result.log;
     }
 
