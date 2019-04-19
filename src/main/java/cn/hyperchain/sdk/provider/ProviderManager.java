@@ -1,10 +1,17 @@
 package cn.hyperchain.sdk.provider;
 
+import cn.hyperchain.sdk.common.utils.Async;
+import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
+import cn.hyperchain.sdk.crypto.cert.CertKeyPair;
 import cn.hyperchain.sdk.exception.AllNodesBadException;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
-import cn.hyperchain.sdk.response.Response;
+import cn.hyperchain.sdk.request.TCertRequest;
+import cn.hyperchain.sdk.response.TCertResponse;
+import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -17,13 +24,70 @@ import java.util.HashMap;
  * ProviderManager responsible for load balancing, encapsulating headers, etc.
  */
 public class ProviderManager {
-    public List<HttpProvider> httpProviders;
-    //public int requestIndex; // todo: requestIndex需要和Request进行绑定
+    private String namespace = "global";
+    private TCertPool tCertPool;
+    private List<HttpProvider> httpProviders;
+    private boolean isCFCA;
+    private static Gson gson = new Gson();
 
     private ProviderManager() {
     }
 
-    private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
+    private static Logger logger = Logger.getLogger(ProviderManager.class);
+
+    public static class Builder {
+        private ProviderManager providerManager;
+
+        public Builder() {
+            providerManager = new ProviderManager();
+        }
+
+        public Builder providers(HttpProvider... httpProviders) {
+            if (httpProviders == null || httpProviders.length == 0) {
+                throw new IllegalStateException("can't initialize a ProviderManager instance with empty HttpProviders");
+            }
+            providerManager.httpProviders = new ArrayList<>(httpProviders.length);
+            providerManager.httpProviders.addAll(Arrays.asList(httpProviders));
+            return this;
+        }
+
+        public Builder enableTCert(String sdkCertPath, String sdkCertPrivPath, String uniquePubPath, String uniquePrivPath) {
+            if (providerManager.tCertPool != null) {
+                logger.warn("warn: TCertPool has been initialized");
+            }
+            providerManager.isCFCA = false;
+            try {
+                TCertPool tCertPool = new TCertPool(sdkCertPath, sdkCertPrivPath, uniquePubPath, uniquePrivPath);
+                providerManager.settCertPool(tCertPool);
+            } catch (Exception e) {
+                throw new RuntimeException("init TCertPool error, cause " + e.getMessage());
+            }
+            return this;
+        }
+
+        public Builder cfca(String sdkCertPath, String sdkCertPrivPath) {
+            if (providerManager.tCertPool != null) {
+                logger.warn("warn: TCertPool has been initialized");
+            }
+            providerManager.isCFCA = true;
+            try {
+                TCertPool tCertPool = new TCertPool(sdkCertPath, sdkCertPrivPath);
+                providerManager.settCertPool(tCertPool);
+            } catch (Exception e) {
+                throw new RuntimeException("init TCertPool error, cause " + e.getMessage());
+            }
+            return this;
+        }
+
+        public Builder namespace(String namespace) {
+            providerManager.setNamespace(namespace);
+            return this;
+        }
+
+        public ProviderManager build() {
+            return providerManager;
+        }
+    }
 
     /**
      * create provider manager by {@link HttpProvider}.
@@ -48,8 +112,8 @@ public class ProviderManager {
 
         List<HttpProvider> providers = new ArrayList<>();
         for (int id : ids) {
-            if (id >= 0 && id < httpProviders.size()) {
-                providers.add(httpProviders.get(id));
+            if (id > 0 && id <= httpProviders.size()) {
+                providers.add(httpProviders.get(id - 1));
             } else {
                 throw new RequestException(RequestExceptionCode.PARAM_ERROR, "id is ouf of range");
             }
@@ -66,22 +130,23 @@ public class ProviderManager {
      */
     public String send(Request request, int... ids) throws RequestException {
         List<HttpProvider> hProviders = checkIds(ids);
-        // todo: 考虑负载均衡和断线重连
-        // todo: 考虑切换节点
-        for (HttpProvider hProvider : hProviders) {
+        int providerSize = hProviders.size();
+        int startIndex = Utils.randInt(1, providerSize);
+        for (int i = 0; i < providerSize; i ++) {
+            HttpProvider hProvider = hProviders.get((startIndex + i) % providerSize);
             if (hProvider.getStatus() == PStatus.NORMAL) {
-                // todo: 将选择好的节点记录到request的 providerIndex变量中，便于重发等操作
-//                request.setRequestNode(id);
+                logger.debug("[REQUEST] request node id: " + ((startIndex + i) % providerSize + 1));
                 try {
+                    request.setNamespace(this.namespace);
                     return sendTo(request, hProvider);
                 } catch (RequestException e) {
-                    if (e.getCode() == -9999) {
+                    if (e.getCode().equals(RequestExceptionCode.NETWORK_GETBODY_FAILED.getCode())) {
                         logger.debug("send to provider: " + hProvider.getUrl() + " failed");
+                        reconnect(hProvider);
                         continue;
                     }
-                    // other exception rethrow
+                    // throw other exception
                     throw e;
-                    // fixme : we should query all ids again.
                 }
             }
         }
@@ -90,23 +155,83 @@ public class ProviderManager {
     }
 
     private String sendTo(Request request, HttpProvider provider) throws RequestException {
-        String body = getRequestBody(request);
-        Map<String, String> headers = getHeaders(body);
+        String body = request.requestBody();
+        byte[] bobyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
+        Map<String, String> headers = new HashMap<>();
+        if (this.tCertPool != null) {
+            if (this.isCFCA) {
+                headers.put("tcert", this.tCertPool.getSdkCert());
+                headers.put("signature", this.tCertPool.getSdkCertKeyPair().signData(bobyBytes));
+            } else {
+                String tCert = this.tCertPool.getTCert(provider.getUrl());
+                if (tCert == null) {
+                    tCert = this.getTCert(this.tCertPool.getUniquePubKey(), this.tCertPool.getSdkCertKeyPair(), provider);
+                    this.tCertPool.setTCert(provider.getUrl(), tCert);
+                }
+                headers.put("tcert", tCert);
+                headers.put("signature", this.tCertPool.getUniqueKeyPair().signData(bobyBytes));
+            }
+            headers.put("msg", ByteUtil.toHex(bobyBytes));
+        }
 
-        // todo: 将选择好的节点记录到request的 providerIndex变量中，便于重发等操作
         return provider.post(body, headers);
     }
 
-    private String getRequestBody(Request request) {
-        return request.requestBody();
+    private String getTCert(String uniquePubKey, CertKeyPair sdkCertKeyPair, HttpProvider provider) throws RequestException {
+        TCertRequest tCertRequest = new TCertRequest("cert_getTCert", null, null);
+        tCertRequest.setNamespace(this.namespace);
+        Map<String, String> param = new HashMap<>();
+        param.put("pubkey", uniquePubKey);
+        tCertRequest.addParams(param);
+        String body = tCertRequest.requestBody();
+        byte[] bobyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("tcert", sdkCertKeyPair.getPublicKey());
+        headers.put("signature", sdkCertKeyPair.signData(bobyBytes));
+        headers.put("msg", ByteUtil.toHex(bobyBytes));
+        String response = provider.post(body, headers);
+        TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
+        return tCertResponse.getTCert();
     }
 
-    private Map<String, String> getHeaders(String body) {
-        return new HashMap<>();
+    private void reconnect(final HttpProvider provider) {
+        Request request = new NodeRequest("node_getNodes", null, null);
+        Async.run(() -> {
+            while (provider.getStatus() == PStatus.ABNORMAL) {
+                try {
+                    sendTo(request, provider);
+                } catch (RequestException e) {
+                    if (e.getCode().equals(RequestExceptionCode.NETWORK_PROBLEM.getCode())) {
+                        logger.error("reconnect to node " + provider.getUrl() + " failed, will try again...");
+                        Thread.sleep(20000L);
+                        continue;
+                    }
+                }
+                logger.info("reconnect to node " + provider.getUrl() + " success.");
+                provider.setStatus(PStatus.NORMAL);
+                return null;
+            }
+            return null;
+        });
     }
 
-    public <K extends Response> String sendRequest(Request<K> kRequest, int[] nodeIdxs) {
-        System.out.println(kRequest.requestBody());
-        return null;
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    public TCertPool gettCertPool() {
+        return tCertPool;
+    }
+
+    public void settCertPool(TCertPool tCertPool) {
+        this.tCertPool = tCertPool;
+    }
+
+    public boolean isCFCA() {
+        return isCFCA;
     }
 }

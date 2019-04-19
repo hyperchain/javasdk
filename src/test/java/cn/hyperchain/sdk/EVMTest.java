@@ -22,7 +22,7 @@ public class EVMTest {
     private static String PASSWORD = "123";
 
     @Test
-    public void testHVM() throws Exception {
+    public void testEVM() throws Exception {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
         ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);

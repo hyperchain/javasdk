@@ -31,7 +31,7 @@ public abstract class Request<K extends Response> {
     @Expose
     private String jsonrpc = "2.0";
     @Expose
-    private String namespace = "global";
+    private String namespace;
     @Expose
     private String method;
     @Expose

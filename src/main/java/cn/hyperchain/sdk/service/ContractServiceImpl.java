@@ -7,7 +7,6 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +16,14 @@ import java.util.Map;
  * @author tomkk
  * @version 0.0.1
  */
-
 public class ContractServiceImpl implements ContractService {
     private ProviderManager providerManager;
-    private Gson gson;
     private static final String CONTRACT_PREFIX = "contract_";
     private String namespace = "global";
     private String jsonrpc = "2.0";
 
     ContractServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
-        this.gson = new Gson();
     }
 
     /**
