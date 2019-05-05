@@ -1,7 +1,9 @@
 package cn.hyperchain.sdk.provider;
 
+import cn.hyperchain.sdk.common.utils.HttpsUtils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -18,7 +20,6 @@ public class DefaultHttpProvider implements HttpProvider {
     private static final String HTTPS = "https://";
 
     private String url;
-    private String config;
     private volatile PStatus status;
     private String httpPrefix;
 
@@ -27,22 +28,22 @@ public class DefaultHttpProvider implements HttpProvider {
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
     //media type
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public Request.Builder getBuilderHead() {
+    private static Request.Builder getBuilderHead() {
         return new Request.Builder().header("User-Agent", "Mozilla/5.0");
     }
 
-    private OkHttpClient httpClient = new OkHttpClient.Builder()
-            .readTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .build();
+    private OkHttpClient httpClient;
 
     public static class Builder {
         private DefaultHttpProvider defaultHttpProvider;
+        private OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         public Builder() {
+            builder.readTimeout(20, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .connectTimeout(20, TimeUnit.SECONDS);
             defaultHttpProvider = new DefaultHttpProvider();
             defaultHttpProvider.httpPrefix = HTTP;
         }
@@ -52,12 +53,16 @@ public class DefaultHttpProvider implements HttpProvider {
             return this;
         }
 
-        public Builder setConfig(String config) {
-            defaultHttpProvider.setConfig(config);
+        public Builder https(String tlsCa, String tlsPeerCert, String tlsPeerPriv) {
+            HttpsUtils.SSLParams sslSocketFactory = HttpsUtils.getSslSocketFactory(tlsCa, tlsPeerCert, tlsPeerPriv, HttpsUtils.DEFAULT_PASSWORD);
+            builder.sslSocketFactory(sslSocketFactory.getsSLSocketFactory(), sslSocketFactory.getTrustManager())
+                    .hostnameVerifier(HttpsUtils.hyperchainVerifier());
+            defaultHttpProvider.httpPrefix = HTTPS;
             return this;
         }
 
         public DefaultHttpProvider build() {
+            defaultHttpProvider.httpClient = builder.build();
             defaultHttpProvider.status = PStatus.NORMAL;
             return defaultHttpProvider;
         }
@@ -65,30 +70,36 @@ public class DefaultHttpProvider implements HttpProvider {
 
     @Override
     public String post(String body, Map<String, String> headers) throws RequestException {
-        //todo: check headers size
         RequestBody requestBody = RequestBody.create(JSON, body);
+        Headers.Builder headerBuilder = new Headers.Builder();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            headerBuilder.add(entry.getKey(), entry.getValue());
+        }
         Response response;
         Request request = getBuilderHead()
                 .url(httpPrefix + url)
+                .headers(headerBuilder.build())
                 .post(requestBody)
                 .build();
+
+        logger.debug("[REQUEST] url: " + httpPrefix + url);
+        logger.debug("[REQUEST] " + body);
 
         try {
             response = this.httpClient.newCall(request).execute();
         } catch (IOException exception) {
             this.status = PStatus.ABNORMAL;
-            runNodeReconnect();
-
-            logger.info("Connect the node " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
+            logger.error("Connect the node " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
             throw new RequestException(RequestExceptionCode.NETWORK_PROBLEM);
         }
         if (response.isSuccessful()) {
             try {
-                return response.body().string();
+                String result = response.body().string();
+                logger.debug("[RESPONSE] " + result);
+                return result;
             } catch (IOException exception) {
                 this.status = PStatus.ABNORMAL;
-                runNodeReconnect();
-                logger.info("Connect the node " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
+                logger.error("get response from " + url + " failed. The reason is " + exception.getMessage() + ". Please check. Now try send other node...");
                 throw new RequestException(RequestExceptionCode.NETWORK_GETBODY_FAILED);
             }
         } else {
@@ -107,65 +118,16 @@ public class DefaultHttpProvider implements HttpProvider {
     }
 
     @Override
+    public void setStatus(PStatus status) {
+        this.status = status;
+    }
+
+    @Override
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getConfig() {
-        return config;
-    }
-
-    public void setConfig(String config) {
-        this.config = config;
-    }
-
-    /**
-     * when request error, need to reconnect the node.
-     */
-    public void runNodeReconnect() {
-//        final String nodeUrl = url;
-//        final APIRequest apiRequest = new APIRequest(RPCVersion.V2_0, namespace, APIType.NODE, "getNodes", "[]", 1);
-//
-//
-//        //每隔20s，发送一个检测请求，目前为请求节点信息
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Request req = null;
-//                String params = apiRequest.serialize();
-//
-//                while (true) {
-//                    Request request = Post(params, nodeUrl);
-//                    Response response = null;
-//                    try {
-//                        response = httpClient.newCall(request).execute();
-//                    } catch (Exception e) {
-//
-//                    }
-//                    if (response != null && response.isSuccessful()) {
-//                        try {
-//                            response.body().string();
-//
-//                            status = PStatus.NORMAL;
-//                            logger.info("Node " + nodeUrl + " Reconnect Success!");
-//
-//                            return;
-//                        } catch (IOException e) {
-//                            //continue cycle
-//                        }
-//                    }
-//                    logger.debug("Node " + nodeUrl + " Reconnect failed, will try again " + reConnectTime + "ms later.");
-//                    try {
-//                        Thread.sleep(reConnectTime);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
     }
 }

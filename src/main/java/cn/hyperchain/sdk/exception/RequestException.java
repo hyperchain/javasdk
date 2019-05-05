@@ -4,10 +4,6 @@ public class RequestException extends Exception {
     private Integer code;
     private String msg;
 
-    public RequestException(){
-
-    }
-
     /**
      * create RequestException by code and msg.
      * @param code code
@@ -39,7 +35,6 @@ public class RequestException extends Exception {
         this.code = rsCode.getCode();
         this.msg = rsCode.getMsg() + " cause: " + addMsg;
     }
-
 
     public Integer getCode() {
         return code;

@@ -11,7 +11,6 @@ import cn.hyperchain.sdk.transaction.Transaction;
  * @author tomkk
  * @version 0.0.1
  */
-
 public class ContractRequest<T extends TxHashResponse> extends Request<T> {
     private Transaction transaction;
     private ContractService contractService;

@@ -5,6 +5,7 @@ import org.bouncycastle.util.encoders.Hex;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class ByteUtil {
 
@@ -76,6 +77,25 @@ public class ByteUtil {
     }
 
     /**
+     * convert BigInteger to signed bytes.
+     * @param b BigInteger
+     * @param numBytes the desired size
+     * @return numBytes byte long array
+     */
+    public static byte[] bigIntegerToBytesSigned(BigInteger b, int numBytes) {
+        if (b == null) {
+            return null;
+        }
+        byte[] bytes = new byte[numBytes];
+        Arrays.fill(bytes, b.signum() < 0 ? (byte) 0xFF : 0x00);
+        byte[] biBytes = b.toByteArray();
+        int start = (biBytes.length == numBytes + 1) ? 1 : 0;
+        int length = Math.min(biBytes.length, numBytes);
+        System.arraycopy(biBytes, start, bytes, numBytes - length, length);
+        return bytes;
+    }
+
+    /**
      * @param arrays - arrays to merge.
      * @return - merged array
      */
@@ -122,5 +142,16 @@ public class ByteUtil {
             System.arraycopy(n.toByteArray(), 0, tmpd, 32 - n.toByteArray().length, n.toByteArray().length);
         }
         return tmpd;
+    }
+
+    /**
+     * Cast hex encoded value from byte[] to BigInteger.
+     * null is parsed like byte[0]
+     *
+     * @param bb byte array contains the values
+     * @return unsigned positive BigInteger value.
+     */
+    public static BigInteger bytesToBigInteger(byte[] bb) {
+        return (bb == null || bb.length == 0) ? BigInteger.ZERO : new BigInteger(1, bb);
     }
 }

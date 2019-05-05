@@ -1,11 +1,13 @@
 package cn.hyperchain.sdk.crypto.sm.sm2;
 
+import cn.hyperchain.sdk.common.utils.ByteUtil;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
@@ -39,6 +41,20 @@ public class SM2Util {
         ECKeyPairGenerator keyGen = new ECKeyPairGenerator();
         keyGen.init(keyGenerationParams);
         return keyGen.generateKeyPair();
+    }
+
+    /**
+     * get signature by sm2 key pair, use default userID.
+     *
+     * @param keyPair private key bytes
+     * @param srcData source data
+     * @return signature bytes
+     * @throws CryptoException -
+     */
+    public static byte[] sign(byte[] keyPair, byte[] srcData) throws CryptoException {
+        ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, keyPair), SM2Util.DOMAIN_PARAMS);
+        AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(null, privateKeyParameters);
+        return sign(asymmetricCipherKeyPair, srcData);
     }
 
     /**

@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.transaction;
 
 import cn.hyperchain.contract.BaseInvoke;
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.Utils;
@@ -17,14 +18,14 @@ public class Transaction {
     private String from;
     private String to;
     private String payload;
-    private long value;
+    private long value = 0;
     private boolean simulate;
     private VMType vmType;
     private int opCode;
     private String extra = "";
     private long timestamp;
     private long nonce;
-    private String signature = "default";
+    private String signature = "";
     private String needHashString;
 
     public static class Builder {
@@ -115,11 +116,57 @@ public class Transaction {
         }
     }
 
+    public static class EVMBuilder extends Builder {
+        public EVMBuilder(String from) {
+            super(from);
+            super.transaction.setVmType(VMType.EVM);
+        }
+
+        /**
+         * deploy Solidity contract bin.
+         * @param bin contract bin
+         * @return {@link Builder}
+         */
+        public Builder deploy(String bin) {
+            super.transaction.setTo("0x0");
+            super.transaction.setPayload(bin);
+            return this;
+        }
+
+        /**
+         * deploy Solidity contract bin with params.
+         * @param bin contract bin
+         * @param abi contract abi
+         * @param params deploy contract params
+         * @return {@link Builder}
+         */
+        public Builder deploy(String bin, Abi abi, Object... params) {
+            super.transaction.setTo("0x0");
+            String payload = bin + ByteUtil.toHex(abi.getConstructor().encode(params));
+            super.transaction.setPayload(payload);
+            return this;
+        }
+
+        /**
+         * invoke Solidity contract whit specific method and params.
+         * @param methodName method name
+         * @param abi contract abi
+         * @param params invoke params
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String methodName, Abi abi, Object... params) {
+            super.transaction.setTo(contractAddress);
+            String payload = ByteUtil.toHex(abi.getFunction(methodName).encode(params));
+            super.transaction.setPayload(payload);
+            return this;
+        }
+    }
+
     private void setNeedHashString() {
-        String value = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
+        String value = Utils.isBlank(this.payload) ? String.valueOf(this.value) : this.payload;
         this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
                             + "&to=" + chPrefix(this.to.toLowerCase())
-                            + "&value=" + value
+                            + "&value=" + chPrefix(value).toLowerCase()
                             + "&timestamp=0x" + Long.toHexString(this.timestamp)
                             + "&nonce=0x" + Long.toHexString(this.nonce)
                             + "&opcode=" + this.opCode
