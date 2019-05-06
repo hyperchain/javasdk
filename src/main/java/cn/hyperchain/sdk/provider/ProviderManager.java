@@ -42,6 +42,11 @@ public class ProviderManager {
             providerManager = new ProviderManager();
         }
 
+        /**
+         * set provider manager http providers.
+         * @param httpProviders http providers
+         * @return {@link Builder}
+         */
         public Builder providers(HttpProvider... httpProviders) {
             if (httpProviders == null || httpProviders.length == 0) {
                 throw new IllegalStateException("can't initialize a ProviderManager instance with empty HttpProviders");
@@ -51,6 +56,14 @@ public class ProviderManager {
             return this;
         }
 
+        /**
+         * enable TCert to request http.
+         * @param sdkCertPath sdkCert file path
+         * @param sdkCertPrivPath sdkCert private key file path
+         * @param uniquePubPath unique public key file path
+         * @param uniquePrivPath unique private key file path
+         * @return {@link Builder}
+         */
         public Builder enableTCert(String sdkCertPath, String sdkCertPrivPath, String uniquePubPath, String uniquePrivPath) {
             if (providerManager.tCertPool != null) {
                 logger.warn("warn: TCertPool has been initialized");
@@ -65,6 +78,12 @@ public class ProviderManager {
             return this;
         }
 
+        /**
+         * use cafa to request http.
+         * @param sdkCertPath sdkCert file path
+         * @param sdkCertPrivPath sdkCert private key file path
+         * @return {@link Builder}
+         */
         public Builder cfca(String sdkCertPath, String sdkCertPrivPath) {
             if (providerManager.tCertPool != null) {
                 logger.warn("warn: TCertPool has been initialized");
@@ -79,11 +98,20 @@ public class ProviderManager {
             return this;
         }
 
+        /**
+         * set provider manager's namespace.
+         * @param namespace namespace
+         * @return {@link Builder}
+         */
         public Builder namespace(String namespace) {
             providerManager.setNamespace(namespace);
             return this;
         }
 
+        /**
+         * return provider manager instance.
+         * @return {@link ProviderManager}
+         */
         public ProviderManager build() {
             return providerManager;
         }

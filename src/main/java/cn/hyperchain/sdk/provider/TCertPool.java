@@ -11,12 +11,26 @@ public class TCertPool {
     private CertKeyPair uniqueKeyPair;
     private Map<String, String> tCerts;
 
+    /**
+     * init a TCert pool.
+     * @param sdkCertPath sdkCert file path
+     * @param sdkCertPrivPath sdkCert private key file path
+     * @param uniquePubPath unique public key file path
+     * @param uniquePrivPath unique private key file path
+     * @throws Exception -
+     */
     public TCertPool(String sdkCertPath, String sdkCertPrivPath, String uniquePubPath, String uniquePrivPath) throws Exception {
         this.sdkCertKeyPair = new CertKeyPair(sdkCertPath, sdkCertPrivPath);
         this.uniqueKeyPair = new CertKeyPair(uniquePubPath, uniquePrivPath);
         this.tCerts = new ConcurrentHashMap<>();
     }
 
+    /**
+     * init a TCert pool for cfca.
+     * @param sdkCertPath sdkCert file path
+     * @param sdkCertPrivPath sdkCert private key file path
+     * @throws Exception -
+     */
     public TCertPool(String sdkCertPath, String sdkCertPrivPath) throws Exception {
         this.sdkCertKeyPair = new CertKeyPair(sdkCertPath, sdkCertPrivPath);
         this.tCerts = new ConcurrentHashMap<>();

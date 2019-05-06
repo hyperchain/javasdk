@@ -15,6 +15,12 @@ public class CertKeyPair {
     private String publicKey;
     private boolean isGM;
 
+    /**
+     * create cert key pair instance.
+     * @param pubFilePath cert file path
+     * @param privFilePath private key file path
+     * @throws Exception -
+     */
     public CertKeyPair(String pubFilePath, String privFilePath) throws Exception {
         this.isGM = CertUtils.isGMCert(privFilePath);
         String pubPem = FileUtil.readFile(pubFilePath);
@@ -26,6 +32,11 @@ public class CertKeyPair {
         return publicKey;
     }
 
+    /**
+     * use private key of cert key pair to sign data.
+     * @param message message data
+     * @return signature
+     */
     public String signData(byte[] message) {
         if (this.isGM) {
             return signDataWithSM2(message);
