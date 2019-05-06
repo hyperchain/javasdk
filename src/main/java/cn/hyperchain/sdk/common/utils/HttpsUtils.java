@@ -53,6 +53,14 @@ public class HttpsUtils {
         }
     }
 
+    /**
+     * create ssl socket factory and trust manager.
+     * @param certificates tlsCa file path
+     * @param tlsPeerCert tls peer cert file path
+     * @param tlsPeerPriv tls peer cert private key file path
+     * @param password jks password, default is ""
+     * @return {@link SSLParams}
+     */
     public static SSLParams getSslSocketFactory(String certificates, String tlsPeerCert, String tlsPeerPriv, String password) {
         SSLParams sslParams = new SSLParams();
         InputStream isCa = null;
@@ -75,6 +83,10 @@ public class HttpsUtils {
         }
     }
 
+    /**
+     * create hyperchain verifier.
+     * @return {@link HostnameVerifier}
+     */
     public static HostnameVerifier hyperchainVerifier() {
         return new HostnameVerifier() {
             @Override
@@ -92,7 +104,9 @@ public class HttpsUtils {
     }
 
     private static TrustManager[] prepareTrustManager(InputStream... certificates) {
-        if (certificates == null || certificates.length <= 0) return null;
+        if (certificates == null || certificates.length <= 0) {
+            return null;
+        }
         try {
 
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
@@ -103,16 +117,16 @@ public class HttpsUtils {
                 String certificateAlias = Integer.toString(index++);
                 keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
                 try {
-                    if (certificate != null)
+                    if (certificate != null) {
                         certificate.close();
+                    }
                 } catch (IOException e) {
                     logger.error(e);
                 }
             }
             TrustManagerFactory trustManagerFactory = null;
 
-            trustManagerFactory = TrustManagerFactory.
-                    getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keyStore);
 
             return trustManagerFactory.getTrustManagers();
@@ -182,8 +196,7 @@ public class HttpsUtils {
     }
 
     /**
-     * Create a KeyStore from standard PEM files
-     *
+     * Create a KeyStore from standard PEM files.
      * @param privateKeyPem the private key PEM file
      * @param certificatePem the certificate(s) PEM file
      * @param password to set to protect the private key

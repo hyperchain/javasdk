@@ -40,6 +40,9 @@ public class DefaultHttpProvider implements HttpProvider {
         private DefaultHttpProvider defaultHttpProvider;
         private OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
+        /**
+         * create http provider builder.
+         */
         public Builder() {
             builder.readTimeout(20, TimeUnit.SECONDS)
                     .writeTimeout(20, TimeUnit.SECONDS)
@@ -48,11 +51,23 @@ public class DefaultHttpProvider implements HttpProvider {
             defaultHttpProvider.httpPrefix = HTTP;
         }
 
+        /**
+         * set http url.
+         * @param url http url
+         * @return {@link Builder}
+         */
         public Builder setUrl(String url) {
             defaultHttpProvider.setUrl(url);
             return this;
         }
 
+        /**
+         * use https protocol.
+         * @param tlsCa tls ca file path
+         * @param tlsPeerCert tls peer cert file path
+         * @param tlsPeerPriv tls peer private key file path
+         * @return @return {@link Builder}
+         */
         public Builder https(String tlsCa, String tlsPeerCert, String tlsPeerPriv) {
             HttpsUtils.SSLParams sslSocketFactory = HttpsUtils.getSslSocketFactory(tlsCa, tlsPeerCert, tlsPeerPriv, HttpsUtils.DEFAULT_PASSWORD);
             builder.sslSocketFactory(sslSocketFactory.getsSLSocketFactory(), sslSocketFactory.getTrustManager())
@@ -61,6 +76,10 @@ public class DefaultHttpProvider implements HttpProvider {
             return this;
         }
 
+        /**
+         * get default http provider instance.
+         * @return {@link DefaultHttpProvider}
+         */
         public DefaultHttpProvider build() {
             defaultHttpProvider.httpClient = builder.build();
             defaultHttpProvider.status = PStatus.NORMAL;

@@ -52,6 +52,10 @@ public class NodeResponse extends Response {
     @Expose
     private JsonElement result;
 
+    /**
+     * get nodes info.
+     * @return node info array
+     */
     public List<Node> getNodes() {
         List<Node> nodes = new ArrayList<>();
         Gson gson = new Gson();
