@@ -71,7 +71,6 @@ public class Encoder {
             int len = 0;
             byte[] buf = new byte[1024];
             while ((len = bis.read(buf)) != -1) {
-                // 如果有数据的话，就把数据添加到输出流
                 baos.write(buf, 0, len);
             }
             byte[] buffer = baos.toByteArray();
@@ -113,25 +112,22 @@ public class Encoder {
             beanClass.dump(baos);
             byte[] clazz = baos.toByteArray();
             if (clazz.length > 0xffff) {
-                throw new IOException("the bean class is too large");
+                throw new IOException("the bean class is too large"); // 64k
             }
             //2. get the bean class name
             byte[] clzName = bean.getClass().getCanonicalName().getBytes();
             if (clzName.length > 0xffff) {
-                throw new IOException("the bean class name is too large");
+                throw new IOException("the bean class name is too large"); // 64k
             }
             //3. get the bin of bean
             Gson gson = new Gson();
             byte[] beanBin = gson.toJson(bean).getBytes();
-            if (beanBin.length > 0xffff) {
-                throw new IOException("the bean Object is too large");
-            }
-            //4. accumulate: | class length(2B) | name length(2B) | class | class name | bin |
+            //4. accumulate: | class length(4B) | name length(2B) | class | class name | bin |
             //               | len(txHash)      | len("__txHash__")| txHash | "__txHash__" | bin |
             StringBuilder sb = new StringBuilder();
-            sb.append(ByteUtil.toHex(ByteUtil.shortToBytes((short) clazz.length)));
+            sb.append(ByteUtil.toHex(ByteUtil.intToByteArray(clazz.length)));
             sb.append(ByteUtil.toHex(ByteUtil.shortToBytes((short) clzName.length)));
-            //NOTE: name不用给了
+
             sb.append(ByteUtil.toHex(clazz));
             sb.append(ByteUtil.toHex(clzName));
             sb.append(ByteUtil.toHex(beanBin));

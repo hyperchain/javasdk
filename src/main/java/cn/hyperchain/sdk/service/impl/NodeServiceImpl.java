@@ -1,16 +1,17 @@
-package cn.hyperchain.sdk.service;
+package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.NodeResponse;
+import cn.hyperchain.sdk.service.NodeService;
 
 public class NodeServiceImpl implements NodeService {
 
     private ProviderManager providerManager;
     private static final String NODE_PREFIX = "node_";
 
-    NodeServiceImpl(ProviderManager providerManager) {
+    public NodeServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
     }
 

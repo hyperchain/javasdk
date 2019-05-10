@@ -1,4 +1,4 @@
-package cn.hyperchain.sdk.service;
+package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.ContractRequest;
@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.request.PollingRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class ContractServiceImpl implements ContractService {
     private String namespace = "global";
     private String jsonrpc = "2.0";
 
-    ContractServiceImpl(ProviderManager providerManager) {
+    public ContractServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
     }
 

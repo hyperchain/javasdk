@@ -1,4 +1,4 @@
-package cn.hyperchain.sdk.service;
+package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.ECAccount;
@@ -10,6 +10,7 @@ import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.exception.AccountException;
+import cn.hyperchain.sdk.service.AccountService;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
@@ -19,7 +20,7 @@ import java.security.SecureRandom;
 
 public class AccountServiceImpl implements AccountService {
 
-    AccountServiceImpl() {}
+    public AccountServiceImpl() {}
 
     @Override
     public Account genAccount(Algo algo) {
