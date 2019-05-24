@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.service.impl.AccountServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
+import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
 
 /**
@@ -22,5 +23,9 @@ public class ServiceManager {
 
     public static NodeService getNodeService(ProviderManager providerManager) {
         return new NodeServiceImpl(providerManager);
+    }
+
+    public static MQService getMQService(ProviderManager providerManager) {
+        return new MQServiceImpl(providerManager);
     }
 }

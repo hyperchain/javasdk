@@ -10,7 +10,6 @@ import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.hvm.StudentInvoke;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
-import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.service.AccountService;
