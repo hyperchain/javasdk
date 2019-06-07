@@ -5,7 +5,9 @@ package cn.hyperchain.sdk.common.utils;
  * @version 1.0, 2018/6/12
  */
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
+import cn.hyperchain.sdk.crypto.cert.SM2Priv;
 import org.apache.log4j.Logger;
+import org.bouncycastle.openssl.PEMKeyPair;
 import sun.security.x509.X500Name;
 
 import javax.net.ssl.HostnameVerifier;
@@ -55,21 +57,16 @@ public class HttpsUtils {
 
     /**
      * create ssl socket factory and trust manager.
-     * @param certificates tlsCa file path
-     * @param tlsPeerCert tls peer cert file path
-     * @param tlsPeerPriv tls peer cert private key file path
+     * @param certificates tlsCa inputStream
+     * @param tlsPeerCert tls peer cert inputStream
+     * @param tlsPeerPriv tls peer cert private key inputStream
      * @param password jks password, default is ""
      * @return {@link SSLParams}
      */
-    public static SSLParams getSslSocketFactory(String certificates, String tlsPeerCert, String tlsPeerPriv, String password) {
+    public static SSLParams getSslSocketFactory(InputStream certificates, InputStream tlsPeerCert, InputStream tlsPeerPriv, String password) {
         SSLParams sslParams = new SSLParams();
-        InputStream isCa = null;
+        InputStream isCa = certificates;
         try {
-            if (Utils.isAbsolutePath(certificates)) {
-                isCa = new FileInputStream(certificates);
-            } else {
-                isCa = HttpsUtils.class.getClassLoader().getResourceAsStream(certificates);
-            }
             TrustManager[] trustManagers = prepareTrustManager(isCa);
             KeyManager[] keyManagers = prepareKeyManager(tlsPeerCert, tlsPeerPriv, password);
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
@@ -137,7 +134,7 @@ public class HttpsUtils {
 
     }
 
-    private static KeyManager[] prepareKeyManager(String tlsPeerCert, String tlsPeerPriv, String password) {
+    private static KeyManager[] prepareKeyManager(InputStream tlsPeerCert, InputStream tlsPeerPriv, String password) {
         try {
 //            KeyStore clientKeyStore = KeyStore.getInstance("JKS");
 //            clientKeyStore.load(bksFile, password.toCharArray());
@@ -201,29 +198,25 @@ public class HttpsUtils {
      * @param certificatePem the certificate(s) PEM file
      * @param password to set to protect the private key
      */
-    public static KeyStore createKeyStore(String certificatePem, String privateKeyPem, final String password) throws Exception {
+    public static KeyStore createKeyStore(InputStream certificatePem, InputStream privateKeyPem, final String password) throws Exception {
         final X509Certificate[] cert = createCertificates(certificatePem);
         final KeyStore keystore = KeyStore.getInstance("JKS");
         keystore.load(null);
         // Import private key
-        final PrivateKey key = CertUtils.getPrivateKeyFromPEM(privateKeyPem);
+        PEMKeyPair pem = CertUtils.getPEM(privateKeyPem);
+        boolean isGM = pem.getPrivateKeyInfo().getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
+
+        final PrivateKey key = CertUtils.getPrivateKeyFromPEM(pem, isGM);
         keystore.setKeyEntry("tlsCertPriv", key, password.toCharArray(), cert);
         return keystore;
     }
 
-    private static X509Certificate[] createCertificates(String certificatePem) throws Exception {
+    private static X509Certificate[] createCertificates(InputStream certificatePem) throws Exception {
         List<X509Certificate> result = new ArrayList<X509Certificate>();
         BufferedReader r = null;
+        r = new BufferedReader(new InputStreamReader(certificatePem));
+
         try {
-            if (Utils.isAbsolutePath(certificatePem)) {
-                r = new BufferedReader(new FileReader(certificatePem));
-            } else {
-                InputStream inputStream = HttpsUtils.class.getClassLoader().getResourceAsStream(certificatePem);
-                if (inputStream == null) {
-                    throw new IOException("This file not exist! " + certificatePem);
-                }
-                r = new BufferedReader(new InputStreamReader(inputStream));
-            }
             String s = r.readLine();
             if (s == null || !s.contains("BEGIN CERTIFICATE")) {
                 r.close();
