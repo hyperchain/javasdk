@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.provider;
 
 import cn.hyperchain.sdk.crypto.cert.CertKeyPair;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,26 +14,26 @@ public class TCertPool {
 
     /**
      * init a TCert pool.
-     * @param sdkCertPath sdkCert file path
-     * @param sdkCertPrivPath sdkCert private key file path
-     * @param uniquePubPath unique public key file path
-     * @param uniquePrivPath unique private key file path
+     * @param sdkCert sdkCert inputStream
+     * @param sdkCertPriv sdkCert private key inputStream
+     * @param uniquePub unique public key inputStream
+     * @param uniquePriv unique private key inputStream
      * @throws Exception -
      */
-    public TCertPool(String sdkCertPath, String sdkCertPrivPath, String uniquePubPath, String uniquePrivPath) throws Exception {
-        this.sdkCertKeyPair = new CertKeyPair(sdkCertPath, sdkCertPrivPath);
-        this.uniqueKeyPair = new CertKeyPair(uniquePubPath, uniquePrivPath);
+    public TCertPool(InputStream sdkCert, InputStream sdkCertPriv, InputStream uniquePub, InputStream uniquePriv) throws Exception {
+        this.sdkCertKeyPair = new CertKeyPair(sdkCert, sdkCertPriv);
+        this.uniqueKeyPair = new CertKeyPair(uniquePub, uniquePriv);
         this.tCerts = new ConcurrentHashMap<>();
     }
 
     /**
      * init a TCert pool for cfca.
-     * @param sdkCertPath sdkCert file path
-     * @param sdkCertPrivPath sdkCert private key file path
+     * @param sdkCert sdkCert inputStream
+     * @param sdkCertPriv sdkCert private key inputStream
      * @throws Exception -
      */
-    public TCertPool(String sdkCertPath, String sdkCertPrivPath) throws Exception {
-        this.sdkCertKeyPair = new CertKeyPair(sdkCertPath, sdkCertPrivPath);
+    public TCertPool(InputStream sdkCert, InputStream sdkCertPriv) throws Exception {
+        this.sdkCertKeyPair = new CertKeyPair(sdkCert, sdkCertPriv);
         this.tCerts = new ConcurrentHashMap<>();
     }
 
