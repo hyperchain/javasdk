@@ -9,3 +9,6 @@ target
 .project
 .settings
 .vscode
+
+# jar
+src/test/resources/hvm-jar/contract-test-1.0-SNAPSHOT.jar

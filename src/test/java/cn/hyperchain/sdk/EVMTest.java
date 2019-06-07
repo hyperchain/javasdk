@@ -14,6 +14,8 @@ import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 public class EVMTest {
@@ -33,8 +35,10 @@ public class EVMTest {
 
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMAES, PASSWORD);
-        String bin = FileUtil.readFile("solidity/TypeTestContract_sol_TypeTestContract.bin");
-        String abiStr = FileUtil.readFile("solidity/TypeTestContract_sol_TypeTestContract.abi");
+        FileInputStream inputStream1 = new FileInputStream("solidity/TypeTestContract_sol_TypeTestContract.bin");
+        FileInputStream inputStream2 = new FileInputStream("solidity/TypeTestContract_sol_TypeTestContract.abi");
+        String bin = FileUtil.readFile(inputStream1);
+        String abiStr = FileUtil.readFile(inputStream2);
         Abi abi = Abi.fromJson(abiStr);
         Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract01").build();
         transaction.sign(account);

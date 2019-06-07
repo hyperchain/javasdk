@@ -24,34 +24,29 @@ public class CertUtils {
 
     /**
      * judge is guomi cert.
-     * @param pemPath pem path
+     * @param pem pem inputStream
      * @return is guomi cert
      * @throws Exception -
      */
-    public static boolean isGMCert(String pemPath) throws Exception {
-        PEMParser pemRd = openPEMResource(pemPath);
+    public static PEMKeyPair getPEM(InputStream pem) throws Exception {
+        PEMParser pemRd = openPEMResource(pem);
         if (pemRd == null) {
             throw new Exception("Open pem error");
         }
         PEMKeyPair pemPair = (PEMKeyPair) pemRd.readObject();
-        return pemPair.getPrivateKeyInfo().getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
+        return pemPair;
     }
 
     /**
      * get private key.
      *
-     * @param pemPath private key file path
+     * @param pem private key inputStream
      * @return -
      * @throws Exception -
      */
-    public static PrivateKey getPrivateKeyFromPEM(String pemPath) throws Exception {
-        PEMParser pemRd = openPEMResource(pemPath);
-        if (pemRd == null) {
-            throw new Exception("Open pem error");
-        }
-        PEMKeyPair pemPair = (PEMKeyPair) pemRd.readObject();
+    public static PrivateKey getPrivateKeyFromPEM(PEMKeyPair pemPair, boolean isGM) throws Exception {
 
-        if (pemPair.getPrivateKeyInfo().getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID)) {
+        if (isGM) {
             DLSequence dl = (DLSequence) pemPair.getPrivateKeyInfo().parsePrivateKey();
             ASN1Encodable[] dls = dl.toArray();
             BigInteger priv = null;
@@ -67,22 +62,7 @@ public class CertUtils {
         }
     }
 
-    private static PEMParser openPEMResource(String fileName) {
-        InputStream res = null;
-        try {
-            if (Utils.isAbsolutePath(fileName)) {
-                res = new FileInputStream(fileName);
-            } else {
-                res = CertUtils.class.getClassLoader().getResourceAsStream(fileName);
-            }
-
-            if (res == null) {
-                throw new IOException("This file not exist! " + fileName);
-            }
-        } catch (IOException e) {
-            return null;
-        }
-
+    private static PEMParser openPEMResource(InputStream res) {
         Reader fRd = new BufferedReader(new InputStreamReader(res));
         return new PEMParser(fRd);
     }

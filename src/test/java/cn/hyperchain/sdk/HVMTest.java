@@ -17,12 +17,16 @@ import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class HVMTest {
 
     public static String DEFAULT_URL = "localhost:8081";
 
     @Test
-    public void testHVM() throws RequestException {
+    public void testHVM() throws RequestException, FileNotFoundException {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
         ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
@@ -32,7 +36,9 @@ public class HVMTest {
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
-        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy("hvm-jar/hvmbasic-1.0.0-student.jar").build();
+
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("hvm-jar/hvmbasic-1.0.0-student.jar");
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(inputStream).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
         Assert.assertTrue(SignerUtil.verifySign(transaction.getNeedHashString(), transaction.getSignature(), account.getPublicKey()));

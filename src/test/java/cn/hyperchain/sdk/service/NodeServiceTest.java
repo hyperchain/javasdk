@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class NodeServiceTest {
 
-    private ProviderManager providerManager = common.providerManager;
+    private ProviderManager providerManager = Common.providerManager;
     private NodeService nodeService = ServiceManager.getNodeService(providerManager);
 
     @Test
