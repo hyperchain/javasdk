@@ -8,8 +8,7 @@ import org.apache.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -26,46 +25,18 @@ public class Encoder {
     /**
      * get deploy payload.
      *
-     * @param path contract jar path
+     * @param fis FileinputStream for the given jar file
      * @return payload
      */
-    public static String encodeDeployJar(String path) {
-        JarFile jar = null;
-        InputStream fis = null;
+    public static String encodeDeployJar(InputStream fis) {
         BufferedInputStream bis = null;
         ByteArrayOutputStream baos = null;
+        FileOutputStream os = null;
+        JarFile jar = null;
+
+        String tmpPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "tmp.jar";
+
         try {
-            if (Utils.isAbsolutePath(path)) {
-                jar = new JarFile(path, true);
-                fis = new FileInputStream(path);
-            } else {
-                URL url = Thread.currentThread().getContextClassLoader().getResource(path);
-                if (url == null) {
-                    throw new IOException("Jar: " + path + " not found.");
-                }
-
-                if (url.toString().startsWith("jar")) {
-                    JarURLConnection connection = (JarURLConnection) url.openConnection();
-                    JarFile jarFile = connection.getJarFile();
-                    Enumeration enu = jarFile.entries();
-                    while (enu.hasMoreElements()) {
-                        JarEntry jarEntry = (JarEntry) enu.nextElement();
-                        String name = jarEntry.getName();
-                        if (name.startsWith(path)) {
-                            if (name.endsWith(".jar")) {
-                                fis = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-                            }
-                        }
-                    }
-                } else {
-                    jar = new JarFile(new File(url.toURI()));
-                    fis = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-                }
-            }
-            if (jar != null && jar.getManifest().getMainAttributes().getValue("Main-Class") == null) {
-                throw new IOException("the path does not point to a contract jar");
-            }
-
             bis = new BufferedInputStream(fis);
             baos = new ByteArrayOutputStream();
             int len = 0;
@@ -77,8 +48,19 @@ public class Encoder {
             if (buffer.length > 1024 * 64) {
                 throw new IOException("the contract jar should not be larger than 64KB");
             }
+
+            os = new FileOutputStream(tmpPath);
+            os.write(buffer);
+
+            jar = new JarFile(tmpPath, true);
+
+            if (jar != null && jar.getManifest().getMainAttributes().getValue("Main-Class") == null) {
+                throw new IOException("the path does not point to a contract jar");
+            }
+
+
             return ByteUtil.toHex(buffer);
-        } catch (IOException | URISyntaxException e ) {
+        } catch (IOException e ) {
             throw new RuntimeException(e);
         } finally {
             try {

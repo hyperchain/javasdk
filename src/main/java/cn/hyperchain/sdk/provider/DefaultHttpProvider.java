@@ -12,6 +12,7 @@ import okhttp3.Request;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -63,12 +64,12 @@ public class DefaultHttpProvider implements HttpProvider {
 
         /**
          * use https protocol.
-         * @param tlsCa tls ca file path
-         * @param tlsPeerCert tls peer cert file path
-         * @param tlsPeerPriv tls peer private key file path
+         * @param tlsCa tls ca inputStream
+         * @param tlsPeerCert tls peer cert inputstream
+         * @param tlsPeerPriv tls peer private key inputstream
          * @return @return {@link Builder}
          */
-        public Builder https(String tlsCa, String tlsPeerCert, String tlsPeerPriv) {
+        public Builder https(InputStream tlsCa, InputStream tlsPeerCert, InputStream tlsPeerPriv) {
             HttpsUtils.SSLParams sslSocketFactory = HttpsUtils.getSslSocketFactory(tlsCa, tlsPeerCert, tlsPeerPriv, HttpsUtils.DEFAULT_PASSWORD);
             builder.sslSocketFactory(sslSocketFactory.getsSLSocketFactory(), sslSocketFactory.getTrustManager())
                     .hostnameVerifier(HttpsUtils.hyperchainVerifier());
