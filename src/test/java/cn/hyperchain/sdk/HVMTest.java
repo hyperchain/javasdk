@@ -4,6 +4,7 @@ import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Decoder;
+import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.crypto.SignerUtil;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.hvm.StudentInvoke;
@@ -18,13 +19,16 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class HVMTest {
 
-    public static String DEFAULT_URL = "localhost:8091";
+    public static String DEFAULT_URL = "localhost:8081";
 
     @Test
     @Ignore
-    public void testHVM() throws RequestException {
+    public void testHVM() throws RequestException, IOException {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
         ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
@@ -34,7 +38,8 @@ public class HVMTest {
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
-        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy("hvm-jar/hvmbasic-1.0.0-student.jar").build();
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/hvmbasic-1.0.0-student.jar");
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
         Assert.assertTrue(SignerUtil.verifySign(transaction.getNeedHashString(), transaction.getSignature(), account.getPublicKey()));
