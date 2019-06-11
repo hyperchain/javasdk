@@ -23,7 +23,7 @@ public class common {
     static {
         HttpProvider httpProvider1 = new DefaultHttpProvider.Builder()
                 .setUrl(node1)
-                .https(tlsca, tls_peer_cert, tls_peer_priv)
+//                .https(tlsca, tls_peer_cert, tls_peer_priv)
                 .build();
         HttpProvider httpProvider2 = new DefaultHttpProvider.Builder()
                 .setUrl(node2)
@@ -39,8 +39,9 @@ public class common {
                 .build();
         providerManager = new ProviderManager.Builder()
                 .namespace("global")
-                .providers(httpProvider1, httpProvider2, httpProvider3, httpProvider4)
-                .enableTCert(sdkcert_cert, sdkcert_priv, unique_pub, unique_priv)
+//                .providers(httpProvider1, httpProvider2, httpProvider3, httpProvider4)
+                .providers(httpProvider1)
+//                .enableTCert(sdkcert_cert, sdkcert_priv, unique_pub, unique_priv)
                 .build();
     }
 }

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <litesdk.version>0.0.1</litesdk.version>
+        <litesdk.version>0.0.2</litesdk.version>
         <maven.checkstyle.version>3.0.0</maven.checkstyle.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
 
@@ -26,8 +26,8 @@
     </scm>
     <licenses>
         <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>GNU Lesser General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
         </license>
     </licenses>
 

@@ -7,15 +7,19 @@ dist: trusty
 
 install:
   - docker pull hyperchaincn/hvmd
-  - docker run -d --rm --name=hvmd -p 8081:9999 hyperchaincn/hvmd
+  - docker run -d --rm --name=hvmd -p 8091:9999 hyperchaincn/hvmd
+
+  - wget https://github.com/hyperchain/hyperchain/releases/download/v1.0.0/hyperchain-solo-1.0.0-8b68028-20190516-Ubuntu-16.04.tar.gz
+  - tar zxvf hyperchain-solo-1.0.0-8b68028-20190516-Ubuntu-16.04.tar.gz
+  - cd hyperchain-solo-8b68028 && nohup ./hyperchain &
 
 before_script:
-  - mvn --version
+#  - mvn --version
   - mvn clean
 
 script:
   - mvn validate
-  - mvn install
+#  - mvn install
   - mvn test
 
 after_success:
