@@ -15,13 +15,15 @@ import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class HVMTest {
 
-    public static String DEFAULT_URL = "localhost:8081";
+    public static String DEFAULT_URL = "localhost:8091";
 
     @Test
+    @Ignore
     public void testHVM() throws RequestException {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
