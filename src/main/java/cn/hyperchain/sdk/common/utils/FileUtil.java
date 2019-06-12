@@ -1,7 +1,5 @@
 package cn.hyperchain.sdk.common.utils;
 
-import jdk.internal.util.xml.impl.Input;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,31 +43,12 @@ public class FileUtil {
     }
 
     /**
-     * get InputStream of file for the given path.
-     * @param path file
-     * @return inputstream of the file path
-     * @throws IOException may not find file
-     */
-    public static InputStream getInputStream(String path) throws IOException {
-        InputStream is = null;
-
-        if (Utils.isAbsolutePath(path)) {
-            is = new FileInputStream(path);
-        } else {
-            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-        }
-        return is;
-
-    }
-
-
-    /**
-     * get InputStream of jar file for the given path.
+     * get InputStream of the file for the given path.
      * @param path jar path
      * @return input stream for the jar path
      * @throws IOException may not find file
      */
-    public static InputStream getJarFileInputStream(String path) throws IOException {
+    public static InputStream readFileAsStream(String path) throws IOException {
         InputStream fis = null;
         if (Utils.isAbsolutePath(path)) {
             fis = new FileInputStream(path);

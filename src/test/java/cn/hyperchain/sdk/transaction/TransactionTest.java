@@ -10,7 +10,7 @@ public class TransactionTest {
     @Test
     public void testCreateTransaction() throws IOException {
         String path = "hvm-jar/hvmbasic-1.0.0-student.jar";
-        InputStream inputStream = FileUtil.getInputStream(path);
+        InputStream inputStream = FileUtil.readFileAsStream(path);
         Transaction transaction = new Transaction.HVMBuilder("0x0000000000000000000000000000000000000000")
                 .deploy(inputStream)
                 .extra("")
