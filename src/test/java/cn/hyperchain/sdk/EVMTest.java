@@ -42,6 +42,7 @@ public class EVMTest {
         String bin = FileUtil.readFile(inputStream1);
         String abiStr = FileUtil.readFile(inputStream2);
         Abi abi = Abi.fromJson(abiStr);
+
         Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract01").build();
         transaction.sign(account);
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
@@ -68,5 +69,28 @@ public class EVMTest {
             System.out.println(o.getClass());
             System.out.println(new String((byte[]) o));
         }
+
+        System.out.println("*********************************************************************");
+        // maintain contract test
+
+        // test freeze
+        Transaction transaction2 = new Transaction.EVMBuilder(account.getAddress()).maintain(contractAddress, 2, bin, abi, "contract01").build();
+        transaction2.sign(account);
+        ReceiptResponse receiptResponse2 = contractService.maintain(transaction2).send().polling();
+        System.out.println(receiptResponse2.getRet());
+
+        // test thaw
+        Transaction transaction3 = new Transaction.EVMBuilder(account.getAddress()).maintain(contractAddress, 3, bin, abi, "contract01").build();
+        transaction3.sign(account);
+        ReceiptResponse receiptResponse3 = contractService.maintain(transaction3).send().polling();
+        System.out.println(receiptResponse3.getRet());
+
+        // test upgrade
+        Transaction transaction4 = new Transaction.EVMBuilder(account.getAddress()).maintain(contractAddress, 1, bin, abi, "contract02").build();
+        transaction4.sign(account);
+        ReceiptResponse receiptResponse4 = contractService.maintain(transaction4).send().polling();
+        System.out.println("contract address: " + receiptResponse4.getContractAddress());
+        System.out.println(receiptResponse4.getRet());
+
     }
 }

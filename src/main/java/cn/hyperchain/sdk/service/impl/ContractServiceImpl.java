@@ -77,9 +77,41 @@ public class ContractServiceImpl implements ContractService {
 
         receiptResponsePollingRequest.addParams(txHash);
         receiptResponsePollingRequest.setJsonrpc(jsonrpc);
-        receiptResponsePollingRequest.setJsonrpc(namespace);
+        receiptResponsePollingRequest.setNamespace(namespace);
 
         return receiptResponsePollingRequest;
+    }
+
+    @Override
+    public Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds) {
+        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
+
+        Map<String, Object> params = commonParamMap(transaction);
+        params.put("to", transaction.getTo());
+        params.put("opcode", transaction.getOpCode());
+
+        txHashResponseContractRequest.addParams(params);
+        txHashResponseContractRequest.setJsonrpc(jsonrpc);
+        txHashResponseContractRequest.setNamespace(namespace);
+        txHashResponseContractRequest.setContractService(this);
+
+        return txHashResponseContractRequest;
+    }
+
+    @Override
+    public Request<TxHashResponse> maintainPrivate(Transaction transaction, int... nodeIds) {
+        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(CONTRACT_PREFIX + "maintainPrivateContract", providerManager, TxHashResponse.class, transaction, nodeIds);
+
+        Map<String, Object> params = commonParamMap(transaction);
+        params.put("to", transaction.getTo());
+        params.put("opcode", transaction.getOpCode());
+
+        txHashResponseContractRequest.addParams(params);
+        txHashResponseContractRequest.setJsonrpc(jsonrpc);
+        txHashResponseContractRequest.setNamespace(namespace);
+        txHashResponseContractRequest.setContractService(this);
+
+        return txHashResponseContractRequest;
     }
 
     private Map<String, Object> commonParamMap(Transaction transaction) {
