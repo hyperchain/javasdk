@@ -8,6 +8,7 @@ import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.Utils;
 import org.apache.log4j.Logger;
 
+import java.io.InputStream;
 import java.util.Date;
 
 public class Transaction {
@@ -92,11 +93,11 @@ public class Transaction {
 
         /**
          * create deployment transaction for {@link VMType} HVM.
-         * @param jarPath hvm contract jar
+         * @param fis FileInputStream for the given jar file
          * @return {@link Builder}
          */
-        public Builder deploy(String jarPath) {
-            String payload = Encoder.encodeDeployJar(jarPath);
+        public Builder deploy(InputStream fis) {
+            String payload = Encoder.encodeDeployJar(fis);
             super.transaction.setTo("0x0");
             super.transaction.setPayload(payload);
             return this;

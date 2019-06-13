@@ -14,6 +14,7 @@ import cn.hyperchain.sdk.response.TCertResponse;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,19 +59,19 @@ public class ProviderManager {
 
         /**
          * enable TCert to request http.
-         * @param sdkCertPath sdkCert file path
-         * @param sdkCertPrivPath sdkCert private key file path
-         * @param uniquePubPath unique public key file path
-         * @param uniquePrivPath unique private key file path
+         * @param sdkCert sdkCert inputStream
+         * @param sdkCertPriv sdkCert private key inputStream
+         * @param uniquePub unique public key inputStream
+         * @param uniquePriv unique private key inputStream
          * @return {@link Builder}
          */
-        public Builder enableTCert(String sdkCertPath, String sdkCertPrivPath, String uniquePubPath, String uniquePrivPath) {
+        public Builder enableTCert(InputStream sdkCert, InputStream sdkCertPriv, InputStream uniquePub, InputStream uniquePriv) {
             if (providerManager.tCertPool != null) {
                 logger.warn("warn: TCertPool has been initialized");
             }
             providerManager.isCFCA = false;
             try {
-                TCertPool tCertPool = new TCertPool(sdkCertPath, sdkCertPrivPath, uniquePubPath, uniquePrivPath);
+                TCertPool tCertPool = new TCertPool(sdkCert, sdkCertPriv, uniquePub, uniquePriv);
                 providerManager.settCertPool(tCertPool);
             } catch (Exception e) {
                 throw new RuntimeException("init TCertPool error, cause " + e.getMessage());
@@ -80,17 +81,17 @@ public class ProviderManager {
 
         /**
          * use cafa to request http.
-         * @param sdkCertPath sdkCert file path
-         * @param sdkCertPrivPath sdkCert private key file path
+         * @param sdkCert sdkCert inputStream
+         * @param sdkCertPriv sdkCert private key inputStream
          * @return {@link Builder}
          */
-        public Builder cfca(String sdkCertPath, String sdkCertPrivPath) {
+        public Builder cfca(InputStream sdkCert, InputStream sdkCertPriv) {
             if (providerManager.tCertPool != null) {
                 logger.warn("warn: TCertPool has been initialized");
             }
             providerManager.isCFCA = true;
             try {
-                TCertPool tCertPool = new TCertPool(sdkCertPath, sdkCertPrivPath);
+                TCertPool tCertPool = new TCertPool(sdkCert, sdkCertPriv);
                 providerManager.settCertPool(tCertPool);
             } catch (Exception e) {
                 throw new RuntimeException("init TCertPool error, cause " + e.getMessage());
