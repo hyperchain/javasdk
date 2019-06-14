@@ -91,3 +91,6 @@ Decoder.decodeHVM(receiptResponse1.getRet(), String.class);
 ## issue
 
 If you have any suggestions or idea, please submit issue in this project!
+
+## doc
+If you want to know more about LiteSDK, you can read manual at [here](doc/litesdk%20v0.0.1%20使用手册.md).
