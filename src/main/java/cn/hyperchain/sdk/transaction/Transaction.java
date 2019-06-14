@@ -12,7 +12,8 @@ import java.io.InputStream;
 import java.util.Date;
 
 public class Transaction {
-    private Transaction() {}
+    private Transaction() {
+    }
 
     private static final Logger logger = Logger.getLogger(Transaction.class);
 
@@ -34,6 +35,7 @@ public class Transaction {
 
         /**
          * create transfer or generate transaction.
+         *
          * @param from account address
          */
         public Builder(String from) {
@@ -44,7 +46,8 @@ public class Transaction {
 
         /**
          * create a transform transaction from account A to account B.
-         * @param to origin account
+         *
+         * @param to    origin account
          * @param value goal account
          * @return {@link Builder}
          */
@@ -56,6 +59,7 @@ public class Transaction {
 
         /**
          * make transaction status is simulate.
+         *
          * @return {@link Builder}
          */
         public Builder simulate() {
@@ -65,6 +69,7 @@ public class Transaction {
 
         /**
          * add transaction extra info.
+         *
          * @param extra extra data
          * @return {@link Builder}
          */
@@ -74,7 +79,45 @@ public class Transaction {
         }
 
         /**
+         * upgrade contract.
+         *
+         * @param contractAddress contract address in chain
+         * @param payload payload of the new contract
+         * @return {@link Builder}
+         */
+        public Builder upgrade(String contractAddress, String payload) {
+            transaction.setPayload(payload);
+            transaction.setTo(contractAddress);
+            transaction.setOpCode(1);
+            return this;
+        }
+
+        /**
+         * freeze contract.
+         *
+         * @param contractAddress contract address in chain
+         * @return {@link Builder}
+         */
+        public Builder freeze(String contractAddress) {
+            transaction.setOpCode(2);
+            transaction.setTo(contractAddress);
+            return this;
+        }
+
+        /**
+         * unfreeze contract.
+         * @param contractAddress contract address in chain
+         * @return {@link Builder}
+         */
+        public Builder unfreeze(String contractAddress) {
+            transaction.setTo(contractAddress);
+            transaction.setOpCode(3);
+            return this;
+        }
+
+        /**
          * build transaction instance.
+         *
          * @return {@link Transaction}
          */
         public Transaction build() {
@@ -93,6 +136,7 @@ public class Transaction {
 
         /**
          * create deployment transaction for {@link VMType} HVM.
+         *
          * @param fis FileInputStream for the given jar file
          * @return {@link Builder}
          */
@@ -105,8 +149,9 @@ public class Transaction {
 
         /**
          * create invoking transaction for {@link VMType} HVM.
+         *
          * @param contractAddress contract address in chain
-         * @param baseInvoke an instance of {@link BaseInvoke}
+         * @param baseInvoke      an instance of {@link BaseInvoke}
          * @return {@link Builder}
          */
         public Builder invoke(String contractAddress, BaseInvoke baseInvoke) {
@@ -115,6 +160,8 @@ public class Transaction {
             super.transaction.setPayload(payload);
             return this;
         }
+
+
     }
 
     public static class EVMBuilder extends Builder {
@@ -125,6 +172,7 @@ public class Transaction {
 
         /**
          * deploy Solidity contract bin.
+         *
          * @param bin contract bin
          * @return {@link Builder}
          */
@@ -136,8 +184,9 @@ public class Transaction {
 
         /**
          * deploy Solidity contract bin with params.
-         * @param bin contract bin
-         * @param abi contract abi
+         *
+         * @param bin    contract bin
+         * @param abi    contract abi
          * @param params deploy contract params
          * @return {@link Builder}
          */
@@ -150,9 +199,10 @@ public class Transaction {
 
         /**
          * invoke Solidity contract whit specific method and params.
+         *
          * @param methodName method name
-         * @param abi contract abi
-         * @param params invoke params
+         * @param abi        contract abi
+         * @param params     invoke params
          * @return {@link Builder}
          */
         public Builder invoke(String contractAddress, String methodName, Abi abi, Object... params) {
@@ -161,18 +211,20 @@ public class Transaction {
             super.transaction.setPayload(payload);
             return this;
         }
+
+
     }
 
     private void setNeedHashString() {
         String value = Utils.isBlank(this.payload) ? String.valueOf(this.value) : this.payload;
         this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
-                            + "&to=" + chPrefix(this.to.toLowerCase())
-                            + "&value=" + chPrefix(value).toLowerCase()
-                            + "&timestamp=0x" + Long.toHexString(this.timestamp)
-                            + "&nonce=0x" + Long.toHexString(this.nonce)
-                            + "&opcode=" + this.opCode
-                            + "&extra=" + this.extra
-                            + "&vmtype=" + this.vmType.getType();
+                + "&to=" + chPrefix(this.to.toLowerCase())
+                + "&value=" + chPrefix(value).toLowerCase()
+                + "&timestamp=0x" + Long.toHexString(this.timestamp)
+                + "&nonce=0x" + Long.toHexString(this.nonce)
+                + "&opcode=" + this.opCode
+                + "&extra=" + this.extra
+                + "&vmtype=" + this.vmType.getType();
     }
 
     public void sign(Account account) {
