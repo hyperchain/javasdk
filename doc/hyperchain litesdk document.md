@@ -17,7 +17,8 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder()
                 .build();
 ```
 
-其中`setUrl()`可以设置连接的节点**URL**（格式为**ip+jsonRPC端口**），`https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
+* `setUrl()`可以设置连接的节点**URL**（格式为**ip+jsonRPC端口**）;
+* `https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
 
 ### 2.2 创建ProvideManager对象
 
@@ -37,7 +38,10 @@ providerManager = new ProviderManager.Builder()
 
 方式1：只需要传`HttpProvider`对象，其他都使用`ProvideManager`的默认配置，如不启用证书、使用的**namespace**配置项为**global**。
 
-方式2：`namespace()`可以设置对应的**namespace名**，`providers()`设置需要管理的`HttpProvider`对象们，`enableTCert()`设置使用的证书(**需要传的参数类型为输入流)**。注：例子中未出现的方法还有一个`cfca(InputStream sdkCert, InputStream sdkCertPriv)`，功能与`enableTCert()`相同，两者的区别是证书校验是否通过**cfca机构**，且在创建`ProvideManager`对象过程中两个方法只能使用其中一个。
+方式2：
+* `namespace()`可以设置对应的**namespace名**;
+* `providers()`设置需要管理的`HttpProvider`对象们;
+* `enableTCert()`设置使用的证书(**需要传的参数类型为输入流)**。注：例子中未出现的方法还有一个`cfca(InputStream sdkCert, InputStream sdkCertPriv)`，功能与`enableTCert()`相同，两者的区别是证书校验是否通过**cfca机构**，且在创建`ProvideManager`对象过程中两个方法只能使用其中一个。
 
 ### 2.3 创建服务
 
@@ -72,25 +76,7 @@ System.out.println(nodeResponse.getNodes());
 
 ## 第三章. 交易
 
-**LiteSDK**的交易接口分为两类：一类**以交易体结构为核心**，一类是**查询接口**。两者虽然都名为交易，但实际执行的功能和应用场景都不同，该章主要说明前者如何使用，
-
-以交易体结构为核心的交易主要应用在合约交易上，即将想要执行的操作和数据封装成一笔交易体，再调用合约服务(`ContractService`)的接口去执行。
-
-### 合约接口
-
-LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约**三种接口。
-
-```java
-public interface ContractService {
-    Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds);
-
-    Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
-
-    Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
-}
-```
-
-根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM两种形式的合约**，这两种也会影响到交易体的创建。
+**LiteSDK**的交易接口分为两类：一类**是普通的转账交易，不涉及虚拟机**，一类是**合约交易，和虚拟机相关**。两者虽然都名为交易，但实际执行的功能和应用场景都不同，该章主要说明如何使用，
 
 ### 账户创建
 
@@ -144,6 +130,29 @@ class EVMBuilder extends Builder {
 ```
 
 下面是创建各个服务的交易体`Transaction`的实例。
+
+### 转账交易
+
+TODO
+
+### 合约接口
+
+以交易体结构为核心的交易主要应用在合约交易上，即将想要执行的操作和数据封装成一笔交易体，再调用合约服务(`ContractService`)的接口去执行。
+
+LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约**三种接口。
+
+```java
+public interface ContractService {
+    Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds);
+
+    Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+
+    Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
+}
+```
+
+根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM两种形式的合约**，这两种也会影响到交易体的创建。
+
 
 #### 部署合约
 
