@@ -1,3 +1,4 @@
+
 ## 第一章. 前言 
 
 **LiteSDK**是一个**轻量JavaSDK工具**，提供与Hyperchain区块链平台交互的接口以及一些处理工具。该文档⾯向Hyperchain区块链平台的应⽤开发者，提供hyperchain Java SDK的 使⽤指南。
@@ -17,8 +18,10 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder()
                 .build();
 ```
 
+
 * `setUrl()`可以设置连接的节点**URL**（格式为**ip+jsonRPC端口**）;
 * `https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
+
 
 ### 2.2 创建ProvideManager对象
 
@@ -36,12 +39,15 @@ providerManager = new ProviderManager.Builder()
                 .build();
 ```
 
-方式1：只需要传`HttpProvider`对象，其他都使用`ProvideManager`的默认配置，如不启用证书、使用的**namespace**配置项为**global**。
+方式1：
+
+​		只需要传`HttpProvider`对象，其他都使用`ProvideManager`的默认配置，如不启用证书、使用的**namespace**配置项为**global**。
 
 方式2：
 * `namespace()`可以设置对应的**namespace名**;
 * `providers()`设置需要管理的`HttpProvider`对象们;
 * `enableTCert()`设置使用的证书(**需要传的参数类型为输入流)**。注：例子中未出现的方法还有一个`cfca(InputStream sdkCert, InputStream sdkCertPriv)`，功能与`enableTCert()`相同，两者的区别是证书校验是否通过**cfca机构**，且在创建`ProvideManager`对象过程中两个方法只能使用其中一个。
+
 
 ### 2.3 创建服务
 
@@ -76,7 +82,30 @@ System.out.println(nodeResponse.getNodes());
 
 ## 第三章. 交易
 
-**LiteSDK**的交易接口分为两类：一类**是普通的转账交易，不涉及虚拟机**，一类是**合约交易，和虚拟机相关**。两者虽然都名为交易，但实际执行的功能和应用场景都不同，该章主要说明如何使用，
+**LiteSDK**的交易接口分为两类：一类**是普通的转账交易，不涉及虚拟机**，一类是**合约交易，和虚拟机相关**。两者虽然都名为交易，但实际执行的功能和应用场景都不同。
+
+
+### 转账交易
+
+TODO
+
+### 合约接口
+
+以交易体结构为核心的交易主要应用在合约交易上，即将想要执行的操作和数据封装成一笔交易体，再调用合约服务(`ContractService`)的接口去执行。
+
+LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约**三种接口。
+
+```java
+public interface ContractService {
+    Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds);
+
+    Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+
+    Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
+}
+```
+
+根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM两种形式的合约**，这两种也会影响到交易体的创建。
 
 ### 账户创建
 
@@ -105,7 +134,7 @@ public interface AccountService {
 }
 ```
 
-### 交易体创建
+#### 交易体创建
 
 **LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。HVM和EVM分别有各自的**Builder**：`HVMBuilder`、`EVMBuilder`，继承同一个父类`Builer`。目前**Builder**模式提供了五种交易体的封装，分别对应**部署合约、调用合约、升级合约、冻结合约、解冻合约**，其中前两个服务的交易体分别定义在HVM、EVM各自的`Builder`子类中，后三者都是**管理合约**这一服务的子服务，定义在父类`Builder`中。
 
@@ -130,29 +159,6 @@ class EVMBuilder extends Builder {
 ```
 
 下面是创建各个服务的交易体`Transaction`的实例。
-
-### 转账交易
-
-TODO
-
-### 合约接口
-
-以交易体结构为核心的交易主要应用在合约交易上，即将想要执行的操作和数据封装成一笔交易体，再调用合约服务(`ContractService`)的接口去执行。
-
-LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约**三种接口。
-
-```java
-public interface ContractService {
-    Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds);
-
-    Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
-
-    Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
-}
-```
-
-根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM两种形式的合约**，这两种也会影响到交易体的创建。
-
 
 #### 部署合约
 
@@ -253,7 +259,7 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 
 ### 交易体签名
 
-通过`Transaction`提供的`sign()`方法，需要指定Account对象。
+通过`Transaction`提供的`sign()`方法，需要指定`Account`对象。
 
 ```java
 transaction.sign(account);
@@ -278,9 +284,9 @@ ReceiptResponse receiptResponse = contractRequest.send().polling();
 
 #### 
 
-## 第四章. NodeService相关接口
+## 第五章. NodeService相关接口
 
-### 4.1 获取节点信息
+### 5.1 获取节点信息
 
 参数
 
@@ -288,4 +294,76 @@ ReceiptResponse receiptResponse = contractRequest.send().polling();
 
 ```java
 Request<NodeResponse> getNodes(int... ids);
+```
+
+
+
+## 第六章. MQ接口(MQService)
+
+### 6.1 通知MQ服务器正常工作
+
+参数
+
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<MQResponse> informNormal(int... nodeIds)
+```
+
+### 6.2 注册队列
+
+参数
+
++ from 调用该接口的账户地址
++ queueName 队列名称
++ routingkeys 想要订阅的消息类型
++ isVerbose 推送区块时是否推送交易列表，true表示是
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<MQResponse> registerQueue(String from, String queueName, List<String> routingkeys, Boolean isVerbose, int... nodeIds);
+```
+
+### 6.3 注销队列
+
+参数
+
++ from 调用该接口的账户地址
++ queueName 队列名称
++ exchangerName exchanger 名称
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<MQResponse> unRegisterQueue(String from, String queueName, String exchangerName, int... nodeIds);
+```
+
+### 6.4 获取所有队列名称
+
+参数
+
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<MQResponse> getAllQueueNames(int... nodeIds);
+```
+
+### 6.5 获取所有exchanger名称
+
+参数
+
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<MQResponse> getExchangerName(int... nodeIds);
+```
+
+### 6.6 删除exchanger
+
+参数
+
++ exchangerName exchanger名称
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
 ```

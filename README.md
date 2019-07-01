@@ -93,4 +93,4 @@ Decoder.decodeHVM(receiptResponse1.getRet(), String.class);
 If you have any suggestions or idea, please submit issue in this project!
 
 ## doc
-If you want to know more about LiteSDK, you can read manual at [here](doc/hyperchain litesdk document.md).
+If you want to know more about LiteSDK, you can read manual at [here](doc/hyperchain_litesdk_document.md).
