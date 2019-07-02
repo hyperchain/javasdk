@@ -25,7 +25,7 @@ import java.io.InputStream;
 
 public class HVMTest {
 
-    public static String DEFAULT_URL = "localhost:8081";
+    public static String DEFAULT_URL = "localhost:8091";
 
     @Test
     @Ignore

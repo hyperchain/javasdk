@@ -282,7 +282,6 @@ Request<TxHashResponse> contractRequest = contractService.deploy(transaction);
 ReceiptResponse receiptResponse = contractRequest.send().polling();
 ```
 
-#### 
 
 ## 第五章. NodeService相关接口
 
@@ -366,4 +365,20 @@ Request<MQResponse> getExchangerName(int... nodeIds);
 
 ```java
 Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
+```
+
+
+
+## 第五章. RadarService相关接口
+
+### 5.1 监听合约
+
+参数
+
++ sourceCode 要监听的合约的源代码
++ contractAddress 要监听的合约的部署地址
++ ids 说明请求向哪些节点发送。
+
+```java
+Request<RadarResponse> listenContract(String sourceCode, String contractAddress, int... nodeIds);
 ```
