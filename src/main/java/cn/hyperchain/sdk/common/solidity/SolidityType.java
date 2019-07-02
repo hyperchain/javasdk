@@ -325,7 +325,19 @@ public abstract class SolidityType {
         }
 
         public static byte[] decodeBytes32(byte[] encoded, int offset) {
-            return Arrays.copyOfRange(encoded, offset, offset + Int32Size);
+            byte[] bytes = Arrays.copyOfRange(encoded, offset, offset + Int32Size);
+            int len = -1;
+            for (int i=bytes.length-1;i>=0;i--) {
+                if (bytes[i]!=0) {
+                    len = i + 1;
+                    break;
+                }
+            }
+            byte[] result = bytes;
+            if (len!=-1) {
+                result = Arrays.copyOfRange(bytes, 0, len);
+            }
+            return result;
         }
     }
 
@@ -458,7 +470,8 @@ public abstract class SolidityType {
         @Override
         public byte[] encode(Object value) {
             if (!(value instanceof Boolean)) throw new RuntimeException("Wrong value for bool type: " + value);
-            return super.encode(value == Boolean.TRUE ? 1 : 0);
+            int num = ((boolean)value) ? 1 : 0;
+            return super.encode(num);
         }
 
         @Override
