@@ -5,6 +5,7 @@ import cn.hyperchain.sdk.service.impl.AccountServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
 import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
+import cn.hyperchain.sdk.service.impl.RadarServiceImpl;
 
 /**
  * service implements manager.
@@ -27,5 +28,9 @@ public class ServiceManager {
 
     public static MQService getMQService(ProviderManager providerManager) {
         return new MQServiceImpl(providerManager);
+    }
+
+    public static RadarService getRadarService(ProviderManager providerManager) {
+        return new RadarServiceImpl(providerManager);
     }
 }
