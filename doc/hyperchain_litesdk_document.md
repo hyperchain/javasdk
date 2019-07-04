@@ -80,6 +80,8 @@ System.out.println(nodeResponse.getNodes());
 
 当`ProvideManager`管理多个节点连接时，返回的节点信息应该是一个数组，这时就需要调用示例中的`getNodes()`方法将返回结果转换成更准确的类型。
 
+
+
 ## 第三章. 交易
 
 **LiteSDK**的交易接口分为两类：一类**是普通的转账交易，不涉及虚拟机**，一类是**合约交易，和虚拟机相关**。两者虽然都名为交易，但实际执行的功能和应用场景都不同。
@@ -283,9 +285,369 @@ ReceiptResponse receiptResponse = contractRequest.send().polling();
 ```
 
 
-## 第五章. NodeService相关接口
 
-### 5.1 获取节点信息
+## 第四章. Transaction接口(TxService)
+
+**注：该章的Transaction与第三章的交易体概念不同，该章的接口主要主要用于查询之前在链上的执行信息，将返回的信息封装为Transaction结构体。**
+
+### 4.1 查询指定区块区间的交易(getTransactions)
+
+参数：
+
+ * from 区块区间起点
+ * to 区块区间终点
+ * nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxResponse> getTx(BigInteger from, BigInteger to, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getTx(String from, String to, int... nodeIds);
+```
+
+
+
+### 4.2 查询所有非法交易(getDiscardTransactions)
+
+参数：
+
+ * nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxResponse> getDiscardTx(int... nodeIds);
+```
+
+
+
+### 4.3 查询交易by transaction hash(getTransactionByHash)
+
+参数：
+ * txHash 交易hash
+ * nodeIds 请求向哪些节点发送
+
+```java
+Request<TxResponse> getTxByHash(String txHash, int... nodeIds);
+```
+
+参数：
+
+ * txHash 交易hash
+ * isprivateTx 是否获取隐私交易，若设false，则该方法和上一个方法作用一样
+ * nodeIds 请求向哪些节点发送
+
+```java
+Request<TxResponse> getTxByHash(String txHash, boolean isPrivateTx, int... nodeIds);
+```
+
+
+
+### 4.4 查询交易by block hash(getTxByBlockHashAndIndex)
+
+参数：
+
+- blockHash 区块哈希值
+- index 区块内的交易索引值
+- nodeIds 请求向哪些节点发送
+
+```java
+Request<TxResponse> getTxByBlockHashAndIndex(String blockHash, int index, int... nodeIds);
+```
+
+
+
+### 4.5 查询交易by block number(getTxByBlockNumAndIndex)
+
+参数：
+
+- blockNumber 区块号
+- index 区块内的交易索引值
+- nodeIds 请求向哪些节点发送
+
+```java
+Request<TxResponse> getTxByBlockNumAndIndex(int blockNumber, int idx, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getTxByBlockNumAndIndex(String blockNumber, String idx, int... nodeIds);
+```
+
+
+
+### 4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)
+
+参数：
+
+- from 区块区间起点
+- to 区块区间终点
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxResponse> getTxAvgTimeByBlockNumber(BigInteger from, BigInteger to, int... nodeIds);
+```
+
+重载方法如下:
+
+```java
+Request<TxResponse> getTxAvgTimeByBlockNumber(String from, String to, int... nodeIds);
+```
+
+
+
+### 4.7 查询链上所有交易量(getTransactionsCount)
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getTransactionsCount(int... nodeIds);
+```
+
+
+
+### 4.8 查询交易回执信息by transaction hash(getTransactionReceipt)
+
+参数：
+
+- txHash 交易hash。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds);
+```
+
+
+
+### 4.9 查询区块交易数量by block hash(getBlockTxCountByHash)
+
+参数：
+
+- blockHash 区块哈希值
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxResponse> getBlockTxCountByHash(String blockHash, int... nodeIds);
+```
+
+
+
+### 4.10 查询区块交易数量by block number(getBlockTxCountByNumber)
+
+参数：
+
+- blockNumber 区块号。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getBlockTxCountByNumber(String blockNumber, int... nodeIds);
+```
+
+
+
+### 4.11 获取交易签名哈希(getSignHash)
+
+**部署合约时**
+
+参数：
+
+- from 发起者地址。
+- nonce 16位的随机数，该值必须为十进制整数。
+- extra(可选) 额外信息。
+- payload 字节编码。
+- timestamp 交易时间戳。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getSignHash(String from, BigInteger nonce, String extra, String payload, BigInteger timestamp, int... nodeIds);
+
+Request<TxResponse> getSignHash(String from, BigInteger nonce, String payload, BigInteger timestamp, int... nodeIds);
+```
+
+**普通交易**
+
+参数：
+
+- from 发起者地址。
+- nonce 16位的随机数，该值必须为十进制整数。
+- extra（可选） 额外信息。
+- value 交易值。
+- timestamp 交易时间戳。
+- nodeIds 说明请求向哪些节点发送。
+
+```
+Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String extra, String value, BigInteger timestamp, int... nodeIds);
+
+Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String value, BigInteger timestamp, int... nodeIds);
+```
+
+
+
+### 4.12 查询指定时间区间内的交易(getTransactionsByTime)
+
+参数：
+
+- startTime 起起始时间戳(单位ns)。
+- endTime 结束时间戳(单位ns)。
+- limit（可选） 符合条件的区块数目最大值，默认值为50。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+
+Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int limit, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int... nodeIds);
+
+Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int limit, int... nodeIds);
+```
+
+
+
+### 4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)
+
+参数：
+
+- startTime 起起始时间戳(单位ns)。
+- endTime 结束时间戳(单位ns)。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getDiscardTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getDiscardTransactionsByTime(String startTime, String endTime, int... nodeIds);
+```
+
+
+
+### 4.14 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)
+
+参数：
+
+- from 起始区块号。
+- to 终止区块号。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getTransactionsCountByContractAddr(String from, String to, String address, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getTransactionsCountByContractAddr(BigInteger from, BigInteger to, String address, int... nodeIds);
+```
+
+
+
+### 4.15 查询下一页交易(getNextPageTransactions)
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+
+
+### 4.16 查询上一页交易(getPrevPageTransactions)
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+
+
+### 4.17 查询批量交易by hash list(getBatchTxByHash)
+
+参数：
+
+- txHashList 交易的哈希数组, 哈希值为32字节的十六进制字符串。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeIds);
+```
+
+
+
+### 4.18 查询批量回执by hash list(getBatchReceip)
+
+参数：
+
+- txHashList  交易的哈希数组, 哈希值为32字节的十六进制字符串。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<ReceiptResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
+```
+
+
+
+### 4.19 查询指定时间区间内的交易数量(getTxsCountByTime)
+
+参数：
+
+- startTime 起起始时间戳(单位ns)。
+- endTime 结束时间戳(单位ns)。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+
+
+## 第六章. NodeService相关接口
+
+### 6.1 获取节点信息
 
 参数
 
@@ -297,9 +659,9 @@ Request<NodeResponse> getNodes(int... ids);
 
 
 
-## 第六章. MQ接口(MQService)
+## 第七章. MQ接口(MQService)
 
-### 6.1 通知MQ服务器正常工作
+### 7.1 通知MQ服务器正常工作
 
 参数
 
@@ -309,7 +671,7 @@ Request<NodeResponse> getNodes(int... ids);
 Request<MQResponse> informNormal(int... nodeIds)
 ```
 
-### 6.2 注册队列
+### 7.2 注册队列
 
 参数
 
@@ -323,7 +685,7 @@ Request<MQResponse> informNormal(int... nodeIds)
 Request<MQResponse> registerQueue(String from, String queueName, List<String> routingkeys, Boolean isVerbose, int... nodeIds);
 ```
 
-### 6.3 注销队列
+### 7.3 注销队列
 
 参数
 
@@ -336,7 +698,7 @@ Request<MQResponse> registerQueue(String from, String queueName, List<String> ro
 Request<MQResponse> unRegisterQueue(String from, String queueName, String exchangerName, int... nodeIds);
 ```
 
-### 6.4 获取所有队列名称
+### 7.4 获取所有队列名称
 
 参数
 
@@ -346,7 +708,7 @@ Request<MQResponse> unRegisterQueue(String from, String queueName, String exchan
 Request<MQResponse> getAllQueueNames(int... nodeIds);
 ```
 
-### 6.5 获取所有exchanger名称
+### 7.5 获取所有exchanger名称
 
 参数
 
@@ -356,7 +718,7 @@ Request<MQResponse> getAllQueueNames(int... nodeIds);
 Request<MQResponse> getExchangerName(int... nodeIds);
 ```
 
-### 6.6 删除exchanger
+### 7.6 删除exchanger
 
 参数
 
@@ -369,9 +731,9 @@ Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
 
 
 
-## 第五章. RadarService相关接口
+## 第八章. RadarService相关接口
 
-### 5.1 监听合约
+### 8.1 监听合约
 
 参数
 

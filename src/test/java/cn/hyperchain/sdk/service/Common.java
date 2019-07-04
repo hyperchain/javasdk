@@ -4,8 +4,6 @@ import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 
 public class Common {
@@ -31,6 +29,7 @@ public class Common {
     public static final String node3 = "localhost:8083";
     public static final String node4 = "localhost:8084";
     public static ProviderManager providerManager;
+    public static ProviderManager soloProviderManager;
 
     static {
 
@@ -75,6 +74,17 @@ public class Common {
             providerManager = new ProviderManager.Builder()
                     .namespace("global")
                     .providers(httpProvider1, httpProvider2, httpProvider3, httpProvider4)
+//                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
+                    .build();
+
+            sdkcert_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_cert);
+            sdkcert_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_priv);
+            unique_pub_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(unique_pub);
+            unique_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(unique_priv);
+
+            soloProviderManager = new ProviderManager.Builder()
+                    .namespace("global")
+                    .providers(httpProvider1)
 //                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
                     .build();
         } catch (Exception e) {
