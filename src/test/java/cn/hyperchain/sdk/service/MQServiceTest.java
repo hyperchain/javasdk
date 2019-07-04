@@ -1,8 +1,6 @@
 package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.provider.DefaultHttpProvider;
-import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.MQResponse;
@@ -13,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MQServiceTest {
-    String url = "localhost:8081";
-    HttpProvider provider = new DefaultHttpProvider.Builder().setUrl(url).build();
-    ProviderManager providerManager = new ProviderManager.Builder().providers(provider).build();
+    ProviderManager providerManager = Common.soloProviderManager;
     MQService mqService = ServiceManager.getMQService(providerManager);
     String exchanger = null;
     String from = "0x2CC762775FC1AA7486AA2FCF0D7885D4EEE4DA2";

@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
+import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
@@ -25,17 +26,25 @@ public class TxServiceTest {
     private static ArrayList<Long> timestamps = new ArrayList<>();
     private static ArrayList<String> blockHashes = new ArrayList<>();
     private static String contractAddress = null;
+    private static String bin = null;
+    private static Abi abi = null;
 
     @BeforeClass
     public static void init() throws IOException, RequestException {
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         ContractService contractService = ServiceManager.getContractService(providerManager);
 
+        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.bin");
+        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.abi");
+        bin = FileUtil.readFile(inputStream1);
+        String abiStr = FileUtil.readFile(inputStream2);
+        abi = Abi.fromJson(abiStr);
+
         Account account = null;
         Transaction transaction = null;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             account = accountService.genAccount(Algo.ECRAW);
-            transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(FileUtil.readFileAsStream("hvm-jar/hvmbasic-1.0.0-student.jar")).build();
+            transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract" + i).build();
             transaction.sign(account);
 
             String txHash = contractService.deploy(transaction).send().polling().getTxHash();
@@ -60,14 +69,13 @@ public class TxServiceTest {
         deploy();
     }
 
-    public static void deploy() throws IOException, RequestException {
+    public static void deploy() throws RequestException {
         ContractService contractService = ServiceManager.getContractService(providerManager);
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
         Account backup = account;
-        InputStream payload = FileUtil.readFileAsStream("hvm-jar/hvmbasic-1.0.0-student.jar");
-        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract").build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
 
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
@@ -90,6 +98,7 @@ public class TxServiceTest {
     }
 
     @Test
+    @Ignore
     public void testGetDiscardTx() throws RequestException {
         Request<TxResponse> txResponseRequest = txService.getDiscardTx();
         TxResponse txResponse = txResponseRequest.send();
@@ -212,6 +221,7 @@ public class TxServiceTest {
     }
 
     @Test
+    @Ignore
     public void testGetTransactionsByTime() throws RequestException {
         BigInteger startTime = BigInteger.valueOf(1562073987434588840L);
         BigInteger endTime = BigInteger.valueOf(1562093987434588900L);
@@ -223,6 +233,7 @@ public class TxServiceTest {
     }
 
     @Test
+    @Ignore
     public void testGetTransactionsByTime1() throws RequestException {
         String startTime = String.valueOf(1562073987434588840L);
         String endTime = String.valueOf(1562093987434588900L);
@@ -234,6 +245,7 @@ public class TxServiceTest {
     }
 
     @Test
+    @Ignore
     public void testGetDiscardTransactionsByTime() throws RequestException {
         BigInteger startTime = BigInteger.valueOf(1559193987434588840L);
         BigInteger endTime = BigInteger.valueOf(1559193987434588900L);
@@ -245,6 +257,7 @@ public class TxServiceTest {
     }
 
     @Test
+    @Ignore
     public void testGetDiscardTransactionsByTime1() throws RequestException {
         String startTime = String.valueOf(1559193987434588840L);
         String endTime = String.valueOf(1559193987434588900L);

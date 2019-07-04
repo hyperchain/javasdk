@@ -44,7 +44,7 @@ public class Common {
             tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
             HttpProvider httpProvider1 = new DefaultHttpProvider.Builder()
                     .setUrl(node1)
-                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
                     .build();
 
             tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
@@ -52,7 +52,7 @@ public class Common {
             tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
             HttpProvider httpProvider2 = new DefaultHttpProvider.Builder()
                     .setUrl(node2)
-                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
                     .build();
 
             tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
@@ -60,7 +60,7 @@ public class Common {
             tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
             HttpProvider httpProvider3 = new DefaultHttpProvider.Builder()
                     .setUrl(node3)
-                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
                     .build();
 
             tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
@@ -68,13 +68,13 @@ public class Common {
             tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
             HttpProvider httpProvider4 = new DefaultHttpProvider.Builder()
                     .setUrl(node4)
-                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
                     .build();
 
             providerManager = new ProviderManager.Builder()
                     .namespace("global")
                     .providers(httpProvider1, httpProvider2, httpProvider3, httpProvider4)
-                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
+//                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
                     .build();
 
             sdkcert_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_cert);
@@ -85,7 +85,7 @@ public class Common {
             soloProviderManager = new ProviderManager.Builder()
                     .namespace("global")
                     .providers(httpProvider1)
-                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
+//                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
