@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.service.impl.AccountServiceImpl;
+import cn.hyperchain.sdk.service.impl.BlockServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
 import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
@@ -10,6 +11,7 @@ import cn.hyperchain.sdk.service.impl.TxServiceImpl;
 
 /**
  * service implements manager.
+ *
  * @author tomkk
  * @version 0.0.1
  */
@@ -34,6 +36,12 @@ public class ServiceManager {
     public static RadarService getRadarService(ProviderManager providerManager) {
         return new RadarServiceImpl(providerManager);
     }
+
+    public static BlockService getBlockService(ProviderManager providerManager) {
+        return new BlockServiceImpl(providerManager);
+    }
+
+
 
     public static TxService getTxService(ProviderManager providerManager) {
         return new TxServiceImpl(providerManager);
