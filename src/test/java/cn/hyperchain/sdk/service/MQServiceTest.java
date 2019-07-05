@@ -3,7 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
-import cn.hyperchain.sdk.response.MQResponse;
+import cn.hyperchain.sdk.response.mq.MQResponse;
 import org.junit.Before;
 import org.junit.Test;
 

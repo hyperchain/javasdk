@@ -5,7 +5,7 @@ import cn.hyperchain.sdk.request.ReceiptRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TxRequest;
 import cn.hyperchain.sdk.response.ReceiptResponse;
-import cn.hyperchain.sdk.response.TxResponse;
+import cn.hyperchain.sdk.response.tx.TxResponse;
 import cn.hyperchain.sdk.service.TxService;
 
 import java.math.BigInteger;
