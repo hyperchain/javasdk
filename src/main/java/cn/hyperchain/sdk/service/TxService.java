@@ -2,7 +2,7 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
-import cn.hyperchain.sdk.response.TxResponse;
+import cn.hyperchain.sdk.response.tx.TxResponse;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

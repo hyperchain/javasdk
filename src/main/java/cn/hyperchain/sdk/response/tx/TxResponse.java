@@ -1,5 +1,6 @@
-package cn.hyperchain.sdk.response;
+package cn.hyperchain.sdk.response.tx;
 
+import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

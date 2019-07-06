@@ -1,5 +1,6 @@
-package cn.hyperchain.sdk.response;
+package cn.hyperchain.sdk.response.mq;
 
+import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,6 +15,7 @@ public class MQResponse extends Response {
 
     /**
      * return list of queue names.
+     *
      * @return list of queue names
      */
     public List<String> getQueueNames() {
@@ -21,7 +23,7 @@ public class MQResponse extends Response {
         Gson gson = new Gson();
         if (result.isJsonArray()) {
             JsonArray jsonArray = result.getAsJsonArray();
-            for (JsonElement element: jsonArray) {
+            for (JsonElement element : jsonArray) {
                 String name = gson.fromJson(element, String.class);
                 queue.add(name);
             }

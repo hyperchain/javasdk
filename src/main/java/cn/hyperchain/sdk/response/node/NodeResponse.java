@@ -1,5 +1,6 @@
-package cn.hyperchain.sdk.response;
+package cn.hyperchain.sdk.response.node;
 
+import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -56,7 +57,7 @@ public class NodeResponse extends Response {
      * get nodes info.
      * @return node info array
      */
-    public List<Node> getNodes() {
+    public List<Node> getResult() {
         List<Node> nodes = new ArrayList<>();
         Gson gson = new Gson();
         if (result.isJsonArray()) {
@@ -64,6 +65,9 @@ public class NodeResponse extends Response {
             for (JsonElement jsonElement : jsonArray) {
                 nodes.add(gson.fromJson(jsonElement, Node.class));
             }
+        } else {
+            Node node = gson.fromJson(result, Node.class);
+            nodes.add(node);
         }
         return nodes;
     }

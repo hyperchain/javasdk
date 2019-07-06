@@ -6,10 +6,15 @@ import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.request.BlockRequest;
 import cn.hyperchain.sdk.request.Request;
-import cn.hyperchain.sdk.response.BlockResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
-import cn.hyperchain.sdk.response.TxResponse;
+import cn.hyperchain.sdk.response.Response;
+import cn.hyperchain.sdk.response.block.BlockAvgTimeResponse;
+import cn.hyperchain.sdk.response.block.BlockCountResponse;
+import cn.hyperchain.sdk.response.block.BlockNumberResponse;
+import cn.hyperchain.sdk.response.block.BlockResponse;
+import cn.hyperchain.sdk.response.tx.TxResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -90,7 +95,7 @@ public class BlockServiceTest {
     public void testGetLatestBlock() throws RequestException {
         Request<BlockResponse> blockResponseBlockRequest = blockService.getLatestBlock();
         BlockResponse blockResponse = blockResponseBlockRequest.send();
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -98,7 +103,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBlocks(BigInteger.valueOf(1), BigInteger.valueOf(2));
         BlockResponse blockResponse = blockResponseRequest.send();
         System.out.println(blockResponse);
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -106,7 +111,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBlocks(String.valueOf(1), String.valueOf(2));
         BlockResponse blockResponse = blockResponseRequest.send();
         System.out.println(blockResponse);
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -115,7 +120,7 @@ public class BlockServiceTest {
         BlockResponse blockResponse = blockResponseRequest.send();
 
         System.out.println(blockResponse);
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -125,17 +130,18 @@ public class BlockServiceTest {
         BlockResponse blockResponse = blockResponseRequest.send();
 
         System.out.println(blockResponse);
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
     public void testGetBlockByHash() throws RequestException {
         String blockHash = blockHashes.get(0);
+//        String blockHash = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
         Request<BlockResponse> blockResponseRequest = blockService.getBlockByHash(blockHash);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -149,7 +155,7 @@ public class BlockServiceTest {
         Request<BlockResponse> responseRequest = blockService.getBatchBlocksByHash(blockHashes);
         BlockResponse blockResponse = responseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -162,7 +168,7 @@ public class BlockServiceTest {
 
         Request<BlockResponse> responseRequest = blockService.getBatchBlocksByHash(blockHashes, true);
         BlockResponse blockResponse = responseRequest.send();
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -172,7 +178,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBlockByNum(blockNum);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -182,7 +188,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBlockByNum(blockNum);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -192,7 +198,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBlockByNum(blockNum, false);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -202,7 +208,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBlockByNum(blockNum, false);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -214,7 +220,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBatchBlocksByNum(blockNums);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -226,7 +232,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBatchBlocksByNum(blockNums, false);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -238,7 +244,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBatchBlocksByStrNum(blockNums);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -250,7 +256,7 @@ public class BlockServiceTest {
         Request<BlockResponse> blockResponseRequest = blockService.getBatchBlocksByStrNum(blockNums, false);
         BlockResponse blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocks());
+        System.out.println(blockResponse.getResult());
     }
 
     @Test
@@ -258,10 +264,10 @@ public class BlockServiceTest {
         BigInteger from = BigInteger.valueOf(1);
         BigInteger to = BigInteger.valueOf(2);
 
-        Request<BlockResponse> blockResponseRequest = blockService.getAvgGenerateTimeByBlockNumber(from, to);
-        BlockResponse blockResponse = blockResponseRequest.send();
+        Request<BlockAvgTimeResponse> blockRequest = blockService.getAvgGenerateTimeByBlockNumber(from, to);
+        BlockAvgTimeResponse blockResponse = blockRequest.send();
 
-        System.out.println(blockResponse.getAvgGenerateTime());
+        System.out.println(blockResponse);
     }
 
     @Test
@@ -269,10 +275,10 @@ public class BlockServiceTest {
         String from = String.valueOf(1);
         String to = String.valueOf(2);
 
-        Request<BlockResponse> blockResponseRequest = blockService.getAvgGenerateTimeByBlockNumber(from, to);
-        BlockResponse blockResponse = blockResponseRequest.send();
+        Request<BlockAvgTimeResponse> blockRequest = blockService.getAvgGenerateTimeByBlockNumber(from, to);
+        BlockAvgTimeResponse blockAvgTimeResponse = blockRequest.send();
 
-        System.out.println(blockResponse.getAvgGenerateTime());
+        System.out.println(blockAvgTimeResponse);
     }
 
     @Test
@@ -282,10 +288,10 @@ public class BlockServiceTest {
         BigInteger endTime = BigInteger.valueOf(1559193987434588900L);
 
 
-        Request<BlockResponse> blockResponseRequest = blockService.getBlocksByTime(startTime, endTime);
-        BlockResponse blockResponse = blockResponseRequest.send();
+        BlockRequest blockResponseRequest = (BlockRequest) blockService.getBlocksByTime(startTime, endTime);
+        Response blockResponse = blockResponseRequest.send();
 
-        System.out.println(blockResponse.getBlocksCount());
+        System.out.println(blockResponse);
     }
 
     @Test
@@ -294,24 +300,25 @@ public class BlockServiceTest {
         String startTime = String.valueOf(1559549200);
         String endTime = String.valueOf(1559549300);
 
-        Request<BlockResponse> blockResponseRequest = blockService.getBlocksByTime(startTime, endTime);
-        BlockResponse blockResponse = blockResponseRequest.send();
+        Request<BlockCountResponse> blockRequest = blockService.getBlocksByTime(startTime, endTime);
+        BlockCountResponse blockResponse = blockRequest.send();
 
-        System.out.println(blockResponse.getBlocksCount());
+        System.out.println(blockResponse);
     }
 
     @Test
     public void testGetChainHeight() throws RequestException {
-        Request<BlockResponse> blockResponseRequest = blockService.getChainHeight();
-        BlockResponse blockResponse = blockResponseRequest.send();
+        Request<BlockNumberResponse> blockRequest = blockService.getChainHeight();
+        BlockNumberResponse blockNumberResponse = blockRequest.send();
 
-        System.out.println(blockResponse.getBlockNumber());
+        System.out.println(blockNumberResponse);
+        System.out.println(blockNumberResponse.getResult());
     }
 
     @Test
     public void testGetGenesisBlock() throws RequestException {
-        Request<BlockResponse> blockResponseRequest = blockService.getGenesisBlock();
-        BlockResponse blockResponse = blockResponseRequest.send();
-        System.out.println(blockResponse.getBlockNumber());
+        Request<BlockNumberResponse> blockRequest = blockService.getGenesisBlock();
+        BlockNumberResponse blockNumberResponse = blockRequest.send();
+        System.out.println(blockNumberResponse.getResult());
     }
 }

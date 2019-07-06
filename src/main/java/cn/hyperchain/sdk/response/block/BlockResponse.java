@@ -1,5 +1,7 @@
-package cn.hyperchain.sdk.response;
+package cn.hyperchain.sdk.response.block;
 
+import cn.hyperchain.sdk.response.Response;
+import cn.hyperchain.sdk.response.tx.TxResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -69,30 +71,12 @@ public class BlockResponse extends Response {
         }
     }
 
-    private class BlockCount {
-        @Expose
-        private String sumOfBlocks;
-        @Expose
-        private String startBlock;
-        @Expose
-        private String endBlock;
-
-        @Override
-        public String toString() {
-            return "BlockCount{" +
-                    "sumOfBlocks='" + sumOfBlocks + '\'' +
-                    ", startBlock='" + startBlock + '\'' +
-                    ", endBlock='" + endBlock + '\'' +
-                    '}';
-        }
-    }
-
     /**
      * get block list.
      *
      * @return block list
      */
-    public List<Block> getBlocks() {
+    public List<Block> getResult() {
         ArrayList<Block> blocks = new ArrayList<>();
         if (result.isJsonArray()) {
             JsonArray jsonArray = result.getAsJsonArray();
@@ -104,18 +88,6 @@ public class BlockResponse extends Response {
             blocks.add(block);
         }
         return blocks;
-    }
-
-    public String getAvgGenerateTime() {
-        return result.getAsString();
-    }
-
-    public String getBlockNumber() {
-        return result.getAsString();
-    }
-
-    public BlockCount getBlocksCount() {
-        return gson.fromJson(result, BlockCount.class);
     }
 
     @Override

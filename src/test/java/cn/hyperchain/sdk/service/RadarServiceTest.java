@@ -5,12 +5,10 @@ import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.provider.DefaultHttpProvider;
-import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
-import cn.hyperchain.sdk.response.RadarResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.radar.RadarResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -19,9 +17,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 public class RadarServiceTest {
-    private static String url = "localhost:8081";
-    private static HttpProvider httpProvider = new DefaultHttpProvider.Builder().setUrl(url).build();
-    private static ProviderManager providerManager = new ProviderManager.Builder().providers(httpProvider).build();
+    private static ProviderManager providerManager = Common.soloProviderManager;
     private static RadarService radarService = ServiceManager.getRadarService(providerManager);
     private static String contractAddress = null;
 
