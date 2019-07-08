@@ -107,15 +107,16 @@ public abstract class ContractType {
         return fingerprintSignature();
     }
 
-    byte[] encodeArguments(Object... args) {
-        if (args.length > inputs.size()) {
-            throw new RuntimeException("Too many arguments: " + args.length + " > " + inputs.size());
+    byte[] encodeArguments(List<Object> args) {
+
+        if (args.size() > inputs.size()) {
+            throw new RuntimeException("Too many arguments: " + args.size() + " > " + inputs.size());
         }
 
         int staticSize = 0;
         int dynamicCnt = 0;
         // calculating static size and number of dynamic params
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.size(); i++) {
             SolidityType type = inputs.get(i).type;
             if (type.isDynamicType()) {
                 dynamicCnt++;
@@ -123,17 +124,17 @@ public abstract class ContractType {
             staticSize += type.getFixedSize();
         }
 
-        byte[][] bb = new byte[args.length + dynamicCnt][];
-        for (int curDynamicPtr = staticSize, curDynamicCnt = 0, i = 0; i < args.length; i++) {
+        byte[][] bb = new byte[args.size() + dynamicCnt][];
+        for (int curDynamicPtr = staticSize, curDynamicCnt = 0, i = 0; i < args.size(); i++) {
             SolidityType type = inputs.get(i).type;
             if (type.isDynamicType()) {
-                byte[] dynBB = type.encode(args[i]);
+                byte[] dynBB = type.encode(args.get(i));
                 bb[i] = encodeInt(curDynamicPtr);
-                bb[args.length + curDynamicCnt] = dynBB;
+                bb[args.size() + curDynamicCnt] = dynBB;
                 curDynamicCnt++;
                 curDynamicPtr += dynBB.length;
             } else {
-                bb[i] = type.encode(args[i]);
+                bb[i] = type.encode(args.get(i));
             }
         }
 
@@ -150,7 +151,7 @@ public abstract class ContractType {
             return Param.decodeList(inputs, encoded);
         }
 
-        public byte[] encode(Object... args) {
+        public byte[] encode(List<Object> args) {
             return encodeArguments(args);
         }
 
@@ -167,7 +168,7 @@ public abstract class ContractType {
             super(null, constant, name, inputs, outputs, Type.function, payable);
         }
 
-        public byte[] encode(Object... args) {
+        public byte[] encode(List<Object> args) {
             return ByteUtil.merge(encodeSignature(), encodeArguments(args));
         }
 

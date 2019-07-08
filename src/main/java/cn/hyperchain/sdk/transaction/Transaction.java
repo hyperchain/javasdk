@@ -5,6 +5,7 @@ import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Encoder;
+import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.common.utils.Utils;
 import org.apache.log4j.Logger;
 
@@ -190,9 +191,9 @@ public class Transaction {
          * @param params deploy contract params
          * @return {@link Builder}
          */
-        public Builder deploy(String bin, Abi abi, Object... params) {
+        public Builder deploy(String bin, Abi abi, FuncParams params) {
             super.transaction.setTo("0x0");
-            String payload = bin + ByteUtil.toHex(abi.getConstructor().encode(params));
+            String payload = bin + ByteUtil.toHex(abi.getConstructor().encode(params.getParams()));
             super.transaction.setPayload(payload);
             return this;
         }
@@ -205,9 +206,9 @@ public class Transaction {
          * @param params     invoke params
          * @return {@link Builder}
          */
-        public Builder invoke(String contractAddress, String methodName, Abi abi, Object... params) {
+        public Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params) {
             super.transaction.setTo(contractAddress);
-            String payload = ByteUtil.toHex(abi.getFunction(methodName).encode(params));
+            String payload = ByteUtil.toHex(abi.getFunction(methodName).encode(params.getParams()));
             super.transaction.setPayload(payload);
             return this;
         }

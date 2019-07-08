@@ -4,6 +4,7 @@ import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
@@ -32,7 +33,9 @@ public class RadarServiceTest {
         String abiString = FileUtil.readFile(Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.abi"));
         Abi abi = Abi.fromJson(abiString);
 
-        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract01").build();
+        FuncParams params = new FuncParams();
+        params.addParams("contract01");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
         transaction.sign(account);
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
         contractAddress = receiptResponse.getContractAddress();
