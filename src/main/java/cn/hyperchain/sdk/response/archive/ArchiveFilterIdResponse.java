@@ -1,16 +1,16 @@
-package cn.hyperchain.sdk.response.tx;
+package cn.hyperchain.sdk.response.archive;
 
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.annotations.Expose;
 
 /**
- * this class represents transaction count with time field response.
+ * this class represents filter id.
  *
  * @author Jianhui Dong
- * @ClassName TxAvgTimeResponse
+ * @ClassName ArchiveFilterIdResponse
  * @date 2019-07-08
  */
-public class TxAvgTimeResponse extends Response {
+public class ArchiveFilterIdResponse extends Response {
     @Expose
     private String result;
 
@@ -20,7 +20,7 @@ public class TxAvgTimeResponse extends Response {
 
     @Override
     public String toString() {
-        return "TxAvgTimeResponse{" +
+        return "ArchiveFilterIdResponse{" +
                 "result='" + result + '\'' +
                 ", jsonrpc='" + jsonrpc + '\'' +
                 ", id='" + id + '\'' +
