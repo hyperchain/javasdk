@@ -19,6 +19,7 @@ public class AccountServiceTest {
         Account account1 = accountService.fromAccountJson(account.toJson(), "123");
         System.out.println(account.toJson());
         Assert.assertEquals(account.toJson(), account1.toJson());
+        System.out.println(account.getPrivateKey());
     }
 
     @Test

@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.response.node;
 
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NodeResponse extends Response {
+    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public class Node {
         @Expose
@@ -59,7 +61,6 @@ public class NodeResponse extends Response {
      */
     public List<Node> getResult() {
         List<Node> nodes = new ArrayList<>();
-        Gson gson = new Gson();
         if (result.isJsonArray()) {
             JsonArray jsonArray = result.getAsJsonArray();
             for (JsonElement jsonElement : jsonArray) {

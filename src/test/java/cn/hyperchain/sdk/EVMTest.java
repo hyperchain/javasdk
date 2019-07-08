@@ -14,8 +14,6 @@ import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -48,6 +46,8 @@ public class EVMTest {
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
         String contractAddress = receiptResponse.getContractAddress();
         System.out.println("contract address: " + contractAddress);
+        System.out.println("账户私钥:" + account.getPrivateKey());
+
 
         Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes1)", abi, "1").build();
         transaction1.sign(account);

@@ -1,9 +1,9 @@
 package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.account.ECAccount;
 import cn.hyperchain.sdk.account.SMAccount;
-import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.account.Version;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
             BigInteger privateKeyBI = ecPriv.getD();
 
             publicKey = ecPub.getQ().getEncoded(false);
-            privateKey = Account.encodePrivateKey((ByteUtil.biConvert32Bytes(privateKeyBI)), algo, password);
+            privateKey = Account.encodePrivateKey(ByteUtil.biConvert32Bytes(privateKeyBI), algo, password);
             address = HashUtil.sha3omit12(publicKey);
             return new SMAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V3, algo, keyPair);
         } else {

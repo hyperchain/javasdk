@@ -68,8 +68,8 @@ public class BlockServiceTest {
         Request<TxResponse> txResponseRequest = txService.getTxByHash(txHash);
         Request<TxResponse> txResponseRequest1 = txService.getTxByHash(txHash1);
         TxResponse txResponse = txResponseRequest.send();
-        String blockHash = txResponse.getTransactions().get(0).getBlockHash();
-        String blockHash1 = txResponseRequest1.send().getTransactions().get(0).getBlockHash();
+        String blockHash = txResponse.getResult().get(0).getBlockHash();
+        String blockHash1 = txResponseRequest1.send().getResult().get(0).getBlockHash();
 
         blockHashes.add(blockHash);
         blockHashes.add(blockHash1);

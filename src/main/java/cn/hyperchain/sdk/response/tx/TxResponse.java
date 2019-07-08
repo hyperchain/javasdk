@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.response.tx;
 
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TxResponse extends Response {
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public class Transaction {
 
@@ -82,21 +83,6 @@ public class TxResponse extends Response {
         }
     }
 
-    public class TxCount {
-        @Expose
-        String count;
-        @Expose
-        long timestamp;
-
-        @Override
-        public String toString() {
-            return "TxCount{" +
-                    "count='" + count + '\'' +
-                    ", timestamp=" + timestamp +
-                    '}';
-        }
-    }
-
     @Expose
     private JsonElement result;
 
@@ -105,7 +91,7 @@ public class TxResponse extends Response {
      *
      * @return list of transactions
      */
-    public List<Transaction> getTransactions() {
+    public List<Transaction> getResult() {
         List<Transaction> transactions = new ArrayList<>();
 
         if (result.isJsonArray()) {
@@ -118,16 +104,6 @@ public class TxResponse extends Response {
         }
 
         return transactions;
-    }
-
-    /**
-     * get transaction count.
-     *
-     * @return transaction count
-     */
-    public TxCount getTxCount() {
-        TxCount txCount = gson.fromJson(result, TxCount.class);
-        return txCount;
     }
 
     @Override

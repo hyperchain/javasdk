@@ -4,6 +4,7 @@ import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 
@@ -23,7 +24,7 @@ public class TxHashResponse extends Response {
     private int[] nodeIds;
 
     public TxHashResponse() {
-        this.gson = new Gson();
+        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
     public void setTransaction(Transaction transaction) {

@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.response.mq;
 
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
@@ -20,7 +21,7 @@ public class MQResponse extends Response {
      */
     public List<String> getQueueNames() {
         List<String> queue = new ArrayList<>();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         if (result.isJsonArray()) {
             JsonArray jsonArray = result.getAsJsonArray();
             for (JsonElement element : jsonArray) {
