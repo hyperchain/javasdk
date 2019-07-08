@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.response.block;
 import cn.hyperchain.sdk.response.Response;
 import cn.hyperchain.sdk.response.tx.TxResponse;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
@@ -13,7 +14,7 @@ import java.util.List;
 public class BlockResponse extends Response {
     @Expose
     private JsonElement result;
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     private class Block {
         @Expose

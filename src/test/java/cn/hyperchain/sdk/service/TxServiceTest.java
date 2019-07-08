@@ -8,6 +8,9 @@ import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
+import cn.hyperchain.sdk.response.tx.TxCountResponse;
+import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.BeforeClass;
@@ -60,8 +63,8 @@ public class TxServiceTest {
         Request<TxResponse> txResponseRequest = txService.getTxByHash(txHash);
         Request<TxResponse> txResponseRequest1 = txService.getTxByHash(txHash1);
         TxResponse txResponse = txResponseRequest.send();
-        String blockHash = txResponse.getTransactions().get(0).getBlockHash();
-        String blockHash1 = txResponseRequest1.send().getTransactions().get(0).getBlockHash();
+        String blockHash = txResponse.getResult().get(0).getBlockHash();
+        String blockHash1 = txResponseRequest1.send().getResult().get(0).getBlockHash();
 
         blockHashes.add(blockHash);
         blockHashes.add(blockHash1);
@@ -87,14 +90,14 @@ public class TxServiceTest {
     public void testGetTx() throws RequestException {
         Request<TxResponse> txResponseRequest = txService.getTx(BigInteger.valueOf(1), BigInteger.valueOf(3));
         TxResponse receiptResponse = txResponseRequest.send();
-        System.out.println(receiptResponse.getTransactions());
+        System.out.println(receiptResponse.getResult());
     }
 
     @Test
     public void testGetTx1() throws RequestException {
         Request<TxResponse> txResponseRequest = txService.getTx("1", "3");
         TxResponse receiptResponse = txResponseRequest.send();
-        System.out.println(receiptResponse.getTransactions());
+        System.out.println(receiptResponse.getResult());
     }
 
     @Test
@@ -102,7 +105,7 @@ public class TxServiceTest {
     public void testGetDiscardTx() throws RequestException {
         Request<TxResponse> txResponseRequest = txService.getDiscardTx();
         TxResponse txResponse = txResponseRequest.send();
-        System.out.println(txResponse.getTransactions());
+        System.out.println(txResponse.getResult());
     }
 
     @Test
@@ -110,7 +113,7 @@ public class TxServiceTest {
         String txHash = txHashes.get(0);
         Request<TxResponse> txResponseRequest = txService.getTxByHash(txHash);
         TxResponse txResponse = txResponseRequest.send();
-        System.out.println(txResponse);
+        System.out.println(txResponse.getResult());
     }
 
     @Test
@@ -140,7 +143,7 @@ public class TxServiceTest {
         Request<TxResponse> txResponseRequest = txService.getTxByBlockNumAndIndex(blockNum, index);
         TxResponse txResponse = txResponseRequest.send();
 
-        System.out.println(txResponse);
+        System.out.println(txResponse.getResult());
     }
 
     @Test
@@ -150,28 +153,19 @@ public class TxServiceTest {
         Request<TxResponse> txResponseRequest = txService.getTxByBlockNumAndIndex(blockNum, index);
         TxResponse txResponse = txResponseRequest.send();
 
-        System.out.println(txResponse);
+        System.out.println(txResponse.getResult());
 
     }
-
-    @Test
-    public void testGetTransactionsCount() throws RequestException {
-        Request<TxResponse> transactionsCount = txService.getTransactionsCount();
-        TxResponse txResponse = transactionsCount.send();
-
-        System.out.println(txResponse.getTxCount());
-    }
-
 
     @Test
     public void testGetTxAvgTimeByBlockNumber() throws RequestException {
         String from = "1";
         String to = "2";
 
-        Request<TxResponse> txResponseRequest = txService.getTxAvgTimeByBlockNumber(from, to);
-        TxResponse txResponse = txResponseRequest.send();
+        Request<TxAvgTimeResponse> txResponseRequest = txService.getTxAvgTimeByBlockNumber(from, to);
+        TxAvgTimeResponse avgTimeResponse = txResponseRequest.send();
 
-        System.out.println(txResponse);
+        System.out.println(avgTimeResponse.getResult());
     }
 
     @Test
@@ -179,10 +173,18 @@ public class TxServiceTest {
         BigInteger from = new BigInteger("1");
         BigInteger to = new BigInteger("2");
 
-        Request<TxResponse> txResponseRequest = txService.getTxAvgTimeByBlockNumber(from, to);
-        TxResponse txResponse = txResponseRequest.send();
+        Request<TxAvgTimeResponse> txResponseRequest = txService.getTxAvgTimeByBlockNumber(from, to);
+        TxAvgTimeResponse avgTimeResponse = txResponseRequest.send();
 
-        System.out.println(txResponse);
+        System.out.println(avgTimeResponse.getResult());
+    }
+
+    @Test
+    public void testGetTransactionsCount() throws RequestException {
+        Request<TxCountWithTSResponse> transactionsCount = txService.getTransactionsCount();
+        TxCountWithTSResponse txCountWithTSResponse = transactionsCount.send();
+
+        System.out.println(txCountWithTSResponse.getResult());
     }
 
     @Test
@@ -198,26 +200,20 @@ public class TxServiceTest {
     @Test
     public void testGetBlockTxCountByHash() throws RequestException {
         String blockHash = blockHashes.get(0);
-        Request<TxResponse> blockTxCountByHash = txService.getBlockTxCountByHash(blockHash);
-        TxResponse txResponse = blockTxCountByHash.send();
+        Request<TxCountResponse> blockTxCountByHash = txService.getBlockTxCountByHash(blockHash);
+        TxCountResponse txCountResponse = blockTxCountByHash.send();
 
-        System.out.println(txResponse);
+        System.out.println(txCountResponse.getResult());
     }
 
 
     @Test
     public void testGetBlockTxCountByNumber() throws RequestException {
         String blockNumber = "1";
-        Request<TxResponse> blockTxCountByNumber = txService.getBlockTxCountByNumber(blockNumber);
-        TxResponse txResponse = blockTxCountByNumber.send();
+        Request<TxCountResponse> blockTxCountByNumber = txService.getBlockTxCountByNumber(blockNumber);
+        TxCountResponse txCountResponse = blockTxCountByNumber.send();
 
-        System.out.println(txResponse);
-    }
-
-    @Test
-    @Ignore
-    public void testGetSignHash() throws RequestException {
-
+        System.out.println(txCountResponse.getResult());
     }
 
     @Test
@@ -295,7 +291,7 @@ public class TxServiceTest {
 
         Request<TxResponse> txResponseRequest = txService.getBatchTxByHash(txHashes1);
         TxResponse txResponse = txResponseRequest.send();
-        System.out.println(txResponse.getTransactions());
+        System.out.println(txResponse.getResult());
     }
 
     @Test
@@ -310,10 +306,10 @@ public class TxServiceTest {
         BigInteger startTime = BigInteger.valueOf(1559193987434588840L);
         BigInteger endTime = BigInteger.valueOf(1559193987434588900L);
 
-        Request<TxResponse> txResponseRequest = txService.getTxsCountByTime(startTime, endTime);
-        TxResponse txResponse = txResponseRequest.send();
+        Request<TxCountResponse> txRequest = txService.getTxsCountByTime(startTime, endTime);
+        TxCountResponse txCountResponse = txRequest.send();
 
-        System.out.println(txResponse);
+        System.out.println(txCountResponse.getResult());
     }
 
 

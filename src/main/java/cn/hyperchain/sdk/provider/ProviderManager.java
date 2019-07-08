@@ -12,14 +12,15 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
 import cn.hyperchain.sdk.response.TCertResponse;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * ProviderManager responsible for load balancing, encapsulating headers, etc.
@@ -29,7 +30,7 @@ public class ProviderManager {
     private TCertPool tCertPool;
     private List<HttpProvider> httpProviders;
     private boolean isCFCA;
-    private static Gson gson = new Gson();
+    private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     private ProviderManager() {
     }

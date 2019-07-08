@@ -3,17 +3,17 @@ package cn.hyperchain.sdk.request;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
 import cn.hyperchain.sdk.provider.ProviderManager;
-import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.Response;
 
-public class ReceiptRequest<K extends ReceiptResponse> extends Request<K> {
+public class ReceiptRequest extends Request {
 
-    public ReceiptRequest(String method, ProviderManager providerManager, Class<K> clazz, int... nodeIds) {
+    public ReceiptRequest(String method, ProviderManager providerManager, Class clazz, int... nodeIds) {
         super(method, providerManager, clazz, nodeIds);
     }
 
     @Override
-    public K send() throws RequestException {
-        K response = null;
+    public Response send() throws RequestException {
+        Response response = null;
 
         try {
             response = super.send();
