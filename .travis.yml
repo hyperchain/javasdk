@@ -9,6 +9,7 @@ install:
   - docker pull hyperchaincn/hvmd
   - docker run -d --rm --name=hvmd -p 8091:9999 hyperchaincn/hvmd
   - docker run -d --name myrabbitmq -p 5672:5672 -p 15672:15672 docker.io/rabbitmq:latest
+  - npm install -g solc@0.4.25
 
   - wget https://github.com/hyperchain/hyperchain/releases/download/v1.0.0/hyperchain-solo-1.0.0-8b68028-20190516-Ubuntu-16.04.tar.gz
   - tar zxvf hyperchain-solo-1.0.0-8b68028-20190516-Ubuntu-16.04.tar.gz
