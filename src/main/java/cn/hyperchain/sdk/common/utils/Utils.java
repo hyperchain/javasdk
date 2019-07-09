@@ -2,6 +2,8 @@ package cn.hyperchain.sdk.common.utils;
 
 import org.apache.log4j.Logger;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +31,7 @@ public class Utils {
 
     /**
      * create transaction random nonce.
+     *
      * @return nonce
      */
     public static long genNonce() {
@@ -39,6 +42,7 @@ public class Utils {
 
     /**
      * create create random int value in range.
+     *
      * @param min range start
      * @param max range end
      * @return result
@@ -50,6 +54,7 @@ public class Utils {
 
     /**
      * judge String is null or "".
+     *
      * @param str source str
      * @return is blank
      */
@@ -59,10 +64,54 @@ public class Utils {
 
     /**
      * judge file path is absolute.
+     *
      * @param path file path
      * @return is absolute
      */
     public static boolean isAbsolutePath(String path) {
         return path.startsWith("/") || path.startsWith("file:/") || path.contains(":\\");
+    }
+
+
+    /**
+     * to compile solidity contract local.
+     *
+     * @param sourceCodePath source code file path
+     */
+    public static void compile(String sourceCodePath) {
+        String command = "solc --bin --abi " + sourceCodePath;
+        Runtime runtime = Runtime.getRuntime();
+        FileOutputStream fileOutputStream1;
+        FileOutputStream fileOutputStream2;
+        try {
+            Process process = runtime.exec(command);
+            String output = FileUtil.readFile(process.getInputStream());
+
+            int start1 = output.indexOf("Binary:") + 9;
+            int start2 = output.indexOf("Contract JSON ABI") + 19;
+            String bin = output.substring(start1, start2 - 20);
+            String abi = output.substring(start2);
+
+            String path;
+            if (Utils.isAbsolutePath(sourceCodePath)) {
+                path = sourceCodePath.substring(0, sourceCodePath.lastIndexOf("."));
+            } else {
+                path = Thread.currentThread().getContextClassLoader().getResource(sourceCodePath).getPath();
+                path = path.substring(0, path.lastIndexOf("."));
+            }
+
+            System.out.println("path: " + path);
+            fileOutputStream1 = new FileOutputStream(path + ".bin");
+            fileOutputStream2 = new FileOutputStream(path + ".abi");
+
+            fileOutputStream1.write(bin.getBytes());
+            fileOutputStream2.write(abi.getBytes());
+
+            fileOutputStream1.close();
+            fileOutputStream2.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
