@@ -4,6 +4,7 @@ import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.BlockRequest;
@@ -48,11 +49,14 @@ public class BlockServiceTest {
         String abiStr = FileUtil.readFile(inputStream2);
         abi = Abi.fromJson(abiStr);
 
-        Account account = null;
-        Transaction transaction = null;
+        Account account;
+        Transaction transaction;
+        FuncParams params;
         for (int i = 0; i < 2; i++) {
+            params = new FuncParams();
+            params.addParams("contract" + i);
             account = accountService.genAccount(Algo.ECRAW);
-            transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract" + i).build();
+            transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
             transaction.sign(account);
 
             String txHash = contractService.deploy(transaction).send().polling().getTxHash();
@@ -83,7 +87,10 @@ public class BlockServiceTest {
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
         Account backup = account;
-        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract").build();
+
+        FuncParams params = new FuncParams();
+        params.addParams("contract");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
 
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
