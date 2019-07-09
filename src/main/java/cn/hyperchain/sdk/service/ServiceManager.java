@@ -4,6 +4,7 @@ import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.service.impl.AccountServiceImpl;
 import cn.hyperchain.sdk.service.impl.ArchiveServiceImpl;
 import cn.hyperchain.sdk.service.impl.BlockServiceImpl;
+import cn.hyperchain.sdk.service.impl.CompileServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
 import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
@@ -48,5 +49,9 @@ public class ServiceManager {
 
     public static ArchiveService getArchiveService(ProviderManager providerManager) {
         return new ArchiveServiceImpl(providerManager);
+    }
+
+    public static CompileService getCompileService(ProviderManager providerManager) {
+        return new CompileServiceImpl(providerManager);
     }
 }
