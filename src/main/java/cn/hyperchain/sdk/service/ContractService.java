@@ -7,6 +7,7 @@ import cn.hyperchain.sdk.transaction.Transaction;
 
 /**
  * contract service interface.
+ *
  * @author tomkk
  * @version 0.0.1
  */
