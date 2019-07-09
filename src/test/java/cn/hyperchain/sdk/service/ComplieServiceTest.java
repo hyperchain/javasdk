@@ -25,6 +25,7 @@ public class ComplieServiceTest {
     private static String bin;
     private static String type;
 
+
     @BeforeClass
     public static void testComplie() throws RequestException, IOException {
         String sourceCode = FileUtil.readFile(FileUtil.readFileAsStream("solidity/TypeTestContract.sol"));
@@ -41,6 +42,7 @@ public class ComplieServiceTest {
     }
 
     @Test
+    @Ignore
     public void testDeploy() throws RequestException {
         ContractService contractService = ServiceManager.getContractService(providerManager);
         AccountService accountService = ServiceManager.getAccountService(providerManager);

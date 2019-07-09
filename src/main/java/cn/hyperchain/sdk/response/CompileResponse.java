@@ -54,7 +54,7 @@ public class CompileResponse extends Response {
     public String[] getAbi() {
         return result.getAbi();
     }
-
+  
     public String[] getTypes() {
         return result.getTypes();
     }
