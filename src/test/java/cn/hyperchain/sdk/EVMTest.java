@@ -5,6 +5,7 @@ import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -41,7 +42,9 @@ public class EVMTest {
         String abiStr = FileUtil.readFile(inputStream2);
         Abi abi = Abi.fromJson(abiStr);
 
-        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, "contract01").build();
+        FuncParams params = new FuncParams();
+        params.addParams("contract01");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
         transaction.sign(account);
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
         String contractAddress = receiptResponse.getContractAddress();
@@ -49,7 +52,9 @@ public class EVMTest {
         System.out.println("账户私钥:" + account.getPrivateKey());
 
 
-        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes1)", abi, "1").build();
+        FuncParams params1 = new FuncParams();
+        params1.addParams("1");
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes1)", abi, params1).build();
         transaction1.sign(account);
         ReceiptResponse receiptResponse1 = contractService.invoke(transaction1).send().polling();
         System.out.println(receiptResponse1.getRet());

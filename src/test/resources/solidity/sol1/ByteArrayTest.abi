@@ -1,0 +1,1 @@
+[{"constant":false,"inputs":[{"name":"a","type":"uint32[2]"},{"name":"b","type":"bool[2]"}],"name":"testArray","outputs":[{"name":"","type":"uint32[2]"},{"name":"","type":"bool[2]"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"name1","type":"bytes"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]

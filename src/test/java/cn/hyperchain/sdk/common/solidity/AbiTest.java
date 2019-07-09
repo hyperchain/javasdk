@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.common.solidity;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.FuncParams;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,7 +22,9 @@ public class AbiTest {
         Assert.assertEquals(contractAbi.length(), abi.toJson().length());
 
         ContractType.Function function = abi.getFunction("simpleFunction(bytes32)");
-        byte[] encode = function.encode("aaa");
+        FuncParams params = new FuncParams();
+        params.addParams("aaa");
+        byte[] encode = function.encode(params.getParams());
         System.out.println(ByteUtil.toHex(encode));
     }
 
