@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.service.impl.AccountServiceImpl;
+import cn.hyperchain.sdk.service.impl.ArchiveServiceImpl;
 import cn.hyperchain.sdk.service.impl.BlockServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
 import cn.hyperchain.sdk.service.impl.MQServiceImpl;
@@ -41,11 +42,11 @@ public class ServiceManager {
         return new BlockServiceImpl(providerManager);
     }
 
-
-
     public static TxService getTxService(ProviderManager providerManager) {
         return new TxServiceImpl(providerManager);
     }
 
-
+    public static ArchiveService getArchiveService(ProviderManager providerManager) {
+        return new ArchiveServiceImpl(providerManager);
+    }
 }

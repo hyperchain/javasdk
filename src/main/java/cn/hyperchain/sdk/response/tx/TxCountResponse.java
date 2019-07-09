@@ -4,9 +4,10 @@ import cn.hyperchain.sdk.response.Response;
 import com.google.gson.annotations.Expose;
 
 /**
+ * this class represents transaction count response.
+ *
  * @author Jianhui Dong
  * @ClassName TxCountResponse
- * @Description
  * @date 2019-07-08
  */
 public class TxCountResponse extends Response {

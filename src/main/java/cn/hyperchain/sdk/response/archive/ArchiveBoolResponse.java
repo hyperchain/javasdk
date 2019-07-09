@@ -1,27 +1,27 @@
-package cn.hyperchain.sdk.response.tx;
+package cn.hyperchain.sdk.response.archive;
 
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.annotations.Expose;
 
 /**
- * this class represents transaction count with time field response.
+ * this class represents archive boolean response (when return type is only a boolean value).
  *
  * @author Jianhui Dong
- * @ClassName TxAvgTimeResponse
+ * @ClassName ArchiveBoolResponse
  * @date 2019-07-08
  */
-public class TxAvgTimeResponse extends Response {
+public class ArchiveBoolResponse extends Response {
     @Expose
-    private String result;
+    private Boolean result;
 
-    public String getResult() {
+    public Boolean getResult() {
         return result;
     }
 
     @Override
     public String toString() {
-        return "TxAvgTimeResponse{" +
-                "result='" + result + '\'' +
+        return "ArchiveBoolResponse{" +
+                "result=" + result +
                 ", jsonrpc='" + jsonrpc + '\'' +
                 ", id='" + id + '\'' +
                 ", code=" + code +
