@@ -387,13 +387,13 @@ Request<TxResponse> getTxByBlockNumAndIndex(String blockNumber, String idx, int.
 - nodeIds 说明请求向哪些节点发送
 
 ```java
-Request<TxResponse> getTxAvgTimeByBlockNumber(BigInteger from, BigInteger to, int... nodeIds);
+Request<TxAvgTimeResponse> getTxAvgTimeByBlockNumber(BigInteger from, BigInteger to, int... nodeIds);
 ```
 
 重载方法如下:
 
 ```java
-Request<TxResponse> getTxAvgTimeByBlockNumber(String from, String to, int... nodeIds);
+Request<TxAvgTimeResponse> getTxAvgTimeByBlockNumber(String from, String to, int... nodeIds);
 ```
 
 
@@ -405,7 +405,7 @@ Request<TxResponse> getTxAvgTimeByBlockNumber(String from, String to, int... nod
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-Request<TxResponse> getTransactionsCount(int... nodeIds);
+Request<TxCountWithTSResponse> getTransactionsCount(int... nodeIds);
 ```
 
 
@@ -431,7 +431,7 @@ Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送
 
 ```java
-Request<TxResponse> getBlockTxCountByHash(String blockHash, int... nodeIds);
+Request<TxCountWithTSResponse> getBlockTxCountByHash(String blockHash, int... nodeIds);
 ```
 
 
@@ -444,7 +444,7 @@ Request<TxResponse> getBlockTxCountByHash(String blockHash, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-Request<TxResponse> getBlockTxCountByNumber(String blockNumber, int... nodeIds);
+Request<TxCountWithTSResponse> getBlockTxCountByNumber(String blockNumber, int... nodeIds);
 ```
 
 
@@ -645,6 +645,189 @@ Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, 
 
 
 
+## 第五章. BlockService相关接口
+
+### 5.1 获取最新区块(getLastestBlock)
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getLastestBlock(int... nodeIds);
+```
+
+### 5.2 查询指定区间的区块by block number(getBlocks)
+
+参数：
+
+- from 起始区块号。
+- to 终止区块号。
+- isPlain  (可选)，默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, int... nodeIds);
+
+Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, boolean isPlain, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockResponse> getBlocks(String from, String to, int... nodeIds);
+
+Request<BlockResponse> getBlocks(String from, String to, boolean isPlain, int... nodeIds);
+```
+
+
+
+### 5.3 查询区块by block hash(getBlockByHash)
+
+参数：
+
+- blockHash 区块的哈希值,32字节的十六进制字符串。
+- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getBlockByHash(String blockHash, int... nodeIds);
+
+Request<BlockResponse> getBlockByHash(String blockHash, boolean isPlain, int... nodeIds);
+```
+
+
+
+### 5.4 查询区块by block number(getBlockByNum)
+
+参数：
+
+- blockNumber 区块号。
+- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getBlockByNum(BigInteger blockNumber, int... nodeIds);
+
+Request<BlockResponse> getBlockByNum(BigInteger blockNumber, boolean isPlain, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockResponse> getBlockByNum(String blockNumber, int... nodeIds);
+
+Request<BlockResponse> getBlockByNum(String blockNumber, boolean isPlain, int... nodeIds);
+```
+
+
+
+### 5.5 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)
+
+参数：
+
+- from 起始区块号。
+- to 终止区块号。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockAvgTimeResponse> getAvgGenerateTimeByBlockNumber(BigInteger from, BigInteger to, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockAvgTimeResponse> getAvgGenerateTimeByBlockNumber(String from, String to, int... nodeIds);
+```
+
+
+
+### 5.6 查询指定时间区间内的区块数量(getBlocksByTime)
+
+参数：
+
+- startTime 起始时间戳(单位ns)。
+- endTime 结束时间戳(单位ns)。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockCountResponse> getBlocksByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockCountResponse> getBlocksByTime(String startTime, String endTime, int... nodeIds);
+```
+
+
+
+### 5.7 查询最新区块号，即链高(getChainHeight)
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockNumberResponse> getChainHeight(int... nodeIds);
+```
+
+
+
+### 5.8 查询创世区块号(getChainHeight)
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+RequestBlockNumberResponse> getChainHeight(int... nodeIds);
+```
+
+
+
+### 5.9 查询批量区块by block hash list(getBatchBlocksByHash)
+
+参数：
+
+- blockHashList 要查询的区块哈希数组，哈希值为32字节的十六进制字符串。
+- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, int... nodeIds);
+
+Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, boolean isPlain, int... nodeIds);
+```
+
+
+
+### 5.10 查询批量区块by block number list(getBatchBlocksByNum)
+
+参数：
+
+- blockNumberList 要查询的区块号数组。
+- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, int... nodeIds);
+
+Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, boolean isPlain, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, int... nodeIds);
+
+Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, boolean isPlain, int... nodeIds);
+```
+
+
+
+
+
 ## 第六章. NodeService相关接口
 
 ### 6.1 获取节点信息
@@ -663,7 +846,7 @@ Request<NodeResponse> getNodes(int... ids);
 
 ### 7.1 通知MQ服务器正常工作
 
-参数
+参数：
 
 + nodeIds 说明请求向哪些节点发送
 
@@ -673,7 +856,7 @@ Request<MQResponse> informNormal(int... nodeIds)
 
 ### 7.2 注册队列
 
-参数
+参数：
 
 + from 调用该接口的账户地址
 + queueName 队列名称
@@ -687,7 +870,7 @@ Request<MQResponse> registerQueue(String from, String queueName, List<String> ro
 
 ### 7.3 注销队列
 
-参数
+参数：
 
 + from 调用该接口的账户地址
 + queueName 队列名称
@@ -710,7 +893,7 @@ Request<MQResponse> getAllQueueNames(int... nodeIds);
 
 ### 7.5 获取所有exchanger名称
 
-参数
+参数：
 
 + nodeIds 说明请求向哪些节点发送
 
@@ -720,7 +903,7 @@ Request<MQResponse> getExchangerName(int... nodeIds);
 
 ### 7.6 删除exchanger
 
-参数
+参数：
 
 + exchangerName exchanger名称
 + nodeIds 说明请求向哪些节点发送
@@ -735,12 +918,153 @@ Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
 
 ### 8.1 监听合约
 
-参数
+参数：
 
 + sourceCode 要监听的合约的源代码
 + contractAddress 要监听的合约的部署地址
-+ ids 说明请求向哪些节点发送。
++ nodeIds 说明请求向哪些节点发送。
 
 ```java
 Request<RadarResponse> listenContract(String sourceCode, String contractAddress, int... nodeIds);
+```
+
+
+
+## 第九章. ArchiveService相关接口
+
+### 9.1 制作快照
+
+参数：
+
++ blockNumber 区块号
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveFilterIdResponse> snapshot(BigInteger blockNumber, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<ArchiveFilterIdResponse> snapshot(String blockNumber, int... nodeIds);
+```
+
+### 9.2 查询快照是否存在
+
+参数：
+
++ filterId 快照id
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> querySnapshotExist(String filterId, int... nodeIds);
+```
+
+### 9.3 检查快照是否正确
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> checkSnapshot(String filterId, int... nodeIds);
+```
+
+### 9.4 删除快照
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> deleteSnapshot(String filterId, int... nodeIds);
+```
+
+### 9.5 列出所有快照
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveResponse> listSnapshot(int... nodeIds);
+```
+
+### 9.6 查看快照
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveResponse> readSnapshot(String filterId, int... nodeIds);
+```
+
+### 9.7 数据归档（预约归档）
+
+参数：
+
+- filterId 快照id
+- sync 是否同步
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeIds);
+```
+
+### 9.8 数据归档（直接归档）
+
+参数：
+
+- blkNumber 区块号
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
+```
+
+### 9.9 恢复某归档数据
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> restore(String filterId, boolean sync, int... nodeIds);
+```
+
+### 9.10 恢复所有归档数据
+
+参数：
+
+- sync 是否同步
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> restoreAll(boolean sync, int... nodeIds);
+```
+
+### 9.11 查询归档数据状态
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
+```
+
+### 9.12 查询所有待完成的快照请求
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveResponse> pending(int... nodeIds);
 ```
