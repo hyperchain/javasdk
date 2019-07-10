@@ -37,11 +37,13 @@ public class AccountTest {
         Account account = Account.fromAccountJson(json, "");
         System.out.println(account);
 
-//        String json1 = "{\"address\":\"1886F849CF2A663352A471CD8B4494B9028EFAC9\",\"publicKey\":\"041A376A664E2F4A2F2D1544C83E18B39A0B40DB13056855831CA3E80032692C81AA3E11C5F957CAA3D7F9C7A70633C7665263F0535AB65560047004521A1DB95C\",\"privateKey\":\"1CCCCE7ED2D3277A2ECBBD8C0A30C7CF74E452CA43A6B194E20B2F0CFDB08E59C50F252DADE0758E18FA3EFF0D11F612\",\"privateKeyEncrypted\":true,\"version\":\"3.0\",\"algo\":\"0x14\"}";
-//        Account account1 = Account.fromAccountJson(json1, "123");
-//        System.out.println("----------------[");
-//        System.out.println(json1);
-//        System.out.println(account1);
+        String json1 = "{\"address\":\"dcec687a81255149e248a9f4979e01789cfc8249\",\"encrypted\":\"df8df34ee6c87f1ff0328b292ced9e89bcebb52533c3cc0ca7ecd5e3c11d34fa3b9254c295d0a1ecc08a1805d7970406\",\"version\":\"3.0\",\"algo\":\"0x04\"}";
+        Account account1 = Account.fromAccountJson(json1, "123");
+        System.out.println("----------------------------------");
+        System.out.println(json1.toLowerCase());
+        System.out.println(account1.toJson().toLowerCase());
+
+
         ProviderManager providerManager = Common.soloProviderManager;
         ContractService contractService = ServiceManager.getContractService(providerManager);
         InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.bin");
@@ -60,15 +62,11 @@ public class AccountTest {
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
         String contractAddress = receiptResponse.getContractAddress();
         System.out.println("合约地址: " + contractAddress);
-//        System.out.println("部署返回(未解码): " + receiptResponse.getRet());
-//        System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
 
-
-//        transaction.sign(account1);
-//        ReceiptResponse receiptResponse1 = contractService.deploy(transaction).send().polling();
-//        String contractAddress1 = receiptResponse.getContractAddress();
-//        System.out.println("合约地址: " + contractAddress1);
-//        System.out.println("部署返回(未解码): " + receiptResponse1.getRet());
-//        System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse1.getRet(), String.class));
+        transaction = new Transaction.EVMBuilder(account1.getAddress()).deploy(bin, abi, params).build();
+        transaction.sign(account1);
+        ReceiptResponse receiptResponse1 = contractService.deploy(transaction).send().polling();
+        String contractAddress1 = receiptResponse1.getContractAddress();
+        System.out.println("合约地址: " + contractAddress1);
     }
 }

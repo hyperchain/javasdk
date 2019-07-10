@@ -75,7 +75,7 @@ public abstract class Account {
         if (algo.isSM()) {
             ECPoint ecPoint = SM2Util.CURVE.decodePoint(ByteUtil.fromHex(publicKeyHex));
             ECPublicKeyParameters publicKeyParameters = new ECPublicKeyParameters(ecPoint, SM2Util.DOMAIN_PARAMS);
-            ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, ByteUtil.fromHex(privateKeyHex)), SM2Util.DOMAIN_PARAMS);
+            ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, privateKey), SM2Util.DOMAIN_PARAMS);
             AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(publicKeyParameters, privateKeyParameters);
             if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParameters.getQ().getEncoded(false))))) {
                 throw new AccountException("account address is not matching with private key");
@@ -180,54 +180,55 @@ public abstract class Account {
     @Deprecated
     private static String parseAccountJson(String accountJson, String password) {
         JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
+
+        String version = jsonObject.get("version").getAsString();
+        if (Version.V4.getV().equals(version)) {
+            return accountJson;
+        }
+
         JsonElement publicKeyStr = jsonObject.get("publicKey");
         JsonElement algoStr = jsonObject.get("algo");
         JsonElement encryptedStr = jsonObject.get("encrypted");
         JsonElement isEncrypted = jsonObject.get("privateKeyEncrypted");
 
-        String address = jsonObject.get("address").getAsString();
-        String version = jsonObject.get("version").getAsString();
+        String address = jsonObject.get("address").getAsString().toLowerCase();
         String privateKeyHex;
         String publicKeyHex;
-
         Algo algo;
 
         if (algoStr == null) {
             if (isEncrypted.getAsBoolean()) {
-                algo = Algo.getAlog("0x12");
+                algo = Algo.SMDES;
             } else {
-                algo = Algo.getAlog("0x13");
+                algo = Algo.SMRAW;
             }
         } else {
             algo = Algo.getAlog(algoStr.getAsString());
         }
 
         if (encryptedStr == null) {
-            privateKeyHex = jsonObject.get("privateKey").getAsString().toLowerCase();
+            privateKeyHex = jsonObject.get("privateKey").getAsString();
         } else {
-            String encrypted = encryptedStr.getAsString().toLowerCase();
-            privateKeyHex = encrypted;
+            privateKeyHex = encryptedStr.getAsString();
         }
 
-        if (isEncrypted != null) {
-            if (isEncrypted.getAsBoolean()) {
-                privateKeyHex = ByteUtil.toHex(decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password));
-            }
-        }
+        privateKeyHex = privateKeyHex.toLowerCase();
 
         if (!algo.isSM() && publicKeyStr == null) {
-            ECKey ecKey = ECKey.fromPrivate(ByteUtil.fromHex(privateKeyHex));
+            byte[] privateKey = decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password);
+            ECKey ecKey = ECKey.fromPrivate(privateKey);
             publicKeyHex = ByteUtil.toHex(ecKey.getPubKey());
         } else {
             publicKeyHex = publicKeyStr.getAsString();
-//            throw new UnsupportedOperationException("not support sm");
         }
 
-        String newAccountJson = "{\"address\":\"" + Utils.deleteHexPre(address).toLowerCase()
+        publicKeyHex = publicKeyHex.toLowerCase();
+
+        String newAccountJson = "{\"address\":\"" + Utils.deleteHexPre(address)
                 + "\",\"algo\":\"" + algo.getAlgo()
-                + "\",\"privateKey\":\"" + Utils.deleteHexPre(privateKeyHex).toLowerCase()
+                + "\",\"privateKey\":\"" + Utils.deleteHexPre(privateKeyHex)
                 + "\",\"version\":\"" + version
-                + "\",\"publicKey\":\"" + Utils.deleteHexPre(publicKeyHex).toLowerCase()
+                + "\",\"publicKey\":\"" + Utils.deleteHexPre(publicKeyHex)
                 + "\"}";
 
 
