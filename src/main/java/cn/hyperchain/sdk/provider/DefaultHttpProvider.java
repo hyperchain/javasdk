@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.provider;
 import cn.hyperchain.sdk.common.utils.HttpsUtils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import com.alibaba.fastjson.JSONObject;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -115,6 +116,15 @@ public class DefaultHttpProvider implements HttpProvider {
         if (response.isSuccessful()) {
             try {
                 String result = response.body().string();
+                JSONObject jsonObject = com.alibaba.fastjson.JSON.parseObject(result);
+                if (jsonObject.get("message") != null && jsonObject.get("message").equals("Token is expired")) {
+                    logger.info("Token is expired");
+                    throw new RequestException(400,"Token is expired");
+                }
+                if (jsonObject.get("message") != null && jsonObject.get("message").equals("Token Error")) {
+                    logger.info("Token Error");
+                    throw new RequestException(400,"Token Error");
+                }
                 logger.debug("[RESPONSE] " + result);
                 return result;
             } catch (IOException exception) {

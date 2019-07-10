@@ -31,6 +31,10 @@ public class TxHashResponse extends Response {
         this.transaction = transaction;
     }
 
+    public int[] getNodeIds() {
+        return nodeIds;
+    }
+
     public void setNodeIds(int... nodeIds) {
         this.nodeIds = nodeIds;
     }

@@ -24,6 +24,15 @@ public abstract class Request<K extends Response> {
     protected ProviderManager providerManager;
     protected Class<K> clazz;
     protected int[] nodeIds;
+
+    public ProviderManager getProviderManager() {
+        return providerManager;
+    }
+
+    public void setProviderManager(ProviderManager providerManager) {
+        this.providerManager = providerManager;
+    }
+
     private Gson gson;
     // rpc request
     @Expose

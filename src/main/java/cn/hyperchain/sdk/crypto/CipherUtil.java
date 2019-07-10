@@ -109,7 +109,7 @@ public class CipherUtil {
         byte[] keyBytes = getPassword(password, 32);
         Key key = new SecretKeySpec(keyBytes, "AES");
         try {
-            Cipher out = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
+            Cipher out = Cipher.getInstance("AES/CBC/PKCS5Padding");
             out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(getIV(keyBytes, 16)));
             return out.doFinal(content);
         } catch (Exception exception) {
@@ -145,7 +145,7 @@ public class CipherUtil {
         byte[] keyBytes = getPassword(password, 24);
         Key key = new SecretKeySpec(keyBytes, "DESede");
         try {
-            Cipher out = Cipher.getInstance("DESede/CBC/PKCS5Padding", "BC");
+            Cipher out = Cipher.getInstance("DESede/CBC/PKCS5Padding");
             out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(getIV(keyBytes, 8)));
             return out.doFinal(content);
         } catch (Exception exception) {
