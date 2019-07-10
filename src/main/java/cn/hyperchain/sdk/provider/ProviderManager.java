@@ -208,6 +208,7 @@ public class ProviderManager {
                 headers.put("tcert", tCert);
                 headers.put("signature", this.tCertPool.getUniqueKeyPair().signData(bobyBytes));
             }
+            headers.put("hash",this.getHash());
             headers.put("msg", ByteUtil.toHex(bobyBytes));
         }
 
