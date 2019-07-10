@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.account;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.crypto.CipherUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
@@ -8,6 +9,7 @@ import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.exception.AccountException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
@@ -22,8 +24,8 @@ import java.math.BigInteger;
 public abstract class Account {
     protected final Logger logger = Logger.getLogger(Account.class);
 
-    protected static final byte[] ECFlag = new byte[] {0};
-    protected static final byte[] SMFlag = new byte[] {1};
+    protected static final byte[] ECFlag = new byte[]{0};
+    protected static final byte[] SMFlag = new byte[]{1};
 
     private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -40,10 +42,11 @@ public abstract class Account {
 
     /**
      * create account json instance by param.
-     * @param publicKey public key hex
+     *
+     * @param publicKey  public key hex
      * @param privateKey private key hex
-     * @param version account version
-     * @param algo account private key algorithm
+     * @param version    account version
+     * @param algo       account private key algorithm
      */
     public Account(String address, String publicKey, String privateKey, Version version, Algo algo) {
         this.privateKey = privateKey;
@@ -55,11 +58,13 @@ public abstract class Account {
 
     /**
      * get account from account json.
+     *
      * @param accountJson account json
-     * @param password password
+     * @param password    password
      * @return {@link Account}
      */
     public static Account fromAccountJson(String accountJson, String password) {
+        accountJson = parseAccountJson(accountJson, password);
         JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
         String addressHex = jsonObject.get("address").getAsString();
         String publicKeyHex = jsonObject.get("publicKey").getAsString();
@@ -87,9 +92,10 @@ public abstract class Account {
 
     /**
      * decode private key by password and specific account algo.
+     *
      * @param privateKey private key bytes
-     * @param algo algo
-     * @param password password
+     * @param algo       algo
+     * @param password   password
      * @return decoded private key
      */
     public static byte[] decodePrivateKey(byte[] privateKey, Algo algo, String password) {
@@ -117,9 +123,10 @@ public abstract class Account {
 
     /**
      * encode private key by password and specific account algo.
+     *
      * @param privateKey private key bytes
-     * @param algo algo
-     * @param password password
+     * @param algo       algo
+     * @param password   password
      * @return encoded private key
      */
     public static byte[] encodePrivateKey(byte[] privateKey, Algo algo, String password) {
@@ -169,6 +176,63 @@ public abstract class Account {
     public abstract byte[] sign(byte[] sourceData);
 
     public abstract boolean verify(byte[] sourceData, byte[] signature);
+
+    @Deprecated
+    private static String parseAccountJson(String accountJson, String password) {
+        JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
+        JsonElement publicKeyStr = jsonObject.get("publicKey");
+        JsonElement algoStr = jsonObject.get("algo");
+        JsonElement encryptedStr = jsonObject.get("encrypted");
+        JsonElement isEncrypted = jsonObject.get("privateKeyEncrypted");
+
+        String address = jsonObject.get("address").getAsString();
+        String version = jsonObject.get("version").getAsString();
+        String privateKeyHex;
+        String publicKeyHex;
+
+        Algo algo;
+
+        if (algoStr == null) {
+            if (isEncrypted.getAsBoolean()) {
+                algo = Algo.getAlog("0x12");
+            } else {
+                algo = Algo.getAlog("0x13");
+            }
+        } else {
+            algo = Algo.getAlog(algoStr.getAsString());
+        }
+
+        if (encryptedStr == null) {
+            privateKeyHex = jsonObject.get("privateKey").getAsString().toLowerCase();
+        } else {
+            String encrypted = encryptedStr.getAsString().toLowerCase();
+            privateKeyHex = encrypted;
+        }
+
+        if (isEncrypted != null) {
+            if (isEncrypted.getAsBoolean()) {
+                privateKeyHex = ByteUtil.toHex(decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password));
+            }
+        }
+
+        if (!algo.isSM() && publicKeyStr == null) {
+            ECKey ecKey = ECKey.fromPrivate(ByteUtil.fromHex(privateKeyHex));
+            publicKeyHex = ByteUtil.toHex(ecKey.getPubKey());
+        } else {
+            publicKeyHex = publicKeyStr.getAsString();
+            throw new UnsupportedOperationException("not support sm");
+        }
+
+        String newAccountJson = "{\"address\":\"" + Utils.deleteHexPre(address).toLowerCase()
+                + "\",\"algo\":\"" + algo.getAlgo()
+                + "\",\"privateKey\":\"" + Utils.deleteHexPre(privateKeyHex).toLowerCase()
+                + "\",\"version\":\"" + version
+                + "\",\"publicKey\":\"" + Utils.deleteHexPre(publicKeyHex).toLowerCase()
+                + "\"}";
+
+
+        return newAccountJson;
+    }
 
     @Override
     public String toString() {
