@@ -1,6 +1,8 @@
 package cn.hyperchain.sdk.response;
 
 import cn.hyperchain.sdk.exception.RequestException;
+import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.request.PollingRequest;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.Gson;
@@ -22,6 +24,8 @@ public class TxHashResponse extends Response {
     private ContractService contractService;
     private Gson gson;
     private int[] nodeIds;
+    private String method;
+    private ProviderManager providerManager;
 
     public TxHashResponse() {
         this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -39,8 +43,17 @@ public class TxHashResponse extends Response {
         this.contractService = contractService;
     }
 
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public void setProviderManager(ProviderManager providerManager) {
+        this.providerManager = providerManager;
+    }
+
     /**
      * polling to get receipt by txHash.
+     *
      * @return {@link ReceiptResponse}
      * @throws RequestException -
      */
@@ -51,11 +64,18 @@ public class TxHashResponse extends Response {
             return new ReceiptResponse(this, receipt);
         }
 
-        return contractService.getReceipt(getTxHash(), this.nodeIds).send();
+        if (contractService != null) {
+            return contractService.getReceipt(getTxHash(), this.nodeIds).send();
+        } else {
+            PollingRequest pollingRequest = new PollingRequest(method, providerManager, ReceiptResponse.class, nodeIds);
+            pollingRequest.addParams(getTxHash());
+            return (ReceiptResponse) pollingRequest.send();
+        }
     }
 
     /**
      * get transaction hash.
+     *
      * @return hash
      */
     public String getTxHash() {

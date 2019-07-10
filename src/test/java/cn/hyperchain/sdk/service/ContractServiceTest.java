@@ -23,7 +23,7 @@ public class ContractServiceTest {
     ProviderManager providerManager = Common.soloProviderManager;
     ContractService contractService = ServiceManager.getContractService(providerManager);
     AccountService accountService = ServiceManager.getAccountService(providerManager);
-
+    private static String txHash;
     @Before
     @Ignore
     public void deploy() throws RequestException, IOException {
@@ -36,6 +36,7 @@ public class ContractServiceTest {
         Assert.assertTrue(SignerUtil.verifySign(transaction.getNeedHashString(), transaction.getSignature(), account.getPublicKey()));
         // 4. get request
         ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        txHash = receiptResponse.getTxHash();
         String contractAddress = receiptResponse.getContractAddress();
         System.out.println("合约地址: " + contractAddress);
         System.out.println("部署返回(未解码): " + receiptResponse.getRet());
@@ -43,9 +44,7 @@ public class ContractServiceTest {
     }
 
     @Test
-    @Ignore
     public void testReceipt() throws RequestException {
-        String txHash = "0x8186076256e9ca935c2cea065777fbdc9bcb095e4edd38826d820d289f97b905";
         Request<ReceiptResponse> receipt = contractService.getReceipt(txHash);
         ReceiptResponse response = receipt.send();
         System.out.println(response);

@@ -2,10 +2,12 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
+import cn.hyperchain.sdk.transaction.Transaction;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -288,5 +290,6 @@ public interface TxService {
      */
     Request<TxCountResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
+    Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds);
 
 }
