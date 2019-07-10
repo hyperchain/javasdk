@@ -29,6 +29,7 @@ public class Utils {
 
     /**
      * create transaction random nonce.
+     *
      * @return nonce
      */
     public static long genNonce() {
@@ -39,6 +40,7 @@ public class Utils {
 
     /**
      * create create random int value in range.
+     *
      * @param min range start
      * @param max range end
      * @return result
@@ -50,6 +52,7 @@ public class Utils {
 
     /**
      * judge String is null or "".
+     *
      * @param str source str
      * @return is blank
      */
@@ -58,7 +61,28 @@ public class Utils {
     }
 
     /**
+     * add hex prefix.
+     *
+     * @param origin source str
+     * @return hex str with 0x
+     */
+    public static String addHexPre(String origin) {
+        return origin.startsWith("0x") ? origin : "0x" + origin;
+    }
+
+    /**
+     * delete hex prefix.
+     *
+     * @param origin source str
+     * @return hex str without 0x
+     */
+    public static String deleteHexPre(String origin) {
+        return origin.startsWith("0x") ? origin.substring(2) : origin;
+    }
+
+    /**
      * judge file path is absolute.
+     *
      * @param path file path
      * @return is absolute
      */
