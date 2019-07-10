@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.crypto.CipherUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
+import cn.hyperchain.sdk.crypto.sm.sm4.SM4Util;
 import cn.hyperchain.sdk.exception.AccountException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -115,6 +116,9 @@ public abstract class Account {
             case SM3DES:
                 privateKey = CipherUtil.decrypt3DES(privateKey, password);
                 break;
+            case SMSM4:
+                privateKey = SM4Util.decryptCbcPadding(privateKey, password);
+                break;
             default:
                 throw new AccountException("illegal account type");
         }
@@ -147,6 +151,8 @@ public abstract class Account {
                 privateKey = CipherUtil.encrypt3DES(privateKey, password);
                 break;
             case SMSM4:
+                privateKey = SM4Util.encryptCbcPadding(privateKey, password);
+                break;
             default:
                 throw new AccountException("illegal account type");
         }
