@@ -220,7 +220,7 @@ public abstract class Account {
             publicKeyHex = ByteUtil.toHex(ecKey.getPubKey());
         } else {
             publicKeyHex = publicKeyStr.getAsString();
-            throw new UnsupportedOperationException("not support sm");
+//            throw new UnsupportedOperationException("not support sm");
         }
 
         String newAccountJson = "{\"address\":\"" + Utils.deleteHexPre(address).toLowerCase()
