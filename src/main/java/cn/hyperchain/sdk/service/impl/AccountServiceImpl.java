@@ -49,13 +49,13 @@ public class AccountServiceImpl implements AccountService {
             publicKey = ecPub.getQ().getEncoded(false);
             privateKey = Account.encodePrivateKey(ByteUtil.biConvert32Bytes(privateKeyBI), algo, password);
             address = HashUtil.sha3omit12(publicKey);
-            return new SMAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V3, algo, keyPair);
+            return new SMAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, keyPair);
         } else {
             ecKey = new ECKey(new SecureRandom());
             address = ecKey.getAddress();
             publicKey = ecKey.getPubKey();
             privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
-            return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V3, algo, ecKey);
+            return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, ecKey);
         }
     }
 
