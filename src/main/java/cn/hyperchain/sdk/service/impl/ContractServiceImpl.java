@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * default contract service interface's implement.
+ *
  * @author tomkk
  * @version 0.0.1
  */
@@ -29,12 +30,14 @@ public class ContractServiceImpl implements ContractService {
 
     /**
      * deploy a contract.
+     *
      * @param transaction deploy transaction
-     * @param nodeIds specific ids
+     * @param nodeIds     specific ids
      * @return {@link Request} of {@link TxHashResponse}
      */
+    @Override
     public Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds) {
-        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(methodName("deployContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("deployContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = commonParamMap(transaction);
 
@@ -48,12 +51,14 @@ public class ContractServiceImpl implements ContractService {
 
     /**
      * invoke a contract.
+     *
      * @param transaction invoke transaction
-     * @param nodeIds specific ids
+     * @param nodeIds     specific ids
      * @return {@link Request} of {@link TxHashResponse}
      */
+    @Override
     public Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds) {
-        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(methodName("invokeContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("invokeContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = commonParamMap(transaction);
         txParamMap.put("to", transaction.getTo());
@@ -68,12 +73,14 @@ public class ContractServiceImpl implements ContractService {
 
     /**
      * get transaction receipt by txHash.
-     * @param txHash transaction hash
+     *
+     * @param txHash  transaction hash
      * @param nodeIds specific ids
      * @return {@link Request} of {@link ReceiptResponse}
      */
+    @Override
     public Request<ReceiptResponse> getReceipt(String txHash, int... nodeIds) {
-        PollingRequest<ReceiptResponse> receiptResponsePollingRequest = new PollingRequest<ReceiptResponse>("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        PollingRequest receiptResponsePollingRequest = new PollingRequest("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
 
         receiptResponsePollingRequest.addParams(txHash);
         receiptResponsePollingRequest.setJsonrpc(jsonrpc);
@@ -84,7 +91,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds) {
-        ContractRequest<TxHashResponse> txHashResponseContractRequest = new ContractRequest<TxHashResponse>(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest txHashResponseContractRequest = new ContractRequest(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> params = commonParamMap(transaction);
         params.put("to", transaction.getTo());
