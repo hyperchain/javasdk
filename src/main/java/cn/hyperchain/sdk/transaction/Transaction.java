@@ -339,6 +339,11 @@ public class Transaction {
         return needHashString;
     }
 
+    /**
+     * get common params map.
+     *
+     * @return params
+     */
     public Map<String, Object> commonParamMap() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("from", from);

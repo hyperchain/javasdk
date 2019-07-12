@@ -39,11 +39,10 @@ public class ContractServiceImpl implements ContractService {
         ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("deployContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = transaction.commonParamMap();
-
+        txParamMap.remove("to");
         txHashResponseContractRequest.addParams(txParamMap);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setNamespace(namespace);
-        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
@@ -60,12 +59,10 @@ public class ContractServiceImpl implements ContractService {
         ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("invokeContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = transaction.commonParamMap();
-        txParamMap.put("to", transaction.getTo());
 
         txHashResponseContractRequest.addParams(txParamMap);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setJsonrpc(namespace);
-        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
@@ -93,13 +90,11 @@ public class ContractServiceImpl implements ContractService {
         ContractRequest txHashResponseContractRequest = new ContractRequest(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> params = transaction.commonParamMap();
-        params.put("to", transaction.getTo());
         params.put("opcode", transaction.getOpCode());
 
         txHashResponseContractRequest.addParams(params);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setNamespace(namespace);
-        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
