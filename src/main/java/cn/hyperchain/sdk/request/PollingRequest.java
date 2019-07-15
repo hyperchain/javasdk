@@ -15,8 +15,8 @@ public class PollingRequest extends Request {
     private long sleepTime = 50;
     private long stepSize = 50;
 
-    public PollingRequest(String method, ProviderManager providerManager, Class clazz, int... nodeIdxs) {
-        super(method, providerManager, clazz, nodeIdxs);
+    public PollingRequest(String method, ProviderManager providerManager, Class clazz, int... nodeIds) {
+        super(method, providerManager, clazz, nodeIds);
     }
 
     public PollingRequest setAttempt(int attempt) {

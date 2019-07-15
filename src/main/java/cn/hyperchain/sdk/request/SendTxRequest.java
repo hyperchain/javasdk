@@ -4,27 +4,27 @@ import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.Response;
 import cn.hyperchain.sdk.response.TxHashResponse;
-import cn.hyperchain.sdk.transaction.Transaction;
 
 /**
- * contract result.
+ * this class represents send tx request.
  *
- * @author tomkk
- * @version 0.0.1
+ * @author Lam
+ * @ClassName SendTxRequest
+ * @date 2019-07-11
  */
-public class ContractRequest extends Request {
+public class SendTxRequest extends Request {
 
-    public ContractRequest(String method, ProviderManager providerManager, Class clazz, Transaction transaction, int... ids) {
-        super(method, providerManager, clazz, ids);
+    public SendTxRequest(String method, ProviderManager providerManager, Class clazz, int... nodeIds) {
+        super(method, providerManager, clazz, nodeIds);
+        this.providerManager = providerManager;
     }
+
 
     @Override
     public Response send() throws RequestException {
         TxHashResponse response = (TxHashResponse) super.send();
-
         response.setNodeIds(this.nodeIds);
         response.setProviderManager(this.providerManager);
-
         return response;
     }
 }

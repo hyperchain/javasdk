@@ -9,7 +9,6 @@ import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,12 +38,11 @@ public class ContractServiceImpl implements ContractService {
     public Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds) {
         ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("deployContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
-        Map<String, Object> txParamMap = commonParamMap(transaction);
-
+        Map<String, Object> txParamMap = transaction.commonParamMap();
+        txParamMap.remove("to");
         txHashResponseContractRequest.addParams(txParamMap);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setNamespace(namespace);
-        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
@@ -60,13 +58,11 @@ public class ContractServiceImpl implements ContractService {
     public Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds) {
         ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("invokeContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
 
-        Map<String, Object> txParamMap = commonParamMap(transaction);
-        txParamMap.put("to", transaction.getTo());
+        Map<String, Object> txParamMap = transaction.commonParamMap();
 
         txHashResponseContractRequest.addParams(txParamMap);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setJsonrpc(namespace);
-        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
@@ -93,34 +89,17 @@ public class ContractServiceImpl implements ContractService {
     public Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds) {
         ContractRequest txHashResponseContractRequest = new ContractRequest(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
 
-        Map<String, Object> params = commonParamMap(transaction);
-        params.put("to", transaction.getTo());
+        Map<String, Object> params = transaction.commonParamMap();
         params.put("opcode", transaction.getOpCode());
 
         txHashResponseContractRequest.addParams(params);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
         txHashResponseContractRequest.setNamespace(namespace);
-        txHashResponseContractRequest.setContractService(this);
 
         return txHashResponseContractRequest;
     }
 
-    private Map<String, Object> commonParamMap(Transaction transaction) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("from", transaction.getFrom());
-        map.put("timestamp", transaction.getTimestamp());
-        map.put("nonce", transaction.getNonce());
-        map.put("type", transaction.getVmType().toString());
-        map.put("payload", transaction.getPayload());
-        if (transaction.getExtra() != null && !"".equals(transaction.getExtra())) {
-            map.put("extra", transaction.getExtra());
-        }
-        map.put("simulate", transaction.isSimulate());
-        map.put("signature", transaction.getSignature());
-        return map;
-    }
-
     private String methodName(String method) {
-        return this.CONTRACT_PREFIX + method;
+        return CONTRACT_PREFIX + method;
     }
 }
