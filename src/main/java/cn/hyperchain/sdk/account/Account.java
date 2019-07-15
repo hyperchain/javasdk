@@ -187,9 +187,15 @@ public abstract class Account {
     private static String parseAccountJson(String accountJson, String password) {
         JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
 
-        String version = jsonObject.get("version").getAsString();
-        if (Version.V4.getV().equals(version)) {
-            return accountJson;
+        JsonElement versionStr = jsonObject.get("version");
+        String version;
+        if (versionStr == null) {
+            version = Version.V4.getV();
+        } else {
+            version = versionStr.getAsString();
+            if (version.equals(Version.V4.getV())) {
+                return accountJson;
+            }
         }
 
         JsonElement publicKeyStr = jsonObject.get("publicKey");
