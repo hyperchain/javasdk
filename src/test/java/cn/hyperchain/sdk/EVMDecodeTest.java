@@ -71,6 +71,26 @@ public class EVMDecodeTest {
     }
 
     @Test
+    public void testBytes32() throws Exception {
+        FuncParams params = new FuncParams();
+        params.addParams("s1".getBytes());
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes1)", abi, params).build();
+        transaction1.sign(account);
+        Request<TxHashResponse> invoke = contractService.invoke(transaction1);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        ContractType.Function function = abi.getFunction("TestBytes32(bytes1)");
+        // 解码得到List<byte[]>
+        List<?> decodeResult = function.decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(new String((byte[]) result));
+        }
+    }
+
+    @Test
     public void testBytes() throws Exception {
         FuncParams params = new FuncParams();
         params.addParams("10".getBytes());
@@ -85,6 +105,7 @@ public class EVMDecodeTest {
         // 解码得到List<byte[]>
         List<?> decodeResult = function.decodeResult(fromHex);
         for (Object result : decodeResult) {
+            System.out.println(result.getClass());
             System.out.println(new String((byte[]) result));
         }
     }
