@@ -1,4 +1,88 @@
-
+  * [第一章. 前言](#第一章-前言)
+  * [第二章. 初始化](#第二章-初始化)
+     * [2.1 创建HttpProvider对象](#21-创建httpprovider对象)
+     * [2.2 创建ProvideManager对象](#22-创建providemanager对象)
+     * [2.3 创建服务](#23-创建服务)
+     * [2.4 获取结果](#24-获取结果)
+  * [第三章. 交易](#第三章-交易)
+     * [合约接口](#合约接口)
+     * [转账交易](#转账交易)
+     * [账户创建](#账户创建)
+        * [创建账户](#创建账户)
+        * [交易体创建](#交易体创建)
+        * [部署合约](#部署合约)
+           * [HVM](#hvm)
+           * [EVM](#evm)
+        * [调用合约](#调用合约)
+           * [HVM](#hvm-1)
+           * [EVM](#evm-1)
+        * [升级合约](#升级合约)
+           * [HVM](#hvm-2)
+           * [EVM](#evm-2)
+        * [冻结合约](#冻结合约)
+           * [HVM](#hvm-3)
+           * [EVM](#evm-3)
+        * [解冻合约](#解冻合约)
+           * [HVM](#hvm-4)
+           * [EVM](#evm-4)
+     * [交易体签名](#交易体签名)
+     * [创建请求](#创建请求)
+     * [发送交易体](#发送交易体)
+  * [第四章. Transaction接口(TxService)](#第四章-transaction接口txservice)
+     * [4.1 查询指定区块区间的交易(getTransactions)](#41-查询指定区块区间的交易gettransactions)
+     * [4.2 查询所有非法交易(getDiscardTransactions)](#42-查询所有非法交易getdiscardtransactions)
+     * [4.3 查询交易by transaction hash(getTransactionByHash)](#43-查询交易by-transaction-hashgettransactionbyhash)
+     * [4.4 查询交易by block hash(getTxByBlockHashAndIndex)](#44-查询交易by-block-hashgettxbyblockhashandindex)
+     * [4.5 查询交易by block number(getTxByBlockNumAndIndex)](#45-查询交易by-block-numbergettxbyblocknumandindex)
+     * [4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#46-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
+     * [4.7 查询链上所有交易量(getTransactionsCount)](#47-查询链上所有交易量gettransactionscount)
+     * [4.8 查询交易回执信息by transaction hash(getTransactionReceipt)](#48-查询交易回执信息by-transaction-hashgettransactionreceipt)
+     * [4.9 查询区块交易数量by block hash(getBlockTxCountByHash)](#49-查询区块交易数量by-block-hashgetblocktxcountbyhash)
+     * [4.10 查询区块交易数量by block number(getBlockTxCountByNumber)](#410-查询区块交易数量by-block-numbergetblocktxcountbynumber)
+     * [4.11 获取交易签名哈希(getSignHash)](#411-获取交易签名哈希getsignhash)
+     * [4.12 查询指定时间区间内的交易(getTransactionsByTime)](#412-查询指定时间区间内的交易gettransactionsbytime)
+     * [4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)](#413-查询指定时间区间内的非法交易getdiscardtransactionsbytime)
+     * [4.14 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)](#414-查询区块区间交易数量by-contract-addressgettransactionscountbycontractaddr)
+     * [4.15 查询下一页交易(getNextPageTransactions)](#415-查询下一页交易getnextpagetransactions)
+     * [4.16 查询上一页交易(getPrevPageTransactions)](#416-查询上一页交易getprevpagetransactions)
+     * [4.17 查询批量交易by hash list(getBatchTxByHash)](#417-查询批量交易by-hash-listgetbatchtxbyhash)
+     * [4.18 查询批量回执by hash list(getBatchReceip)](#418-查询批量回执by-hash-listgetbatchreceip)
+     * [4.19 查询指定时间区间内的交易数量(getTxsCountByTime)](#419-查询指定时间区间内的交易数量gettxscountbytime)
+  * [第五章. BlockService相关接口](#第五章-blockservice相关接口)
+     * [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
+     * [5.2 查询指定区间的区块by block number(getBlocks)](#52-查询指定区间的区块by-block-numbergetblocks)
+     * [5.3 查询区块by block hash(getBlockByHash)](#53-查询区块by-block-hashgetblockbyhash)
+     * [5.4 查询区块by block number(getBlockByNum)](#54-查询区块by-block-numbergetblockbynum)
+     * [5.5 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)](#55-查询区块平均生成时间getavggeneratetimebyblocknumber)
+     * [5.6 查询指定时间区间内的区块数量(getBlocksByTime)](#56-查询指定时间区间内的区块数量getblocksbytime)
+     * [5.7 查询最新区块号，即链高(getChainHeight)](#57-查询最新区块号即链高getchainheight)
+     * [5.8 查询创世区块号(getChainHeight)](#58-查询创世区块号getchainheight)
+     * [5.9 查询批量区块by block hash list(getBatchBlocksByHash)](#59-查询批量区块by-block-hash-listgetbatchblocksbyhash)
+     * [5.10 查询批量区块by block number list(getBatchBlocksByNum)](#510-查询批量区块by-block-number-listgetbatchblocksbynum)
+  * [第六章. Node相关接口（NodeService）](#第六章-node相关接口nodeservice)
+     * [6.1 获取节点信息](#61-获取节点信息)
+  * [第七章. MQ相关接口(MQService)](#第七章-mq相关接口mqservice)
+     * [7.1 通知MQ服务器正常工作](#71-通知mq服务器正常工作)
+     * [7.2 注册队列](#72-注册队列)
+     * [7.3 注销队列](#73-注销队列)
+     * [7.4 获取所有队列名称](#74-获取所有队列名称)
+     * [7.5 获取所有exchanger名称](#75-获取所有exchanger名称)
+     * [7.6 删除exchanger](#76-删除exchanger)
+  * [第八章. Radar相关接口（RadarService）](#第八章-radar相关接口radarservice)
+     * [8.1 监听合约](#81-监听合约)
+  * [第九章. ArchiveService相关接口](#第九章-archiveservice相关接口)
+     * [9.1 制作快照](#91-制作快照)
+     * [9.2 查询快照是否存在](#92-查询快照是否存在)
+     * [9.3 检查快照是否正确](#93-检查快照是否正确)
+     * [9.4 删除快照](#94-删除快照)
+     * [9.5 列出所有快照](#95-列出所有快照)
+     * [9.6 查看快照](#96-查看快照)
+     * [9.7 数据归档（预约归档）](#97-数据归档预约归档)
+     * [9.8 数据归档（直接归档）](#98-数据归档直接归档)
+     * [9.9 恢复某归档数据](#99-恢复某归档数据)
+     * [9.10 恢复所有归档数据](#910-恢复所有归档数据)
+     * [9.11 查询归档数据状态](#911-查询归档数据状态)
+     * [9.12 查询所有待完成的快照请求](#912-查询所有待完成的快照请求)
 ## 第一章. 前言 
 
 **LiteSDK**是一个**轻量JavaSDK工具**，提供与Hyperchain区块链平台交互的接口以及一些处理工具。该文档⾯向Hyperchain区块链平台的应⽤开发者，提供hyperchain Java SDK的 使⽤指南。
@@ -59,10 +143,10 @@ providerManager = new ProviderManager.Builder()
 NodeService nodeService = ServiceManager.getNodeService(providerManager);
 
 // 通过调用NodeService提供的方法创建相应的服务，类型为Request<NodeResponse>
-NodeRequest<NodeResponse> nodeRequest = nodeService.getNodes();
+NodeRequest nodeRequest = nodeService.getNodes();
 ```
 
-实际上每个服务创建对应创建一个请求，这个请求都继承了共同的父类——`Request`，**LiteSDK**将根据不同的`Service`接口，返回不同`Request`子类，同时将用户调用接口的参数`params`封装到`Request`请求中，而`Request`还会附带一个响应的泛型声明，该响应类型也将根据不同的`Service`接口绑定。
+实际上每个服务创建对应创建一个请求，这个请求都继承了共同的父类——`Request`，**LiteSDK**将根据不同的`Service`接口，返回不同`Request`子类，同时将用户调用接口的参数`params`封装到`Request`请求中，而在创建`Request`的过程中会附带一个具体的响应类型的声明，该响应类型也将根据不同的`Service`接口与`Request`绑定。
 
 `Request`拥有`send()`和`sendAsync()`同步发送和异步发送两个方法：
 
@@ -71,29 +155,45 @@ NodeRequest<NodeResponse> nodeRequest = nodeService.getNodes();
 
 ### 2.4 获取结果
 
-同样地，响应也都继承了共同的父类——`Response`，通过调用`Request`的`send()`方法得到，**LitesSDK**会将不同的返回结果`result`根据接口封装成不同的`Response`子类，如2.3所说`Response`类型在生成`Request`时绑定。`Response`可以获取状态码、状态消息等，而不同的`Response`可以获取到不同的结果，有时也需要进一步获取到更具体的信息。示例如下：
+同样地，响应也都继承了共同的父类——`Response`，通过调用`Request`的`send()`方法得到，**LitesSDK**会将不同的返回结果`result`根据接口封装成不同的`Response`子类，如 **2.3** 所说`Response`类型在生成`Request`时绑定。`Response`可以获取状态码、状态消息等，而不同的`Response`可以获取到不同的结果，有时也需要进一步获取到更具体的信息。示例如下：
 
 ```java
 NodeResponse nodeResponse = nodeRequest.send();
-System.out.println(nodeResponse.getNodes());
+System.out.println(nodeResponse.getResult());
 ```
 
-当`ProvideManager`管理多个节点连接时，返回的节点信息应该是一个数组，这时就需要调用示例中的`getNodes()`方法将返回结果转换成更准确的类型。
+当`ProvideManager`管理多个节点连接时，返回的节点信息应该是一个数组，这时就需要调用示例中的`getResult()`方法将返回结果转换成更准确的类型。
 
 
 
 ## 第三章. 交易
 
-**LiteSDK**的交易接口分为两类：一类**是普通的转账交易，不涉及虚拟机**，一类是**合约交易，和虚拟机相关**。两者虽然都名为交易，但实际执行的功能和应用场景都不同。
-
-
-### 转账交易
-
-TODO
+**LiteSDK**的交易接口需要用到交易体，交易体的应用场景分为两类：一类**是普通的转账交易，不涉及虚拟机**，一类是**合约交易，和虚拟机相关**。两者虽然都名为交易，但实际执行的功能和应用场景都不同，且转账交易的实现由`TxService`提供，合约交易的实现由`ContractService`提供。
 
 ### 合约接口
 
 以交易体结构为核心的交易主要应用在合约交易上，即将想要执行的操作和数据封装成一笔交易体，再调用合约服务(`ContractService`)的接口去执行。
+
+绑定合约接口的`Response`子类只有`TxHashResponse`，里面封装了`ReceiptResponse`类型的参数，实际是**tx hash**，拿到`TxHashResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执。
+
+`TxHashResponse`的主要方法如下：
+
+```java
+/**
+ * 通过交易hash获取交易回执.
+ *
+ * @return 返回 ReceiptResponse
+ * @throws RequestException -
+ */
+public ReceiptResponse polling() throws RequestException;
+
+/**
+ * 获取交易hash.
+ *
+ * @return 交易hash
+ */
+public String getTxHash();
+```
 
 LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约**三种接口。
 
@@ -109,6 +209,31 @@ public interface ContractService {
 
 根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM两种形式的合约**，这两种也会影响到交易体的创建。
 
+### 转账交易
+
+转账交易的实现主要是TxService提供，主要有两个接口。
+
+```java
+Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds);
+
+Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds);
+```
+
+分别绑定了`TxHashResponse`和`TxHashesResponse`，当拿到这两个响应时调用`polling()`方法就可以获取真正的交易回执，前者返回`ReceiptResponse`，后者返回`ArrayList<ReceiptResponse>`。转账交易和合约接口类似，主要的不同在于交易体的创建，转账交易通过内部类`Builder`调用`transfer()`方法创建。
+
+```java
+class Builder {
+    public Builder transfer(String to, long value);
+}
+
+// example:
+Transaction transaction = new Transaction.Builder(account.getAddress()).transfer("794BF01AB3D37DF2D1EA1AA4E6F4A0E988F4DEA5", 0).build();
+```
+
+
+
+**创建交易体并调用服务的具体流程如下。**
+
 ### 账户创建
 
 #### 创建账户
@@ -120,7 +245,7 @@ AccountService accountService = ServiceManager.getAccountService(providerManager
 Account account = accountService.genAccount(Algo.SMRAW);
 ```
 
-如第二章所说，创建`Service`对象需要指定`ProviderManager`对象，且使用`genAccount()`创建账户时需要指定加密算法，如示例中使用**SMRAW算法**（目前仅支持**ECRAW**、**SMRAW**）两种算法。
+如第二章所说，创建`Service`对象需要指定`ProviderManager`对象，且使用`genAccount()`创建账户时需要指定加密算法，如示例中使用**SMRAW算法**（只有**ECRAW**、**SMRAW**不需要密码参数，其余的加密算法需要手动设置**password**）。
 
 `AccountService`提供的接口如下：
 
@@ -133,6 +258,23 @@ public interface AccountService {
     Account fromAccountJson(String accountJson);
 
     Account fromAccountJson(String accountJson, String password);
+}
+```
+
+目前Account服务支持的所有加密算法如下：
+
+```java
+public enum Algo {
+    ECDES("0x02"),
+    ECRAW("0x03"),
+    ECAES("0x04"),
+    EC3DES("0x05"),
+
+    SMSM4("0x11"),
+    SMDES("0x12"),
+    SMRAW("0x13"),
+    SMAES("0x14"),
+    SM3DES("0x15");
 }
 ```
 
@@ -154,7 +296,9 @@ class HVMBuilder extends Builder {
 }
 
 class EVMBuilder extends Builder {
+    // 当合约无构造参数时使用，不需abi参数
     Builder deploy(String bin);
+    // 当合约需要提供abi解析构造方法参数时使用
     Builder deploy(String bin, Abi abi, Object... params);
     Builder invoke(String contractAddress, String methodName, Abi abi, Object... params);
 }
@@ -183,6 +327,8 @@ String bin = FileUtil.readFile(inputStream1);
 String abiStr = FileUtil.readFile(inputStream2);
 
 Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(bin, abi, "contract01").build();
+// 如果要部署的合约无构造函数，则调用如下
+// Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(bin).build();
 ```
 
 创建交易体时需要指定要**部署的合约的bin、abi文件的字符串内容以及合约名**。
@@ -289,6 +435,79 @@ ReceiptResponse receiptResponse = contractRequest.send().polling();
 ## 第四章. Transaction接口(TxService)
 
 **注：该章的Transaction与第三章的交易体概念不同，该章的接口主要主要用于查询之前在链上的执行信息，将返回的信息封装为Transaction结构体。**
+
+TxService接口繁多，返回的执行结果根据情况封装共对应四种响应：
+
+- TxResponse
+- TxCountWithTSResponse
+- TxCountResponse
+- TxAvgTimeResponse
+
+分别对应的结构如下：
+
+**TxResponse**
+
+通过`result`接收返回结果，`result`实际结构是内部类`Transaction`，可通过`getResult()`方法得到。
+
+```java
+public class TxResponse extends Response {
+    public class Transaction {
+        private String version;
+        private String hash;
+        private String blockNumber;
+        private String blockHash;
+        private String txIndex;
+        private String from;
+        private String to;
+        private String amount;
+        private String timestamp;
+        private String nonce;
+        private String extra;
+        private String executeTime;
+        private String payload;
+        private String signature;
+        private String blockTimestamp;
+        private String blockWriteTime;
+    }
+    private JsonElement result;
+}
+```
+
+**TxCountWithTSResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`TxCount`，可通过`getResult()`方法得到。
+
+```java
+public class TxCountWithTSResponse extends Response {
+    private class TxCount {
+        private String count;
+        private long timestamp;
+    }
+    private TxCount result;
+}
+```
+
+**TxCountResponse**
+
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
+
+```java
+public class TxCountResponse extends Response {
+    private String result;
+}
+```
+
+**TxAvgTimeResponse**
+
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
+
+```java
+public class TxAvgTimeResponse extends Response {
+    private String result;
+}
+```
+
+
 
 ### 4.1 查询指定区块区间的交易(getTransactions)
 
@@ -645,7 +864,74 @@ Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, 
 
 
 
+
+
 ## 第五章. BlockService相关接口
+
+BlockService接口与TxService相似，只是获取的对象是区块信息。同样地，BlockService对象也有很多对应的响应类型：
+
+- BlockResponse
+- BlockNumberResponse 
+- BlockAvgTimeResponse
+- BlockCountResponse
+
+分别对应的结构如下。
+
+**BlockResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`Block`，可通过`getResult()`方法得到。
+
+```java
+public class BlockResponse extends Response {
+    private class Block {
+        private String version;
+        private String number;
+        private String hash;
+        private String parentHash;
+        private String writeTime;
+        private String avgTime;
+        private String txcounts;
+        private String merkleRoot;
+    }
+    private JsonElement result;
+}
+```
+
+**BlockNumberResponse** 
+
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
+
+```java
+public class BlockNumberResponse extends Response {
+    private String result;
+}
+```
+
+**BlockAvgTimeResponse**
+
+通过`result`接收返回结果，`result`实际类型是String`，可通过`getResult()`方法得到。
+
+```java
+public class BlockAvgTimeResponse extends Response {
+    @Expose
+    private String result;
+}
+```
+
+**BlockCountResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`BlockCount`，可通过`getResult()`方法得到。
+
+```java
+public class BlockCountResponse extends Response {
+    private class BlockCount {
+        private String sumOfBlocks;
+        private String startBlock;
+        private String endBlock;
+    }
+    private BlockCount result;
+}
+```
 
 ### 5.1 获取最新区块(getLastestBlock)
 
@@ -828,7 +1114,39 @@ Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList,
 
 
 
-## 第六章. NodeService相关接口
+## 第六章. Node相关接口（NodeService）
+
+NodeService接口用于获取节点信息。NodeService对象对应的响应类型如下：
+
+- NodeResponse
+
+分别对应的结构如下。
+
+**NodeResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`Node`，可通过`getResult()`方法得到。
+
+```java
+public class NodeResponse extends Response {
+    public class Node {
+        private int id;
+        private String ip;
+        private String port;
+        private String namespace;
+        private String hash;
+        private String hostname;
+        private boolean isPrimary;
+        private boolean isvp;
+        private int status;
+        private int delay;
+    }
+    private JsonElement result;
+}
+```
+
+TODO
+
+目前NodeService只支持一个服务，之后会增加更多类型的服务接口。
 
 ### 6.1 获取节点信息
 
@@ -842,7 +1160,21 @@ Request<NodeResponse> getNodes(int... ids);
 
 
 
-## 第七章. MQ接口(MQService)
+## 第七章. MQ相关接口(MQService)
+
+MQService接口用于与**RabbitMQ**进行交互。由于开发时间较早，`MQService`对应的响应类型只有`MQResponse`一种，这与之前提到的接口都不太相同：
+
+`MQResponse`接口结构如下：
+
+```java
+public class MQResponse extends Response {
+    private JsonElement result;
+    // 如果是7.4可使用该方法获取更具体的结果
+ 	public List<String> getQueueNames();
+    // 如果是7.5可使用该方法获取更具体的结果
+    public String getExchanger();
+}
+```
 
 ### 7.1 通知MQ服务器正常工作
 
@@ -914,7 +1246,9 @@ Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
 
 
 
-## 第八章. RadarService相关接口
+## 第八章. Radar相关接口（RadarService）
+
+`RadarService`接口用于可视化监控合约，目前只有一个接口，对应的响应也只有`RadarResponse`。
 
 ### 8.1 监听合约
 
@@ -931,6 +1265,53 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 
 
 ## 第九章. ArchiveService相关接口
+
+`ArchiveService`接口用于快照和归档相关工作，对应的响应类型如下：
+
+- ArchiveResponse
+- ArchiveFilterIdResponse
+- ArchiveBoolResponse
+
+分别对应的结构如下：
+
+ArchiveResponse
+
+通过`result`接收返回结果，`result`实际结构是内部类`Archive`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveResponse extends Response {
+    private class Archive {
+        private String height;
+        private String hash;
+        private String filterId;
+        private String merkleRoot;
+        private String date;
+        private String namespace;
+    }
+
+    private JsonElement result;
+}
+```
+
+ArchiveFilterIdResponse
+
+通过`result`接收返回结果，`result`实际结构是`String`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveFilterIdResponse extends Response {
+    private String result;
+}
+```
+
+ArchiveBoolResponse
+
+通过`result`接收返回结果，`result`实际结构是`Boolean`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveBoolResponse extends Response {
+    private Boolean result;
+}
+```
 
 ### 9.1 制作快照
 

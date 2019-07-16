@@ -48,14 +48,10 @@ public class TxHashResponse extends Response {
             return new ReceiptResponse(this, receipt);
         }
 
-//        if (contractService != null) {
-//            return contractService.getReceipt(getTxHash(), this.nodeIds).send();
-//        } else {
         PollingRequest pollingRequest = new PollingRequest("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
         pollingRequest.addParams(getTxHash());
         System.out.println(gson.toJson(pollingRequest));
         return (ReceiptResponse) pollingRequest.send();
-//        }
     }
 
     /**
