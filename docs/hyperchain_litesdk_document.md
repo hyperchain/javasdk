@@ -299,8 +299,8 @@ class EVMBuilder extends Builder {
     // 当合约无构造参数时使用，不需abi参数
     Builder deploy(String bin);
     // 当合约需要提供abi解析构造方法参数时使用
-    Builder deploy(String bin, Abi abi, Object... params);
-    Builder invoke(String contractAddress, String methodName, Abi abi, Object... params);
+    Builder deploy(String bin, Abi abi, FuncParams params);
+    Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params);
 }
 ```
 
@@ -326,7 +326,9 @@ InputStream inputStream2 = FileUtil.readFileAsStream("solidity/TypeTestContract_
 String bin = FileUtil.readFile(inputStream1);
 String abiStr = FileUtil.readFile(inputStream2);
 
-Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(bin, abi, "contract01").build();
+FuncParams params = new FuncParams();
+params.addParams("contract01");
+Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
 // 如果要部署的合约无构造函数，则调用如下
 // Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(bin).build();
 ```
@@ -346,7 +348,9 @@ Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invok
 ##### EVM
 
 ```java
-Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes1)", abi, "1").build();
+FuncParams params = new FuncParams();
+params.addParams("10".getBytes());
+Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes1)", abi, params).build();
 ```
 
 创建交易体时需要指定**调用方法**、**abi文件**和**方法参数**。
@@ -1449,3 +1453,56 @@ Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
 ```java
 Request<ArchiveResponse> pending(int... nodeIds);
 ```
+
+
+
+## 附录
+
+### 附录 A Solidity与Java的编码解码
+
+#### 类型对应
+
+当使用Litesdk编译solidity合约时，由于java和solidity本身类型的不兼容，所以在调用solidity方法传参数的时候需要对java类型进行相应的编码解码，目前Litesdk支持的对应类型如下：
+
+| JAVA              | SOLIDITY                         |
+| ----------------- | -------------------------------- |
+| `boolean/Boolean` | `bool`                           |
+| `BigInteger`      | `int、int8、int16……int256`       |
+| `BigInteger`      | `uint、uint8、uint16……uint256`   |
+| `String`          | `string`                         |
+| `byte[]/Byte[]`   | `bytes、bytes1、bytes2……bytes32` |
+| `string`          | `address`                        |
+| `Array`/`List`    | `array`                          |
+
+#### 编码
+
+Litesdk提供了FuncParams工具类封装需要转换成solidity类型的java参数，使用方法如下：
+
+```java
+FuncParams params = new FuncParams();
+// param 是类型对应表里对应的java参数
+params.addParams(param1);
+params.addParams(param2);
+
+// 构造交易时将构造好的FuncParams对象传进去
+Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, <method_name>, abi, params).build();
+```
+
+#### 解码
+
+调用evm合约得到交易回执`ReceiptResponse`后，需要对solidity合约的返回值进行解析，使用方法如下：
+
+```java
+String ret = receiptResponse.getRet();
+byte[] fromHex = ByteUtil.fromHex(ret);
+
+// 通过abi的方法名解码，由于返回值可能有多个，所以解码得到的其实是一个List<?>，当中的每个对象
+// 对应一个返回值。如该例子返回值为 int256，在java中对应的是BigInter，所以对返回的decodeResult
+// 遍历强转为BigInteger
+List<?> decodeResult = abi.getFunction("TestInt(int256)").decodeResult(fromHex);
+for (Object result : decodeResult) {
+    System.out.println(result.getClass());
+    System.out.println(((BigInteger) result).toString());
+}
+```
+
