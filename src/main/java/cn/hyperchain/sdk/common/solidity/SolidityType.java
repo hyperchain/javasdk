@@ -187,7 +187,8 @@ public abstract class SolidityType {
 
         @Override
         public byte[] encodeList(List l) {
-            if (l.size() != size) throw new RuntimeException("List size (" + l.size() + ") != " + size + " for type " + getName());
+            if (l.size() != size)
+                throw new RuntimeException("List size (" + l.size() + ") != " + size + " for type " + getName());
             return encodeTuple(l);
         }
 
@@ -285,7 +286,7 @@ public abstract class SolidityType {
         @Override
         public byte[] encode(Object value) {
             if (!(value instanceof String)) throw new RuntimeException("String value expected for type 'string'");
-            return super.encode(((String)value).getBytes(StandardCharsets.UTF_8));
+            return super.encode(((String) value).getBytes(StandardCharsets.UTF_8));
         }
 
         @Override
@@ -327,16 +328,27 @@ public abstract class SolidityType {
         public static byte[] decodeBytes32(byte[] encoded, int offset) {
             byte[] bytes = Arrays.copyOfRange(encoded, offset, offset + Int32Size);
             int len = -1;
-            for (int i=bytes.length-1;i>=0;i--) {
-                if (bytes[i]!=0) {
+            int st = -1;
+            for (int i = 0; i < bytes.length - 1; i++) {
+                if (bytes[i] != 0) {
+                    st = i;
+                    break;
+                }
+            }
+            for (int i = bytes.length - 1; i >= 0; i--) {
+                if (bytes[i] != 0) {
                     len = i + 1;
                     break;
                 }
             }
+
             byte[] result = bytes;
-            if (len!=-1) {
-                result = Arrays.copyOfRange(bytes, 0, len);
+            if (st != -1) {
+                result = Arrays.copyOfRange(bytes, st, len);
+            } else {
+                result = new byte[1];
             }
+
             return result;
         }
     }
@@ -348,7 +360,7 @@ public abstract class SolidityType {
 
         @Override
         public byte[] encode(Object value) {
-            if (value instanceof String && !((String)value).startsWith("0x")) {
+            if (value instanceof String && !((String) value).startsWith("0x")) {
                 // address is supposed to be always in hex
                 value = "0x" + value;
             }
@@ -367,7 +379,7 @@ public abstract class SolidityType {
             return ByteUtil.bigIntegerToBytes(bi, 20);
         }
     }
-    
+
     public static abstract class NumericType extends SolidityType {
         public NumericType(String name) {
             super(name);
@@ -376,7 +388,7 @@ public abstract class SolidityType {
         BigInteger encodeInternal(Object value) {
             BigInteger bigInt;
             if (value instanceof String) {
-                String s = ((String)value).toLowerCase().trim();
+                String s = ((String) value).toLowerCase().trim();
                 int radix = 10;
                 if (s.startsWith("0x")) {
                     s = s.substring(2);
@@ -386,11 +398,11 @@ public abstract class SolidityType {
                     radix = 16;
                 }
                 bigInt = new BigInteger(s, radix);
-            } else  if (value instanceof BigInteger) {
+            } else if (value instanceof BigInteger) {
                 bigInt = (BigInteger) value;
-            } else  if (value instanceof Number) {
+            } else if (value instanceof Number) {
                 bigInt = new BigInteger(value.toString());
-            } else  if (value instanceof byte[]) {
+            } else if (value instanceof byte[]) {
                 bigInt = ByteUtil.bytesToBigInteger((byte[]) value);
             } else {
                 throw new RuntimeException("Invalid value for type '" + this + "': " + value + " (" + value.getClass() + ")");
@@ -409,53 +421,63 @@ public abstract class SolidityType {
             if (getName().equals("int")) return "int256";
             return super.getCanonicalName();
         }
+
         public static BigInteger decodeInt(byte[] encoded, int offset) {
             return new BigInteger(Arrays.copyOfRange(encoded, offset, offset + Int32Size));
         }
+
         public static byte[] encodeInt(int i) {
             return encodeInt(new BigInteger("" + i));
         }
+
         public static byte[] encodeInt(BigInteger bigInt) {
             return ByteUtil.bigIntegerToBytesSigned(bigInt, Int32Size);
         }
+
         @Override
         public Object decode(byte[] encoded, int offset) {
             return decodeInt(encoded, offset);
         }
+
         @Override
         public byte[] encode(Object value) {
             BigInteger bigInt = encodeInternal(value);
             return encodeInt(bigInt);
         }
     }
-    
+
     public static class UnsignedIntType extends NumericType {
         public UnsignedIntType(String name) {
             super(name);
         }
-        
+
         @Override
         public String getCanonicalName() {
             if (getName().equals("uint")) return "uint256";
             return super.getCanonicalName();
         }
+
         public static BigInteger decodeInt(byte[] encoded, int offset) {
             return new BigInteger(1, Arrays.copyOfRange(encoded, offset, offset + Int32Size));
         }
+
         public static byte[] encodeInt(int i) {
             return encodeInt(new BigInteger("" + i));
         }
+
         public static byte[] encodeInt(BigInteger bigInt) {
             if (bigInt.signum() == -1) {
                 throw new RuntimeException("Wrong value for uint type: " + bigInt);
             }
             return ByteUtil.bigIntegerToBytes(bigInt, Int32Size);
         }
+
         @Override
         public byte[] encode(Object value) {
             BigInteger bigInt = encodeInternal(value);
             return encodeInt(bigInt);
         }
+
         @Override
         public Object decode(byte[] encoded, int offset) {
             return decodeInt(encoded, offset);
@@ -470,7 +492,7 @@ public abstract class SolidityType {
         @Override
         public byte[] encode(Object value) {
             if (!(value instanceof Boolean)) throw new RuntimeException("Wrong value for bool type: " + value);
-            int num = ((boolean)value) ? 1 : 0;
+            int num = ((boolean) value) ? 1 : 0;
             return super.encode(num);
         }
 
