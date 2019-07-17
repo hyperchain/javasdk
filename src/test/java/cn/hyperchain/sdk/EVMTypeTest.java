@@ -22,6 +22,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,6 +41,7 @@ public class EVMTypeTest {
     private static Account account;
     private static Abi abi;
     private static String contractAddress;
+    private static String funcName;
 
     @BeforeClass
     public static void deploy() throws Exception {
@@ -98,7 +101,316 @@ public class EVMTypeTest {
                 System.out.println(new String((byte[]) object));
 
             }
+        }
+    }
+
+    @Test
+    public void testBytes32() throws RequestException {
+        funcName = "TestBytes32(bytes32)";
+
+        FuncParams params = new FuncParams();
+        params.addParams("10".getBytes());
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction1.sign(account);
+        Request<TxHashResponse> invoke = contractService.invoke(transaction1);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        ContractType.Function function = abi.getFunction(funcName);
+        // 解码得到List<byte[]>
+        List<?> decodeResult = function.decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(new String((byte[]) result));
+        }
+    }
+
+    @Test
+    public void testBytes1() throws Exception {
+        funcName = "TestBytes1(bytes1)";
+        FuncParams params = new FuncParams();
+        params.addParams("10".getBytes());
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction1.sign(account);
+        Request<TxHashResponse> invoke = contractService.invoke(transaction1);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        ContractType.Function function = abi.getFunction(funcName);
+        // 解码得到List<byte[]>
+        List<?> decodeResult = function.decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(new String((byte[]) result));
+        }
+    }
+
+    @Test
+    public void testBytes() throws Exception {
+        funcName = "TestBytes(bytes)";
+        FuncParams params = new FuncParams();
+        params.addParams("10".getBytes());
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction1.sign(account);
+        Request<TxHashResponse> invoke = contractService.invoke(transaction1);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        ContractType.Function function = abi.getFunction(funcName);
+        // 解码得到List<byte[]>
+        List<?> decodeResult = function.decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(new String((byte[]) result));
+        }
+    }
+
+    @Test
+    public void testInt() throws Exception {
+        funcName = "TestInt(int256)";
+        FuncParams params = new FuncParams();
+        params.addParams("20");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        Request<TxHashResponse> invoke = contractService.invoke(transaction);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(((BigInteger) result).toString());
+        }
+
+    }
+
+    @Test
+    public void testUInt() throws Exception {
+        funcName = "TestUint(uint8)";
+        FuncParams params = new FuncParams();
+        params.addParams("20");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        Request<TxHashResponse> invoke = contractService.invoke(transaction);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(result);
+        }
+
+    }
+
+    @Test
+    public void testBool() throws Exception {
+        funcName = "TestBool(bool)";
+        FuncParams params = new FuncParams();
+        params.addParams(true);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(result);
+        }
+    }
+
+    @Test
+    public void testAddress() throws Exception {
+        funcName = "TestAddress(address)";
+        FuncParams params = new FuncParams();
+        params.addParams(contractAddress);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        // 传字符串、返回字节数组，需要解码
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(ByteUtil.toHex((byte[]) result));
+        }
+    }
+
+    @Test
+    public void testString() throws Exception {
+        funcName = "TestString(string)";
+        FuncParams params = new FuncParams();
+        params.addParams("10");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        System.out.println(ret);
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(result);
+        }
+    }
+
+    @Test
+    public void testIntArray() throws Exception {
+        funcName = "TestIntArray(int256[3])";
+        int[] ints = {1, 2, 3};
+        FuncParams params = new FuncParams();
+        params.addParams(ints);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        System.out.println(ret);
+        byte[] fromHex = ByteUtil.fromHex(ret);
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            for (int i = 0; i < ((Object[]) result).length; i++) {
+                System.out.println(((Object[]) result)[i].getClass());
+                System.out.println(((Object[]) result)[i]);
+            }
+        }
+    }
+
+    @Test
+    public void testInt8Array() throws Exception {
+        funcName = "TestInt8Array(int8[3])";
+        int[] ints = {1, 2, 3};
+        FuncParams params = new FuncParams();
+        params.addParams(ints);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        System.out.println(ret);
+        byte[] fromHex = ByteUtil.fromHex(ret);
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            for (int i = 0; i < ((Object[]) result).length; i++) {
+                System.out.println(((Object[]) result)[i].getClass());
+                System.out.println(((Object[]) result)[i]);
+            }
+        }
+    }
+
+    @Test
+    public void testUint8Array() throws Exception {
+        funcName = "TestUint8Array(uint8[3])";
+        int[] ints = {20, 2, 3};
+        FuncParams params = new FuncParams();
+        params.addParams(ints);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        System.out.println(ret);
+        byte[] fromHex = ByteUtil.fromHex(ret);
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            for (int i = 0; i < ((Object[]) result).length; i++) {
+                System.out.println(((Object[]) result)[i].getClass());
+                System.out.println(((Object[]) result)[i]);
+            }
+        }
+    }
+
+    @Test
+    public void testUintArray() throws Exception {
+        funcName = "TestUintArray(uint256[3])";
+        int[] ints = {20, 2, 3};
+        FuncParams params = new FuncParams();
+        params.addParams(ints);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        System.out.println(ret);
+        byte[] fromHex = ByteUtil.fromHex(ret);
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            for (int i = 0; i < ((Object[]) result).length; i++) {
+                System.out.println(((Object[]) result)[i].getClass());
+                System.out.println(((Object[]) result)[i]);
+            }
+        }
+    }
+
+    @Test
+    public void testBoolArray() throws Exception {
+        funcName = "TestBoolArray(bool[3])";
+        ArrayList<Boolean> booleans = new ArrayList<>();
+        booleans.add(true);
+        booleans.add(false);
+        booleans.add(false);
+
+        FuncParams params = new FuncParams();
+        params.addParams(booleans);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+        System.out.println(ret);
+
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        System.out.println(((Object[]) decodeResult.get(0))[0]);
+        for (Object result : decodeResult) {
+            for (int i = 0; i < ((Object[]) result).length; i++) {
+                System.out.println(((Object[]) result)[i].getClass());
+                System.out.println(((Object[]) result)[i]);
+            }
 
         }
     }
+
+    @Test
+    public void testAddressArray() throws Exception {
+        funcName = "TestAddressArray(address[2])";
+        String[] addresses = {contractAddress, contractAddress};
+
+        FuncParams params = new FuncParams();
+        params.addParams(addresses);
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction.sign(account);
+
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            for (int i = 0; i < ((Object[]) result).length; i++) {
+                System.out.println(((Object[]) result)[i].getClass());
+                System.out.println(ByteUtil.toHex((byte[]) ((Object[]) result)[i]));
+            }
+        }
+    }
+
 }

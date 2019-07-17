@@ -313,7 +313,7 @@ public abstract class SolidityType {
             } else if (value instanceof byte[]) {
                 byte[] bytes = (byte[]) value;
                 byte[] ret = new byte[Int32Size];
-                System.arraycopy(bytes, 0, ret, Int32Size - bytes.length, bytes.length);
+                System.arraycopy(bytes, 0, ret, 0, bytes.length);
                 return ret;
             }
 
@@ -328,13 +328,6 @@ public abstract class SolidityType {
         public static byte[] decodeBytes32(byte[] encoded, int offset) {
             byte[] bytes = Arrays.copyOfRange(encoded, offset, offset + Int32Size);
             int len = -1;
-            int st = -1;
-            for (int i = 0; i < bytes.length - 1; i++) {
-                if (bytes[i] != 0) {
-                    st = i;
-                    break;
-                }
-            }
             for (int i = bytes.length - 1; i >= 0; i--) {
                 if (bytes[i] != 0) {
                     len = i + 1;
@@ -343,10 +336,8 @@ public abstract class SolidityType {
             }
 
             byte[] result = bytes;
-            if (st != -1) {
-                result = Arrays.copyOfRange(bytes, st, len);
-            } else {
-                result = new byte[1];
+            if (len != -1) {
+                result = Arrays.copyOfRange(bytes, 0, len);
             }
 
             return result;

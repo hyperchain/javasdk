@@ -17,9 +17,13 @@ contract TypeTestContract {
         return a;
     }
 
-    function TestBytes32(bytes1 a) returns (bytes1) {
+    function TestBytes32(bytes32 a) returns (bytes32) {
         eventA(name, "hello");
         eventB();
+        return a;
+    }
+
+    function TestBytes1(bytes1 a) returns (bytes1) {
         return a;
     }
 
