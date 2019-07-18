@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Transaction {
     private Transaction() {
@@ -217,10 +219,10 @@ public class Transaction {
     }
 
     private void setNeedHashString() {
-        String value = Utils.isBlank(this.payload) ? String.valueOf(this.value) : this.payload;
+        String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
         this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
                 + "&to=" + chPrefix(this.to.toLowerCase())
-                + "&value=" + chPrefix(value).toLowerCase()
+                + "&value=" + chPrefix(value)
                 + "&timestamp=0x" + Long.toHexString(this.timestamp)
                 + "&nonce=0x" + Long.toHexString(this.nonce)
                 + "&opcode=" + this.opCode
@@ -335,5 +337,31 @@ public class Transaction {
 
     public String getNeedHashString() {
         return needHashString;
+    }
+
+    /**
+     * get common params map.
+     *
+     * @return params
+     */
+    public Map<String, Object> commonParamMap() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("from", from);
+        map.put("to", to);
+        map.put("timestamp", timestamp);
+        map.put("nonce", nonce);
+        map.put("type", vmType.toString());
+
+        if (!Utils.isBlank(payload)) {
+            map.put("payload", payload);
+        } else {
+            map.put("value", value);
+        }
+        if (!Utils.isBlank(extra)) {
+            map.put("extra", extra);
+        }
+        map.put("simulate", simulate);
+        map.put("signature", signature);
+        return map;
     }
 }

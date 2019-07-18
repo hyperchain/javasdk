@@ -10,6 +10,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigInteger;
+
 /**
  * @author Jianhui Dong
  * @ClassName ArchiveServiceTest
@@ -22,7 +24,7 @@ public class ArchiveServiceTest {
 
     @BeforeClass
     public static void init() throws RequestException {
-        Request<ArchiveFilterIdResponse> snapshot = archiveService.snapshot("1200");
+        Request<ArchiveFilterIdResponse> snapshot = archiveService.snapshot("1300");
         ArchiveFilterIdResponse idResponse = snapshot.send();
         filterId = idResponse.getResult();
     }
@@ -45,8 +47,8 @@ public class ArchiveServiceTest {
 
     @Test
     @Ignore
-    public void testArchiveWithSnapshot() throws RequestException {
-        Request<ArchiveBoolResponse> request = archiveService.archiveWithSnapshot("200");
+    public void testArchiveNoPredict() throws RequestException {
+        Request<ArchiveBoolResponse> request = archiveService.archiveNoPredict(BigInteger.valueOf(1));
         ArchiveBoolResponse response = request.send();
         System.out.println(response);
     }

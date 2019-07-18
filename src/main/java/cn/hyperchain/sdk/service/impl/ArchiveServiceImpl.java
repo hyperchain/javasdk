@@ -74,10 +74,9 @@ public class ArchiveServiceImpl implements ArchiveService {
     }
 
     @Override
-    public Request<ArchiveBoolResponse> archiveWithSnapshot(String blkNumber, int... nodeIds) {
-        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "archive", providerManager, ArchiveBoolResponse.class, nodeIds);
+    public Request<ArchiveBoolResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds) {
+        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "archiveNoPredict", providerManager, ArchiveBoolResponse.class, nodeIds);
         archiveRequest.addParams(blkNumber);
-        archiveRequest.addParams(false);
         return archiveRequest;
     }
 

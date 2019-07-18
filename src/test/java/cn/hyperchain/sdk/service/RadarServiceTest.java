@@ -29,8 +29,8 @@ public class RadarServiceTest {
 
         Account account = accountService.genAccount(Algo.ECRAW);
 
-        String bin = FileUtil.readFile(FileUtil.readFileAsStream("solidity/TypeTestContract_sol_TypeTestContract.bin"));
-        String abiString = FileUtil.readFile(Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.abi"));
+        String bin = FileUtil.readFile(FileUtil.readFileAsStream("solidity/sol2/TestContract_sol_TypeTestContract.bin"));
+        String abiString = FileUtil.readFile(Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi"));
         Abi abi = Abi.fromJson(abiString);
 
         FuncParams params = new FuncParams();
@@ -44,7 +44,7 @@ public class RadarServiceTest {
     @Test
     @Ignore
     public void testListenContract() throws IOException, RequestException {
-        String source = FileUtil.readFile(FileUtil.readFileAsStream("solidity/TypeTestContract.sol"));
+        String source = FileUtil.readFile(FileUtil.readFileAsStream("solidity/sol2/TestContract.sol"));
         Request<RadarResponse> listenContract = radarService.listenContract(source, contractAddress);
         RadarResponse radarResponse = listenContract.send();
         System.out.println(radarResponse);

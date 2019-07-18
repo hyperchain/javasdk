@@ -1,8 +1,8 @@
 package cn.hyperchain.sdk.response;
 
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.service.ContractService;
-import cn.hyperchain.sdk.transaction.Transaction;
+import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.request.PollingRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -18,18 +18,14 @@ import com.google.gson.annotations.Expose;
 public class TxHashResponse extends Response {
     @Expose
     private JsonElement result;
-    private Transaction transaction;
-    private ContractService contractService;
     private Gson gson;
     private int[] nodeIds;
+    private ProviderManager providerManager;
 
     public TxHashResponse() {
         this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
 
     public int[] getNodeIds() {
         return nodeIds;
@@ -39,12 +35,14 @@ public class TxHashResponse extends Response {
         this.nodeIds = nodeIds;
     }
 
-    public void setContractService(ContractService contractService) {
-        this.contractService = contractService;
+
+    public void setProviderManager(ProviderManager providerManager) {
+        this.providerManager = providerManager;
     }
 
     /**
      * polling to get receipt by txHash.
+     *
      * @return {@link ReceiptResponse}
      * @throws RequestException -
      */
@@ -55,11 +53,15 @@ public class TxHashResponse extends Response {
             return new ReceiptResponse(this, receipt);
         }
 
-        return contractService.getReceipt(getTxHash(), this.nodeIds).send();
+        PollingRequest pollingRequest = new PollingRequest("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        pollingRequest.addParams(getTxHash());
+        System.out.println(gson.toJson(pollingRequest));
+        return (ReceiptResponse) pollingRequest.send();
     }
 
     /**
      * get transaction hash.
+     *
      * @return hash
      */
     public String getTxHash() {

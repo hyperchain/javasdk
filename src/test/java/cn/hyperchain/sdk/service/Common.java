@@ -1,9 +1,18 @@
 package cn.hyperchain.sdk.service;
 
+import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.common.solidity.Abi;
+import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.common.utils.FuncParams;
+import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.transaction.Transaction;
+import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public class Common {
@@ -30,6 +39,10 @@ public class Common {
     public static final String node4 = "localhost:8084";
     public static ProviderManager providerManager;
     public static ProviderManager soloProviderManager;
+
+    public static final String bin = "solidity/sol2/TestContract_sol_TypeTestContract.bin";
+    public static final String abi = "solidity/sol2/TestContract_sol_TypeTestContract.abi";
+    private static Logger logger = Logger.getLogger(Common.class);
 
     static {
 
@@ -90,5 +103,23 @@ public class Common {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String deployEVM(Account account) throws IOException, RequestException {
+        ContractService contractService = ServiceManager.getContractService(soloProviderManager);
+        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream(bin);
+        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream(abi);
+        String bin = FileUtil.readFile(inputStream1);
+        String abiStr = FileUtil.readFile(inputStream2);
+        Abi abi = Abi.fromJson(abiStr);
+
+        FuncParams params = new FuncParams();
+        params.addParams("contract01");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
+        transaction.sign(account);
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        String contractAddress = receiptResponse.getContractAddress();
+        logger.debug("contract address: " + contractAddress);
+        return contractAddress;
     }
 }

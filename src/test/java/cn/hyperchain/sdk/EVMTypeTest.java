@@ -7,7 +7,9 @@ import cn.hyperchain.sdk.common.solidity.ContractType;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.common.utils.FuncParams;
+import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
+import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -24,18 +26,22 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EVMDecodeTest {
 
+/**
+ * @author Lam
+ * @ClassName EVMTypeTest
+ * @date 2019-07-16
+ */
+public class EVMTypeTest {
     private static String DEFAULT_URL = "localhost:8081";
-    private static String PASSWORD = "123";
-    private static String contractAddress = null;
-    private static DefaultHttpProvider httpProvider = null;
-    private static ProviderManager providerManager = null;
-    private static ContractService contractService = null;
-    private static AccountService accountService = null;
-    private static Account account = null;
-    private static Abi abi = null;
-    private static String funcName = null;
+    private static ProviderManager providerManager;
+    private static HttpProvider httpProvider;
+    private static ContractService contractService;
+    private static AccountService accountService;
+    private static Account account;
+    private static Abi abi;
+    private static String contractAddress;
+    private static String funcName;
 
     @BeforeClass
     public static void deploy() throws Exception {
@@ -51,8 +57,8 @@ public class EVMDecodeTest {
         account = accountService.genAccount(Algo.ECRAW);
 
         // 4. 构建EVM交易体
-        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.bin");
-        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.abi");
+        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.bin");
+        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
         String bin = FileUtil.readFile(inputStream1);
         String abiStr = FileUtil.readFile(inputStream2);
         abi = Abi.fromJson(abiStr);
@@ -71,29 +77,103 @@ public class EVMDecodeTest {
     }
 
     @Test
-    public void testBytes() throws Exception {
+    public void testBytes32Array() throws RequestException {
         FuncParams params = new FuncParams();
-        params.addParams("10".getBytes());
-        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes(bytes)", abi, params).build();
+
+        byte[][] bytes = new byte[2][];
+        bytes[0] = "10".getBytes();
+        bytes[1] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".getBytes();
+        params.addParams(bytes);
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32Array(bytes32[2])", abi, params).build();
         transaction1.sign(account);
         Request<TxHashResponse> invoke = contractService.invoke(transaction1);
         ReceiptResponse receiptResponse = invoke.send().polling();
         String ret = receiptResponse.getRet();
         byte[] fromHex = ByteUtil.fromHex(ret);
 
-        ContractType.Function function = abi.getFunction("TestBytes(bytes)");
+        ContractType.Function function = abi.getFunction("TestBytes32Array(bytes32[2])");
         // 解码得到List<byte[]>
         List<?> decodeResult = function.decodeResult(fromHex);
         for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            for (Object object : (Object[]) result) {
+                System.out.println(object.getClass());
+                System.out.println(new String((byte[]) object));
+
+            }
+        }
+    }
+
+    @Test
+    public void testBytes32() throws RequestException {
+        funcName = "TestBytes32(bytes32)";
+
+        FuncParams params = new FuncParams();
+        params.addParams("10".getBytes());
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction1.sign(account);
+        Request<TxHashResponse> invoke = contractService.invoke(transaction1);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        ContractType.Function function = abi.getFunction(funcName);
+        // 解码得到List<byte[]>
+        List<?> decodeResult = function.decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(new String((byte[]) result));
+        }
+    }
+
+    @Test
+    public void testBytes1() throws Exception {
+        funcName = "TestBytes1(bytes1)";
+        FuncParams params = new FuncParams();
+        params.addParams("10".getBytes());
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction1.sign(account);
+        Request<TxHashResponse> invoke = contractService.invoke(transaction1);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        ContractType.Function function = abi.getFunction(funcName);
+        // 解码得到List<byte[]>
+        List<?> decodeResult = function.decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
+            System.out.println(new String((byte[]) result));
+        }
+    }
+
+    @Test
+    public void testBytes() throws Exception {
+        funcName = "TestBytes(bytes)";
+        FuncParams params = new FuncParams();
+        params.addParams("10".getBytes());
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
+        transaction1.sign(account);
+        Request<TxHashResponse> invoke = contractService.invoke(transaction1);
+        ReceiptResponse receiptResponse = invoke.send().polling();
+        String ret = receiptResponse.getRet();
+        byte[] fromHex = ByteUtil.fromHex(ret);
+
+        ContractType.Function function = abi.getFunction(funcName);
+        // 解码得到List<byte[]>
+        List<?> decodeResult = function.decodeResult(fromHex);
+        for (Object result : decodeResult) {
+            System.out.println(result.getClass());
             System.out.println(new String((byte[]) result));
         }
     }
 
     @Test
     public void testInt() throws Exception {
+        funcName = "TestInt(int256)";
         FuncParams params = new FuncParams();
         params.addParams("20");
-        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestInt(int256)", abi, params).build();
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, funcName, abi, params).build();
         transaction.sign(account);
 
         Request<TxHashResponse> invoke = contractService.invoke(transaction);
@@ -101,7 +181,7 @@ public class EVMDecodeTest {
         String ret = receiptResponse.getRet();
         byte[] fromHex = ByteUtil.fromHex(ret);
 
-        List<?> decodeResult = abi.getFunction("TestInt(int256)").decodeResult(fromHex);
+        List<?> decodeResult = abi.getFunction(funcName).decodeResult(fromHex);
         for (Object result : decodeResult) {
             System.out.println(result.getClass());
             System.out.println(((BigInteger) result).toString());

@@ -2,15 +2,11 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
-import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.FileUtil;
-import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.CompileResponse;
-import cn.hyperchain.sdk.response.ReceiptResponse;
-import cn.hyperchain.sdk.transaction.Transaction;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,7 +22,7 @@ public class ComplieServiceTest {
 
     @BeforeClass
     public static void testComplie() throws RequestException, IOException {
-        String sourceCode = FileUtil.readFile(FileUtil.readFileAsStream("solidity/TypeTestContract.sol"));
+        String sourceCode = FileUtil.readFile(FileUtil.readFileAsStream("solidity/sol2/TestContract.sol"));
         Request<CompileResponse> request = compileService.complie(sourceCode);
         CompileResponse response = request.send();
         abi = response.getAbi()[0];
@@ -37,20 +33,11 @@ public class ComplieServiceTest {
     }
 
     @Test
-    public void testDeploy() throws RequestException {
-        ContractService contractService = ServiceManager.getContractService(providerManager);
+    public void testDeploy() throws RequestException, IOException {
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         Account account = accountService.genAccount(Algo.SMRAW);
 
-        FuncParams params = new FuncParams();
-        params.addParams("contract1");
-        Abi abi1 = Abi.fromJson(abi);
-        Transaction contract1 = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi1, params).build();
-        contract1.sign(account);
-        ReceiptResponse response = contractService.deploy(contract1).send().polling();
-
-        String contractAddress = response.getContractAddress();
-        System.out.println("contract address: " + contractAddress);
+        Common.deployEVM(account);
     }
 
 }

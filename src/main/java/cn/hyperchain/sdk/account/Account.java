@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.crypto.CipherUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
+import cn.hyperchain.sdk.crypto.sm.sm4.SM4Util;
 import cn.hyperchain.sdk.exception.AccountException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -75,7 +76,7 @@ public abstract class Account {
         if (algo.isSM()) {
             ECPoint ecPoint = SM2Util.CURVE.decodePoint(ByteUtil.fromHex(publicKeyHex));
             ECPublicKeyParameters publicKeyParameters = new ECPublicKeyParameters(ecPoint, SM2Util.DOMAIN_PARAMS);
-            ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, ByteUtil.fromHex(privateKeyHex)), SM2Util.DOMAIN_PARAMS);
+            ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, privateKey), SM2Util.DOMAIN_PARAMS);
             AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(publicKeyParameters, privateKeyParameters);
             if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParameters.getQ().getEncoded(false))))) {
                 throw new AccountException("account address is not matching with private key");
@@ -115,6 +116,9 @@ public abstract class Account {
             case SM3DES:
                 privateKey = CipherUtil.decrypt3DES(privateKey, password);
                 break;
+            case SMSM4:
+                privateKey = SM4Util.decryptCbcPadding(privateKey, password);
+                break;
             default:
                 throw new AccountException("illegal account type");
         }
@@ -147,6 +151,8 @@ public abstract class Account {
                 privateKey = CipherUtil.encrypt3DES(privateKey, password);
                 break;
             case SMSM4:
+                privateKey = SM4Util.encryptCbcPadding(privateKey, password);
+                break;
             default:
                 throw new AccountException("illegal account type");
         }
@@ -180,54 +186,61 @@ public abstract class Account {
     @Deprecated
     private static String parseAccountJson(String accountJson, String password) {
         JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
+
+        JsonElement versionStr = jsonObject.get("version");
+        String version;
+        if (versionStr == null) {
+            version = Version.V4.getV();
+        } else {
+            version = versionStr.getAsString();
+            if (version.equals(Version.V4.getV())) {
+                return accountJson;
+            }
+        }
+
         JsonElement publicKeyStr = jsonObject.get("publicKey");
         JsonElement algoStr = jsonObject.get("algo");
         JsonElement encryptedStr = jsonObject.get("encrypted");
         JsonElement isEncrypted = jsonObject.get("privateKeyEncrypted");
 
-        String address = jsonObject.get("address").getAsString();
-        String version = jsonObject.get("version").getAsString();
+        String address = jsonObject.get("address").getAsString().toLowerCase();
         String privateKeyHex;
         String publicKeyHex;
-
         Algo algo;
 
         if (algoStr == null) {
             if (isEncrypted.getAsBoolean()) {
-                algo = Algo.getAlog("0x12");
+                algo = Algo.SMDES;
             } else {
-                algo = Algo.getAlog("0x13");
+                algo = Algo.SMRAW;
             }
         } else {
             algo = Algo.getAlog(algoStr.getAsString());
         }
 
         if (encryptedStr == null) {
-            privateKeyHex = jsonObject.get("privateKey").getAsString().toLowerCase();
+            privateKeyHex = jsonObject.get("privateKey").getAsString();
         } else {
-            String encrypted = encryptedStr.getAsString().toLowerCase();
-            privateKeyHex = encrypted;
+            privateKeyHex = encryptedStr.getAsString();
         }
 
-        if (isEncrypted != null) {
-            if (isEncrypted.getAsBoolean()) {
-                privateKeyHex = ByteUtil.toHex(decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password));
-            }
-        }
+        privateKeyHex = privateKeyHex.toLowerCase();
 
         if (!algo.isSM() && publicKeyStr == null) {
-            ECKey ecKey = ECKey.fromPrivate(ByteUtil.fromHex(privateKeyHex));
+            byte[] privateKey = decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password);
+            ECKey ecKey = ECKey.fromPrivate(privateKey);
             publicKeyHex = ByteUtil.toHex(ecKey.getPubKey());
         } else {
             publicKeyHex = publicKeyStr.getAsString();
-//            throw new UnsupportedOperationException("not support sm");
         }
 
-        String newAccountJson = "{\"address\":\"" + Utils.deleteHexPre(address).toLowerCase()
+        publicKeyHex = publicKeyHex.toLowerCase();
+
+        String newAccountJson = "{\"address\":\"" + Utils.deleteHexPre(address)
                 + "\",\"algo\":\"" + algo.getAlgo()
-                + "\",\"privateKey\":\"" + Utils.deleteHexPre(privateKeyHex).toLowerCase()
+                + "\",\"privateKey\":\"" + Utils.deleteHexPre(privateKeyHex)
                 + "\",\"version\":\"" + version
-                + "\",\"publicKey\":\"" + Utils.deleteHexPre(publicKeyHex).toLowerCase()
+                + "\",\"publicKey\":\"" + Utils.deleteHexPre(publicKeyHex)
                 + "\"}";
 
 
