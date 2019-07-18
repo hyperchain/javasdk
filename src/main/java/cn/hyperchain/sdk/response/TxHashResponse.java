@@ -30,6 +30,9 @@ public class TxHashResponse extends Response {
         this.nodeIds = nodeIds;
     }
 
+    public int[] getNodeIds() {
+        return nodeIds;
+    }
 
     public void setProviderManager(ProviderManager providerManager) {
         this.providerManager = providerManager;
