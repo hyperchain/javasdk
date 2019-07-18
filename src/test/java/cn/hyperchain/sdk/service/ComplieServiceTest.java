@@ -22,7 +22,7 @@ public class ComplieServiceTest {
 
     @BeforeClass
     public static void testComplie() throws RequestException, IOException {
-        String sourceCode = FileUtil.readFile(FileUtil.readFileAsStream("solidity/TypeTestContract.sol"));
+        String sourceCode = FileUtil.readFile(FileUtil.readFileAsStream("solidity/sol2/TestContract.sol"));
         Request<CompileResponse> request = compileService.complie(sourceCode);
         CompileResponse response = request.send();
         abi = response.getAbi()[0];

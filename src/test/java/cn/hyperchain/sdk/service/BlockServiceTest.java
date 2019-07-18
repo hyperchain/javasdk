@@ -43,8 +43,8 @@ public class BlockServiceTest {
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         ContractService contractService = ServiceManager.getContractService(providerManager);
 
-        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.bin");
-        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.abi");
+        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.bin");
+        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
         bin = FileUtil.readFile(inputStream1);
         String abiStr = FileUtil.readFile(inputStream2);
         abi = Abi.fromJson(abiStr);

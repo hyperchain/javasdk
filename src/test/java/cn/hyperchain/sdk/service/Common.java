@@ -40,8 +40,8 @@ public class Common {
     public static ProviderManager providerManager;
     public static ProviderManager soloProviderManager;
 
-    public static final String bin = "solidity/TypeTestContract_sol_TypeTestContract.bin";
-    public static final String abi = "solidity/TypeTestContract_sol_TypeTestContract.abi";
+    public static final String bin = "solidity/sol2/TestContract_sol_TypeTestContract.bin";
+    public static final String abi = "solidity/sol2/TestContract_sol_TypeTestContract.abi";
     private static Logger logger = Logger.getLogger(Common.class);
 
     static {

@@ -321,8 +321,8 @@ Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deplo
 ##### EVM
 
 ```java
-InputStream inputStream1 = FileUtil.readFileAsStream("solidity/TypeTestContract_sol_TypeTestContract.bin");
-InputStream inputStream2 = FileUtil.readFileAsStream("solidity/TypeTestContract_sol_TypeTestContract.abi");
+InputStream inputStream1 = FileUtil.readFileAsStream("solidity/sol2/TestContract_sol_TypeTestContract.bin");
+InputStream inputStream2 = FileUtil.readFileAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
 String bin = FileUtil.readFile(inputStream1);
 String abiStr = FileUtil.readFile(inputStream2);
 
