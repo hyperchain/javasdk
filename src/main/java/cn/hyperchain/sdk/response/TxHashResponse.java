@@ -26,11 +26,6 @@ public class TxHashResponse extends Response {
         this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
-
-    public int[] getNodeIds() {
-        return nodeIds;
-    }
-
     public void setNodeIds(int... nodeIds) {
         this.nodeIds = nodeIds;
     }
