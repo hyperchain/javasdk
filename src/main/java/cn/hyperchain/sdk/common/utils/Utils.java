@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.util.Random;
 
 public class Utils {
@@ -17,6 +18,7 @@ public class Utils {
 
     static {
         try {
+            Security.setProperty("securerandom.strongAlgorithms", "NativePRNGNonBlocking:SUN");
             random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
             logger.error(e);
