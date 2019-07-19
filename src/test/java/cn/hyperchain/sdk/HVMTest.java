@@ -7,7 +7,7 @@ import cn.hyperchain.sdk.common.utils.Decoder;
 import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.crypto.SignerUtil;
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.hvm.StudentInvoke;
+import cn.hyperchain.sdk.hvm.ContractInvoke;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -40,7 +40,7 @@ public class HVMTest {
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
         Account backup = account;
-        InputStream payload = FileUtil.readFileAsStream("hvm-jar/hvmbasic-1.0.0-student.jar");
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-1.0-SNAPSHOT.jar");
         Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
@@ -54,7 +54,7 @@ public class HVMTest {
         System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
         // 6. invoke
         account = accountService.genAccount(Algo.ECRAW);
-        Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(contractAddress, new StudentInvoke()).build();
+        Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(contractAddress, new ContractInvoke()).build();
         transaction1.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction1.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction1.getSignature())));
         Assert.assertTrue(SignerUtil.verifySign(transaction1.getNeedHashString(), transaction1.getSignature(), account.getPublicKey()));
