@@ -1462,7 +1462,7 @@ Request<ArchiveResponse> pending(int... nodeIds);
 
 #### 类型对应
 
-当使用Litesdk编译solidity合约时，由于java和solidity本身类型的不兼容，所以在调用solidity方法传参数的时候需要对java类型进行相应的编码解码，目前Litesdk支持的对应类型如下：
+当使用**LiteSDK**编译solidity合约时，由于java和solidity本身类型的不兼容，所以在调用solidity方法传参数的时候需要对java类型进行相应的编码解码，LiteSDK内部的`Abi`类，**与solidity的abi文件对应，用来提供solidity合约的函数入参、返回值等信息**，方便我们对solidity类型和java类型做转换，目前Litesdk支持的对应类型如下：
 
 | JAVA              | SOLIDITY                         |
 | ----------------- | -------------------------------- |
@@ -1476,7 +1476,39 @@ Request<ArchiveResponse> pending(int... nodeIds);
 
 #### 编码
 
-Litesdk提供了FuncParams工具类封装需要转换成solidity类型的java参数，使用方法如下：
+编码时需要提供以下信息：
+
+- solidity合约对应的abi对象，
+- 调用方法名
+- 封装后的java参数  
+
+实现java与solidity之间的类型转换。（注：如果是部署需要提供bin文件，具体参照[部署合约](#部署合约)一节）
+
+##### Abi对象
+
+通过**LiteSDK**提供的`FileUtil`工具类读取文件内容得到abi字符串，并利用`Abi`类的`fromJson`方法生成封装的Abi对象，使用方法如下：
+
+```java
+InputStream abiIs = Thread.currentThread().getContextClassLoader().getResourceAsStream("xxx.abi");
+String abiStr = FileUtil.readFile(abiIs);
+Abi abi = Abi.fromJson(abiStr);
+```
+
+##### 调用方法名
+
+调用方法名需要按格式`$(method_name)(type1[,type2…])`填，假如solidity的函数签名为
+
+```solidity
+function TestUint(uint8 a) returns (uint8) {
+    return a;
+}
+```
+
+则我们提供的调用方法名为`TestUint(uint8)`，如果函数多个参数，则调用方法名的类型之间用**,**分隔。
+
+##### 封装的java参数
+
+**LiteSDK**提供了`FuncParams`工具类封装**需要转换成solidity类型的java参数**，使用方法如下：
 
 ```java
 FuncParams params = new FuncParams();
@@ -1489,6 +1521,8 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invok
 ```
 
 #### 解码
+
+解码与编码类似，需要提供**Abi对象、方法名和编码的solidity结果**，具体可见[编码](#编码)一节。
 
 调用evm合约得到交易回执`ReceiptResponse`后，需要对solidity合约的返回值进行解析，使用方法如下：
 
