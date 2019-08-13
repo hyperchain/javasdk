@@ -1,13 +1,12 @@
   * [第一章. 前言](#第一章-前言)
   * [第二章. 初始化](#第二章-初始化)
      * [2.1 创建HttpProvider对象](#21-创建httpprovider对象)
-     * [2.2 创建ProvideManager对象](#22-创建providemanager对象)
+     * [2.2 创建ProviderManager对象](#22-创建providemanager对象)
      * [2.3 创建服务](#23-创建服务)
      * [2.4 获取结果](#24-获取结果)
   * [第三章. 交易](#第三章-交易)
      * [合约接口](#合约接口)
      * [转账交易](#转账交易)
-     * [账户创建](#账户创建)
         * [创建账户](#创建账户)
         * [交易体创建](#交易体创建)
         * [部署合约](#部署合约)
@@ -107,7 +106,7 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder()
 * `https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
 
 
-### 2.2 创建ProvideManager对象
+### 2.2 创建ProviderManager对象
 
 每个节点的连接都需要一个`HttpProvider`，而`ProvideManager`负责集成、管理这些`HttpProvider`，创建`ProvideManager`有两种方式，一种是通过`createManager()`创建，另一种是和`HttpProvider`一样通过**Builder**模式创建。使用前者创建会使用`ProvideManager`的默认配置参数，而如果想定制更多的属性则需要通过后者的方式创建，示例如下：
 
@@ -234,8 +233,6 @@ Transaction transaction = new Transaction.Builder(account.getAddress()).transfer
 
 **创建交易体并调用服务的具体流程如下。**
 
-### 账户创建
-
 #### 创建账户
 
 这个过程分为两步，先创建`AccountService`对象，再利用该对象创建账户，示例如下：
@@ -360,10 +357,10 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invok
 ##### HVM
 
 ```java
-Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgrade(contractAddress, payload).build();
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).upgrade(contractAddress, payload).build();
 ```
 
-创建交易体时需要指定**合约地址**和**升级的新合约的bin文件**。
+创建交易体时需要指定**合约地址**和**读取新合约jar包得到的字符串**
 
 ##### EVM
 
@@ -371,7 +368,7 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgra
 Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgrade(contractAddress, payload).build();
 ```
 
-创建交易体时需要指定**合约地址**和**新合约jar包的文件流**
+创建交易体时需要指定**合约地址**和**升级的新合约的bin文件字符串**。
 
 #### 冻结合约
 
@@ -913,7 +910,7 @@ public class BlockNumberResponse extends Response {
 
 **BlockAvgTimeResponse**
 
-通过`result`接收返回结果，`result`实际类型是String`，可通过`getResult()`方法得到。
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
 
 ```java
 public class BlockAvgTimeResponse extends Response {
@@ -1071,7 +1068,7 @@ Request<BlockNumberResponse> getChainHeight(int... nodeIds);
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-RequestBlockNumberResponse> getChainHeight(int... nodeIds);
+Request<BlockNumberResponse> getGenesisBlock(int... nodeIds);
 ```
 
 
@@ -1154,7 +1151,7 @@ TODO
 
 ### 6.1 获取节点信息
 
-参数
+参数：
 
 - ids 说明请求向哪些节点发送。
 
@@ -1173,9 +1170,7 @@ MQService接口用于与**RabbitMQ**进行交互。由于开发时间较早，`M
 ```java
 public class MQResponse extends Response {
     private JsonElement result;
-    // 如果是7.4可使用该方法获取更具体的结果
  	public List<String> getQueueNames();
-    // 如果是7.5可使用该方法获取更具体的结果
     public String getExchanger();
 }
 ```
@@ -1278,7 +1273,7 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 
 分别对应的结构如下：
 
-ArchiveResponse
+**ArchiveResponse**
 
 通过`result`接收返回结果，`result`实际结构是内部类`Archive`，可通过`getResult()`方法得到。
 
@@ -1297,7 +1292,7 @@ public class ArchiveResponse extends Response {
 }
 ```
 
-ArchiveFilterIdResponse
+**ArchiveFilterIdResponse**
 
 通过`result`接收返回结果，`result`实际结构是`String`，可通过`getResult()`方法得到。
 
@@ -1307,7 +1302,7 @@ public class ArchiveFilterIdResponse extends Response {
 }
 ```
 
-ArchiveBoolResponse
+**ArchiveBoolResponse**
 
 通过`result`接收返回结果，`result`实际结构是`Boolean`，可通过`getResult()`方法得到。
 
