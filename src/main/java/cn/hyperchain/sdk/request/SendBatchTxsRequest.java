@@ -46,6 +46,11 @@ public class SendBatchTxsRequest extends Request {
 
         Type responsesType = new TypeToken<ArrayList<TxHashResponse>>() {
         }.getType();
+
+        if (!result.startsWith("[")) {
+            result = "[" + result + "]";
+        }
+
         ArrayList<TxHashResponse> txHashResponses = gson.fromJson(result, responsesType);
 
         for (int i = 0; i < txHashResponses.size(); i++) {

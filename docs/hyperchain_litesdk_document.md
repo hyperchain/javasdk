@@ -1,13 +1,12 @@
   * [第一章. 前言](#第一章-前言)
   * [第二章. 初始化](#第二章-初始化)
      * [2.1 创建HttpProvider对象](#21-创建httpprovider对象)
-     * [2.2 创建ProvideManager对象](#22-创建providemanager对象)
+     * [2.2 创建ProviderManager对象](#22-创建providemanager对象)
      * [2.3 创建服务](#23-创建服务)
      * [2.4 获取结果](#24-获取结果)
   * [第三章. 交易](#第三章-交易)
      * [合约接口](#合约接口)
      * [转账交易](#转账交易)
-     * [账户创建](#账户创建)
         * [创建账户](#创建账户)
         * [交易体创建](#交易体创建)
         * [部署合约](#部署合约)
@@ -107,7 +106,7 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder()
 * `https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
 
 
-### 2.2 创建ProvideManager对象
+### 2.2 创建ProviderManager对象
 
 每个节点的连接都需要一个`HttpProvider`，而`ProvideManager`负责集成、管理这些`HttpProvider`，创建`ProvideManager`有两种方式，一种是通过`createManager()`创建，另一种是和`HttpProvider`一样通过**Builder**模式创建。使用前者创建会使用`ProvideManager`的默认配置参数，而如果想定制更多的属性则需要通过后者的方式创建，示例如下：
 
@@ -234,8 +233,6 @@ Transaction transaction = new Transaction.Builder(account.getAddress()).transfer
 
 **创建交易体并调用服务的具体流程如下。**
 
-### 账户创建
-
 #### 创建账户
 
 这个过程分为两步，先创建`AccountService`对象，再利用该对象创建账户，示例如下：
@@ -360,10 +357,10 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invok
 ##### HVM
 
 ```java
-Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgrade(contractAddress, payload).build();
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).upgrade(contractAddress, payload).build();
 ```
 
-创建交易体时需要指定**合约地址**和**升级的新合约的bin文件**。
+创建交易体时需要指定**合约地址**和**读取新合约jar包得到的字符串**
 
 ##### EVM
 
@@ -371,7 +368,7 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgra
 Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgrade(contractAddress, payload).build();
 ```
 
-创建交易体时需要指定**合约地址**和**新合约jar包的文件流**
+创建交易体时需要指定**合约地址**和**升级的新合约的bin文件字符串**。
 
 #### 冻结合约
 
@@ -913,7 +910,7 @@ public class BlockNumberResponse extends Response {
 
 **BlockAvgTimeResponse**
 
-通过`result`接收返回结果，`result`实际类型是String`，可通过`getResult()`方法得到。
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
 
 ```java
 public class BlockAvgTimeResponse extends Response {
@@ -1071,7 +1068,7 @@ Request<BlockNumberResponse> getChainHeight(int... nodeIds);
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-RequestBlockNumberResponse> getChainHeight(int... nodeIds);
+Request<BlockNumberResponse> getGenesisBlock(int... nodeIds);
 ```
 
 
@@ -1154,7 +1151,7 @@ TODO
 
 ### 6.1 获取节点信息
 
-参数
+参数：
 
 - ids 说明请求向哪些节点发送。
 
@@ -1173,9 +1170,7 @@ MQService接口用于与**RabbitMQ**进行交互。由于开发时间较早，`M
 ```java
 public class MQResponse extends Response {
     private JsonElement result;
-    // 如果是7.4可使用该方法获取更具体的结果
  	public List<String> getQueueNames();
-    // 如果是7.5可使用该方法获取更具体的结果
     public String getExchanger();
 }
 ```
@@ -1278,7 +1273,7 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 
 分别对应的结构如下：
 
-ArchiveResponse
+**ArchiveResponse**
 
 通过`result`接收返回结果，`result`实际结构是内部类`Archive`，可通过`getResult()`方法得到。
 
@@ -1297,7 +1292,7 @@ public class ArchiveResponse extends Response {
 }
 ```
 
-ArchiveFilterIdResponse
+**ArchiveFilterIdResponse**
 
 通过`result`接收返回结果，`result`实际结构是`String`，可通过`getResult()`方法得到。
 
@@ -1307,7 +1302,7 @@ public class ArchiveFilterIdResponse extends Response {
 }
 ```
 
-ArchiveBoolResponse
+**ArchiveBoolResponse**
 
 通过`result`接收返回结果，`result`实际结构是`Boolean`，可通过`getResult()`方法得到。
 
@@ -1462,7 +1457,7 @@ Request<ArchiveResponse> pending(int... nodeIds);
 
 #### 类型对应
 
-当使用Litesdk编译solidity合约时，由于java和solidity本身类型的不兼容，所以在调用solidity方法传参数的时候需要对java类型进行相应的编码解码，目前Litesdk支持的对应类型如下：
+当使用**LiteSDK**编译solidity合约时，由于java和solidity本身类型的不兼容，所以在调用solidity方法传参数的时候需要对java类型进行相应的编码解码，LiteSDK内部的`Abi`类，**与solidity的abi文件对应，用来提供solidity合约的函数入参、返回值等信息**，方便我们对solidity类型和java类型做转换，目前Litesdk支持的对应类型如下：
 
 | JAVA              | SOLIDITY                         |
 | ----------------- | -------------------------------- |
@@ -1476,7 +1471,39 @@ Request<ArchiveResponse> pending(int... nodeIds);
 
 #### 编码
 
-Litesdk提供了FuncParams工具类封装需要转换成solidity类型的java参数，使用方法如下：
+编码时需要提供以下信息：
+
+- solidity合约对应的abi对象，
+- 调用方法名
+- 封装后的java参数  
+
+实现java与solidity之间的类型转换。（注：如果是部署需要提供bin文件，具体参照[部署合约](#部署合约)一节）
+
+##### Abi对象
+
+通过**LiteSDK**提供的`FileUtil`工具类读取文件内容得到abi字符串，并利用`Abi`类的`fromJson`方法生成封装的Abi对象，使用方法如下：
+
+```java
+InputStream abiIs = Thread.currentThread().getContextClassLoader().getResourceAsStream("xxx.abi");
+String abiStr = FileUtil.readFile(abiIs);
+Abi abi = Abi.fromJson(abiStr);
+```
+
+##### 调用方法名
+
+调用方法名需要按格式`$(method_name)(type1[,type2…])`填，假如solidity的函数签名为
+
+```solidity
+function TestUint(uint8 a) returns (uint8) {
+    return a;
+}
+```
+
+则我们提供的调用方法名为`TestUint(uint8)`，如果函数多个参数，则调用方法名的类型之间用**,**分隔。
+
+##### 封装的java参数
+
+**LiteSDK**提供了`FuncParams`工具类封装**需要转换成solidity类型的java参数**，使用方法如下：
 
 ```java
 FuncParams params = new FuncParams();
@@ -1489,6 +1516,8 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invok
 ```
 
 #### 解码
+
+解码与编码类似，需要提供**Abi对象、方法名和编码的solidity结果**，具体可见[编码](#编码)一节。
 
 调用evm合约得到交易回执`ReceiptResponse`后，需要对solidity合约的返回值进行解析，使用方法如下：
 
