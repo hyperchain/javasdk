@@ -4,4 +4,5 @@ release v0.0.2
     1. add invoke interface
 release v0.0.3
     1. complete interface
-
+release v0.0.4
+    1. fix send single tx using send batch interface will cause json parse error
