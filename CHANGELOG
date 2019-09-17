@@ -6,3 +6,4 @@ release v0.0.3
     1. complete interface
 release v0.0.4
     1. fix send single tx using send batch interface will cause json parse error
+    2. fix execute deploy in a jar file will cause null pointer error
