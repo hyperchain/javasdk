@@ -50,7 +50,6 @@ public class TxHashResponse extends Response {
 
         PollingRequest pollingRequest = new PollingRequest("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
         pollingRequest.addParams(getTxHash());
-        System.out.println(gson.toJson(pollingRequest));
         return (ReceiptResponse) pollingRequest.send();
     }
 
