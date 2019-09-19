@@ -18,7 +18,9 @@ public class Utils {
 
     static {
         try {
-            Security.setProperty("securerandom.strongAlgorithms", "NativePRNGNonBlocking:SUN");
+            if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") < 0) {
+                Security.setProperty("securerandom.strongAlgorithms", "NativePRNGNonBlocking:SUN");
+            }
             random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
             logger.error(e);
