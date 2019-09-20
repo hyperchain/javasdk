@@ -10,9 +10,9 @@ To get more information you can view [docs](http://docs.hyperchain.cn), use `hvm
 
 ## Get started
 
-### install
+### Install
 
-maven
+Maven
 
 ```
 <dependency>
@@ -22,13 +22,13 @@ maven
 </dependency>
 ```
 
-gradle
+Gradle
 
 ```
 compile group: 'cn.hyperchain', name: 'litesdk', version: '0.0.3'
 ```
 
-### usage
+### Usage
 
 #### 1. build provider manager
 
@@ -42,7 +42,7 @@ DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setU
 ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
 ```
 
-#### 2. build service
+#### 2. Build service
 
 Create different services by specific provider manager, service will provide some function.
 
@@ -51,7 +51,7 @@ ContractService contractService = ServiceManager.getContractService(providerMana
 AccountService accountService = ServiceManager.getAccountService(providerManager);
 ```
 
-#### 3. create account
+#### 3. Create account
 
 Account can be used to sign transaction.
 
@@ -59,7 +59,7 @@ Account can be used to sign transaction.
 Account account = accountService.genAccount(Algo.SMRAW);
 ```
 
-#### 4. build transaction
+#### 4. Build transaction
 
 Transaction builder can create different transaction by different style of initialization.
 
@@ -72,7 +72,7 @@ transaction.sign(account);
 Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(receiptResponse.getContractAddress(), new StudentInvoke()).build();
 ```
 
-#### 5. get response
+#### 5. Get response
 
 Service will return a Request, user can use Request to get specific Response by interface.
 
@@ -80,7 +80,7 @@ Service will return a Request, user can use Request to get specific Response by 
 ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
 ```
 
-#### 6. decode result
+#### 6. Decode result
 
 Decode result to specific type.
 
@@ -88,9 +88,9 @@ Decode result to specific type.
 Decoder.decodeHVM(receiptResponse1.getRet(), String.class);
 ```
 
-## issue
+## Issue
 
 If you have any suggestions or idea, please submit issue in this project!
 
-## doc
+## Doc
 If you want to know more about LiteSDK, you can read manual at [here](docs/hyperchain_litesdk_document.md).
