@@ -56,6 +56,22 @@ public class BlockResponse extends Response {
             return transactions;
         }
 
+        public String getVersion() {
+            return version;
+        }
+
+        public String getParentHash() {
+            return parentHash;
+        }
+
+        public String getWriteTime() {
+            return writeTime;
+        }
+
+        public String getMerkleRoot() {
+            return merkleRoot;
+        }
+
         @Override
         public String toString() {
             return "Block{" +

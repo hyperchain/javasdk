@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
  * @date 2019-07-09
  */
 public class CompileResponse extends Response {
-    private class ComplieReturn {
+    private class CompileReturn {
         @Expose
         private String[] bin;
         @Expose
@@ -26,7 +26,7 @@ public class CompileResponse extends Response {
 
         @Override
         public String toString() {
-            return "ComplieReturn{" +
+            return "CompileReturn{" +
                     "bin='" + bin + '\'' +
                     ", abi='" + abi + '\'' +
                     '}';
@@ -34,9 +34,9 @@ public class CompileResponse extends Response {
     }
 
     @Expose
-    private ComplieReturn result;
+    private CompileReturn result;
 
-    public ComplieReturn getResult() {
+    public CompileReturn getResult() {
         return result;
     }
 
