@@ -186,12 +186,12 @@ public class ProviderManager {
 
     private String sendTo(Request request, HttpProvider provider) throws RequestException {
         String body = request.requestBody();
-        byte[] bobyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
+        byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         Map<String, String> headers = new HashMap<>();
         if (this.tCertPool != null) {
             if (this.isCFCA) {
                 headers.put("tcert", this.tCertPool.getSdkCert());
-                headers.put("signature", this.tCertPool.getSdkCertKeyPair().signData(bobyBytes));
+                headers.put("signature", this.tCertPool.getSdkCertKeyPair().signData(bodyBytes));
             } else {
                 String tCert = this.tCertPool.getTCert(provider.getUrl());
                 if (tCert == null) {
@@ -199,9 +199,9 @@ public class ProviderManager {
                     this.tCertPool.setTCert(provider.getUrl(), tCert);
                 }
                 headers.put("tcert", tCert);
-                headers.put("signature", this.tCertPool.getUniqueKeyPair().signData(bobyBytes));
+                headers.put("signature", this.tCertPool.getUniqueKeyPair().signData(bodyBytes));
             }
-            headers.put("msg", ByteUtil.toHex(bobyBytes));
+            headers.put("msg", ByteUtil.toHex(bodyBytes));
         }
 
         return provider.post(body, headers);
@@ -214,11 +214,11 @@ public class ProviderManager {
         param.put("pubkey", uniquePubKey);
         tCertRequest.addParams(param);
         String body = tCertRequest.requestBody();
-        byte[] bobyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
+        byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         Map<String, String> headers = new HashMap<>();
         headers.put("tcert", sdkCertKeyPair.getPublicKey());
-        headers.put("signature", sdkCertKeyPair.signData(bobyBytes));
-        headers.put("msg", ByteUtil.toHex(bobyBytes));
+        headers.put("signature", sdkCertKeyPair.signData(bodyBytes));
+        headers.put("msg", ByteUtil.toHex(bodyBytes));
         String response = provider.post(body, headers);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
         return tCertResponse.getTCert();

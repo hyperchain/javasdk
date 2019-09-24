@@ -17,6 +17,14 @@ public class TxCountWithTSResponse extends Response {
         @Expose
         private long timestamp;
 
+        public String getCount() {
+            return count;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+
         @Override
         public String toString() {
             return "TxCount{" +
