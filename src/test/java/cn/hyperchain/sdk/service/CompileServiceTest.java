@@ -13,17 +13,17 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ComplieServiceTest {
+public class CompileServiceTest {
     private static ProviderManager providerManager = Common.soloProviderManager;
     private static CompileService compileService = ServiceManager.getCompileService(providerManager);
-    private static Logger logger = Logger.getLogger(ComplieServiceTest.class);
+    private static Logger logger = Logger.getLogger(CompileServiceTest.class);
     private static String abi;
     private static String bin;
 
     @BeforeClass
-    public static void testComplie() throws RequestException, IOException {
+    public static void testCompile() throws RequestException, IOException {
         String sourceCode = FileUtil.readFile(FileUtil.readFileAsStream("solidity/sol2/TestContract.sol"));
-        Request<CompileResponse> request = compileService.complie(sourceCode);
+        Request<CompileResponse> request = compileService.compile(sourceCode);
         CompileResponse response = request.send();
         abi = response.getAbi()[0];
         bin = response.getBin()[0];

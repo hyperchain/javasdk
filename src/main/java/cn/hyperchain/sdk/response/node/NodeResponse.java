@@ -35,6 +35,46 @@ public class NodeResponse extends Response {
         @Expose
         private int delay;
 
+        public int getId() {
+            return id;
+        }
+
+        public String getIp() {
+            return ip;
+        }
+
+        public String getPort() {
+            return port;
+        }
+
+        public String getNamespace() {
+            return namespace;
+        }
+
+        public String getHash() {
+            return hash;
+        }
+
+        public String getHostname() {
+            return hostname;
+        }
+
+        public boolean isPrimary() {
+            return isPrimary;
+        }
+
+        public boolean isIsvp() {
+            return isvp;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public int getDelay() {
+            return delay;
+        }
+
         @Override
         public String toString() {
             return "Node{"
