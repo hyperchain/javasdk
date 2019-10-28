@@ -76,13 +76,13 @@ public class Encoder {
                 throw new IOException("the bean class is too large"); // 64k
             }
             //2. get the bean class name
-            byte[] clzName = bean.getClass().getCanonicalName().getBytes();
+            byte[] clzName = bean.getClass().getCanonicalName().getBytes(Utils.DEFAULT_CHARSET);
             if (clzName.length > 0xffff) {
                 throw new IOException("the bean class name is too large"); // 64k
             }
             //3. get the bin of bean
             Gson gson = new Gson();
-            byte[] beanBin = gson.toJson(bean).getBytes();
+            byte[] beanBin = gson.toJson(bean).getBytes(Utils.DEFAULT_CHARSET);
             //4. accumulate: | class length(4B) | name length(2B) | class | class name | bin |
             //               | len(txHash)      | len("__txHash__")| txHash | "__txHash__" | bin |
             StringBuilder sb = new StringBuilder();
