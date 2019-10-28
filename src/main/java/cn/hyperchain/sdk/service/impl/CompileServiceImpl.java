@@ -1,7 +1,7 @@
 package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
-import cn.hyperchain.sdk.request.ComplieRequest;
+import cn.hyperchain.sdk.request.CompileRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.CompileResponse;
 import cn.hyperchain.sdk.service.CompileService;
@@ -15,16 +15,16 @@ import cn.hyperchain.sdk.service.CompileService;
  */
 public class CompileServiceImpl implements CompileService {
     private ProviderManager providerManager;
-    private static final String COMPLIE_PREFIX = "contract_";
+    private static final String COMPILE_PREFIX = "contract_";
 
     public CompileServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
     }
 
     @Override
-    public Request<CompileResponse> complie(String sourceCode, int... nodes) {
-        ComplieRequest complieRequest = new ComplieRequest(COMPLIE_PREFIX + "compileContract", providerManager, CompileResponse.class, nodes);
-        complieRequest.addParams(sourceCode);
-        return complieRequest;
+    public Request<CompileResponse> compile(String sourceCode, int... nodes) {
+        CompileRequest compileRequest = new CompileRequest(COMPILE_PREFIX + "compileContract", providerManager, CompileResponse.class, nodes);
+        compileRequest.addParams(sourceCode);
+        return compileRequest;
     }
 }

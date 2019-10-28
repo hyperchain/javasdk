@@ -36,8 +36,8 @@ public class EVMTest {
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMAES, PASSWORD);
 
-        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.bin");
-        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/TypeTestContract_sol_TypeTestContract.abi");
+        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.bin");
+        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
         String bin = FileUtil.readFile(inputStream1);
         String abiStr = FileUtil.readFile(inputStream2);
         Abi abi = Abi.fromJson(abiStr);
@@ -54,11 +54,11 @@ public class EVMTest {
 
         FuncParams params1 = new FuncParams();
         params1.addParams("1");
-        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes1)", abi, params1).build();
+        Transaction transaction1 = new Transaction.EVMBuilder(account.getAddress()).invoke(contractAddress, "TestBytes32(bytes32)", abi, params1).build();
         transaction1.sign(account);
         ReceiptResponse receiptResponse1 = contractService.invoke(transaction1).send().polling();
         System.out.println(receiptResponse1.getRet());
-        List decodeList = abi.getFunction("TestBytes32(bytes1)").decodeResult(ByteUtil.fromHex(receiptResponse1.getRet()));
+        List decodeList = abi.getFunction("TestBytes32(bytes32)").decodeResult(ByteUtil.fromHex(receiptResponse1.getRet()));
         String[] topics = receiptResponse1.getLog()[0].getTopics();
         byte[][] topicsData = new byte[topics.length][];
         for (int i = 0; i < topics.length; i ++) {

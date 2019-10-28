@@ -2,10 +2,13 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.response.TxHashesResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
+import cn.hyperchain.sdk.transaction.Transaction;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -288,5 +291,23 @@ public interface TxService {
      */
     Request<TxCountResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
+    /**
+     * send tx.
+     *
+     * @param transaction transaction to be send
+     * @param nodeIds     specific ids
+     * @return {@link Request} of {@link TxHashesResponse}
+     */
+    Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds);
+
+    /**
+     * send batch txs.
+     *
+     * @param transactions transactions to be send
+     * @param methods      methods
+     * @param nodeIds      specific ids
+     * @return {@link Request} of {@link TxHashesResponse}
+     */
+    Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds);
 
 }

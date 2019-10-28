@@ -60,6 +60,58 @@ public class TxResponse extends Response {
             return txIndex;
         }
 
+        public String getVersion() {
+            return version;
+        }
+
+        public String getHash() {
+            return hash;
+        }
+
+        public String getFrom() {
+            return from;
+        }
+
+        public String getTo() {
+            return to;
+        }
+
+        public String getAmount() {
+            return amount;
+        }
+
+        public String getTimestamp() {
+            return timestamp;
+        }
+
+        public String getNonce() {
+            return nonce;
+        }
+
+        public String getExtra() {
+            return extra;
+        }
+
+        public String getExecuteTime() {
+            return executeTime;
+        }
+
+        public String getPayload() {
+            return payload;
+        }
+
+        public String getSignature() {
+            return signature;
+        }
+
+        public String getBlockTimestamp() {
+            return blockTimestamp;
+        }
+
+        public String getBlockWriteTime() {
+            return blockWriteTime;
+        }
+
         @Override
         public String toString() {
             return "Transaction{" +

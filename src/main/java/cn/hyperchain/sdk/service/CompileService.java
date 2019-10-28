@@ -11,5 +11,5 @@ import cn.hyperchain.sdk.response.CompileResponse;
  * @date 2019-07-09
  */
 public interface CompileService {
-    Request<CompileResponse> complie(String sourceCode, int... nodes);
+    Request<CompileResponse> compile(String sourceCode, int... nodes);
 }

@@ -18,6 +18,18 @@ public class BlockCountResponse extends Response {
         @Expose
         private String endBlock;
 
+        public String getSumOfBlocks() {
+            return sumOfBlocks;
+        }
+
+        public String getStartBlock() {
+            return startBlock;
+        }
+
+        public String getEndBlock() {
+            return endBlock;
+        }
+
         @Override
         public String toString() {
             return "BlockCount{" +

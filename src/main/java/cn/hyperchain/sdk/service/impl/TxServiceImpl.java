@@ -1,15 +1,23 @@
 package cn.hyperchain.sdk.service.impl;
 
+import cn.hyperchain.sdk.common.utils.MethodType;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.ReceiptRequest;
 import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.request.SendBatchTxsRequest;
+import cn.hyperchain.sdk.request.SendTxRequest;
 import cn.hyperchain.sdk.request.TxRequest;
 import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.response.TxHashesResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
+import cn.hyperchain.sdk.service.ContractService;
+import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.service.TxService;
+import cn.hyperchain.sdk.transaction.Transaction;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -19,7 +27,6 @@ import java.util.HashMap;
  * Tx Service Implementation.
  *
  * @author dong
- * @date 07/02/2019
  */
 public class TxServiceImpl implements TxService {
     private ProviderManager providerManager;
@@ -357,5 +364,40 @@ public class TxServiceImpl implements TxService {
         return txRequest;
     }
 
+    @Override
+    public Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds) {
+        SendTxRequest sendTxRequest = new SendTxRequest(TX_PREFIX + "sendTransaction", providerManager, TxHashResponse.class, nodeIds);
+        sendTxRequest.addParams(transaction.commonParamMap());
+        return sendTxRequest;
+    }
 
+    @Override
+    public Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds) {
+        ArrayList<Request> requests = new ArrayList<>();
+        TxService txService = ServiceManager.getTxService(providerManager);
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        Request request = null;
+
+        for (int i = 0; i < transactions.size(); i++) {
+            switch (MethodType.methodType(methods.get(i))) {
+                case SEND_TRANSACTION:
+                    request = txService.sendTx(transactions.get(i), nodeIds);
+                    break;
+                case DEPLOY_CONTRACT:
+                    request = contractService.deploy(transactions.get(i), nodeIds);
+                    break;
+                case INVOKE_CONTRACT:
+                    request = contractService.invoke(transactions.get(i), nodeIds);
+                    break;
+                case MAINTAIN_CONTRACT:
+                    request = contractService.maintain(transactions.get(i), nodeIds);
+                    break;
+                default:
+                    throw new RuntimeException("method " + methods.get(i) + " is not supported!");
+            }
+            requests.add(request);
+        }
+        SendBatchTxsRequest batchTxsRequest = new SendBatchTxsRequest(null, providerManager, TxHashesResponse.class, requests, nodeIds);
+        return batchTxsRequest;
+    }
 }

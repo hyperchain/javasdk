@@ -3,39 +3,39 @@ package cn.hyperchain.sdk.request;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
 import cn.hyperchain.sdk.provider.ProviderManager;
-import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.Response;
 
 /**
  * request need to get receipt by polling.
  * @author tomkk
  * @version 0.0.1
  */
-public class PollingRequest<T extends ReceiptResponse> extends Request<T> {
+public class PollingRequest extends Request {
     private int attempt = 10;
     private long sleepTime = 50;
     private long stepSize = 50;
 
-    public PollingRequest(String method, ProviderManager providerManager, Class<T> clazz, int... nodeIdxs) {
-        super(method, providerManager, clazz, nodeIdxs);
+    public PollingRequest(String method, ProviderManager providerManager, Class clazz, int... nodeIds) {
+        super(method, providerManager, clazz, nodeIds);
     }
 
-    public PollingRequest<T> setAttempt(int attempt) {
+    public PollingRequest setAttempt(int attempt) {
         this.attempt = attempt;
         return this;
     }
 
-    public PollingRequest<T> setSleepTime(long sleepTime) {
+    public PollingRequest setSleepTime(long sleepTime) {
         this.sleepTime = sleepTime;
         return this;
     }
 
-    public PollingRequest<T> setStepSize(long stepSize) {
+    public PollingRequest setStepSize(long stepSize) {
         this.stepSize = stepSize;
         return this;
     }
 
     @Override
-    public T send() throws RequestException {
+    public Response send() throws RequestException {
         try {
             // initial sleep
             Thread.sleep(sleepTime);
