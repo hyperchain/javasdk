@@ -18,6 +18,7 @@
 package cn.hyperchain.sdk.common.solidity;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.crypto.HashUtil;
 
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public abstract class ContractType {
     }
 
     public byte[] fingerprintSignature() {
-        return HashUtil.sha3(formatSignature().getBytes());
+        return HashUtil.sha3(formatSignature().getBytes(Utils.DEFAULT_CHARSET));
     }
 
     public byte[] encodeSignature() {

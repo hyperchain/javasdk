@@ -8,5 +8,6 @@ release v0.0.4
     1. fix send single tx using send batch interface will cause json parse error
     2. fix execute deploy in a jar file will cause null pointer error
     3. fix SecureRandom NoSuchAlgorithmException
-release v0.0.5
+release v0.0.5-1
     1. fix spelling mistake and add get method for field of response
+    2. fix string and bytes convert with utf-8

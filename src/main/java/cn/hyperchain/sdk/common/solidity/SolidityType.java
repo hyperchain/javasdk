@@ -18,6 +18,7 @@
 package cn.hyperchain.sdk.common.solidity;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
 
 import java.lang.reflect.Array;
 import java.math.BigInteger;
@@ -254,7 +255,7 @@ public abstract class SolidityType {
             if (value instanceof byte[]) {
                 bb = (byte[]) value;
             } else if (value instanceof String) {
-                bb = ((String) value).getBytes();
+                bb = ((String) value).getBytes(Utils.DEFAULT_CHARSET);
             } else {
                 throw new RuntimeException("byte[] or String value is expected for type 'bytes'");
             }

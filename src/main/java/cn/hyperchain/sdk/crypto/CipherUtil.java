@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.crypto;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
@@ -39,7 +40,7 @@ public class CipherUtil {
         }
         try {
             SecureRandom random = new SecureRandom();
-            DESKeySpec desKey = new DESKeySpec(password.getBytes());
+            DESKeySpec desKey = new DESKeySpec(password.getBytes(Utils.DEFAULT_CHARSET));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             SecretKey securekey = keyFactory.generateSecret(desKey);
             Cipher cipher = Cipher.getInstance("DES");
@@ -70,7 +71,7 @@ public class CipherUtil {
         }
         try {
             SecureRandom random = new SecureRandom();
-            DESKeySpec desKey = new DESKeySpec(password.getBytes());
+            DESKeySpec desKey = new DESKeySpec(password.getBytes(Utils.DEFAULT_CHARSET));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             SecretKey securekey = keyFactory.generateSecret(desKey);
             Cipher cipher = Cipher.getInstance("DES");
@@ -166,7 +167,7 @@ public class CipherUtil {
         } else if (length > len) {
             password = password.substring(0, len);
         }
-        return password.getBytes();
+        return password.getBytes(Utils.DEFAULT_CHARSET);
     }
 
     private static String append(String origin, int size) {
