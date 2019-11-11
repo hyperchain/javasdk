@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
  * @date 07/05/2019
  */
 public class BlockCountResponse extends Response {
-    private class BlockCount {
+    public class BlockCount {
         @Expose
         private String sumOfBlocks;
         @Expose
