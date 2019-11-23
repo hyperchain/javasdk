@@ -117,11 +117,11 @@ public class DefaultHttpProvider implements HttpProvider {
             try {
                 String result = response.body().string();
                 JSONObject jsonObject = com.alibaba.fastjson.JSON.parseObject(result);
-                if (jsonObject.get("jsonrpc") != null && jsonObject.get("code") != null) {
-                    if (!jsonObject.get("code").toString().equals("0")) {
-                        throw new RequestException(400,jsonObject.toString());
-                    }
-                }
+//                if (jsonObject.get("jsonrpc") != null && jsonObject.get("code") != null) {
+//                    if (!jsonObject.get("code").toString().equals("0")) {
+//                        throw new RequestException(400,jsonObject.toString());
+//                    }
+//                }
                 if (jsonObject.get("message") != null && jsonObject.get("message").equals("Token is expired")) {
                     logger.info("Token is expired");
                     throw new RequestException(400,"Token is expired");

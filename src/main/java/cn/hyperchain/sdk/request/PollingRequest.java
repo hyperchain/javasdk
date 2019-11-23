@@ -11,7 +11,7 @@ import cn.hyperchain.sdk.response.Response;
  * @version 0.0.1
  */
 public class PollingRequest extends Request {
-    private int attempt = 10;
+    private int attempt = 50;
     private long sleepTime = 50;
     private long stepSize = 50;
 
@@ -44,6 +44,7 @@ public class PollingRequest extends Request {
         }
         for (int i = 0; i < attempt; i++) {
             try {
+                System.out.println("polling time:" + i);
                 return super.send();
             } catch (RequestException e) {
                 if (e.getCode().equals(RequestExceptionCode.RECEIPT_NOT_FOUND.getCode()) ||
