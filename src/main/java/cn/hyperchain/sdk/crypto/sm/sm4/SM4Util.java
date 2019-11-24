@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.crypto.sm.sm4;
 
 import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
@@ -95,6 +96,6 @@ public class SM4Util {
         } else {
             password = password.substring(0, 16);
         }
-        return password.getBytes();
+        return password.getBytes(Utils.DEFAULT_CHARSET);
     }
 }
