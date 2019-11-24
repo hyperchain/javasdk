@@ -16,7 +16,7 @@ public class BlockResponse extends Response {
     private JsonElement result;
     Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-    private class Block {
+    public class Block {
         @Expose
         private String version;
         @Expose

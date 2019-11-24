@@ -19,7 +19,7 @@ import java.util.List;
 public class ArchiveResponse extends Response {
     Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-    private class Archive {
+    public class Archive {
         @Expose
         private String height;
         @Expose
