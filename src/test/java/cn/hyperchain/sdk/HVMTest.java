@@ -19,17 +19,20 @@ import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class HVMTest {
-
-    public static String DEFAULT_URL = "localhost:9999";
+    public static String DEFAULT_URL = "localhost:8082";
+    public static final String tlsca = "certs/tls/tlsca.ca";
+    public static final String tls_peer_cert = "certs/tls/tls_peer.cert";
+    public static final String tls_peer_priv = "certs/tls/tls_peer.priv";
 
     @Test
-//    @Ignore
+    @Ignore
     public void testHVM() throws RequestException, IOException {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
@@ -90,5 +93,49 @@ public class HVMTest {
         ReceiptResponse receiptResponse4 = contractService.invoke(transaction4).send().polling();
         System.out.println("调用返回(未解码): " + receiptResponse4.getRet());
         System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse4.getRet(), Void.class));
+    }
+
+    @Test
+    @Ignore
+    public void testHttps() throws RequestException, IOException {
+        InputStream tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
+        InputStream tls_peer_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_cert);
+        InputStream tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
+
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).
+                https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is).
+                build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
+
+        // 2. build service
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+        // 3. build transaction
+        Account account = accountService.genAccount(Algo.SMRAW);
+        Account backup = account;
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-1.0-SNAPSHOT.jar");
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
+        transaction.sign(accountService.fromAccountJson(account.toJson()));
+        Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
+        Assert.assertTrue(SignerUtil.verifySign(transaction.getNeedHashString(), transaction.getSignature(), account.getPublicKey()));
+        // 4. get request
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        // 5. polling && get result && decode result
+        String contractAddress = receiptResponse.getContractAddress();
+        System.out.println("合约地址: " + contractAddress);
+        System.out.println("部署返回(未解码): " + receiptResponse.getRet());
+        System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
+        // 6. invoke
+        account = accountService.genAccount(Algo.ECRAW);
+        Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(contractAddress, new ContractInvoke()).build();
+        transaction1.sign(accountService.fromAccountJson(account.toJson()));
+        Assert.assertTrue(account.verify(transaction1.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction1.getSignature())));
+        Assert.assertTrue(SignerUtil.verifySign(transaction1.getNeedHashString(), transaction1.getSignature(), account.getPublicKey()));
+        // 7. request
+        TxHashResponse txHashResponse = contractService.invoke(transaction1).send();
+        ReceiptResponse receiptResponse1 = txHashResponse.polling();
+        // 8. get result & decode result
+        System.out.println("调用返回(未解码): " + receiptResponse1.getRet());
+        System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse1.getRet(), String.class));
     }
 }
