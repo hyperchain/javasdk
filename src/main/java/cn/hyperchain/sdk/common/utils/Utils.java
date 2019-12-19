@@ -5,9 +5,6 @@ import org.apache.log4j.Logger;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.Security;
 import java.util.Random;
 
 public class Utils {
@@ -17,14 +14,7 @@ public class Utils {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     static {
-        try {
-            if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") < 0) {
-                Security.setProperty("securerandom.strongAlgorithms", "NativePRNGNonBlocking:SUN");
-            }
-            random = SecureRandom.getInstanceStrong();
-        } catch (NoSuchAlgorithmException e) {
-            logger.error(e);
-        }
+        random = new Random();
     }
 
     public static Random getRandomInstance() {
