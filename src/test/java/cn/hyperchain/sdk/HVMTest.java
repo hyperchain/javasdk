@@ -1,10 +1,12 @@
 package cn.hyperchain.sdk;
 
+import cn.hyperchain.logic.entity.Person;
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Decoder;
 import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.crypto.SignerUtil;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.hvm.ContractInvoke;
@@ -17,7 +19,6 @@ import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -25,10 +26,10 @@ import java.io.InputStream;
 
 public class HVMTest {
 
-    public static String DEFAULT_URL = "localhost:8091";
+    public static String DEFAULT_URL = "localhost:9999";
 
     @Test
-    @Ignore
+//    @Ignore
     public void testHVM() throws RequestException, IOException {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
@@ -81,5 +82,13 @@ public class HVMTest {
         ReceiptResponse receiptResponse3 = contractService.maintain(transaction3).send().polling();
         System.out.println("调用返回(未解码): " + receiptResponse3.getRet());
         System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse3.getRet(), String.class));
+
+        Person person = new Person("taoyq", 23, 100000000);
+        InvokeDirectlyParams params = new InvokeDirectlyParams.ParamBuilder("add").addObject(Person.class, person).build();
+        Transaction transaction4 = new Transaction.HVMBuilder(backup.getAddress()).invokeDirectly(contractAddress, params).build();
+        transaction4.sign(backup);
+        ReceiptResponse receiptResponse4 = contractService.invoke(transaction4).send().polling();
+        System.out.println("调用返回(未解码): " + receiptResponse4.getRet());
+        System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse4.getRet(), Void.class));
     }
 }
