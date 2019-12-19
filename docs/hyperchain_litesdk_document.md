@@ -480,7 +480,7 @@ public class TxResponse extends Response {
 
 ```java
 public class TxCountWithTSResponse extends Response {
-    private class TxCount {
+    public class TxCount {
         private String count;
         private long timestamp;
     }
@@ -884,7 +884,7 @@ BlockService接口与TxService相似，只是获取的对象是区块信息。�
 
 ```java
 public class BlockResponse extends Response {
-    private class Block {
+    public class Block {
         private String version;
         private String number;
         private String hash;
@@ -925,7 +925,7 @@ public class BlockAvgTimeResponse extends Response {
 
 ```java
 public class BlockCountResponse extends Response {
-    private class BlockCount {
+    public class BlockCount {
         private String sumOfBlocks;
         private String startBlock;
         private String endBlock;
@@ -1279,7 +1279,7 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 
 ```java
 public class ArchiveResponse extends Response {
-    private class Archive {
+    public class Archive {
         private String height;
         private String hash;
         private String filterId;
