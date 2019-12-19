@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
+import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.common.utils.Utils;
 import org.apache.log4j.Logger;
 
@@ -85,7 +86,7 @@ public class Transaction {
          * upgrade contract.
          *
          * @param contractAddress contract address in chain
-         * @param payload payload of the new contract
+         * @param payload         payload of the new contract
          * @return {@link Builder}
          */
         public Builder upgrade(String contractAddress, String payload) {
@@ -109,6 +110,7 @@ public class Transaction {
 
         /**
          * unfreeze contract.
+         *
          * @param contractAddress contract address in chain
          * @return {@link Builder}
          */
@@ -164,6 +166,19 @@ public class Transaction {
             return this;
         }
 
+        /**
+         * create invoking transaction for {@link VMType} HVM.
+         *
+         * @param contractAddress      contract address in chain
+         * @param invokeDirectlyParams params of directly invoking contract
+         * @return {@link Builder}
+         */
+        public Builder invokeDirectly(String contractAddress, InvokeDirectlyParams invokeDirectlyParams) {
+            String payload = invokeDirectlyParams.getParams();
+            super.transaction.setTo(contractAddress);
+            super.transaction.setPayload(payload);
+            return this;
+        }
 
     }
 
