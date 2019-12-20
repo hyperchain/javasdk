@@ -4,9 +4,9 @@ package cn.hyperchain.sdk.common.utils;
  * @author taoyeqi
  * @version 1.0, 2018/6/12
  */
+
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.cert.SM2Priv;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.bouncycastle.openssl.PEMKeyPair;
 import sun.security.x509.X500Name;
@@ -224,7 +224,7 @@ public class HttpsUtils {
             while (s != null) {
                 if (s.contains("END CERTIFICATE")) {
                     String hexString = b.toString();
-                    final byte[] bytes = Base64.decodeBase64(hexString);
+                    final byte[] bytes = Base64.getDecoder().decode(hexString);
                     X509Certificate cert = generateCertificateFromPEM(bytes);
                     result.add(cert);
                     b = new StringBuilder();
