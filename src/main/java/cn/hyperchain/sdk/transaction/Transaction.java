@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.transaction;
 import cn.hyperchain.contract.BaseInvoke;
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.common.solidity.Abi;
+import cn.hyperchain.sdk.common.solidity.ContractType;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
@@ -225,7 +226,11 @@ public class Transaction {
          */
         public Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params) {
             super.transaction.setTo(contractAddress);
-            String payload = ByteUtil.toHex(abi.getFunction(methodName).encode(params.getParams()));
+            ContractType.Function abiFunction = abi.getFunction(methodName);
+            if (abiFunction == null) {
+                throw new NullPointerException("Evm method name error, so we can't find method " + methodName + ", please check the document at https://github.com/hyperchain/javasdk/tree/master/docs!");
+            }
+            String payload = ByteUtil.toHex(abiFunction.encode(params.getParams()));
             super.transaction.setPayload(payload);
             return this;
         }
