@@ -130,6 +130,10 @@ public class DefaultHttpProvider implements HttpProvider {
                     logger.info("Token Error");
                     throw new RequestException(400,"Token Error");
                 }
+
+                if (jsonObject.get("message") != null && !jsonObject.get("message").equals("Token is expired") && !jsonObject.get("message").equals("Token Error") && jsonObject.get("statusCode") != null && jsonObject.get("statusCode").toString().equals("400")) {
+                    throw new RequestException(400,result);
+                }
                 logger.debug("[RESPONSE] " + result);
                 return result;
             } catch (IOException exception) {
