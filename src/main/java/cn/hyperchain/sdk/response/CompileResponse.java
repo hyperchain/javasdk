@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
  * @date 2019-07-09
  */
 public class CompileResponse extends Response {
-    private class CompileReturn {
+    public class CompileReturn {
         @Expose
         private String[] bin;
         @Expose

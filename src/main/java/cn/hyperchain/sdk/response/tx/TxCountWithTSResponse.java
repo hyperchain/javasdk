@@ -11,7 +11,7 @@ import com.google.gson.annotations.Expose;
  * @date 2019-07-08
  */
 public class TxCountWithTSResponse extends Response {
-    private class TxCount {
+    public class TxCount {
         @Expose
         private String count;
         @Expose

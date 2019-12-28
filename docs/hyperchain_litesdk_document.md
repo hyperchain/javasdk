@@ -336,11 +336,26 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deplo
 
 ##### HVM
 
+hvm调用合约有两种方式：
+
+- **invoke bean**调用
+- 直接调用合约方法（类似evm）
+
+1. invoke bean调用如下：
+
 ```java
 Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invoke(receiptResponse.getContractAddress(), invoke).build();
 ```
 
 创建交易体时需要指定**合约地址**和**invoke bean**（HVM中新提出的概念，可点击[该链接](http://hvm.internal.hyperchain.cn/#/)了解）。
+
+2. 直接调用合约方法如下：
+
+```java
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invokeDirectly(receiptResponse.getContractAddress(), params).build();
+```
+
+params类型为`InvokeDirectlyParams`，具体的构造方式见附录。
 
 ##### EVM
 
@@ -480,7 +495,7 @@ public class TxResponse extends Response {
 
 ```java
 public class TxCountWithTSResponse extends Response {
-    private class TxCount {
+    public class TxCount {
         private String count;
         private long timestamp;
     }
@@ -884,7 +899,7 @@ BlockService接口与TxService相似，只是获取的对象是区块信息。�
 
 ```java
 public class BlockResponse extends Response {
-    private class Block {
+    public class Block {
         private String version;
         private String number;
         private String hash;
@@ -925,7 +940,7 @@ public class BlockAvgTimeResponse extends Response {
 
 ```java
 public class BlockCountResponse extends Response {
-    private class BlockCount {
+    public class BlockCount {
         private String sumOfBlocks;
         private String startBlock;
         private String endBlock;
@@ -1279,7 +1294,7 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 
 ```java
 public class ArchiveResponse extends Response {
-    private class Archive {
+    public class Archive {
         private String height;
         private String hash;
         private String filterId;
@@ -1534,4 +1549,25 @@ for (Object result : decodeResult) {
     System.out.println(((BigInteger) result).toString());
 }
 ```
+
+
+
+### 附录B 直接调用HVM合约方法的参数封装
+
+直接调用HVM合约方法封装参数需要用到类`InvokeDirectlyParams`。
+
+示例如下：
+
+假设调用合约方法`add(int a, int b)`，传入参数（10，100）；
+
+```java
+// 构造函数传入想要调用的方法名
+InvokeDirectlyParams.ParamBuilder params = new InvokeDirectlyParams.ParamBuilder("add");
+// 方法addxxx分别构造不同类型的参数
+params.addint(10);
+params.addint(100);
+InvokeDirectlyParams.params.build();
+```
+
+
 

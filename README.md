@@ -19,14 +19,14 @@ Maven
 <dependency>
     <groupId>cn.hyperchain</groupId>
     <artifactId>litesdk</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.6</version>
 </dependency>
 ```
 
 Gradle
 
 ```
-compile group: 'cn.hyperchain', name: 'litesdk', version: '0.0.3'
+compile group: 'cn.hyperchain', name: 'litesdk', version: '0.0.6'
 ```
 
 ### Usage

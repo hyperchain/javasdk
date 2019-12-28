@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <litesdk.version>10.0.6</litesdk.version>
+        <litesdk.version>10.0.7</litesdk.version>
         <maven.checkstyle.version>3.0.0</maven.checkstyle.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
 
@@ -219,7 +219,7 @@
         <dependency>
             <groupId>cn.hyperchain</groupId>
             <artifactId>hvm-sdk</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.8</version>
         </dependency>
 
         <dependency>
@@ -262,6 +262,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.58</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
         </dependency>
     </dependencies>
 
