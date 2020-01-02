@@ -13,6 +13,7 @@ public class ByteUtil {
 
     /**
      * transfer bytes to hex string.
+     *
      * @param data bytes
      * @return hex string
      */
@@ -22,6 +23,7 @@ public class ByteUtil {
 
     /**
      * transfer hex string to bytes.
+     *
      * @param hex hex string
      * @return bytes
      */
@@ -40,6 +42,7 @@ public class ByteUtil {
 
     /**
      * decode hex string to utf-8 string.
+     *
      * @param hex hex string
      * @return utf-8 string
      */
@@ -49,6 +52,7 @@ public class ByteUtil {
 
     /**
      * transfer short type two bytes.
+     *
      * @param n short value
      * @return two bytes
      */
@@ -58,6 +62,7 @@ public class ByteUtil {
 
     /**
      * transfer int type to four bytes.
+     *
      * @param i int value
      * @return four bytes
      */
@@ -92,7 +97,8 @@ public class ByteUtil {
 
     /**
      * convert BigInteger to signed bytes.
-     * @param b BigInteger
+     *
+     * @param b        BigInteger
      * @param numBytes the desired size
      * @return numBytes byte long array
      */
@@ -159,6 +165,7 @@ public class ByteUtil {
     }
 
     /**
+     * todo this is hex encoded value, but method bytesToInteger is not
      * Cast hex encoded value from byte[] to BigInteger.
      * null is parsed like byte[0]
      *
@@ -167,5 +174,25 @@ public class ByteUtil {
      */
     public static BigInteger bytesToBigInteger(byte[] bb) {
         return (bb == null || bb.length == 0) ? BigInteger.ZERO : new BigInteger(1, bb);
+    }
+
+    /**
+     * Cast byte[] to int.
+     *
+     * @param bytes byte array contains the values
+     * @return int value
+     */
+    public static int bytesToInteger(byte[] bytes) {
+        if (bytes.length > 4) {
+            throw new IndexOutOfBoundsException("int can only load 4 bytes");
+        }
+        int n = 0;
+        int temp = 0;
+        for (byte b : bytes) {
+            n <<= 8;
+            temp = b & 0xFF;
+            n |= temp;
+        }
+        return n;
     }
 }
