@@ -15,3 +15,6 @@ release v0.0.5
 release v0.0.6
     1. change class TxCount access from private to public
     2. refactor(doc): update document
+release v0.0.7
+    1. add method error message into evm transaction builder
+    2. fix invoke directly params process function
