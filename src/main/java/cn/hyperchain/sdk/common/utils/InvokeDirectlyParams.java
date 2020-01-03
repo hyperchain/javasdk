@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * this class is used to build param for directly invoke hvm contract.
@@ -39,7 +41,7 @@ public class InvokeDirectlyParams {
             try {
                 invokeDirectlyParams = new InvokeDirectlyParams();
                 payload = new ByteArrayOutputStream();
-                payload.write(get2Length(methodName.length()));
+                payload.write(get2Length(methodName.getBytes().length));
                 payload.write(methodName.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -271,15 +273,57 @@ public class InvokeDirectlyParams {
         /**
          * add Object argument.
          *
-         * @param clazz class of arg
-         * @param arg   the argument you want to pass to contract method invoke
+         * @param clazz class of obj
+         * @param obj   the argument you want to pass to contract method invoke
          * @return {@link ParamBuilder}
          */
-        public ParamBuilder addObject(Class<?> clazz, Object arg) {
-            assert (arg.getClass() == clazz);
+        public ParamBuilder addObject(Class<?> clazz, Object obj) {
+            if (obj.getClass() != clazz) {
+                throw new RuntimeException("class name not equal with obj's type");
+            }
+            if (String.class == clazz) {
+                return addString((String) obj);
+            }
+
             String clazzName = clazz.getName();
-            String param = gson.toJson(arg);
+            String param = gson.toJson(obj);
             writePayload(clazzName, param);
+            return this;
+        }
+
+        /**
+         * this method if for add generic object.
+         *
+         * @param classes index 0 for collection
+         * @param obj     the argument you want to pass to contract method invoke
+         * @return {@link ParamBuilder}
+         */
+        public ParamBuilder addParamizedObject(Class<?>[] classes, Object obj) {
+            if (classes.length <= 1) {
+                throw new RuntimeException("can not detect generic type");
+            } else if (!(Map.class.isAssignableFrom(classes[0]) || Collection.class.isAssignableFrom(classes[0]))) {
+                throw new RuntimeException(classes[0].getName() + " does not implements Collection or Map interface, we can only accpect class which is subclass of interface Map or Collection!");
+            }
+
+            StringBuilder paramizedTypeSB = new StringBuilder();
+            int paramNum = 1;
+            if (Map.class.isAssignableFrom(classes[0])) {
+                paramNum += 2;
+            } else {
+                paramNum += 1;
+            }
+
+            paramizedTypeSB.append(classes[0].getName() + "<");
+            for (int i = 1; i < paramNum; i++) {
+                paramizedTypeSB.append(classes[i].getName());
+                if (i < paramNum - 1) {
+                    paramizedTypeSB.append(", ");
+                }
+            }
+            paramizedTypeSB.append(">");
+            String paramizedTypeName = paramizedTypeSB.toString();
+
+            writePayload(paramizedTypeName, gson.toJson(obj));
             return this;
         }
 
