@@ -24,7 +24,7 @@ public class ServiceManager {
     }
 
     public static AccountService getAccountService(ProviderManager providerManager) {
-        return new AccountServiceImpl();
+        return new AccountServiceImpl(providerManager);
     }
 
     public static NodeService getNodeService(ProviderManager providerManager) {

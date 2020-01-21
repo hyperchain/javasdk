@@ -10,6 +10,10 @@ import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.exception.AccountException;
+import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.request.BalanceRequest;
+import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.account.BalanceResponse;
 import cn.hyperchain.sdk.service.AccountService;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
@@ -20,7 +24,14 @@ import java.security.SecureRandom;
 
 public class AccountServiceImpl implements AccountService {
 
+    private ProviderManager providerManager;
+    private static final String ACC_PREFIX = "account_";
+
     public AccountServiceImpl() {}
+
+    public AccountServiceImpl(ProviderManager providerManager) {
+        this.providerManager = providerManager;
+    }
 
     @Override
     public Account genAccount(Algo algo) {
@@ -67,5 +78,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account fromAccountJson(String accountJson, String password) {
         return Account.fromAccountJson(accountJson, password);
+    }
+
+    @Override
+    public Request<BalanceResponse> getBalance(String address, int... nodeIds) {
+        BalanceRequest balanceRequest = new BalanceRequest(ACC_PREFIX + "getBalance", providerManager, BalanceResponse.class, nodeIds);
+        balanceRequest.addParams(address);
+
+        return balanceRequest;
     }
 }

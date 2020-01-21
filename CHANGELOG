@@ -18,3 +18,5 @@ release v0.0.6
 release v0.0.7
     1. add method error message into evm transaction builder
     2. fix invoke directly params process function
+release v0.0.8
+    1. add getBalance interface
