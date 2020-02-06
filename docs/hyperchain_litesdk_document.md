@@ -255,8 +255,12 @@ public interface AccountService {
     Account fromAccountJson(String accountJson);
 
     Account fromAccountJson(String accountJson, String password);
+    
+    Request<BalanceResponse> getBalance(String address, int... nodeIds);
 }
 ```
+
+前四个接口是用于生成账户，而`getBalance`方法则可以查询该账户所有的余额，需要传一个**合约地址**为参数。
 
 目前Account服务支持的所有加密算法如下：
 
