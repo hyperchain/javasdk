@@ -252,6 +252,10 @@ public class Transaction {
                 + "&vmtype=" + this.vmType.getType();
     }
 
+    /**
+     * create transaction signature.
+     * @param account sign account
+     */
     public void sign(Account account) {
         this.setNeedHashString();
         byte[] sourceData = this.needHashString.getBytes(Utils.DEFAULT_CHARSET);
@@ -370,9 +374,7 @@ public class Transaction {
     public Map<String, Object> commonParamMap() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("from", from);
-        if (!to.equals("0x0")) {
-            map.put("to", to);
-        }
+        map.put("to", to);
         map.put("timestamp", timestamp);
         map.put("nonce", nonce);
         map.put("type", vmType.toString());
