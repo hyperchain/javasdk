@@ -9,9 +9,12 @@ import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.common.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.log4j.Logger;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -129,7 +132,6 @@ public class Transaction {
         public Transaction build() {
             transaction.setTimestamp(genTimestamp());
             transaction.setNonce(genNonce());
-            transaction.setNeedHashString();
             return transaction;
         }
     }
@@ -251,6 +253,7 @@ public class Transaction {
     }
 
     public void sign(Account account) {
+        this.setNeedHashString();
         byte[] sourceData = this.needHashString.getBytes(Utils.DEFAULT_CHARSET);
         this.signature = ByteUtil.toHex(account.sign(sourceData));
     }
@@ -367,10 +370,13 @@ public class Transaction {
     public Map<String, Object> commonParamMap() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("from", from);
-        map.put("to", to);
+        if (!to.equals("0x0")) {
+            map.put("to", to);
+        }
         map.put("timestamp", timestamp);
         map.put("nonce", nonce);
         map.put("type", vmType.toString());
+        map.put("opcode", opCode);
 
         if (!Utils.isBlank(payload)) {
             map.put("payload", payload);
@@ -383,5 +389,49 @@ public class Transaction {
         map.put("simulate", simulate);
         map.put("signature", signature);
         return map;
+    }
+
+    /**
+     * serialize transaction.
+     * @param transaction transaction
+     * @return marshal string
+     */
+    public static String serialize(Transaction transaction) {
+        return new Gson().toJson(transaction.commonParamMap());
+    }
+
+    /**
+     * deserialize transaction.
+     * @param txJson marshal string
+     * @return transaction struct
+     */
+    public static Transaction deSerialize(String txJson) {
+        Type type = new TypeToken<HashMap<String, String>>() {}.getType();
+        Map<String, String> txMap = new Gson().fromJson(txJson, type);
+        Transaction transaction = new Transaction();
+        transaction.setFrom(txMap.get("from"));
+        if (txMap.containsKey("to")) {
+            transaction.setTo(txMap.get("to"));
+        } else {
+            transaction.setTo("0x0");
+        }
+        transaction.setTimestamp(Long.parseLong(txMap.get("timestamp")));
+        transaction.setNonce(Long.parseLong(txMap.get("nonce")));
+        transaction.setOpCode(Integer.parseInt(txMap.get("opcode")));
+        if (txMap.containsKey("payload")) {
+            transaction.setPayload(txMap.get("payload"));
+        } else {
+            transaction.setValue(Long.parseLong(txMap.get("value")));
+        }
+        if (txMap.containsKey("extra")) {
+            transaction.setExtra(txMap.get("extra"));
+        } else {
+            transaction.setExtra("");
+        }
+        transaction.setSimulate(Boolean.parseBoolean(txMap.get("simulate")));
+        transaction.setSignature(txMap.get("signature"));
+        transaction.setVmType(VMType.valueOf(txMap.get("type")));
+
+        return transaction;
     }
 }

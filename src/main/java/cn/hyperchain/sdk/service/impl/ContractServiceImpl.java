@@ -88,9 +88,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds) {
         ContractRequest txHashResponseContractRequest = new ContractRequest(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
-
         Map<String, Object> params = transaction.commonParamMap();
-        params.put("opcode", transaction.getOpCode());
 
         txHashResponseContractRequest.addParams(params);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);

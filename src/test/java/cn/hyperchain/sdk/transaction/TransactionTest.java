@@ -1,6 +1,9 @@
 package cn.hyperchain.sdk.transaction;
 
+import cn.hyperchain.contract.BaseContractInterface;
+import cn.hyperchain.contract.BaseInvoke;
 import cn.hyperchain.sdk.common.utils.FileUtil;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -17,5 +20,38 @@ public class TransactionTest {
                 .extra("")
                 .simulate()
                 .build();
+    }
+
+    private String from = "from";
+    private String to = "to";
+
+    class TestInvoke implements BaseInvoke {
+        private String a = "java";
+        @Override
+        public Object invoke(BaseContractInterface baseContractInterface) {
+            return null;
+        }
+    }
+
+    @Test
+    public void serialize() throws Exception {
+        {
+            InputStream inputStream = FileUtil.readFileAsStream("solidity/DSolc_sol_DSolc.bin");
+            Transaction transaction = new Transaction.HVMBuilder(from).deploy(inputStream).build();
+            String originNeedHash = transaction.getNeedHashString();
+            String txJson = Transaction.serialize(transaction);
+            Transaction txD = Transaction.deSerialize(txJson);
+            Assert.assertEquals(originNeedHash, txD.getNeedHashString());
+            Assert.assertEquals(txJson, Transaction.serialize(txD));
+        }
+
+        {
+            Transaction transaction = new Transaction.HVMBuilder(from).invoke(to, new TestInvoke()).extra("EXTRA").build();
+            String originNeedHash = transaction.getNeedHashString();
+            String txJson = Transaction.serialize(transaction);
+            Transaction txD = Transaction.deSerialize(txJson);
+            Assert.assertEquals(originNeedHash, txD.getNeedHashString());
+            Assert.assertEquals(txJson, Transaction.serialize(txD));
+        }
     }
 }
