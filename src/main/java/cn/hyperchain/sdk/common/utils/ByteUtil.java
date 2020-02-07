@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.common.utils;
 
+import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
@@ -194,5 +195,23 @@ public class ByteUtil {
             n |= temp;
         }
         return n;
+    }
+
+    /**
+     * transfer hex string to base64 string.
+     * @param hexOrigin hex string
+     * @return base64 string
+     */
+    public static String hex2Base64(String hexOrigin) {
+        return base64(ByteUtil.fromHex(hexOrigin));
+    }
+
+    /**
+     * encode bytes to base64 string.
+     * @param data bytes
+     * @return base64 string
+     */
+    public static String base64(byte[] data) {
+        return Base64.toBase64String(data);
     }
 }

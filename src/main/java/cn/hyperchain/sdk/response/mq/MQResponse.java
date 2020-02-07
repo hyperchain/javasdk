@@ -13,6 +13,7 @@ import java.util.List;
 public class MQResponse extends Response {
     @Expose
     private JsonElement result;
+    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     /**
      * return list of queue names.
@@ -21,7 +22,6 @@ public class MQResponse extends Response {
      */
     public List<String> getQueueNames() {
         List<String> queue = new ArrayList<>();
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         if (result.isJsonArray()) {
             JsonArray jsonArray = result.getAsJsonArray();
             for (JsonElement element : jsonArray) {

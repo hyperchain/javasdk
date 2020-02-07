@@ -23,3 +23,7 @@ release v0.0.8
 release v0.0.9-dev
     1. add serialize and deSerialize Transaction
     2. add read pme file to address
+    3. add node service interface
+    4. fix sendBatchTxs interface
+    5. refactor use of gson creating
+    6. add get tx hash local

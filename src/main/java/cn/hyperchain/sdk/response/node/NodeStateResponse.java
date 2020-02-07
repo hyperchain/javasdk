@@ -95,7 +95,7 @@ public class NodeStateResponse extends Response {
 
     @Expose
     private JsonElement result;
-    private Gson gson;
+    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     /**
      * get node states.
@@ -103,7 +103,6 @@ public class NodeStateResponse extends Response {
      * @return list of node states
      */
     public List<NodeState> getResult() {
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         ArrayList<NodeState> nodeStates = new ArrayList<>();
         if (result.isJsonArray()) {
             JsonArray jsonArray = result.getAsJsonArray();

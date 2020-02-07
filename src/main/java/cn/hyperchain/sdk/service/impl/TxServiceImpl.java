@@ -395,6 +395,7 @@ public class TxServiceImpl implements TxService {
                 default:
                     throw new RuntimeException("method " + methods.get(i) + " is not supported!");
             }
+            request.setId(i);
             requests.add(request);
         }
         SendBatchTxsRequest batchTxsRequest = new SendBatchTxsRequest(null, providerManager, TxHashesResponse.class, requests, nodeIds);

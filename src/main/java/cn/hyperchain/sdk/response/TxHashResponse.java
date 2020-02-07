@@ -18,13 +18,11 @@ import com.google.gson.annotations.Expose;
 public class TxHashResponse extends Response {
     @Expose
     private JsonElement result;
-    private Gson gson;
+    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     private int[] nodeIds;
     private ProviderManager providerManager;
 
-    public TxHashResponse() {
-        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    }
+    public TxHashResponse() { }
 
     public void setNodeIds(int... nodeIds) {
         this.nodeIds = nodeIds;

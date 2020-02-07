@@ -13,6 +13,7 @@ import cn.hyperchain.sdk.service.AccountService;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -50,7 +51,7 @@ public class EVMTest {
         String contractAddress = receiptResponse.getContractAddress();
         System.out.println("contract address: " + contractAddress);
         System.out.println("账户私钥:" + account.getPrivateKey());
-
+        Assert.assertEquals(transaction.getTransactionHash(), receiptResponse.getTxHash());
 
         FuncParams params1 = new FuncParams();
         params1.addParams("1");
@@ -58,6 +59,7 @@ public class EVMTest {
         transaction1.sign(account);
         ReceiptResponse receiptResponse1 = contractService.invoke(transaction1).send().polling();
         System.out.println(receiptResponse1.getRet());
+        Assert.assertEquals(transaction1.getTransactionHash(), receiptResponse1.getTxHash());
         List decodeList = abi.getFunction("TestBytes32(bytes32)").decodeResult(ByteUtil.fromHex(receiptResponse1.getRet()));
         String[] topics = receiptResponse1.getLog()[0].getTopics();
         byte[][] topicsData = new byte[topics.length][];

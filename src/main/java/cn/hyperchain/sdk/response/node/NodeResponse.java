@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NodeResponse extends Response {
-    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public class Node {
         @Expose

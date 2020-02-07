@@ -8,7 +8,7 @@ import cn.hyperchain.sdk.response.node.NodeStateResponse;
 import org.junit.Test;
 
 public class NodeServiceTest {
-    private ProviderManager providerManager = Common.providerManager;
+    private ProviderManager providerManager = Common.soloProviderManager;
     private NodeService nodeService = ServiceManager.getNodeService(providerManager);
 
     @Test
@@ -31,7 +31,7 @@ public class NodeServiceTest {
         NodeHashResponse nodeHashResponse1 = nodeService.getNodeHashByID(1).send();
         System.out.println(nodeHashResponse1.getResult());
 
-        NodeHashResponse nodeHashResponse2 = nodeService.getNodeHashByID(2).send();
-        System.out.println(nodeHashResponse2.getResult());
+//        NodeHashResponse nodeHashResponse2 = nodeService.getNodeHashByID(2).send();
+//        System.out.println(nodeHashResponse2.getResult());
     }
 }

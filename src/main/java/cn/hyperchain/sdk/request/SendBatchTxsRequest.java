@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class SendBatchTxsRequest extends Request {
     private ArrayList<Request> requests;
     private TxHashesResponse responses;
-    private Gson gson;
+    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     /**
      * constructor.
@@ -37,7 +37,6 @@ public class SendBatchTxsRequest extends Request {
         super(method, providerManager, clazz, nodeIds);
         this.requests = requests;
         this.responses = new TxHashesResponse();
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
     @Override

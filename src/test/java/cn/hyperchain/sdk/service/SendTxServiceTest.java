@@ -12,6 +12,7 @@ import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.TxHashesResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class SendTxServiceTest {
         ReceiptResponse response = request.send().polling();
         System.out.println(response);
         System.out.println(response.getTxHash());
-
+        Assert.assertEquals(transaction.getTransactionHash(), response.getTxHash());
     }
 
     @Test

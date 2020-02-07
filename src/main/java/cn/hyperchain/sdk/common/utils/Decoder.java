@@ -1,8 +1,11 @@
 package cn.hyperchain.sdk.common.utils;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Decoder {
+
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
      * decode hvm receipt result to specific type.
@@ -16,6 +19,6 @@ public class Decoder {
         if (String.class.equals(clazz)) {
             return (T) ByteUtil.decodeHex(encode);
         }
-        return new GsonBuilder().disableHtmlEscaping().create().fromJson(ByteUtil.decodeHex(encode), clazz);
+        return gson.fromJson(ByteUtil.decodeHex(encode), clazz);
     }
 }

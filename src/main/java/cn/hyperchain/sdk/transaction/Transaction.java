@@ -9,9 +9,14 @@ import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.common.utils.Utils;
+import cn.hyperchain.sdk.crypto.HashUtil;
+import cn.hyperchain.sdk.transaction.proto.TransactionValueProto;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.protobuf.ByteString;
 import org.apache.log4j.Logger;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -24,6 +29,8 @@ public class Transaction {
     }
 
     private static final Logger logger = Logger.getLogger(Transaction.class);
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    public static final long DEFAULT_GAS_LIMIT = 1000000000;
 
     private String from;
     private String to;
@@ -399,7 +406,7 @@ public class Transaction {
      * @return marshal string
      */
     public static String serialize(Transaction transaction) {
-        return new Gson().toJson(transaction.commonParamMap());
+        return gson.toJson(transaction.commonParamMap());
     }
 
     /**
@@ -409,7 +416,7 @@ public class Transaction {
      */
     public static Transaction deSerialize(String txJson) {
         Type type = new TypeToken<HashMap<String, String>>() {}.getType();
-        Map<String, String> txMap = new Gson().fromJson(txJson, type);
+        Map<String, String> txMap = gson.fromJson(txJson, type);
         Transaction transaction = new Transaction();
         transaction.setFrom(txMap.get("from"));
         if (txMap.containsKey("to")) {
@@ -435,5 +442,52 @@ public class Transaction {
         transaction.setVmType(VMType.valueOf(txMap.get("type")));
 
         return transaction;
+    }
+
+    /**
+     * get transaction hash.
+     * @return transaction hash
+     */
+    public String getTransactionHash() {
+        return getTransactionHash(DEFAULT_GAS_LIMIT);
+    }
+
+    /**
+     * get transaction hash.
+     * @param gasLimit gas limit
+     * @return transaction hash
+     */
+    public String getTransactionHash(long gasLimit) {
+        TransactionValueProto.TransactionValue.Builder input = TransactionValueProto.TransactionValue.newBuilder();
+        int defaultGasPrice = 10000; // default
+        input.setPrice(defaultGasPrice);
+        input.setGasLimit(gasLimit);
+        input.setAmount(this.value);
+        if (! "".equals(payload)) {
+            input.setPayload(ByteString.copyFrom(ByteUtil.fromHex(payload)));
+        }
+        input.setOpValue(opCode);
+        input.setExtra(ByteString.copyFromUtf8(extra));
+
+        if (vmType == VMType.EVM) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
+        } else if (vmType == VMType.HVM) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.JVM_VALUE);
+        } else {
+            throw new RuntimeException("unKnow vmType");
+        }
+
+        byte[] valueBytes = input.build().toByteArray();
+        Object[] transactionHash = new Object[6];
+        transactionHash[0] = ByteUtil.hex2Base64(from);
+        if (!"0x0".equals(to)) {
+            transactionHash[1] = ByteUtil.hex2Base64(to);
+        }
+        transactionHash[2] = ByteUtil.base64(valueBytes);
+        transactionHash[3] = timestamp;
+        transactionHash[4] = nonce;
+        transactionHash[5] = ByteUtil.hex2Base64(signature);
+        String hashJson = gson.toJson(transactionHash);
+        return "0x" + Hex.toHexString(HashUtil.sha3(hashJson.getBytes()));
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class BlockResponse extends Response {
     @Expose
     private JsonElement result;
-    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public class Block {
         @Expose

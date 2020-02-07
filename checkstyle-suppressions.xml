@@ -13,4 +13,6 @@
               files="cn.hyperchain.sdk.crypto.jce"/>
     <suppress checks="Check"
               files="cn.hyperchain.sdk.common.solidity"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.transaction.proto.TransactionValueProto"/>
 </suppressions>
