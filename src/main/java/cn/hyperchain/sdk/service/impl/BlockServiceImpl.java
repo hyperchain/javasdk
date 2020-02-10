@@ -5,9 +5,11 @@ import cn.hyperchain.sdk.request.BlockRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.block.BlockAvgTimeResponse;
 import cn.hyperchain.sdk.response.block.BlockCountResponse;
+import cn.hyperchain.sdk.response.block.BlockLimitResponse;
 import cn.hyperchain.sdk.response.block.BlockNumberResponse;
 import cn.hyperchain.sdk.response.block.BlockResponse;
 import cn.hyperchain.sdk.service.BlockService;
+import cn.hyperchain.sdk.service.params.MetaDataParam;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -64,6 +66,33 @@ public class BlockServiceImpl implements BlockService {
         return blockRequest;
     }
 
+
+    @Override
+    public Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, boolean isPlain, int... nodeIds) {
+        BlockRequest blockRequest = new BlockRequest(BLOCK_PREFIX + "getBlocksWithLimit", providerManager, BlockLimitResponse.class, nodeIds);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
+        params.put("isPlain", isPlain);
+        blockRequest.addParams(params);
+
+        return blockRequest;
+    }
+
+    @Override
+    public Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, int size, boolean isPlain, int... nodeIds) {
+        BlockRequest blockRequest = new BlockRequest(BLOCK_PREFIX + "getBlocksWithLimit", providerManager, BlockLimitResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
+        params.put("isPlain", isPlain);
+        MetaDataParam metaDataParam = new MetaDataParam.Builder().limit(size).build();
+        params.put("metadata", metaDataParam);
+        blockRequest.addParams(params);
+
+        return blockRequest;
+    }
 
     @Override
     public Request<BlockResponse> getBlockByHash(String blockHash, int... nodeIds) {
