@@ -12,7 +12,9 @@ import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
+import cn.hyperchain.sdk.response.tx.TxLimitResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
+import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TxServiceTest {
     private static ProviderManager providerManager = Common.soloProviderManager;
@@ -319,5 +322,46 @@ public class TxServiceTest {
         System.out.println(txCountResponse.getResult());
     }
 
+    @Test
+    @Ignore
+    public void testGetTransactionsByTimeWithLimit() throws RequestException, ClassNotFoundException {
+        String startTime = String.valueOf(1562073987434588840L);
+        String endTime = String.valueOf(1581326082434588900L);
+
+        // without meta data
+        System.out.println("***************************************8");
+        TxLimitResponse limitResponse = txService.getTransactionsByTimeWithLimit(startTime, endTime).send();
+        List<TxResponse.Transaction> result1 = limitResponse.getResult();
+        System.out.println(result1.size());
+        System.out.println(result1);
+
+        // with meta data
+        System.out.println("***************************************8");
+        MetaDataParam meta = new MetaDataParam.Builder().limit(100).backward(true).blkNumber(1).txIndex(0).build();
+        TxLimitResponse txLimitResponse = txService.getTransactionsByTimeWithLimit(startTime, endTime, meta).send();
+        List<TxResponse.Transaction> result = txLimitResponse.getResult();
+        System.out.println(result.size());
+        System.out.println(result);
+    }
+
+    @Test
+    @Ignore
+    public void testGetTxsWithLimit() throws RequestException {
+        String from = String.valueOf(1);
+        String to = String.valueOf(2);
+        TxLimitResponse txLimitResponse = txService.getTxsWithLimit(from, to).send();
+        List<TxResponse.Transaction> result = txLimitResponse.getResult();
+        System.out.println("***************************************");
+        System.out.println(result.size());
+        System.out.println(result);
+
+        MetaDataParam meta = new MetaDataParam.Builder().blkNumber(1).txIndex(0).backward(true).limit(3).build();
+        TxLimitResponse txLimitResponse1 = txService.getTxsWithLimit(from, to, meta).send();
+        List<TxResponse.Transaction> result1 = txLimitResponse1.getResult();
+        System.out.println("******************************");
+        System.out.println(result1.size());
+        System.out.println(result1);
+
+    }
 
 }
