@@ -13,6 +13,7 @@ import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.Response;
 import cn.hyperchain.sdk.response.block.BlockAvgTimeResponse;
 import cn.hyperchain.sdk.response.block.BlockCountResponse;
+import cn.hyperchain.sdk.response.block.BlockLimitResponse;
 import cn.hyperchain.sdk.response.block.BlockNumberResponse;
 import cn.hyperchain.sdk.response.block.BlockResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BlockServiceTest {
     private static ProviderManager providerManager = Common.soloProviderManager;
@@ -327,5 +329,21 @@ public class BlockServiceTest {
         Request<BlockNumberResponse> blockRequest = blockService.getGenesisBlock();
         BlockNumberResponse blockNumberResponse = blockRequest.send();
         System.out.println(blockNumberResponse.getResult());
+    }
+
+    @Test
+    @Ignore
+    public void testGetBlocksWithLimit() throws RequestException {
+        String from = String.valueOf(1);
+        String to = String.valueOf(2);
+        BlockLimitResponse blockLimitResponse = blockService.getBlocksWithLimit(from, to, true).send();
+        List<BlockResponse.Block> realResult = blockLimitResponse.getResult();
+        System.out.println(realResult.size());
+        System.out.println(realResult);
+
+        BlockLimitResponse blockLimitResponse1 = blockService.getBlocksWithLimit(from, to, 2, true).send();
+        List<BlockResponse.Block> realResult1 = blockLimitResponse1.getResult();
+        System.out.println(realResult1.size());
+        System.out.println(realResult1);
     }
 }

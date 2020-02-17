@@ -13,10 +13,12 @@ import cn.hyperchain.sdk.response.TxHashesResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
+import cn.hyperchain.sdk.response.tx.TxLimitResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.service.TxService;
+import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
 
 import java.math.BigInteger;
@@ -50,6 +52,31 @@ public class TxServiceImpl implements TxService {
         HashMap<String, Object> params = new HashMap<>();
         params.put("from", from);
         params.put("to", to);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    @Override
+    public Request<TxLimitResponse> getTxsWithLimit(String from, String to, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getTransactionsWithLimit", providerManager, TxLimitResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    @Override
+    public Request<TxLimitResponse> getTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getTransactionsWithLimit", providerManager, TxLimitResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
+        params.put("metadata", metaData);
         txRequest.addParams(params);
 
         return txRequest;
@@ -240,6 +267,41 @@ public class TxServiceImpl implements TxService {
     @Override
     public Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int limit, int... nodeIds) {
         return getTransactionsByTime(new BigInteger(startTime), new BigInteger(endTime), limit, nodeIds);
+    }
+
+    @Override
+    public Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, int... nodeIds) {
+        return getTransactionsByTimeWithLimit(new BigInteger(startTime), new BigInteger(endTime), nodeIds);
+    }
+
+    @Override
+    public Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, MetaDataParam metaData, int... nodeIds) {
+        return getTransactionsByTimeWithLimit(new BigInteger(startTime), new BigInteger(endTime), metaData, nodeIds);
+    }
+
+    @Override
+    public Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, int... nodeIds) {
+        Request<TxLimitResponse> txLimitResponseRequest = new TxRequest(TX_PREFIX + "getTransactionsByTimeWithLimit", providerManager, TxLimitResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+        txLimitResponseRequest.addParams(params);
+
+        return txLimitResponseRequest;
+    }
+
+    @Override
+    public Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, MetaDataParam metaData, int... nodeIds) {
+        Request<TxLimitResponse> txLimitResponseRequest = new TxRequest(TX_PREFIX + "getTransactionsByTimeWithLimit", providerManager, TxLimitResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+        params.put("metadata", metaData);
+        txLimitResponseRequest.addParams(params);
+
+        return txLimitResponseRequest;
     }
 
     @Override
