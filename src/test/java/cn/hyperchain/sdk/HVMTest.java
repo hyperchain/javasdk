@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class HVMTest {
-    public static String DEFAULT_URL = "localhost:8082";
+    public static String DEFAULT_URL = "localhost:8081";
     public static final String tlsca = "certs/tls/tlsca.ca";
     public static final String tls_peer_cert = "certs/tls/tls_peer.cert";
     public static final String tls_peer_priv = "certs/tls/tls_peer.priv";
