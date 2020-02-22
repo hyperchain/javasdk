@@ -18,6 +18,8 @@ public abstract class Response {
     protected int code;
     @Expose
     protected String message;
+    @Expose
+    protected String namespace;
 
     public Response() {
 
@@ -25,6 +27,7 @@ public abstract class Response {
 
     /**
      * create instance from a {@link Response}.
+     *
      * @param response {@link Response}
      */
     public Response(Response response) {
@@ -48,5 +51,9 @@ public abstract class Response {
 
     public String getMessage() {
         return this.message;
+    }
+
+    public String getNamespace() {
+        return namespace;
     }
 }
