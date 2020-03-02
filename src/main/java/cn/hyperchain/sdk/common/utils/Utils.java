@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Utils {
     private static final Logger logger = Logger.getLogger(Utils.class);
+    private static final String MIN_FLATO_TX_VERSION = "2.0";
 
     private static Random random;
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -82,5 +83,9 @@ public class Utils {
      */
     public static boolean isAbsolutePath(String path) {
         return path.startsWith("/") || path.startsWith("file:/") || path.contains(":\\");
+    }
+
+    public static boolean isFlato(String txVersion) {
+        return txVersion.compareTo(MIN_FLATO_TX_VERSION) >= 0;
     }
 }

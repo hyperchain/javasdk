@@ -39,6 +39,7 @@ public class Common {
     public static final String node4 = "localhost:8084";
     public static ProviderManager providerManager;
     public static ProviderManager soloProviderManager;
+    public static ProviderManager soloFlatoProviderManager;
 
     public static final String bin = "solidity/sol2/TestContract_sol_TypeTestContract.bin";
     public static final String abi = "solidity/sol2/TestContract_sol_TypeTestContract.abi";
@@ -99,6 +100,20 @@ public class Common {
                     .namespace("global")
                     .providers(httpProvider1)
 //                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
+                    .build();
+
+
+            // flato provider manager
+            HttpProvider httpFlatoProvider1 = new DefaultHttpProvider.Builder()
+                    .setUrl(node1)
+                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+                    .build();
+
+            soloFlatoProviderManager = new ProviderManager.Builder()
+                    .namespace("global")
+                    .providers(httpFlatoProvider1)
+                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
+                    .txVersion("2.0")
                     .build();
         } catch (Exception e) {
             e.printStackTrace();

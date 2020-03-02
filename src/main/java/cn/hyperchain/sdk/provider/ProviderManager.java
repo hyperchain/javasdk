@@ -26,6 +26,8 @@ import java.util.Map;
  * ProviderManager responsible for load balancing, encapsulating headers, etc.
  */
 public class ProviderManager {
+    private static final String DEFAULT_TX_VERSION = "1.8";
+    private String txVersion = DEFAULT_TX_VERSION;
     private String namespace = "global";
     private TCertPool tCertPool;
     private List<HttpProvider> httpProviders;
@@ -101,7 +103,19 @@ public class ProviderManager {
         }
 
         /**
+         * set tx version
+         *
+         * @param txVersion tx version, to specify which platform is used(hyperchain or flato)
+         * @return {@link Builder}
+         */
+        public Builder txVersion(String txVersion) {
+            providerManager.txVersion = txVersion;
+            return this;
+        }
+
+        /**
          * set provider manager's namespace.
+         *
          * @param namespace namespace
          * @return {@link Builder}
          */
@@ -189,7 +203,7 @@ public class ProviderManager {
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         Map<String, String> headers = new HashMap<>();
         if (this.tCertPool != null) {
-            if (this.isCFCA) {
+            if (Utils.isFlato(this.txVersion) || this.isCFCA) {
                 headers.put("tcert", this.tCertPool.getSdkCert());
                 headers.put("signature", this.tCertPool.getSdkCertKeyPair().signData(bodyBytes));
             } else {
@@ -263,5 +277,13 @@ public class ProviderManager {
 
     public boolean isCFCA() {
         return isCFCA;
+    }
+
+    public String getTxVersion() {
+        return txVersion;
+    }
+
+    public void setTxVersion(String txVersion) {
+        this.txVersion = txVersion;
     }
 }

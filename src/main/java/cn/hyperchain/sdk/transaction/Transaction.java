@@ -30,11 +30,12 @@ public class Transaction {
 
     private static final Logger logger = Logger.getLogger(Transaction.class);
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    private static final String DEFAULT_TX_VERSION = "1.8";
     public static final long DEFAULT_GAS_LIMIT = 1000000000;
 
     private String from;
     private String to;
-    private String payload;
+    private String payload = "";
     private long value = 0;
     private boolean simulate;
     private VMType vmType;
@@ -44,6 +45,7 @@ public class Transaction {
     private long nonce;
     private String signature = "";
     private String needHashString;
+    private String txVersion = DEFAULT_TX_VERSION;
 
     public static class Builder {
         Transaction transaction;
@@ -79,6 +81,17 @@ public class Transaction {
          */
         public Builder simulate() {
             transaction.setSimulate(true);
+            return this;
+        }
+
+        /**
+         * set tx version(must corresponding to flato version).
+         *
+         * @param txVersion tx version
+         * @return {@link Builder}
+         */
+        public Builder txVersion(String txVersion) {
+            transaction.setTxVersion(txVersion);
             return this;
         }
 
@@ -248,19 +261,33 @@ public class Transaction {
     }
 
     private void setNeedHashString() {
-        String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
+        String valueAndPayload = "";
+        if (!Utils.isFlato(this.txVersion)) {
+            String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
+            valueAndPayload = "&value=" + chPrefix(value);
+        } else {
+            String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
+            valueAndPayload = "&value=" + chPrefix(Long.toHexString(this.value))
+                    + "&payload=" + payload;
+        }
+
         this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
                 + "&to=" + chPrefix(this.to.toLowerCase())
-                + "&value=" + chPrefix(value)
+                + valueAndPayload
                 + "&timestamp=0x" + Long.toHexString(this.timestamp)
                 + "&nonce=0x" + Long.toHexString(this.nonce)
                 + "&opcode=" + this.opCode
                 + "&extra=" + this.extra
                 + "&vmtype=" + this.vmType.getType();
+
+        if (Utils.isFlato(this.txVersion)) {
+            this.needHashString += "&version=" + this.txVersion;
+        }
     }
 
     /**
      * create transaction signature.
+     *
      * @param account sign account
      */
     public void sign(Account account) {
@@ -373,6 +400,14 @@ public class Transaction {
         return needHashString;
     }
 
+    public String getTxVersion() {
+        return txVersion;
+    }
+
+    public void setTxVersion(String txVersion) {
+        this.txVersion = txVersion;
+    }
+
     /**
      * get common params map.
      *
@@ -402,6 +437,7 @@ public class Transaction {
 
     /**
      * serialize transaction.
+     *
      * @param transaction transaction
      * @return marshal string
      */
@@ -411,11 +447,13 @@ public class Transaction {
 
     /**
      * deserialize transaction.
+     *
      * @param txJson marshal string
      * @return transaction struct
      */
     public static Transaction deSerialize(String txJson) {
-        Type type = new TypeToken<HashMap<String, String>>() {}.getType();
+        Type type = new TypeToken<HashMap<String, String>>() {
+        }.getType();
         Map<String, String> txMap = gson.fromJson(txJson, type);
         Transaction transaction = new Transaction();
         transaction.setFrom(txMap.get("from"));
@@ -446,6 +484,7 @@ public class Transaction {
 
     /**
      * get transaction hash.
+     *
      * @return transaction hash
      */
     public String getTransactionHash() {
@@ -454,6 +493,7 @@ public class Transaction {
 
     /**
      * get transaction hash.
+     *
      * @param gasLimit gas limit
      * @return transaction hash
      */
@@ -463,7 +503,7 @@ public class Transaction {
         input.setPrice(defaultGasPrice);
         input.setGasLimit(gasLimit);
         input.setAmount(this.value);
-        if (! "".equals(payload)) {
+        if (!"".equals(payload)) {
             input.setPayload(ByteString.copyFrom(ByteUtil.fromHex(payload)));
         }
         input.setOpValue(opCode);
