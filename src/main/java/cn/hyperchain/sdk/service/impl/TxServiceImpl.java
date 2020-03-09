@@ -210,36 +210,21 @@ public class TxServiceImpl implements TxService {
         return txRequest;
     }
 
-
     @Override
     public Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds) {
-        return getTransactionsByTime(startTime, endTime, -1, nodeIds);
-    }
-
-    @Override
-    public Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int limit, int... nodeIds) {
         Request<TxResponse> txResponseRequest = new TxRequest(TX_PREFIX + "getTransactionsByTime", providerManager, TxResponse.class, nodeIds);
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("startTime", startTime);
         params.put("endTime", endTime);
-        if (limit != -1) {
-            params.put("limit", limit);
-        }
         txResponseRequest.addParams(params);
 
         return txResponseRequest;
     }
 
-
     @Override
     public Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int... nodeIds) {
-        return getTransactionsByTime(startTime, endTime, -1, nodeIds);
-    }
-
-    @Override
-    public Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int limit, int... nodeIds) {
-        return getTransactionsByTime(new BigInteger(startTime), new BigInteger(endTime), limit, nodeIds);
+        return getTransactionsByTime(new BigInteger(startTime), new BigInteger(endTime), nodeIds);
     }
 
     @Override

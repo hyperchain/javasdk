@@ -84,7 +84,7 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, int... nodeIds) {
-        return getBatchBlocksByHash(blockHashList, false);
+        return getBatchBlocksByHash(blockHashList, false, nodeIds);
     }
 
 
