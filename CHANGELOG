@@ -27,6 +27,7 @@ release v0.0.9
     4. fix sendBatchTxs interface
     5. refactor use of gson creating
     6. add get tx hash local
+    7. add decode hvm payload function
 
 release v1.0.0
     1. support flato signature

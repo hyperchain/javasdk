@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Decoder;
 import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.common.utils.HVMPayload;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.crypto.SignerUtil;
 import cn.hyperchain.sdk.exception.RequestException;
@@ -32,7 +33,7 @@ public class HVMTest {
     public static final String tls_peer_priv = "certs/tls/tls_peer.priv";
 
     @Test
-    @Ignore
+//    @Ignore
     public void testHVM() throws RequestException, IOException {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
@@ -59,6 +60,10 @@ public class HVMTest {
         // 6. invoke
         account = accountService.genAccount(Algo.ECRAW);
         Transaction transaction1 = new Transaction.HVMBuilder(account.getAddress()).invoke(contractAddress, new ContractInvoke()).build();
+        HVMPayload hvmPayload = Decoder.decodeHVMPayload(transaction1.getPayload());
+        System.out.println("======" + hvmPayload.getInvokeBeanName());
+        System.out.println(hvmPayload.getInvokeArgs());
+        System.out.println(hvmPayload.getInvokeMethods());
         transaction1.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction1.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction1.getSignature())));
         Assert.assertTrue(SignerUtil.verifySign(transaction1.getNeedHashString(), transaction1.getSignature(), account.getPublicKey()));

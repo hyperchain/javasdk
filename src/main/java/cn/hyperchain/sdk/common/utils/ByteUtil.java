@@ -214,4 +214,21 @@ public class ByteUtil {
     public static String base64(byte[] data) {
         return Base64.toBase64String(data);
     }
+
+    /**
+     * copy some bytes array from offset.
+     *
+     * @param origin origin bytes
+     * @param offset from offset
+     * @param length copy length
+     * @return result
+     */
+    public static byte[] copy(byte[] origin, int offset, int length) {
+        if (origin.length <= offset || origin.length < offset + length) {
+            throw new IndexOutOfBoundsException("the origin array length is " + origin.length);
+        }
+        byte[] newArray = new byte[length];
+        System.arraycopy(origin, offset, newArray, 0, length);
+        return newArray;
+    }
 }

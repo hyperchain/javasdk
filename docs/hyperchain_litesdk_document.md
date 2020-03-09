@@ -732,23 +732,17 @@ Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String
 
 - startTime 起起始时间戳(单位ns)。
 - endTime 结束时间戳(单位ns)。
-- limit（可选） 符合条件的区块数目最大值，默认值为50。
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
 Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
-
-Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int limit, int... nodeIds);
 ```
 
 重载方法如下：
 
 ```java
 Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int... nodeIds);
-
-Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int limit, int... nodeIds);
 ```
-
 
 
 ### 4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)
