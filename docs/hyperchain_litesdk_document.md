@@ -456,12 +456,15 @@ ReceiptResponse receiptResponse = contractRequest.send().polling();
 
 **注：该章的Transaction与第三章的交易体概念不同，该章的接口主要主要用于查询之前在链上的执行信息，将返回的信息封装为Transaction结构体。**
 
+为了防止条件查询未限制查询条数，可能导致节点出现OOM的问题，我们**对某些查询接口增加了对应的Limit接口**，具体会在子章节的接口说明中注明。
+
 TxService接口繁多，返回的执行结果根据情况封装共对应四种响应：
 
 - TxResponse
 - TxCountWithTSResponse
 - TxCountResponse
 - TxAvgTimeResponse
+- TxLimitResponse
 
 分别对应的结构如下：
 
@@ -527,6 +530,23 @@ public class TxAvgTimeResponse extends Response {
 }
 ```
 
+**TxLimitResponse**
+
+将`result`封装成`PageResult`结构，通过调用`getResult()`方法会调用PageResult的`parseResult()`可以得到最后的结果。
+
+```java
+public class TxLimitResponse extends Response {
+    private PageResult<TxResponse.Transaction> result;
+}
+
+public class PageResult<T> {
+    private String hasmore;
+    private JsonElement data;
+   
+    public List<T> parseResult(Class clz) {}
+}
+```
+
 
 
 ### 4.1 查询指定区块区间的交易(getTransactions)
@@ -545,6 +565,23 @@ Request<TxResponse> getTx(BigInteger from, BigInteger to, int... nodeIds);
 
 ```java
 Request<TxResponse> getTx(String from, String to, int... nodeIds);
+```
+
+对应的有Limit限制条件的接口如下：
+
+- from 区块区间起点
+ - to 区块区间终点
+ - metaData 限制条件，具体可以查看第十章的MetaDataParam介绍
+ - nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxLimitResponse> getTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds);
+```
+
+或使用默认限制条件
+
+```java
+Request<TxLimitResponse> getTxsWithLimit(String from, String to, int... nodeIds);
 ```
 
 
@@ -736,13 +773,37 @@ Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String
 
 ```java
 Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
-```
 
-重载方法如下：
-
-```java
+//重载方法如下
 Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int... nodeIds);
 ```
+
+
+
+
+对应的有Limit限制条件的接口如下：
+
+- startTime 起起始时间戳(单位ns)。
+- endTime 结束时间戳(单位ns)。
+ - metaData 限制条件，具体可以查看第十章的MetaDataParam介绍
+ - nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, MetaDataParam metaData, int... nodeIds);
+
+//重载方法如下
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, MetaDataParam metaData, int... nodeIds);
+```
+
+或使用默认限制条件
+
+```java
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, int... nodeIds);
+
+//重载方法如下
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, int... nodeIds);
+```
+
 
 
 ### 4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)
@@ -878,11 +939,11 @@ Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, 
 
 
 
-
-
 ## 第五章. BlockService相关接口
 
-BlockService接口与TxService相似，只是获取的对象是区块信息。同样地，BlockService对象也有很多对应的响应类型：
+BlockService接口与TxService相似，只是获取的对象是区块信息。同样地，为了防止条件查询未限制查询条数，可能导致节点出现OOM的问题，我们**对某些查询接口增加了对应的Limit接口**，具体会在子章节的接口说明中注明。
+
+BlockService对象也有很多对应的响应类型：
 
 - BlockResponse
 - BlockNumberResponse 
@@ -947,6 +1008,25 @@ public class BlockCountResponse extends Response {
 }
 ```
 
+**BlockLimitResponse**
+
+将`result`封装成`PageResult`结构，通过调用`getResult()`方法会调用PageResult的`parseResult()`可以得到最后的结果。
+
+```java
+public class BlockLimitResponse extends Response {
+    private PageResult<BlockResponse.Block> result;
+}
+
+public class PageResult<T> {
+    private String hasmore;
+    private JsonElement data;
+   
+    public List<T> parseResult(Class clz) {}
+}
+```
+
+
+
 ### 5.1 获取最新区块(getLastestBlock)
 
 参数：
@@ -956,6 +1036,8 @@ public class BlockCountResponse extends Response {
 ```java
 Request<BlockResponse> getLastestBlock(int... nodeIds);
 ```
+
+
 
 ### 5.2 查询指定区间的区块by block number(getBlocks)
 
@@ -978,6 +1060,24 @@ Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, boolean isPlain
 Request<BlockResponse> getBlocks(String from, String to, int... nodeIds);
 
 Request<BlockResponse> getBlocks(String from, String to, boolean isPlain, int... nodeIds);
+```
+
+对应的有Limit限制条件的接口如下：
+
+- from 区块区间起点
+ - to 区块区间终点
+ - size 想查询的区块数量，不能大于5000
+ - isPlain  (可选)，默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, int size, boolean isPlain, int... nodeIds);
+```
+
+或使用默认限制条件
+
+```java
+Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, boolean isPlain, int... nodeIds);
 ```
 
 
@@ -1461,6 +1561,33 @@ Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
 ```java
 Request<ArchiveResponse> pending(int... nodeIds);
 ```
+
+
+
+
+
+## 第十章. 辅助工具接口
+
+###MetaDataParam
+```java
+public class MetaDataParam {
+    private int pageSize;
+    private Bookmark bookmark;
+    private boolean backward;
+
+    public static class Bookmark {
+        private int blkNum;
+        private int txIndex;
+    }
+}
+```
+- pageSize：表示上限查询条数，不能超过5000；
+
+- bookmark：表示书签位置，由blkNum区块号和txIndex交易下标共同决定
+
+- backward：当查询条件里backward为false时，以书签位置为起点往前查询，true表示以书签位置为起点往后查询；
+
+**注：**若未指定metadata，则默认backward为false，是以最近区块为起点往前查找。
 
 
 
