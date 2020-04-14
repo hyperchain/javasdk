@@ -62,7 +62,7 @@ public class ContractServiceImpl implements ContractService {
 
         txHashResponseContractRequest.addParams(txParamMap);
         txHashResponseContractRequest.setJsonrpc(jsonrpc);
-        txHashResponseContractRequest.setJsonrpc(namespace);
+        txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
     }
