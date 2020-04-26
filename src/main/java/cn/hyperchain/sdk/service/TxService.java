@@ -192,34 +192,21 @@ public interface TxService {
     Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String value, BigInteger timestamp, int... nodeIds);
 
     /**
-     * @see TxService#getTransactionsByTime(BigInteger, BigInteger, int, int...)
+     * querying transactions within a specified time interval.
+     *
+     * @param startTime start time
+     * @param endTime   end time
+     * @param nodeIds   specific ids
+     * @return {@link Request} of {@link TxResponse}
      */
     @Deprecated
     Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
     /**
-     * querying transactions within a specified time interval.
-     *
-     * @param startTime start time
-     * @param endTime   end time
-     * @param limit     the maximum of the block count
-     * @param nodeIds   specific ids
-     * @return {@link Request} of {@link TxResponse}
-     */
-    @Deprecated
-    Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int limit, int... nodeIds);
-
-    /**
-     * @see TxService#getTransactionsByTime(String, String, int, int...)
+     * @see TxService#getTransactionsByTime(BigInteger, BigInteger, int...)
      */
     @Deprecated
     Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int... nodeIds);
-
-    /**
-     * @see TxService#getTransactionsByTime(BigInteger, BigInteger, int, int...)
-     */
-    @Deprecated
-    Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int limit, int... nodeIds);
 
     /**
      * @see TxService#getTransactionsByTimeWithLimit(BigInteger, BigInteger, MetaDataParam, int...)
