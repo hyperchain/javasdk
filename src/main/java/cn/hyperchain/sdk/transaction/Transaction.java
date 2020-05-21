@@ -261,6 +261,18 @@ public class Transaction {
     }
 
     private void setNeedHashString() {
+        if (txVersion.charAt(0) != '2') {
+            String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
+            this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
+                    + "&to=" + chPrefix(this.to.toLowerCase())
+                    + "&value=" + chPrefix(value)
+                    + "&timestamp=0x" + Long.toHexString(this.timestamp)
+                    + "&nonce=0x" + Long.toHexString(this.nonce)
+                    + "&opcode=" + this.opCode
+                    + "&extra=" + this.extra
+                    + "&vmtype=" + this.vmType.getType();
+            return;
+        }
         String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
         this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
                 + "&to=" + chPrefix(this.to.toLowerCase())
@@ -272,6 +284,11 @@ public class Transaction {
                 + "&extra=" + this.extra
                 + "&vmtype=" + this.vmType.getType()
                 + "&version=" + this.txVersion;
+
+        if (txVersion.equals("2.1")) {
+            // todo Handle ExtraID
+            this.needHashString += "&extraid=";
+        }
     }
 
     /**

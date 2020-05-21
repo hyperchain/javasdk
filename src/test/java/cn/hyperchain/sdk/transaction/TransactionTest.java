@@ -2,7 +2,18 @@ package cn.hyperchain.sdk.transaction;
 
 import cn.hyperchain.contract.BaseContractInterface;
 import cn.hyperchain.contract.BaseInvoke;
+import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.exception.RequestException;
+import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.service.AccountService;
+import cn.hyperchain.sdk.service.Common;
+import cn.hyperchain.sdk.service.ServiceManager;
+import cn.hyperchain.sdk.service.TxService;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,5 +64,31 @@ public class TransactionTest {
             Assert.assertEquals(originNeedHash, txD.getNeedHashString());
             Assert.assertEquals(txJson, Transaction.serialize(txD));
         }
+    }
+
+    @Test
+    public void testTxVersion() throws RequestException {
+        ProviderManager providerManager = Common.soloProviderManager;
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+        TxService sendTxService = ServiceManager.getTxService(providerManager);
+
+        Account account = accountService.genAccount(Algo.SMRAW);
+        Transaction transaction = new Transaction.Builder(account.getAddress()).transfer("794BF01AB3D37DF2D1EA1AA4E6F4A0E988F4DEA5", 0).build();
+
+        // For Hyperchain
+        //transaction.setTxVersion("1.0");
+        // For Flato (Default)
+        transaction.setTxVersion("2.0");
+        // For Flato
+        //transaction.setTxVersion("2.1");
+
+        transaction.sign(account);
+
+        System.out.println(transaction.getSignature());
+        System.out.println(transaction.getNeedHashString());
+        Request<TxHashResponse> request = sendTxService.sendTx(transaction);
+        ReceiptResponse response = request.send().polling();
+        System.out.println(response);
+        System.out.println(response.getTxHash());
     }
 }
