@@ -272,6 +272,7 @@ public class Transaction {
                 + "&extra=" + this.extra
                 + "&vmtype=" + this.vmType.getType()
                 + "&version=" + this.txVersion;
+        this.needHashString = this.needHashString + "&extraid=";
     }
 
     /**
@@ -318,7 +319,7 @@ public class Transaction {
     }
 
     public void setPayload(String payload) {
-        this.payload = payload;
+        this.payload = chPrefix(payload);
     }
 
     public long getValue() {

@@ -28,21 +28,24 @@ public class ReceiptResponse extends Response {
         private long gasUsed;
         @Expose
         private String version;
+        @Expose
+        private OracleEvent[] oracles;
 
         public Receipt() {
         }
 
         @Override
         public String toString() {
-            return "Receipt{"
-                    + "contractAddress='" + contractAddress + '\''
-                    + ", ret='" + ret + '\''
-                    + ", txHash='" + txHash + '\''
-                    + ", log=" + Arrays.toString(log)
-                    + ", vmType='" + vmType + '\''
-                    + ", gasUsed=" + gasUsed
-                    + ", version='" + version + '\''
-                    + '}';
+            return "Receipt{" +
+                    "contractAddress='" + contractAddress + '\'' +
+                    ", ret='" + ret + '\'' +
+                    ", txHash='" + txHash + '\'' +
+                    ", log=" + Arrays.toString(log) +
+                    ", vmType='" + vmType + '\'' +
+                    ", gasUsed=" + gasUsed +
+                    ", version='" + version + '\'' +
+                    ", oracles=" + Arrays.toString(oracles) +
+                    '}';
         }
     }
 
@@ -83,6 +86,10 @@ public class ReceiptResponse extends Response {
 
     public String getVersion() {
         return result.version;
+    }
+
+    public OracleEvent[] getOracles() {
+        return result.oracles;
     }
 
     @Override
