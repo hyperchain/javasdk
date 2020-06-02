@@ -30,7 +30,7 @@ public class Transaction {
 
     private static final Logger logger = Logger.getLogger(Transaction.class);
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-    private static final String DEFAULT_TX_VERSION = "2.0";
+    private static final String DEFAULT_TX_VERSION = "2.1";
     public static final long DEFAULT_GAS_LIMIT = 1000000000;
 
     private String from;
@@ -272,6 +272,7 @@ public class Transaction {
                 + "&extra=" + this.extra
                 + "&vmtype=" + this.vmType.getType()
                 + "&version=" + this.txVersion;
+        this.needHashString += "&extraid=" + "";
     }
 
     /**
@@ -318,7 +319,7 @@ public class Transaction {
     }
 
     public void setPayload(String payload) {
-        this.payload = payload;
+        this.payload = chPrefix(payload);
     }
 
     public long getValue() {
