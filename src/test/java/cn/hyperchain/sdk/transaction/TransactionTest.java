@@ -24,6 +24,7 @@ public class TransactionTest {
 
     private String from = "from";
     private String to = "to";
+    private Long num = new Long(1);
 
     class TestInvoke implements BaseInvoke {
         private String a = "java";
@@ -47,6 +48,15 @@ public class TransactionTest {
 
         {
             Transaction transaction = new Transaction.HVMBuilder(from).invoke(to, new TestInvoke()).extra("EXTRA").build();
+            String originNeedHash = transaction.getNeedHashString();
+            String txJson = Transaction.serialize(transaction);
+            Transaction txD = Transaction.deSerialize(txJson);
+            Assert.assertEquals(originNeedHash, txD.getNeedHashString());
+            Assert.assertEquals(txJson, Transaction.serialize(txD));
+        }
+
+        {
+            Transaction transaction = new Transaction.Builder(from).extraIDLong(num+1,num+2).extraIDString("str1").addExtraIDString("str2").transfer(to,0).build();
             String originNeedHash = transaction.getNeedHashString();
             String txJson = Transaction.serialize(transaction);
             Transaction txD = Transaction.deSerialize(txJson);
