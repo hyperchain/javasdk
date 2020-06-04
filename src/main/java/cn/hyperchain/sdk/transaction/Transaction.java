@@ -36,8 +36,8 @@ public class Transaction {
     }
 
     private static final Logger logger = Logger.getLogger(Transaction.class);
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().
-            registerTypeAdapter(Transaction.class, new TxDeserializer()).create();
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping()
+            .registerTypeAdapter(Transaction.class, new TxDeserializer()).create();
     private static final String DEFAULT_TX_VERSION = "2.1";
     public static final long DEFAULT_GAS_LIMIT = 1000000000;
     private static final int EXTRAID_STRING_MAX_LENGTH = 1024;
@@ -119,7 +119,7 @@ public class Transaction {
         }
 
         /**
-         * set transaction extraIDLong
+         * set transaction extraIDLong.
          *
          * @param extraIDLong extraID long
          * @return {@link Builder}
@@ -130,7 +130,7 @@ public class Transaction {
         }
 
         /**
-         * add transaction extraIDLong
+         * add transaction extraIDLong.
          *
          * @param extraIDLong extraID long
          * @return {@link Builder}
@@ -141,7 +141,7 @@ public class Transaction {
         }
 
         /**
-         * set transaction extraIDString
+         * set transaction extraIDString.
          *
          * @param extraIDString extraID String
          * @return {@link Builder}
@@ -152,12 +152,12 @@ public class Transaction {
         }
 
         /**
-         * add transaction extraIDString
+         * add transaction extraIDString.
          *
          * @param extraIDString extraID String
          * @return {@link Builder}
          */
-        public Builder addExtraIDString(String... extraIDString){
+        public Builder addExtraIDString(String... extraIDString) {
             transaction.addExtraIdString(extraIDString);
             return this;
         }
@@ -467,7 +467,7 @@ public class Transaction {
         this.txVersion = txVersion;
     }
 
-    private String buildExtraID(){
+    private String buildExtraID() {
         ArrayList<Object> extraIDs = new ArrayList<Object>();
         if (this.extraIdLong != null) {
             extraIDs.addAll(this.extraIdLong);
@@ -481,9 +481,9 @@ public class Transaction {
             }
         }
         if (extraIDs.size() > EXTRAID_LIST_MAX_LENGTH) {
-            throw new IllegalArgumentException("extraID list exceed EXTRAID_LIST_MAX_LENGTH "+EXTRAID_LIST_MAX_LENGTH);
+            throw new IllegalArgumentException("extraID list exceed EXTRAID_LIST_MAX_LENGTH " + EXTRAID_LIST_MAX_LENGTH);
         }
-        if (extraIDs.size()==0){
+        if (extraIDs.size() == 0) {
             return "";
         }
         return gson.toJson(extraIDs);
@@ -498,6 +498,10 @@ public class Transaction {
         Collections.addAll(this.extraIdLong, extraIDLong);
     }
 
+    /**
+     * add extra IDLong.
+     * @param extraIDLong -
+     */
     public void addExtraIDLong(Long... extraIDLong) {
         if (this.extraIdLong == null) {
             this.extraIdLong = new ArrayList<Long>();
@@ -514,6 +518,10 @@ public class Transaction {
         Collections.addAll(this.extraIdString, extraIdString);
     }
 
+    /**
+     * add extra IDString.
+     * @param extraIdString -
+     */
     public void addExtraIdString(String... extraIdString) {
         if (this.extraIdString == null) {
             this.extraIdString = new ArrayList<String>();
@@ -576,7 +584,7 @@ public class Transaction {
 
     public static class TxDeserializer implements JsonDeserializer<Transaction> {
         /**
-         * deserialize transaction in gson
+         * deserialize transaction in gson.
          *
          * @param json marshal string
          * @param arg1 type

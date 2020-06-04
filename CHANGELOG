@@ -30,3 +30,6 @@ release v0.0.9
 
 release v1.0.0
     1. support flato signature
+release v1.0.1
+    1. add transfer vmtype
+    2. add extraID
