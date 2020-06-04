@@ -70,7 +70,7 @@ public class Transaction {
         public Builder(String from) {
             transaction = new Transaction();
             transaction.setFrom(chPrefix(from));
-            transaction.setVmType(VMType.EVM);
+            transaction.setVmType(VMType.TRANSFER);
         }
 
         /**
@@ -313,7 +313,18 @@ public class Transaction {
             return this;
         }
 
-
+        /**
+         * create a transform transaction from account A to account B.
+         *
+         * @param to    origin account
+         * @param value goal account
+         * @return {@link Builder}
+         */
+        public Builder transfer(String to, long value) {
+            transaction.setTo(to);
+            transaction.setValue(value);
+            return this;
+        }
     }
 
     private void setNeedHashString() {
@@ -648,7 +659,9 @@ public class Transaction {
         if (vmType == VMType.EVM) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
         } else if (vmType == VMType.HVM) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.JVM_VALUE);
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
+        } else if (vmType == VMType.TRANSFER) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
         } else {
             throw new RuntimeException("unKnow vmType");
         }
