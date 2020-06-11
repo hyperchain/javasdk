@@ -34,7 +34,7 @@ public class Transaction {
 
     private String from;
     private String to;
-    private String payload;
+    private String payload = "";
     private long value = 0;
     private boolean simulate;
     private VMType vmType;
@@ -244,7 +244,18 @@ public class Transaction {
             return this;
         }
 
-
+        /**
+         * create a transform transaction from account A to account B.
+         *
+         * @param to    origin account
+         * @param value goal account
+         * @return {@link Builder}
+         */
+        public Builder transfer(String to, long value) {
+            transaction.setTo(to);
+            transaction.setValue(value);
+            return this;
+        }
     }
 
     private void setNeedHashString() {
@@ -261,6 +272,7 @@ public class Transaction {
 
     /**
      * create transaction signature.
+     *
      * @param account sign account
      */
     public void sign(Account account) {
@@ -302,7 +314,7 @@ public class Transaction {
     }
 
     public void setPayload(String payload) {
-        this.payload = payload;
+        this.payload = chPrefix(payload);
     }
 
     public long getValue() {
@@ -402,6 +414,7 @@ public class Transaction {
 
     /**
      * serialize transaction.
+     *
      * @param transaction transaction
      * @return marshal string
      */
@@ -411,6 +424,7 @@ public class Transaction {
 
     /**
      * deserialize transaction.
+     *
      * @param txJson marshal string
      * @return transaction struct
      */
@@ -446,6 +460,7 @@ public class Transaction {
 
     /**
      * get transaction hash.
+     *
      * @return transaction hash
      */
     public String getTransactionHash() {
@@ -454,6 +469,7 @@ public class Transaction {
 
     /**
      * get transaction hash.
+     *
      * @param gasLimit gas limit
      * @return transaction hash
      */
@@ -463,7 +479,7 @@ public class Transaction {
         input.setPrice(defaultGasPrice);
         input.setGasLimit(gasLimit);
         input.setAmount(this.value);
-        if (! "".equals(payload)) {
+        if (!"".equals(payload)) {
             input.setPayload(ByteString.copyFrom(ByteUtil.fromHex(payload)));
         }
         input.setOpValue(opCode);
@@ -472,7 +488,9 @@ public class Transaction {
         if (vmType == VMType.EVM) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
         } else if (vmType == VMType.HVM) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.JVM_VALUE);
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
+        } else if (vmType == VMType.TRANSFER) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
         } else {
             throw new RuntimeException("unKnow vmType");
         }
