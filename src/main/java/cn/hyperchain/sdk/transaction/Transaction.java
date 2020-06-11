@@ -244,6 +244,26 @@ public class Transaction {
             return this;
         }
 
+        /**
+         * invoke Solidity contract whit specific method and params.
+         * @param methodName method name
+         * @param abi        contract abi
+         * @param params     invoke params
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params,String extra) {
+            super.transaction.setTo(contractAddress);
+            ContractType.Function abiFunction = abi.getFunction(methodName);
+            if (abiFunction == null) {
+                throw new NullPointerException("Evm method name error, so we can't find method " + methodName + ", please check the document at https://github.com/hyperchain/javasdk/tree/master/docs!");
+            }
+            String payload = ByteUtil.toHex(abiFunction.encode(params.getParams()));
+            super.transaction.setPayload(payload);
+            super.transaction.setExtra(extra);
+            return this;
+        }
+
+
 
     }
 
