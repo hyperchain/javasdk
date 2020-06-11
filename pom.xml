@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <litesdk.version>0.0.9</litesdk.version>
+        <litesdk.version>0.1.0</litesdk.version>
         <maven.checkstyle.version>3.0.0</maven.checkstyle.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
 

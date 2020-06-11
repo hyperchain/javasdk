@@ -25,7 +25,7 @@ Maven
 Gradle
 
 ```
-compile group: 'cn.hyperchain', name: 'litesdk', version: '0.0.9'
+compile group: 'cn.hyperchain', name: 'litesdk', version: '0.1.0'
 ```
 
 ### Usage

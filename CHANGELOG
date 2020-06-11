@@ -20,7 +20,7 @@ release v0.0.7
     2. fix invoke directly params process function
 release v0.0.8
     1. add getBalance interface
-release v0.0.9-dev
+release v0.0.9
     1. add serialize and deSerialize Transaction
     2. add read pme file to address
     3. add node service interface
@@ -28,3 +28,6 @@ release v0.0.9-dev
     5. refactor use of gson creating
     6. add get tx hash local
     7. add decode hvm payload function
+release v0.1.0
+    1. add transfer vmType
+    2. fix hvm tx calculate txHash error
