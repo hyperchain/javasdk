@@ -231,4 +231,14 @@ public class ByteUtil {
         System.arraycopy(origin, offset, newArray, 0, length);
         return newArray;
     }
+
+    /**
+     * Converts int value into a byte array.
+     *
+     * @param val - int value to convert
+     * @return <code>byte[]</code> of length 4, representing the int value
+     */
+    public static byte[] intToBytes(int val) {
+        return ByteBuffer.allocate(4).putInt(val).array();
+    }
 }

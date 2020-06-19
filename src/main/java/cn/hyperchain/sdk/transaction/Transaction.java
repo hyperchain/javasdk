@@ -70,7 +70,7 @@ public class Transaction {
         public Builder(String from) {
             transaction = new Transaction();
             transaction.setFrom(chPrefix(from));
-            transaction.setVmType(VMType.TRANSFER);
+            transaction.setVmType(VMType.EVM);
         }
 
         /**
@@ -323,6 +323,28 @@ public class Transaction {
         public Builder transfer(String to, long value) {
             transaction.setTo(to);
             transaction.setValue(value);
+            return this;
+        }
+    }
+
+    public static class BVMBuilder extends Builder {
+        public BVMBuilder(String from) {
+            super(from);
+            super.transaction.setVmType(VMType.BVM);
+        }
+
+        /**
+         * invoke BVM contract whit specific method and params.
+         *
+         * @param contractAddress contract address
+         * @param methodName      method name
+         * @param params          invoke params
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String methodName, String... params) {
+            super.transaction.setTo(contractAddress);
+            String payload = Encoder.encodeBVM(methodName, params);
+            super.transaction.setPayload(payload);
             return this;
         }
     }

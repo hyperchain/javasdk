@@ -97,4 +97,39 @@ public class Encoder {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * get bvm invoke payload.
+     *
+     * @param methodName method name
+     * @param params     invoke params
+     * @return payload
+     */
+    public static String encodeBVM(String methodName, String... params) {
+        int allLen = 0;
+        allLen += 8;
+        allLen += methodName.length();
+        for (String param : params) {
+            allLen += param.length();
+            allLen += 4;
+        }
+        byte[] payload = new byte[allLen];
+
+        int start = 0;
+        System.arraycopy(ByteUtil.intToBytes(methodName.length()), 0, payload, start, 4);
+        start += 4;
+        System.arraycopy(methodName.getBytes(), 0, payload, start, methodName.getBytes().length);
+        start += methodName.getBytes().length;
+        System.arraycopy(ByteUtil.intToBytes(params.length), 0, payload, start, 4);
+        start += 4;
+
+        for (String param : params) {
+            System.arraycopy(ByteUtil.intToBytes(param.getBytes().length), 0, payload, start, 4);
+            start += 4;
+            System.arraycopy(param.getBytes(), 0, payload, start, param.getBytes().length);
+            start += param.getBytes().length;
+        }
+
+        return ByteUtil.toHex(payload);
+    }
 }
