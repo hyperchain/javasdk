@@ -31,3 +31,4 @@ release v0.0.9
 release v0.1.0
     1. add transfer vmType
     2. fix hvm tx calculate txHash error
+    3. add bvm vmType

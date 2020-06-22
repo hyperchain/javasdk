@@ -258,6 +258,28 @@ public class Transaction {
         }
     }
 
+    public static class BVMBuilder extends Builder {
+        public BVMBuilder(String from) {
+            super(from);
+            super.transaction.setVmType(VMType.BVM);
+        }
+
+        /**
+         * invoke BVM contract whit specific method and params.
+         *
+         * @param contractAddress contract address
+         * @param methodName      method name
+         * @param params          invoke params
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String methodName, String... params) {
+            super.transaction.setTo(contractAddress);
+            String payload = Encoder.encodeBVM(methodName, params);
+            super.transaction.setPayload(payload);
+            return this;
+        }
+    }
+
     private void setNeedHashString() {
         String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
         this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
@@ -429,7 +451,8 @@ public class Transaction {
      * @return transaction struct
      */
     public static Transaction deSerialize(String txJson) {
-        Type type = new TypeToken<HashMap<String, String>>() {}.getType();
+        Type type = new TypeToken<HashMap<String, String>>() {
+        }.getType();
         Map<String, String> txMap = gson.fromJson(txJson, type);
         Transaction transaction = new Transaction();
         transaction.setFrom(txMap.get("from"));
