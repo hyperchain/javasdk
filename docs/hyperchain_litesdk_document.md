@@ -82,9 +82,20 @@
      * [9.10 恢复所有归档数据](#910-恢复所有归档数据)
      * [9.11 查询归档数据状态](#911-查询归档数据状态)
      * [9.12 查询所有待完成的快照请求](#912-查询所有待完成的快照请求)
+
 ## 第一章. 前言 
 
 **LiteSDK**是一个**轻量JavaSDK工具**，提供与Hyperchain区块链平台交互的接口以及一些处理工具。该文档⾯向Hyperchain区块链平台的应⽤开发者，提供hyperchain Java SDK的 使⽤指南。
+
+如需尝试SDK的demo，可将项目clone到本地，配置好Java环境(推荐使用1.8)和maven构建工具，可运行对应的发送交易和查询接口，例如合约调用的demo可在[此处](https://github.com/hyperchain/javasdk/tree/master/src/test/java/cn/hyperchain/sdk)找到，对应的资源文件和合约demo也在resource文件夹下。
+
+同时如需更好的使用SDK来操作区块链平台发送交易，建议阅读Hyperchain区块链底层平台[介绍文档](http://docs.hyperchain.cn/)，如需详细文档介绍可联系运维人员。
+
+同时对于EVM、HVM合约调用，也需详细阅读对应的合约介绍了解相关概念后再使用SDK进行操作。
+
+EVM Solidity合约文档链接：https://solidity.readthedocs.io/en/latest/
+
+HVM 合约文档链接见Hyperchain介绍文档。
 
 ## 第二章. 初始化
 
@@ -331,7 +342,7 @@ FuncParams params = new FuncParams();
 params.addParams("contract01");
 Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
 // 如果要部署的合约无构造函数，则调用如下
-// Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(bin).build();
+// Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin).build();
 ```
 
 创建交易体时需要指定要**部署的合约的bin、abi文件的字符串内容以及合约名**。
@@ -342,16 +353,16 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deplo
 
 hvm调用合约有两种方式：
 
-- **invoke bean**调用
+- **InvokeBean**调用
 - 直接调用合约方法（类似evm）
 
-1. invoke bean调用如下：
+1. InvokeBean调用如下：
 
 ```java
 Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invoke(receiptResponse.getContractAddress(), invoke).build();
 ```
 
-创建交易体时需要指定**合约地址**和**invoke bean**（HVM中新提出的概念，可点击[该链接](http://hvm.internal.hyperchain.cn/#/)了解）。
+创建交易体时需要指定**合约地址**和**InvokeBean**(HVM中新提出的概念，请先通过HVM文档了解)。
 
 2. 直接调用合约方法如下：
 
