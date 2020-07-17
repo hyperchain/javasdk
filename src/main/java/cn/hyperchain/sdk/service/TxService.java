@@ -209,12 +209,6 @@ public interface TxService {
     Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int... nodeIds);
 
     /**
-     * @see TxService#getTransactionsByTime(BigInteger, BigInteger, int, int...)
-     */
-    @Deprecated
-    Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int limit, int... nodeIds);
-
-    /**
      * @see TxService#getTransactionsByTimeWithLimit(BigInteger, BigInteger, MetaDataParam, int...)
      */
     Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, int... nodeIds);

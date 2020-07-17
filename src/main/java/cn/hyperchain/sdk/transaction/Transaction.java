@@ -20,7 +20,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.protobuf.ByteString;
-import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.io.InputStream;
@@ -35,13 +34,16 @@ public class Transaction {
     private Transaction() {
     }
 
-    private static final Logger logger = Logger.getLogger(Transaction.class);
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping()
             .registerTypeAdapter(Transaction.class, new TxDeserializer()).create();
-    private static final String DEFAULT_TX_VERSION = "2.1";
     public static final long DEFAULT_GAS_LIMIT = 1000000000;
     private static final int EXTRAID_STRING_MAX_LENGTH = 1024;
     private static final int EXTRAID_LIST_MAX_LENGTH = 30;
+
+    // maintain opcode const
+    private static final int UPDATE = 1;
+    private static final int FREEZE = 2;
+    private static final int UNFREEZE = 3;
 
     private String from;
     private String to;
@@ -57,7 +59,8 @@ public class Transaction {
     private ArrayList<String> extraIdString;
     private String signature = "";
     private String needHashString;
-    private String txVersion = DEFAULT_TX_VERSION;
+    private String contractName = "";
+    private TxVersion txVersion = TxVersion.GLOBAL_TX_VERSION;
 
     public static class Builder {
         Transaction transaction;
@@ -102,7 +105,7 @@ public class Transaction {
          * @param txVersion tx version
          * @return {@link Builder}
          */
-        public Builder txVersion(String txVersion) {
+        public Builder txVersion(TxVersion txVersion) {
             transaction.setTxVersion(txVersion);
             return this;
         }
@@ -172,7 +175,7 @@ public class Transaction {
         public Builder upgrade(String contractAddress, String payload) {
             transaction.setPayload(payload);
             transaction.setTo(contractAddress);
-            transaction.setOpCode(1);
+            transaction.setOpCode(UPDATE);
             return this;
         }
 
@@ -183,7 +186,7 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder freeze(String contractAddress) {
-            transaction.setOpCode(2);
+            transaction.setOpCode(FREEZE);
             transaction.setTo(contractAddress);
             return this;
         }
@@ -196,7 +199,18 @@ public class Transaction {
          */
         public Builder unfreeze(String contractAddress) {
             transaction.setTo(contractAddress);
-            transaction.setOpCode(3);
+            transaction.setOpCode(UNFREEZE);
+            return this;
+        }
+
+        /**
+         * set transaction vm type.
+         *
+         * @param vmType {@link VMType}
+         * @return this
+         */
+        public Builder vmType(VMType vmType) {
+            transaction.setVmType(vmType);
             return this;
         }
 
@@ -360,9 +374,12 @@ public class Transaction {
                 + "&opcode=" + this.opCode
                 + "&extra=" + this.extra
                 + "&vmtype=" + this.vmType.getType()
-                + "&version=" + this.txVersion;
-        if (txVersion.equals("2.1")) {
+                + "&version=" + this.txVersion.getVersion();
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion21)) {
             this.needHashString += "&extraid=" + this.buildExtraID();
+        }
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion22)) {
+            this.needHashString += "&cname=" + this.contractName;
         }
     }
 
@@ -481,11 +498,11 @@ public class Transaction {
         return needHashString;
     }
 
-    public String getTxVersion() {
+    public TxVersion getTxVersion() {
         return txVersion;
     }
 
-    public void setTxVersion(String txVersion) {
+    public void setTxVersion(TxVersion txVersion) {
         this.txVersion = txVersion;
     }
 
