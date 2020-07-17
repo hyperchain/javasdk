@@ -193,6 +193,7 @@ public class ProviderManager {
             boolean f = this.isCFCA;
             // todo may different txs have different version
             if (TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion20)) {
+                // is flato
                 f = true;
             }
             if (f) {

@@ -364,22 +364,35 @@ public class Transaction {
     }
 
     private void setNeedHashString() {
-        String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
-        this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
-                + "&to=" + chPrefix(this.to.toLowerCase())
-                + "&value=" + chPrefix(Long.toHexString(this.value))
-                + "&payload=" + payload
-                + "&timestamp=0x" + Long.toHexString(this.timestamp)
-                + "&nonce=0x" + Long.toHexString(this.nonce)
-                + "&opcode=" + this.opCode
-                + "&extra=" + this.extra
-                + "&vmtype=" + this.vmType.getType()
-                + "&version=" + this.txVersion.getVersion();
-        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion21)) {
-            this.needHashString += "&extraid=" + this.buildExtraID();
-        }
-        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion22)) {
-            this.needHashString += "&cname=" + this.contractName;
+        // flato
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
+            String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
+            this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
+                    + "&to=" + chPrefix(this.to.toLowerCase())
+                    + "&value=" + chPrefix(Long.toHexString(this.value))
+                    + "&payload=" + payload
+                    + "&timestamp=0x" + Long.toHexString(this.timestamp)
+                    + "&nonce=0x" + Long.toHexString(this.nonce)
+                    + "&opcode=" + this.opCode
+                    + "&extra=" + this.extra
+                    + "&vmtype=" + this.vmType.getType()
+                    + "&version=" + this.txVersion.getVersion();
+            if (txVersion.isGreaterOrEqual(TxVersion.TxVersion21)) {
+                this.needHashString += "&extraid=" + this.buildExtraID();
+            }
+            if (txVersion.isGreaterOrEqual(TxVersion.TxVersion22)) {
+                this.needHashString += "&cname=" + this.contractName;
+            }
+        } else { // hyperchain
+            String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
+            this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
+                    + "&to=" + chPrefix(this.to.toLowerCase())
+                    + "&value=" + chPrefix(value)
+                    + "&timestamp=0x" + Long.toHexString(this.timestamp)
+                    + "&nonce=0x" + Long.toHexString(this.nonce)
+                    + "&opcode=" + this.opCode
+                    + "&extra=" + this.extra
+                    + "&vmtype=" + this.vmType.getType();
         }
     }
 
