@@ -13,13 +13,19 @@ import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.transaction.proto.TransactionValueProto;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.protobuf.ByteString;
-import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +34,16 @@ public class Transaction {
     private Transaction() {
     }
 
-    private static final Logger logger = Logger.getLogger(Transaction.class);
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping()
+            .registerTypeAdapter(Transaction.class, new TxDeserializer()).create();
     public static final long DEFAULT_GAS_LIMIT = 1000000000;
+    private static final int EXTRAID_STRING_MAX_LENGTH = 1024;
+    private static final int EXTRAID_LIST_MAX_LENGTH = 30;
+
+    // maintain opcode const
+    private static final int UPDATE = 1;
+    private static final int FREEZE = 2;
+    private static final int UNFREEZE = 3;
 
     private String from;
     private String to;
@@ -42,8 +55,12 @@ public class Transaction {
     private String extra = "";
     private long timestamp;
     private long nonce;
+    private ArrayList<Long> extraIdLong;
+    private ArrayList<String> extraIdString;
     private String signature = "";
     private String needHashString;
+    private String contractName = "";
+    private TxVersion txVersion = TxVersion.GLOBAL_TX_VERSION;
 
     public static class Builder {
         Transaction transaction;
@@ -83,6 +100,17 @@ public class Transaction {
         }
 
         /**
+         * set tx version(must corresponding to flato version).
+         *
+         * @param txVersion tx version
+         * @return {@link Builder}
+         */
+        public Builder txVersion(TxVersion txVersion) {
+            transaction.setTxVersion(txVersion);
+            return this;
+        }
+
+        /**
          * add transaction extra info.
          *
          * @param extra extra data
@@ -90,6 +118,50 @@ public class Transaction {
          */
         public Builder extra(String extra) {
             transaction.setExtra(extra);
+            return this;
+        }
+
+        /**
+         * set transaction extraIDLong.
+         *
+         * @param extraIDLong extraID long
+         * @return {@link Builder}
+         */
+        public Builder extraIDLong(Long... extraIDLong) {
+            transaction.setExtraIDLong(extraIDLong);
+            return this;
+        }
+
+        /**
+         * add transaction extraIDLong.
+         *
+         * @param extraIDLong extraID long
+         * @return {@link Builder}
+         */
+        public Builder addExtraIDLong(Long... extraIDLong) {
+            transaction.addExtraIDLong(extraIDLong);
+            return this;
+        }
+
+        /**
+         * set transaction extraIDString.
+         *
+         * @param extraIDString extraID String
+         * @return {@link Builder}
+         */
+        public Builder extraIDString(String... extraIDString) {
+            transaction.setExtraIdString(extraIDString);
+            return this;
+        }
+
+        /**
+         * add transaction extraIDString.
+         *
+         * @param extraIDString extraID String
+         * @return {@link Builder}
+         */
+        public Builder addExtraIDString(String... extraIDString) {
+            transaction.addExtraIdString(extraIDString);
             return this;
         }
 
@@ -103,7 +175,7 @@ public class Transaction {
         public Builder upgrade(String contractAddress, String payload) {
             transaction.setPayload(payload);
             transaction.setTo(contractAddress);
-            transaction.setOpCode(1);
+            transaction.setOpCode(UPDATE);
             return this;
         }
 
@@ -114,7 +186,7 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder freeze(String contractAddress) {
-            transaction.setOpCode(2);
+            transaction.setOpCode(FREEZE);
             transaction.setTo(contractAddress);
             return this;
         }
@@ -127,7 +199,18 @@ public class Transaction {
          */
         public Builder unfreeze(String contractAddress) {
             transaction.setTo(contractAddress);
-            transaction.setOpCode(3);
+            transaction.setOpCode(UNFREEZE);
+            return this;
+        }
+
+        /**
+         * set transaction vm type.
+         *
+         * @param vmType {@link VMType}
+         * @return this
+         */
+        public Builder vmType(VMType vmType) {
+            transaction.setVmType(vmType);
             return this;
         }
 
@@ -281,15 +364,36 @@ public class Transaction {
     }
 
     private void setNeedHashString() {
-        String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
-        this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
-                + "&to=" + chPrefix(this.to.toLowerCase())
-                + "&value=" + chPrefix(value)
-                + "&timestamp=0x" + Long.toHexString(this.timestamp)
-                + "&nonce=0x" + Long.toHexString(this.nonce)
-                + "&opcode=" + this.opCode
-                + "&extra=" + this.extra
-                + "&vmtype=" + this.vmType.getType();
+        // flato
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
+            String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
+            this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
+                    + "&to=" + chPrefix(this.to.toLowerCase())
+                    + "&value=" + chPrefix(Long.toHexString(this.value))
+                    + "&payload=" + payload
+                    + "&timestamp=0x" + Long.toHexString(this.timestamp)
+                    + "&nonce=0x" + Long.toHexString(this.nonce)
+                    + "&opcode=" + this.opCode
+                    + "&extra=" + this.extra
+                    + "&vmtype=" + this.vmType.getType()
+                    + "&version=" + this.txVersion.getVersion();
+            if (txVersion.isGreaterOrEqual(TxVersion.TxVersion21)) {
+                this.needHashString += "&extraid=" + this.buildExtraID();
+            }
+            if (txVersion.isGreaterOrEqual(TxVersion.TxVersion22)) {
+                this.needHashString += "&cname=" + this.contractName;
+            }
+        } else { // hyperchain
+            String value = Utils.isBlank(this.payload) ? Long.toHexString(this.value) : this.payload;
+            this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
+                    + "&to=" + chPrefix(this.to.toLowerCase())
+                    + "&value=" + chPrefix(value)
+                    + "&timestamp=0x" + Long.toHexString(this.timestamp)
+                    + "&nonce=0x" + Long.toHexString(this.nonce)
+                    + "&opcode=" + this.opCode
+                    + "&extra=" + this.extra
+                    + "&vmtype=" + this.vmType.getType();
+        }
     }
 
     /**
@@ -407,6 +511,76 @@ public class Transaction {
         return needHashString;
     }
 
+    public TxVersion getTxVersion() {
+        return txVersion;
+    }
+
+    public void setTxVersion(TxVersion txVersion) {
+        this.txVersion = txVersion;
+    }
+
+    private String buildExtraID() {
+        ArrayList<Object> extraIDs = new ArrayList<Object>();
+        if (this.extraIdLong != null) {
+            extraIDs.addAll(this.extraIdLong);
+        }
+        if (this.extraIdString != null) {
+            for (String s : this.extraIdString) {
+                if (s.length() > EXTRAID_STRING_MAX_LENGTH) {
+                    throw new IllegalArgumentException("extraID string exceed the EXTRAID_STRING_MAX_LENGTH " + EXTRAID_STRING_MAX_LENGTH);
+                }
+                extraIDs.add(s);
+            }
+        }
+        if (extraIDs.size() > EXTRAID_LIST_MAX_LENGTH) {
+            throw new IllegalArgumentException("extraID list exceed EXTRAID_LIST_MAX_LENGTH " + EXTRAID_LIST_MAX_LENGTH);
+        }
+        if (extraIDs.size() == 0) {
+            return "";
+        }
+        return gson.toJson(extraIDs);
+    }
+
+    public ArrayList<Long> getExtraIdLong() {
+        return extraIdLong;
+    }
+
+    public void setExtraIDLong(Long... extraIDLong) {
+        this.extraIdLong = new ArrayList<Long>();
+        Collections.addAll(this.extraIdLong, extraIDLong);
+    }
+
+    /**
+     * add extra IDLong.
+     * @param extraIDLong -
+     */
+    public void addExtraIDLong(Long... extraIDLong) {
+        if (this.extraIdLong == null) {
+            this.extraIdLong = new ArrayList<Long>();
+        }
+        Collections.addAll(this.extraIdLong, extraIDLong);
+    }
+
+    public ArrayList<String> getExtraIdString() {
+        return extraIdString;
+    }
+
+    public void setExtraIdString(String... extraIdString) {
+        this.extraIdString = new ArrayList<String>();
+        Collections.addAll(this.extraIdString, extraIdString);
+    }
+
+    /**
+     * add extra IDString.
+     * @param extraIdString -
+     */
+    public void addExtraIdString(String... extraIdString) {
+        if (this.extraIdString == null) {
+            this.extraIdString = new ArrayList<String>();
+        }
+        Collections.addAll(this.extraIdString, extraIdString);
+    }
+
     /**
      * get common params map.
      *
@@ -428,6 +602,12 @@ public class Transaction {
         }
         if (!Utils.isBlank(extra)) {
             map.put("extra", extra);
+        }
+        if (this.extraIdLong != null && this.extraIdLong.size() != 0) {
+            map.put("extraIdInt64", this.extraIdLong);
+        }
+        if (this.extraIdString != null && this.extraIdString.size() != 0) {
+            map.put("extraIdString", this.extraIdString);
         }
         map.put("simulate", simulate);
         map.put("signature", signature);
@@ -451,34 +631,62 @@ public class Transaction {
      * @return transaction struct
      */
     public static Transaction deSerialize(String txJson) {
-        Type type = new TypeToken<HashMap<String, String>>() {
-        }.getType();
-        Map<String, String> txMap = gson.fromJson(txJson, type);
-        Transaction transaction = new Transaction();
-        transaction.setFrom(txMap.get("from"));
-        if (txMap.containsKey("to")) {
-            transaction.setTo(txMap.get("to"));
-        } else {
-            transaction.setTo("0x0");
-        }
-        transaction.setTimestamp(Long.parseLong(txMap.get("timestamp")));
-        transaction.setNonce(Long.parseLong(txMap.get("nonce")));
-        transaction.setOpCode(Integer.parseInt(txMap.get("opcode")));
-        if (txMap.containsKey("payload")) {
-            transaction.setPayload(txMap.get("payload"));
-        } else {
-            transaction.setValue(Long.parseLong(txMap.get("value")));
-        }
-        if (txMap.containsKey("extra")) {
-            transaction.setExtra(txMap.get("extra"));
-        } else {
-            transaction.setExtra("");
-        }
-        transaction.setSimulate(Boolean.parseBoolean(txMap.get("simulate")));
-        transaction.setSignature(txMap.get("signature"));
-        transaction.setVmType(VMType.valueOf(txMap.get("type")));
+        return gson.fromJson(txJson,Transaction.class);
+    }
 
-        return transaction;
+    public static class TxDeserializer implements JsonDeserializer<Transaction> {
+        /**
+         * deserialize transaction in gson.
+         *
+         * @param json marshal string
+         * @param arg1 type
+         * @param arg2 JsonDeserializationContext
+         * @return transaction struct
+         * @throws JsonParseException json parse exception
+         */
+        @Override
+        public Transaction deserialize(JsonElement json, Type arg1,
+                                       JsonDeserializationContext arg2) throws JsonParseException {
+
+            Transaction transaction = new Transaction();
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            transaction.setFrom(jsonObject.get("from").getAsString());
+            if (jsonObject.has("to")) {
+                transaction.setTo(jsonObject.get("to").getAsString());
+            } else {
+                transaction.setTo("0x0");
+            }
+            transaction.setTimestamp(jsonObject.get("timestamp").getAsLong());
+            transaction.setNonce(jsonObject.get("nonce").getAsLong());
+            transaction.setOpCode(jsonObject.get("opcode").getAsInt());
+            if (jsonObject.has("payload")) {
+                transaction.setPayload(jsonObject.get("payload").getAsString());
+            } else {
+                transaction.setValue(jsonObject.get("value").getAsLong());
+            }
+            if (jsonObject.has("extra")) {
+                transaction.setExtra(jsonObject.get("extra").getAsString());
+            } else {
+                transaction.setExtra("");
+            }
+            if (jsonObject.has("extraIdInt64")) {
+                JsonArray extraIDLongArray = jsonObject.get("extraIdInt64").getAsJsonArray();
+                for (JsonElement jsonElement : extraIDLongArray) {
+                    transaction.addExtraIDLong(jsonElement.getAsLong());
+                }
+            }
+            if (jsonObject.has("extraIdString")) {
+                JsonArray extraIDStringArray = jsonObject.get("extraIdString").getAsJsonArray();
+                for (JsonElement jsonElement : extraIDStringArray) {
+                    transaction.addExtraIdString(jsonElement.getAsString());
+                }
+            }
+            transaction.setSimulate(jsonObject.get("simulate").getAsBoolean());
+            transaction.setSignature(jsonObject.get("signature").getAsString());
+            transaction.setVmType(VMType.valueOf(jsonObject.get("type").getAsString()));
+            return transaction;
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.block.BlockAvgTimeResponse;
 import cn.hyperchain.sdk.response.block.BlockCountResponse;
+import cn.hyperchain.sdk.response.block.BlockLimitResponse;
 import cn.hyperchain.sdk.response.block.BlockNumberResponse;
 import cn.hyperchain.sdk.response.block.BlockResponse;
 
@@ -28,16 +29,19 @@ public interface BlockService {
     /**
      * @see BlockService#getBlocks(String, String, boolean, int...)
      */
+    @Deprecated
     Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, int... nodeIds);
 
     /**
      * @see BlockService#getBlocks(String, String, boolean, int...)
      */
+    @Deprecated
     Request<BlockResponse> getBlocks(String from, String to, int... nodeIds);
 
     /**
      * @see BlockService#getBlocks(String, String, boolean, int...)
      */
+    @Deprecated
     Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, boolean isPlain, int... nodeIds);
 
     /**
@@ -50,7 +54,26 @@ public interface BlockService {
      * @param nodeIds specific ids
      * @return {@link Request} of {@link BlockResponse}
      */
+    @Deprecated
     Request<BlockResponse> getBlocks(String from, String to, boolean isPlain, int... nodeIds);
+
+    /**
+     * @see BlockService#getBlocksWithLimit(String, String, int, boolean, int...)
+     */
+    Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, boolean isPlain, int... nodeIds);
+
+    /**
+     * query the block of the specified block interval with limit.
+     *
+     * @param from    start block number
+     * @param to      end block number
+     * @param isPlain default false, indicating that the returned block includes transaction information within the block.
+     *                *                If specified, the returned block does not include transactions within the block
+     * @param size    the count of blocks you want to query, it must not more than 5000
+     * @param nodeIds specific ids
+     * @return {@link Request} of {@link BlockLimitResponse}
+     */
+    Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, int size, boolean isPlain, int... nodeIds);
 
     /**
      * @see BlockService#getBlockByHash(String, boolean, int...)

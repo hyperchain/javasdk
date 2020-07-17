@@ -31,5 +31,10 @@ release v0.0.9
 release v0.1.0
     1. add transfer vmType
     2. fix hvm tx calculate txHash error
-release v0.1.1
-    1. add bvm vmType
+    3. add bvm vmType
+
+release v1.0.0
+    1. support flato signature
+release v1.0.1
+    1. add transfer vmtype
+    2. add extraID

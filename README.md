@@ -28,6 +28,12 @@ Gradle
 compile group: 'cn.hyperchain', name: 'litesdk', version: '0.1.0'
 ```
 
+|  platform version   | sdk version  |
+|  ----  | ----  |
+| hyperchain  | v0.1.0 |
+| solo 2.0  | v1.0.0 |
+| flato 0.0.6 | v1.0.1 |
+
 ### Usage
 
 #### 1. build provider manager

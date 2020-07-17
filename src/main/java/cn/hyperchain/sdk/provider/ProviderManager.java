@@ -11,6 +11,7 @@ import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
 import cn.hyperchain.sdk.response.TCertResponse;
+import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
@@ -189,7 +190,13 @@ public class ProviderManager {
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         Map<String, String> headers = new HashMap<>();
         if (this.tCertPool != null) {
-            if (this.isCFCA) {
+            boolean f = this.isCFCA;
+            // todo may different txs have different version
+            if (TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion20)) {
+                // is flato
+                f = true;
+            }
+            if (f) {
                 headers.put("tcert", this.tCertPool.getSdkCert());
                 headers.put("signature", this.tCertPool.getSdkCertKeyPair().signData(bodyBytes));
             } else {
