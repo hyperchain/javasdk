@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.exception;
 
 public enum RequestExceptionCode {
     PARAM_ERROR(-4000, "request params error"),
+    REQUEST_TYPE_ERROR(-9994, "httpProvider is not adapter request type"),
     REQUEST_ERROR(-9996, "request fail, request param error"),
     POLLING_TIME_OUT(-9998, "polling get receipt error"),
     NETWORK_PROBLEM(-9999, "network problem, request failed"),

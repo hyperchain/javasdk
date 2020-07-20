@@ -47,6 +47,8 @@ public class TxResponse extends Response {
         private String blockTimestamp;
         @Expose
         private String blockWriteTime;
+        @Expose
+        private ArrayList<Object> extraId;
 
         public String getBlockNumber() {
             return blockNumber;
@@ -112,6 +114,10 @@ public class TxResponse extends Response {
             return blockWriteTime;
         }
 
+        public ArrayList<Object> getExtraId() {
+            return extraId;
+        }
+
         @Override
         public String toString() {
             return "Transaction{" +
@@ -131,6 +137,7 @@ public class TxResponse extends Response {
                     ", signature='" + signature + '\'' +
                     ", blockTimestamp='" + blockTimestamp + '\'' +
                     ", blockWriteTime='" + blockWriteTime + '\'' +
+                    ", extraId='" + gson.toJson(extraId) + '\'' +
                     '}';
         }
     }

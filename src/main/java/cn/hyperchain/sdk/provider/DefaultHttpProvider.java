@@ -17,29 +17,29 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class DefaultHttpProvider implements HttpProvider {
-    private static final String HTTP = "http://";
-    private static final String HTTPS = "https://";
+    protected static final String HTTP = "http://";
+    protected static final String HTTPS = "https://";
 
-    private String url;
-    private volatile PStatus status;
-    private String httpPrefix;
+    protected String url;
+    protected volatile PStatus status;
+    protected String httpPrefix;
 
-    private DefaultHttpProvider() {
+    protected DefaultHttpProvider() {
     }
 
     private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
     //media type
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    protected static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    private static Request.Builder getBuilderHead() {
+    protected static Request.Builder getBuilderHead() {
         return new Request.Builder().header("User-Agent", "Mozilla/5.0");
     }
 
-    private OkHttpClient httpClient;
+    protected OkHttpClient httpClient;
 
     public static class Builder {
-        private DefaultHttpProvider defaultHttpProvider;
-        private OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        protected DefaultHttpProvider defaultHttpProvider;
+        protected OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         /**
          * create http provider builder.
@@ -50,6 +50,37 @@ public class DefaultHttpProvider implements HttpProvider {
                     .connectTimeout(20, TimeUnit.SECONDS);
             defaultHttpProvider = new DefaultHttpProvider();
             defaultHttpProvider.httpPrefix = HTTP;
+        }
+
+        /**
+         * create http provider builder.
+         *
+         * @param readTimeout readTimeout
+         * @param writeTimeout writeTimeout
+         * @param connectTimeout connectTimeout
+         */
+        public Builder(int readTimeout, int writeTimeout, int connectTimeout) {
+            builder.readTimeout(readTimeout, TimeUnit.SECONDS)
+                    .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                    .connectTimeout(connectTimeout, TimeUnit.SECONDS);
+            defaultHttpProvider = new DefaultHttpProvider();
+            defaultHttpProvider.httpPrefix = HTTP;
+        }
+
+        /**
+         * provide constructor for subclass.
+         *
+         * @param readTimeout readTimeout
+         * @param writeTimeout writeTimeout
+         * @param connectTimeout connectTimeout
+         * @param defaultHttpProvider defaultHttpProvider instance
+         */
+        protected Builder(int readTimeout, int writeTimeout, int connectTimeout, DefaultHttpProvider defaultHttpProvider) {
+            builder.readTimeout(readTimeout, TimeUnit.SECONDS)
+                    .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                    .connectTimeout(connectTimeout, TimeUnit.SECONDS);
+            this.defaultHttpProvider = defaultHttpProvider;
+            this.defaultHttpProvider.httpPrefix = HTTP;
         }
 
         /**
@@ -89,7 +120,9 @@ public class DefaultHttpProvider implements HttpProvider {
     }
 
     @Override
-    public String post(String body, Map<String, String> headers) throws RequestException {
+    public String post(cn.hyperchain.sdk.request.Request rawRequest) throws RequestException {
+        Map<String, String> headers = rawRequest.getHeaders();
+        String body = rawRequest.requestBody();
         RequestBody requestBody = RequestBody.create(JSON, body);
         Headers.Builder headerBuilder = new Headers.Builder();
         for (Map.Entry<String, String> entry : headers.entrySet()) {

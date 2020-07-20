@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
+import cn.hyperchain.sdk.provider.FileMgrHttpProvider;
 import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -84,9 +85,42 @@ public class Common {
 //                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
                     .build();
 
+            tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
+            tls_peer_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_cert);
+            tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
+            FileMgrHttpProvider fileMgrHttpProvider1 = new FileMgrHttpProvider.Builder()
+                    .setUrl(node1)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+                    .build();
+
+            tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
+            tls_peer_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_cert);
+            tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
+            FileMgrHttpProvider fileMgrHttpProvider2 = new FileMgrHttpProvider.Builder()
+                    .setUrl(node2)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+                    .build();
+
+            tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
+            tls_peer_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_cert);
+            tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
+            FileMgrHttpProvider fileMgrHttpProvider3 = new FileMgrHttpProvider.Builder()
+                    .setUrl(node3)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+                    .build();
+
+            tlsca_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tlsca);
+            tls_peer_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_cert);
+            tls_peer_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(tls_peer_priv);
+            FileMgrHttpProvider fileMgrHttpProvider4 = new FileMgrHttpProvider.Builder()
+                    .setUrl(node4)
+//                    .https(tlsca_is, tls_peer_cert_is, tls_peer_priv_is)
+                    .build();
+
             providerManager = new ProviderManager.Builder()
                     .namespace("global")
                     .providers(httpProvider1, httpProvider2, httpProvider3, httpProvider4)
+                    .fileMgrHttpProviders(fileMgrHttpProvider1, fileMgrHttpProvider2, fileMgrHttpProvider3, fileMgrHttpProvider4)
 //                    .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
                     .build();
 

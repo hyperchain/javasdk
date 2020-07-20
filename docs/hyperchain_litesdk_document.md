@@ -106,13 +106,21 @@ HVM 合约文档链接见Hyperchain介绍文档。
 ```java
 public static final String node1 = "localhost:8081";
 
+// 方式1
 HttpProvider httpProvider = new DefaultHttpProvider.Builder()
+                .setUrl(node1)
+                .https(tlsca, tls_peer_cert, tls_peer_priv)
+                .build();
+
+// 方式2，自定义超时时间
+HttpProvider httpProvider = new DefaultHttpProvider.Builder(10, 10, 10)
                 .setUrl(node1)
                 .https(tlsca, tls_peer_cert, tls_peer_priv)
                 .build();
 ```
 
 
+* `Builder(int readTimeout, int writeTimeout, int connectTimeout)`自定义**https协议**的读取超时时间、写超时时间和连接超时时间，单位为s。
 * `setUrl()`可以设置连接的节点**URL**（格式为**ip+jsonRPC端口**）;
 * `https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
 
@@ -1483,15 +1491,15 @@ Request<ArchiveResponse> pending(int... nodeIds);
 
 当使用**LiteSDK**编译solidity合约时，由于java和solidity本身类型的不兼容，所以在调用solidity方法传参数的时候需要对java类型进行相应的编码解码，LiteSDK内部的`Abi`类，**与solidity的abi文件对应，用来提供solidity合约的函数入参、返回值等信息**，方便我们对solidity类型和java类型做转换，目前Litesdk支持的对应类型如下：
 
-| JAVA              | SOLIDITY                         |
-| ----------------- | -------------------------------- |
-| `boolean/Boolean` | `bool`                           |
+| JAVA              | SOLIDITY                       |
+| ----------------- | ------------------------------ |
+| `boolean/Boolean` | `bool`                         |
 | `BigInteger`      | `int、int8、int16……int256`       |
 | `BigInteger`      | `uint、uint8、uint16……uint256`   |
-| `String`          | `string`                         |
+| `String`          | `string`                       |
 | `byte[]/Byte[]`   | `bytes、bytes1、bytes2……bytes32` |
-| `string`          | `address`                        |
-| `Array`/`List`    | `array`                          |
+| `string`          | `address`                      |
+| `Array`/`List`    | `array`                        |
 
 #### 编码
 
@@ -1582,37 +1590,39 @@ InvokeDirectlyParams.params.build();
 
 ### 附录C 平台错误码和对应原因
 
-| **code** | **含义**                                                   |
-| -------- | ---------------------------------------------------------- |
-| 0        | 请求成功                                                   |
-| -32700   | 服务端接收到无效的json。该错误发送于服务器尝试解析json文本 |
-| -32600   | 无效的请求（比如非法的JSON格式）                           |
-| -32601   | 方法不存在或者无效                                         |
-| -32602   | 无效的方法参数                                             |
-| -32000   | Hyperchain内部错误或者空指针或者节点未安装solidity环境     |
-| -32001   | 查询的数据不存在                                           |
-| -32002   | 余额不足                                                   |
-| -32003   | 签名非法                                                   |
-| -32004   | 合约部署出错                                               |
-| -32005   | 合约调用出错                                               |
-| -32006   | 系统繁忙(平台需要处理交易量达到限制)                       |
-| -32007   | 交易重复                                                   |
-| -32008   | 合约操作权限不够                                           |
-| -32009   | 账户不存在                                                 |
-| -32010   | namespace不存在                                            |
-| -32011   | 账本上无区块产生，查询最新区块的时候可能抛出该错误         |
-| -32012   | 订阅不存在                                                 |
-| -32013   | 数据归档、快照相关错误                                     |
-| -32021   | 过时接口                                                   |
-| -32097   | Hypercli用户令牌无效                                       |
-| -32098   | 请求未带cert或者错误cert导致认证失败                       |
-| -32099   | 请求tcert失败                                              |
-|          | 参数错误(指定节点发送时，指定index错误)                    |
-| -9995    | 请求失败(通常是请求体过长)                                 |
-| -9996    | 请求失败(通常是请求消息错误)                               |
-| -9997    | 异步请求失败                                               |
-| -9998    | 请求超时(轮询结束未获得回执)                               |
-| -9999    | 获取平台响应失败                                           |
+| **code** | **含义**                               |
+| -------- | ------------------------------------ |
+| 0        | 请求成功                                 |
+| -32700   | 服务端接收到无效的json。该错误发送于服务器尝试解析json文本    |
+| -32600   | 无效的请求（比如非法的JSON格式）                   |
+| -32601   | 方法不存在或者无效                            |
+| -32602   | 无效的方法参数                              |
+| -32000   | Hyperchain内部错误或者空指针或者节点未安装solidity环境 |
+| -32001   | 查询的数据不存在                             |
+| -32002   | 余额不足                                 |
+| -32003   | 签名非法                                 |
+| -32004   | 合约部署出错                               |
+| -32005   | 合约调用出错                               |
+| -32006   | 系统繁忙(平台需要处理交易量达到限制)                  |
+| -32007   | 交易重复                                 |
+| -32008   | 合约操作权限不够                             |
+| -32009   | 账户不存在                                |
+| -32010   | namespace不存在                         |
+| -32011   | 账本上无区块产生，查询最新区块的时候可能抛出该错误            |
+| -32012   | 订阅不存在                                |
+| -32013   | 数据归档、快照相关错误                          |
+| -32021   | 过时接口                                 |
+| -32097   | Hypercli用户令牌无效                       |
+| -32098   | 请求未带cert或者错误cert导致认证失败               |
+| -32099   | 请求tcert失败                            |
+|          | 参数错误(指定节点发送时，指定index错误)              |
+| -9993    | 文件下载失败                               |
+| -9994    | FileMgrHttpProvider不支持的request类型请求   |
+| -9995    | 请求失败(通常是请求体过长)                       |
+| -9996    | 请求失败(通常是请求消息错误)                      |
+| -9997    | 异步请求失败                               |
+| -9998    | 请求超时(轮询结束未获得回执)                      |
+| -9999    | 获取平台响应失败                             |
 
 上述为平台api和sdk接口可能返回的状态码的说明，其中-999x的状态码为sdk对平台返回状态码或网络请求结果的封装，简化上层处理逻辑；其余状态码为平台api接口的原生返回结果。
 
