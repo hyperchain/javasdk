@@ -45,6 +45,7 @@ public class Transaction {
     private static final int UPDATE = 1;
     private static final int FREEZE = 2;
     private static final int UNFREEZE = 3;
+    private static final int DESTROY = 5;
 
     private String from;
     private String to;
@@ -213,6 +214,18 @@ public class Transaction {
         public Builder unfreeze(String contractAddress) {
             transaction.setTo(contractAddress);
             transaction.setOpCode(UNFREEZE);
+            return this;
+        }
+
+        /**
+         * destroy contract.
+         *
+         * @param contractAddress contract address in chain
+         * @return {@link Builder}
+         */
+        public Builder destroy(String contractAddress) {
+            transaction.setTo(contractAddress);
+            transaction.setOpCode(DESTROY);
             return this;
         }
 

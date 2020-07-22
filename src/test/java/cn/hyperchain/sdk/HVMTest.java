@@ -19,6 +19,7 @@ import cn.hyperchain.sdk.service.AccountService;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
+import com.sun.xml.internal.ws.policy.AssertionSet;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -98,6 +99,41 @@ public class HVMTest {
         ReceiptResponse receiptResponse4 = contractService.invoke(transaction4).send().polling();
         System.out.println("调用返回(未解码): " + receiptResponse4.getRet());
         System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse4.getRet(), Void.class));
+    }
+
+    @Test
+    public void testHVMDestroy() throws RequestException, IOException {
+        // 1. build provider manager
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
+
+        // 2. build service
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+        // 3. build transaction
+        Account account = accountService.genAccount(Algo.SMRAW);
+        Account backup = account;
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-1.0-SNAPSHOT.jar");
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
+        transaction.sign(accountService.fromAccountJson(account.toJson()));
+        Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
+        Assert.assertTrue(SignerUtil.verifySign(transaction.getNeedHashString(), transaction.getSignature(), account.getPublicKey()));
+        // 4. get request
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        // 5. polling && get result && decode result
+        String contractAddress = receiptResponse.getContractAddress();
+        System.out.println("合约地址: " + contractAddress);
+        System.out.println("部署返回(未解码): " + receiptResponse.getRet());
+        System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
+
+        //contract destroy test
+        Transaction transaction2 = new Transaction.HVMBuilder(backup.getAddress()).destroy(contractAddress).build();
+        transaction2.sign(backup);
+        Assert.assertTrue(backup.verify(transaction2.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction2.getSignature())));
+        Assert.assertTrue(SignerUtil.verifySign(transaction2.getNeedHashString(), transaction2.getSignature(), backup.getPublicKey()));
+        ReceiptResponse receiptResponse2 = contractService.maintain(transaction2).send().polling();
+        System.out.println("调用返回(未解码): " + receiptResponse2.getRet());
+        System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse2.getRet(), String.class));
     }
 
     @Test
