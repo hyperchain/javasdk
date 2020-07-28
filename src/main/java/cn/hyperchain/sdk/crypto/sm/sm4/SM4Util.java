@@ -65,7 +65,7 @@ public class SM4Util {
             Cipher cipher = generateCbcCipher(ALGORITHM_NAME_CBC_PADDING, Cipher.DECRYPT_MODE, getSM4Password(key), deIV);
             return cipher.doFinal(enData);
         } catch (Exception e) {
-            return null;
+            return ByteUtil.EMPTY_BYTE_ARRAY;
         }
     }
 

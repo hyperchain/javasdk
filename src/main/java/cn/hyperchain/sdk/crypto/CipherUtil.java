@@ -1,7 +1,9 @@
 package cn.hyperchain.sdk.crypto;
 
+import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Utils;
+import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
@@ -15,6 +17,7 @@ import java.security.SecureRandom;
 import java.security.Security;
 
 public class CipherUtil {
+    protected final static Logger logger = Logger.getLogger(Account.class);
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -22,14 +25,17 @@ public class CipherUtil {
 
     /**
      * encrypt data use DES algorithm.
-     * @param content need to be encrypted data
+     *
+     * @param content  need to be encrypted data
      * @param password password
      * @return encrypted data
      */
     @Deprecated
     public static byte[] encryptDES(byte[] content, String password) {
         if (password.length() > 16) {
-            throw new RuntimeException();
+            throw new RuntimeException("the length of password is more than 16");
+        } else if (password.length() < 16) {
+            logger.warn("the length of password is less than 16");
         }
         if (password.length() % 8 != 0) {
             StringBuilder sb = new StringBuilder(password);
@@ -53,6 +59,7 @@ public class CipherUtil {
 
     /**
      * decrypt data by DES algorithm.
+     *
      * @param content  origin data
      * @param password password
      * @return result bytes
@@ -78,13 +85,14 @@ public class CipherUtil {
             cipher.init(Cipher.DECRYPT_MODE, securekey, random);
             return cipher.doFinal(content);
         } catch (Exception exception) {
-            return null;
+            return ByteUtil.EMPTY_BYTE_ARRAY;
         }
     }
 
     /**
      * encrypt data by AES algorithm.
-     * @param content need to be encrypted data
+     *
+     * @param content  need to be encrypted data
      * @param password password 128/192/256 bits | 16/24/32 bytes
      * @return result bytes
      */
@@ -102,7 +110,8 @@ public class CipherUtil {
 
     /**
      * decrypt data by AES algorithm.
-     * @param content origin data
+     *
+     * @param content  origin data
      * @param password password 128/192/256 bits | 16/24/32 bytes
      * @return result bytes
      */
@@ -120,7 +129,8 @@ public class CipherUtil {
 
     /**
      * encrypt data by 3DES algorithm.
-     * @param content need to be encrypted data
+     *
+     * @param content  need to be encrypted data
      * @param password password 24 bytes
      * @return result bytes
      */
@@ -138,7 +148,8 @@ public class CipherUtil {
 
     /**
      * decrypted data by 3DES algorithm.
-     * @param content origin data
+     *
+     * @param content  origin data
      * @param password password 24 bytes
      * @return result bytes
      */
@@ -172,7 +183,7 @@ public class CipherUtil {
 
     private static String append(String origin, int size) {
         StringBuilder sb = new StringBuilder(origin);
-        for (int i = origin.length(); i < size; i ++) {
+        for (int i = origin.length(); i < size; i++) {
             sb.append("@");
         }
         return sb.toString();
