@@ -16,9 +16,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 import org.apache.log4j.Logger;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 
 import java.math.BigInteger;
 
@@ -73,12 +75,19 @@ public abstract class Account {
         Version version = Version.getVersion(jsonObject.get("version").getAsString());
         Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
         byte[] privateKey = decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password);
+        if (privateKey.length == 0) {
+            throw new AccountException("password error");
+        }
         if (algo.isSM()) {
             ECPoint ecPoint = SM2Util.CURVE.decodePoint(ByteUtil.fromHex(publicKeyHex));
             ECPublicKeyParameters publicKeyParameters = new ECPublicKeyParameters(ecPoint, SM2Util.DOMAIN_PARAMS);
             ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, privateKey), SM2Util.DOMAIN_PARAMS);
+
+            FixedPointCombMultiplier fixedPointCombMultiplier = new FixedPointCombMultiplier();
+            ECPoint ecPointPublicKeyFromPrivateKey = fixedPointCombMultiplier.multiply(privateKeyParameters.getParameters().getG(), privateKeyParameters.getD());
+            ECPublicKeyParameters publicKeyParametersFromPrivateKey = new ECPublicKeyParameters(ecPointPublicKeyFromPrivateKey, privateKeyParameters.getParameters());
             AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(publicKeyParameters, privateKeyParameters);
-            if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParameters.getQ().getEncoded(false))))) {
+            if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParametersFromPrivateKey.getQ().getEncoded(false))))) {
                 throw new AccountException("account address is not matching with private key");
             }
             return new SMAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);

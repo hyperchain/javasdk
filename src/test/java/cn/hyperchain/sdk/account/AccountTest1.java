@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.account;
 
+import cn.hyperchain.sdk.exception.AccountException;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.service.AccountService;
 import cn.hyperchain.sdk.service.AccountServiceTest;
@@ -44,4 +45,15 @@ public class AccountTest1 {
         Common.deployEVM(account2);
     }
 
+    @Test
+    public void testFromAccountJson() {
+        Account account1 = accountService.genAccount(Algo.EC3DES, "1234567891234567");
+        String accountJson1 = account1.toJson();
+        try {
+            Account account = accountService.fromAccountJson(accountJson1, "1234523452");
+            Assert.assertEquals(account.toString(), account1.toString());
+        } catch (AccountException e) {
+            System.out.println(e.toString());
+        }
+    }
 }
