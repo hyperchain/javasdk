@@ -47,6 +47,7 @@ public abstract class Request<K extends Response> {
 
     /**
      * default send by provider manager.
+     *
      * @return {@link Response}
      * @throws RequestException -
      */

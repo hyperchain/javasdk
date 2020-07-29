@@ -8,6 +8,7 @@ import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
@@ -16,6 +17,7 @@ import cn.hyperchain.sdk.response.tx.TxLimitResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -305,10 +307,12 @@ public class TxServiceTest {
     }
 
     @Test
-    @Ignore
     public void testGetBatchReceipt() throws RequestException {
-        ReceiptResponse receiptResponse = txService.getBatchReceipt(txHashes).send();
-        System.out.println(receiptResponse);
+        ReceiptListResponse receiptListResponse = txService.getBatchReceipt(txHashes).send();
+        ArrayList<ReceiptResponse.Receipt> receipts = receiptListResponse.getResult();
+        for (int i = 0; i < receipts.size(); i++) {
+            Assert.assertTrue(txHashes.contains(receipts.get(i).getTxHash()));
+        }
     }
 
     @Test

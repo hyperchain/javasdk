@@ -862,7 +862,7 @@ Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeId
 
 
 
-### 4.18 查询批量回执by hash list(getBatchReceip)
+### 4.18 查询批量回执by hash list(getBatchReceipt)
 
 参数：
 
@@ -870,7 +870,7 @@ Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeId
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-Request<ReceiptResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
+Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
 ```
 
 

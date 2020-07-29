@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.TxHashesResponse;
@@ -317,7 +318,7 @@ public interface TxService {
      */
     Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeIds);
 
-    Request<ReceiptResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
+    Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
 
     /**
      * query the count of transactions with a given period.
