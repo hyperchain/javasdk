@@ -17,7 +17,7 @@ import java.security.SecureRandom;
 import java.security.Security;
 
 public class CipherUtil {
-    protected final static Logger logger = Logger.getLogger(Account.class);
+    protected static final Logger logger = Logger.getLogger(Account.class);
 
     static {
         Security.addProvider(new BouncyCastleProvider());

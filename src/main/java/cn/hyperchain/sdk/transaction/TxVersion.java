@@ -25,7 +25,7 @@ public enum TxVersion {
         return this.intVersion >= txV.intVersion;
     }
 
-    public static volatile TxVersion GLOBAL_TX_VERSION = TxVersion21;
+    public static volatile TxVersion GLOBAL_TX_VERSION = TxVersion22;
 
     public static void setGlobalTxVersion(TxVersion txV) {
         TxVersion.GLOBAL_TX_VERSION = txV;

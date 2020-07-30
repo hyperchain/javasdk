@@ -388,7 +388,6 @@ public class TxServiceImpl implements TxService {
     }
 
     @Override
-    // TODO not support array type now.
     public Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds) {
         HashMap<String, Object> params = new HashMap<>();
         params.put("hashes", txHashList);
