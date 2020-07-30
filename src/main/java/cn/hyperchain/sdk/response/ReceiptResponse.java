@@ -44,6 +44,10 @@ public class ReceiptResponse extends Response {
                     + ", version='" + version + '\''
                     + '}';
         }
+
+        public String getTxHash() {
+            return txHash;
+        }
     }
 
     @Expose

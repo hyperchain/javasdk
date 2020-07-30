@@ -82,6 +82,10 @@
      * [9.10 恢复所有归档数据](#910-恢复所有归档数据)
      * [9.11 查询归档数据状态](#911-查询归档数据状态)
      * [9.12 查询所有待完成的快照请求](#912-查询所有待完成的快照请求)
+  * [第十章. 接口响应类型结构体介绍](#第十章-接口响应类型结构体介绍)
+     * [10.1 TxService接口对应的响应类型](#101-TxService接口对应的响应类型)
+     * [10.2 BlockService接口对应的响应类型](#102-BlockService接口对应的响应类型)
+     * [10.3 ArchiveService接口对应的响应类型](#103-ArchiveService接口对应的响应类型)
 
 ## 第一章. 前言 
 
@@ -475,76 +479,15 @@ ReceiptResponse receiptResponse = contractRequest.send().polling();
 
 **注：该章的Transaction与第三章的交易体概念不同，该章的接口主要主要用于查询之前在链上的执行信息，将返回的信息封装为Transaction结构体。**
 
-TxService接口繁多，返回的执行结果根据情况封装共对应四种响应：
+TxService接口繁多，返回的执行结果根据情况封装共对应五种响应：
 
 - TxResponse
 - TxCountWithTSResponse
 - TxCountResponse
 - TxAvgTimeResponse
+- ReceiptListResponse
 
-分别对应的结构如下：
-
-**TxResponse**
-
-通过`result`接收返回结果，`result`实际结构是内部类`Transaction`，可通过`getResult()`方法得到。
-
-```java
-public class TxResponse extends Response {
-    public class Transaction {
-        private String version;
-        private String hash;
-        private String blockNumber;
-        private String blockHash;
-        private String txIndex;
-        private String from;
-        private String to;
-        private String amount;
-        private String timestamp;
-        private String nonce;
-        private String extra;
-        private String executeTime;
-        private String payload;
-        private String signature;
-        private String blockTimestamp;
-        private String blockWriteTime;
-    }
-    private JsonElement result;
-}
-```
-
-**TxCountWithTSResponse**
-
-通过`result`接收返回结果，`result`实际类型是内部类`TxCount`，可通过`getResult()`方法得到。
-
-```java
-public class TxCountWithTSResponse extends Response {
-    public class TxCount {
-        private String count;
-        private long timestamp;
-    }
-    private TxCount result;
-}
-```
-
-**TxCountResponse**
-
-通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
-
-```java
-public class TxCountResponse extends Response {
-    private String result;
-}
-```
-
-**TxAvgTimeResponse**
-
-通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
-
-```java
-public class TxAvgTimeResponse extends Response {
-    private String result;
-}
-```
+详细结构请参考第十章
 
 
 
@@ -870,7 +813,7 @@ Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeId
 
 
 
-### 4.18 查询批量回执by hash list(getBatchReceip)
+### 4.18 查询批量回执by hash list(getBatchReceipt)
 
 参数：
 
@@ -878,7 +821,7 @@ Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeId
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-Request<ReceiptResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
+Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
 ```
 
 
@@ -908,63 +851,8 @@ BlockService接口与TxService相似，只是获取的对象是区块信息。�
 - BlockAvgTimeResponse
 - BlockCountResponse
 
-分别对应的结构如下。
+详细结构请参考第十章。
 
-**BlockResponse**
-
-通过`result`接收返回结果，`result`实际类型是内部类`Block`，可通过`getResult()`方法得到。
-
-```java
-public class BlockResponse extends Response {
-    public class Block {
-        private String version;
-        private String number;
-        private String hash;
-        private String parentHash;
-        private String writeTime;
-        private String avgTime;
-        private String txcounts;
-        private String merkleRoot;
-    }
-    private JsonElement result;
-}
-```
-
-**BlockNumberResponse** 
-
-通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
-
-```java
-public class BlockNumberResponse extends Response {
-    private String result;
-}
-```
-
-**BlockAvgTimeResponse**
-
-通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
-
-```java
-public class BlockAvgTimeResponse extends Response {
-    @Expose
-    private String result;
-}
-```
-
-**BlockCountResponse**
-
-通过`result`接收返回结果，`result`实际类型是内部类`BlockCount`，可通过`getResult()`方法得到。
-
-```java
-public class BlockCountResponse extends Response {
-    public class BlockCount {
-        private String sumOfBlocks;
-        private String startBlock;
-        private String endBlock;
-    }
-    private BlockCount result;
-}
-```
 
 ### 5.1 获取最新区块(getLastestBlock)
 
@@ -1303,46 +1191,9 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 - ArchiveFilterIdResponse
 - ArchiveBoolResponse
 
-分别对应的结构如下：
+详细结构请参考第十章。
 
-**ArchiveResponse**
 
-通过`result`接收返回结果，`result`实际结构是内部类`Archive`，可通过`getResult()`方法得到。
-
-```java
-public class ArchiveResponse extends Response {
-    public class Archive {
-        private String height;
-        private String hash;
-        private String filterId;
-        private String merkleRoot;
-        private String date;
-        private String namespace;
-    }
-
-    private JsonElement result;
-}
-```
-
-**ArchiveFilterIdResponse**
-
-通过`result`接收返回结果，`result`实际结构是`String`，可通过`getResult()`方法得到。
-
-```java
-public class ArchiveFilterIdResponse extends Response {
-    private String result;
-}
-```
-
-**ArchiveBoolResponse**
-
-通过`result`接收返回结果，`result`实际结构是`Boolean`，可通过`getResult()`方法得到。
-
-```java
-public class ArchiveBoolResponse extends Response {
-    private Boolean result;
-}
-```
 
 ### 9.1 制作快照
 
@@ -1479,6 +1330,218 @@ Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
 
 ```java
 Request<ArchiveResponse> pending(int... nodeIds);
+```
+
+
+
+## 第十章. 接口响应类型结构体介绍
+
+### 10.1 TxService接口对应的响应类型
+
+- TxResponse
+- TxCountWithTSResponse
+- TxCountResponse
+- TxAvgTimeResponse
+- ReceiptListResponse
+
+分别对应的结构如下：
+
+**TxResponse**
+
+通过`result`接收返回结果，`result`实际结构是内部类`Transaction`，可通过`getResult()`方法得到。
+
+```java
+public class TxResponse extends Response {
+    public class Transaction {
+        private String version;
+        private String hash;
+        private String blockNumber;
+        private String blockHash;
+        private String txIndex;
+        private String from;
+        private String to;
+        private String amount;
+        private String timestamp;
+        private String nonce;
+        private String extra;
+        private String executeTime;
+        private String payload;
+        private String signature;
+        private String blockTimestamp;
+        private String blockWriteTime;
+    }
+    private JsonElement result;
+}
+```
+
+**TxCountWithTSResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`TxCount`，可通过`getResult()`方法得到。
+
+```java
+public class TxCountWithTSResponse extends Response {
+    public class TxCount {
+        private String count;
+        private long timestamp;
+    }
+    private TxCount result;
+}
+```
+
+**TxCountResponse**
+
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
+
+```java
+public class TxCountResponse extends Response {
+    private String result;
+}
+```
+
+**TxAvgTimeResponse**
+
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
+
+```java
+public class TxAvgTimeResponse extends Response {
+    private String result;
+}
+```
+
+**ReceiptListResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`Receipt`，可通过`getResult()`方法得到。
+
+```java
+public class ReceiptListResponse extends Response {
+    private ArrayList<ReceiptResponse.Receipt> result;
+}
+```
+
+`Receipt`结构如下
+
+```java
+public class Receipt {
+        private String contractAddress;
+        private String ret;
+        private String txHash;
+        private EventLog[] log;
+        private String vmType;
+        private long gasUsed;
+        private String version;
+}
+```
+
+### 10.2 BlockService接口对应的响应类型
+
+- BlockResponse
+- BlockNumberResponse 
+- BlockAvgTimeResponse
+- BlockCountResponse
+
+分别对应的结构如下。
+
+**BlockResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`Block`，可通过`getResult()`方法得到。
+
+```java
+public class BlockResponse extends Response {
+    public class Block {
+        private String version;
+        private String number;
+        private String hash;
+        private String parentHash;
+        private String writeTime;
+        private String avgTime;
+        private String txcounts;
+        private String merkleRoot;
+    }
+    private JsonElement result;
+}
+```
+
+**BlockNumberResponse** 
+
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
+
+```java
+public class BlockNumberResponse extends Response {
+    private String result;
+}
+```
+
+**BlockAvgTimeResponse**
+
+通过`result`接收返回结果，`result`实际类型是`String`，可通过`getResult()`方法得到。
+
+```java
+public class BlockAvgTimeResponse extends Response {
+    @Expose
+    private String result;
+}
+```
+
+**BlockCountResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`BlockCount`，可通过`getResult()`方法得到。
+
+```java
+public class BlockCountResponse extends Response {
+    public class BlockCount {
+        private String sumOfBlocks;
+        private String startBlock;
+        private String endBlock;
+    }
+    private BlockCount result;
+}
+```
+
+### 10.3 ArchiveService接口对应的响应类型
+
+- ArchiveResponse
+- ArchiveFilterIdResponse
+- ArchiveBoolResponse
+
+分别对应的结构如下：
+
+**ArchiveResponse**
+
+通过`result`接收返回结果，`result`实际结构是内部类`Archive`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveResponse extends Response {
+    public class Archive {
+        private String height;
+        private String hash;
+        private String filterId;
+        private String merkleRoot;
+        private String date;
+        private String namespace;
+    }
+
+    private JsonElement result;
+}
+```
+
+**ArchiveFilterIdResponse**
+
+通过`result`接收返回结果，`result`实际结构是`String`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveFilterIdResponse extends Response {
+    private String result;
+}
+```
+
+**ArchiveBoolResponse**
+
+通过`result`接收返回结果，`result`实际结构是`Boolean`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveBoolResponse extends Response {
+    private Boolean result;
+}
 ```
 
 

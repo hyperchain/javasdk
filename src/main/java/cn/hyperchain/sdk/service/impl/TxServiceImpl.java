@@ -7,6 +7,7 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.SendBatchTxsRequest;
 import cn.hyperchain.sdk.request.SendTxRequest;
 import cn.hyperchain.sdk.request.TxRequest;
+import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.TxHashesResponse;
@@ -388,11 +389,11 @@ public class TxServiceImpl implements TxService {
 
     @Override
     // TODO not support array type now.
-    public Request<ReceiptResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds) {
+    public Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds) {
         HashMap<String, Object> params = new HashMap<>();
         params.put("hashes", txHashList);
 
-        ReceiptRequest receiptRequest = new ReceiptRequest(TX_PREFIX + "getBatchReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        ReceiptRequest receiptRequest = new ReceiptRequest(TX_PREFIX + "getBatchReceipt", providerManager, ReceiptListResponse.class, nodeIds);
         receiptRequest.addParams(params);
 
         return receiptRequest;
