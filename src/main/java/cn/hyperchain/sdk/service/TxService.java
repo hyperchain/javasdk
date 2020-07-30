@@ -347,5 +347,4 @@ public interface TxService {
      * @return {@link Request} of {@link TxHashesResponse}
      */
     Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds);
-
 }

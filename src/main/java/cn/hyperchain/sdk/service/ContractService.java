@@ -13,6 +13,7 @@ import cn.hyperchain.sdk.transaction.Transaction;
  */
 
 public interface ContractService {
+
     Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds);
 
     Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);

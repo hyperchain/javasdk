@@ -7,6 +7,7 @@ import cn.hyperchain.sdk.crypto.cert.CertKeyPair;
 import cn.hyperchain.sdk.exception.AllNodesBadException;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import cn.hyperchain.sdk.request.FileTransferRequest;
 import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
@@ -30,6 +31,7 @@ public class ProviderManager {
     private String namespace = "global";
     private TCertPool tCertPool;
     private List<HttpProvider> httpProviders;
+    private List<HttpProvider> fileMgrHttpProviders;
     private boolean isCFCA;
     private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -56,6 +58,20 @@ public class ProviderManager {
             }
             providerManager.httpProviders = new ArrayList<>(httpProviders.length);
             providerManager.httpProviders.addAll(Arrays.asList(httpProviders));
+            return this;
+        }
+
+        /**
+         * set provider manager fileMgr http providers.
+         * @param fileMgrHttpProviders fileMgr http providers
+         * @return {@link Builder}
+         */
+        public Builder fileMgrHttpProviders(FileMgrHttpProvider... fileMgrHttpProviders) {
+            if (fileMgrHttpProviders == null || fileMgrHttpProviders.length == 0) {
+                throw new IllegalStateException("can't initialize a ProviderManager instance with empty FileMgrHttpProviders");
+            }
+            providerManager.fileMgrHttpProviders = new ArrayList<>(fileMgrHttpProviders.length);
+            providerManager.fileMgrHttpProviders.addAll(Arrays.asList(fileMgrHttpProviders));
             return this;
         }
 
@@ -135,7 +151,7 @@ public class ProviderManager {
         return providerManager;
     }
 
-    private List<HttpProvider> checkIds(int... ids) throws RequestException {
+    private List<HttpProvider> checkIds(List<HttpProvider> httpProviders, int... ids) throws RequestException {
         // use all with null
         if (ids == null || ids.length == 0) {
             return httpProviders;
@@ -160,7 +176,12 @@ public class ProviderManager {
      * @throws RequestException -
      */
     public String send(Request request, int... ids) throws RequestException {
-        List<HttpProvider> hProviders = checkIds(ids);
+        List<HttpProvider> hProviders;
+        if (request instanceof FileTransferRequest) {
+            hProviders = checkIds(fileMgrHttpProviders ,ids);
+        } else {
+            hProviders = checkIds(httpProviders ,ids);
+        }
         int providerSize = hProviders.size();
         int startIndex = Utils.randInt(1, providerSize);
         for (int i = 0; i < providerSize; i ++) {
@@ -186,9 +207,9 @@ public class ProviderManager {
     }
 
     private String sendTo(Request request, HttpProvider provider) throws RequestException {
+        requestCheck(request, provider);
         String body = request.requestBody();
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
-        Map<String, String> headers = new HashMap<>();
         if (this.tCertPool != null) {
             boolean f = this.isCFCA;
             // todo may different txs have different version
@@ -197,21 +218,20 @@ public class ProviderManager {
                 f = true;
             }
             if (f) {
-                headers.put("tcert", this.tCertPool.getSdkCert());
-                headers.put("signature", this.tCertPool.getSdkCertKeyPair().signData(bodyBytes));
+                request.addHeader("tcert", this.tCertPool.getSdkCert());
+                request.addHeader("signature", this.tCertPool.getSdkCertKeyPair().signData(bodyBytes));
             } else {
                 String tCert = this.tCertPool.getTCert(provider.getUrl());
                 if (tCert == null) {
                     tCert = this.getTCert(this.tCertPool.getUniquePubKey(), this.tCertPool.getSdkCertKeyPair(), provider);
                     this.tCertPool.setTCert(provider.getUrl(), tCert);
                 }
-                headers.put("tcert", tCert);
-                headers.put("signature", this.tCertPool.getUniqueKeyPair().signData(bodyBytes));
+                request.addHeader("tcert", tCert);
+                request.addHeader("signature", this.tCertPool.getUniqueKeyPair().signData(bodyBytes));
             }
-            headers.put("msg", ByteUtil.toHex(bodyBytes));
+            request.addHeader("msg", ByteUtil.toHex(bodyBytes));
         }
-
-        return provider.post(body, headers);
+        return provider.post(request);
     }
 
     private String getTCert(String uniquePubKey, CertKeyPair sdkCertKeyPair, HttpProvider provider) throws RequestException {
@@ -222,13 +242,20 @@ public class ProviderManager {
         tCertRequest.addParams(param);
         String body = tCertRequest.requestBody();
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("tcert", sdkCertKeyPair.getPublicKey());
-        headers.put("signature", sdkCertKeyPair.signData(bodyBytes));
-        headers.put("msg", ByteUtil.toHex(bodyBytes));
-        String response = provider.post(body, headers);
+        tCertRequest.addHeader("tcert", sdkCertKeyPair.getPublicKey());
+        tCertRequest.addHeader("signature", sdkCertKeyPair.signData(bodyBytes));
+        tCertRequest.addHeader("msg", ByteUtil.toHex(bodyBytes));
+        String response = provider.post(tCertRequest);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
         return tCertResponse.getTCert();
+    }
+
+    private void requestCheck(Request request, HttpProvider provider) throws RequestException {
+        boolean isFileMgrRequest = request instanceof FileTransferRequest;
+        boolean isFileMgrHttpProvider = provider instanceof FileMgrHttpProvider;
+        if (isFileMgrHttpProvider != isFileMgrRequest) {
+            throw new RequestException(RequestExceptionCode.REQUEST_TYPE_ERROR);
+        }
     }
 
     private void reconnect(final HttpProvider provider) {
