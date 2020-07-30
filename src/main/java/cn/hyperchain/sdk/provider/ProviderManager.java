@@ -12,6 +12,9 @@ import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
 import cn.hyperchain.sdk.response.TCertResponse;
+import cn.hyperchain.sdk.response.tx.TxVersionResponse;
+import cn.hyperchain.sdk.service.ServiceManager;
+import cn.hyperchain.sdk.service.TxService;
 import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -132,6 +135,7 @@ public class ProviderManager {
          * @return {@link ProviderManager}
          */
         public ProviderManager build() {
+            setTxVersion(providerManager);
             return providerManager;
         }
     }
@@ -148,6 +152,7 @@ public class ProviderManager {
         ProviderManager providerManager = new ProviderManager();
         providerManager.httpProviders = new ArrayList<>();
         providerManager.httpProviders.addAll(Arrays.asList(httpProviders));
+        setTxVersion(providerManager);
         return providerManager;
     }
 
@@ -297,5 +302,35 @@ public class ProviderManager {
 
     public boolean isCFCA() {
         return isCFCA;
+    }
+
+    /**
+     * set the global TxVersion.
+     *
+     * @param providerManager specific providerManger
+     */
+    public static void setTxVersion(ProviderManager providerManager) {
+        int nodeNum = providerManager.httpProviders.size();
+        TxService txService = ServiceManager.getTxService(providerManager);
+        try {
+            String txVersionResult = "";
+            int count = 0;
+            for (int i = 1; i <= nodeNum; i++) {
+                TxVersionResponse txVersionResponse = txService.getTxVersion(i).send();
+                String txVersion = txVersionResponse.getTxVersionResult();
+                if (txVersionResult.equals(txVersion)) {
+                    count++;
+                } else {
+                    txVersionResult = txVersion;
+                }
+            }
+            if (count == nodeNum - 1) {
+                TxVersion.setGlobalTxVersion(txVersionResult);
+            } else {
+                logger.warn("the TxVersion of nodes is different, the platform's TxVersion is " + TxVersion.GLOBAL_TX_VERSION);
+            }
+        } catch (RequestException e) {
+            logger.error(e.toString());
+        }
     }
 }

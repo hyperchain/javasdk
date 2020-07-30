@@ -15,6 +15,7 @@ import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxLimitResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
+import cn.hyperchain.sdk.response.tx.TxVersionResponse;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
@@ -368,4 +369,10 @@ public class TxServiceTest {
 
     }
 
+    @Test
+    public void testGetTxVersion() throws RequestException {
+        Request<TxVersionResponse>txVersionResponseRequest = txService.getTxVersion(1);
+        TxVersionResponse txVersionResponse=txVersionResponseRequest.send();
+        System.out.println(txVersionResponse.getTxVersionResult());
+    }
 }

@@ -24,6 +24,7 @@
         * [解冻合约](#解冻合约)
            * [HVM](#hvm-4)
            * [EVM](#evm-4)
+     * [交易体设置TxVersion](#交易体设置TxVersion)
      * [交易体签名](#交易体签名)
      * [创建请求](#创建请求)
      * [发送交易体](#发送交易体)
@@ -47,6 +48,7 @@
      * [4.17 查询批量交易by hash list(getBatchTxByHash)](#417-查询批量交易by-hash-listgetbatchtxbyhash)
      * [4.18 查询批量回执by hash list(getBatchReceip)](#418-查询批量回执by-hash-listgetbatchreceip)
      * [4.19 查询指定时间区间内的交易数量(getTxsCountByTime)](#419-查询指定时间区间内的交易数量gettxscountbytime)
+     * [4.20 查询平台当前的交易版本号(getTxVersion)](#420-查询平台当前的交易版本号getTxVersion)
   * [第五章. BlockService相关接口](#第五章-blockservice相关接口)
      * [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
      * [5.2 查询指定区间的区块by block number(getBlocks)](#52-查询指定区间的区块by-block-numbergetblocks)
@@ -131,7 +133,17 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder(10, 10, 10)
 
 ### 2.2 创建ProviderManager对象
 
-每个节点的连接都需要一个`HttpProvider`，而`ProvideManager`负责集成、管理这些`HttpProvider`，创建`ProvideManager`有两种方式，一种是通过`createManager()`创建，另一种是和`HttpProvider`一样通过**Builder**模式创建。使用前者创建会使用`ProvideManager`的默认配置参数，而如果想定制更多的属性则需要通过后者的方式创建，示例如下：
+每个节点的连接都需要一个`HttpProvider`，而`ProviderManager`负责集成、管理这些`HttpProvider`，创建`ProviderManager`有两种方式，一种是通过`createManager()`创建，另一种是和`HttpProvider`一样通过**Builder**模式创建。使用前者创建会使用`ProvideManager`的默认配置参数，而如果想定制更多的属性则需要通过后者的方式创建，示例如下：
+
+另外，每个节点都有一个对应的TxVersion，可通过`getTxVersion(nodeId)`接口获取对应节点的TxVersion，发送到节点的transaction的TxVersion必须与节点一致才能通过验签。`providerManager`对象在创建时会通过`TxVersion.setGlobalTxVersion`设置全局的TxVersion。`Transaction`对象也可通过`setTxVersion`函数设置单次交易的TxVersion。节点平台与TxVersion对应关系如下：
+
+|  平台使用版本   | TxVersion版本  |
+|  ----  | ----  |
+| hyperchain  | 1.0 |
+| flato 0.0.3-0.0.4  | 2.0 |
+| flato 0.0.5+ | 2.1 |
+| flato 0.7.0 | 2.2 |
+| flato 0.0.8 | 2.3 |
 
 ```java
 // 方式1
@@ -447,6 +459,10 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 ```
 
 创建交易体时需要指定**合约地址**。
+
+### 交易体设置TxVersion
+
+`transaction`对象在创建时，其TxVersion属性值默认为全局的TxVersion，也可通过`setTxVersion`函数来设置交易体的TxVersion属性。
 
 ### 交易体签名
 
@@ -836,6 +852,20 @@ Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int..
 
 ```java
 Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+
+
+### 4.20 查询平台当前的交易版本号(getTxVersion)
+
+getTxVersion接口会在创建ProviderManager对象时调用，并设置全局的TxVersion。
+
+参数：
+
+- nodeId 说明请求哪个节点平台的交易版本号
+
+```java
+Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
 ```
 
 

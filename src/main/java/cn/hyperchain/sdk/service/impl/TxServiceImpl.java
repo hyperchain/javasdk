@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.common.utils.MethodType;
+import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.ReceiptRequest;
 import cn.hyperchain.sdk.request.Request;
@@ -16,6 +17,7 @@ import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxLimitResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
+import cn.hyperchain.sdk.response.tx.TxVersionResponse;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.service.TxService;
@@ -447,5 +449,11 @@ public class TxServiceImpl implements TxService {
         }
         SendBatchTxsRequest batchTxsRequest = new SendBatchTxsRequest(null, providerManager, TxHashesResponse.class, requests, nodeIds);
         return batchTxsRequest;
+    }
+
+    @Override
+    public Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getTransactionsVersion", providerManager, TxVersionResponse.class, nodeId);
+        return txRequest;
     }
 }

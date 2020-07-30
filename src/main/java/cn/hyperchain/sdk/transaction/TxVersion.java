@@ -30,4 +30,37 @@ public enum TxVersion {
     public static void setGlobalTxVersion(TxVersion txV) {
         TxVersion.GLOBAL_TX_VERSION = txV;
     }
+
+    /**
+     * set the global TxVersion.
+     *
+     * @param txVersion the Txversion of nodes
+     */
+    public static void setGlobalTxVersion(String txVersion) {
+        switch (txVersion) {
+            case "1.0":
+                GLOBAL_TX_VERSION = TxVersion10;
+                break;
+            case "2.0":
+                GLOBAL_TX_VERSION = TxVersion20;
+                break;
+            case "2.1":
+                GLOBAL_TX_VERSION = TxVersion21;
+                break;
+            case "2.2":
+                GLOBAL_TX_VERSION = TxVersion22;
+                break;
+            case "2.3":
+                GLOBAL_TX_VERSION = TxVersion23;
+                break;
+            case "2.4":
+                GLOBAL_TX_VERSION = TxVersion24;
+                break;
+            case "2.5":
+                GLOBAL_TX_VERSION = TxVersion25;
+                break;
+            default:
+                break;
+        }
+    }
 }
