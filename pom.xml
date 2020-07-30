@@ -232,33 +232,18 @@
                     </plugin>
                 </plugins>
             </build>
-<!--            <distributionManagement>-->
-<!--                <snapshotRepository>-->
-<!--                    <id>oss</id>-->
-<!--                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
-<!--                </snapshotRepository>-->
-<!--                <repository>-->
-<!--                    <id>oss</id>-->
-<!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--                </repository>-->
-<!--            </distributionManagement>-->
+           <distributionManagement>
+               <snapshotRepository>
+                   <id>oss</id>
+                   <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+               </snapshotRepository>
+               <repository>
+                   <id>oss</id>
+                   <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+               </repository>
+           </distributionManagement>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <repository>
-            <id>maven-releases</id>
-            <name>Nexus Releases</name>
-            <!-- releases address in maven repository -->
-            <url>http://nexus.hyperchain.cn/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>maven-snapshots</id>
-            <name>Nexus Snapshots</name>
-            <!-- snapshots address in maven repository -->
-            <url>http://nexus.hyperchain.cn/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
