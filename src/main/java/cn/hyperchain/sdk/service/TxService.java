@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.service;
 
+import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -10,6 +11,7 @@ import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxLimitResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
+import cn.hyperchain.sdk.response.tx.TxVersionResponse;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
 
@@ -348,4 +350,11 @@ public interface TxService {
      * @return {@link Request} of {@link TxHashesResponse}
      */
     Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds);
+
+    /**
+     * get TxVersion.
+     *
+     * @return String
+     */
+    Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
 }
