@@ -27,7 +27,7 @@ public class InvokeDirectlyParams {
     }
 
     public static class ParamBuilder {
-        private static final String MAGIC = "fefffbce";
+        public static final String MAGIC = "fefffbce";
         private ByteArrayOutputStream payload;
         private Gson gson = new Gson();
         private InvokeDirectlyParams invokeDirectlyParams;

@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class Decoder {
 
@@ -40,10 +42,24 @@ public class Decoder {
     /**
      * decode hvm payload.
      *
-     * @param payload in: | class length(4B) | name length(2B) | class | class name | bin |
+     * @param payload  invoke hvm payload or invoke directly hvm payload
      * @return HVMPayload
      */
     public static HVMPayload decodeHVMPayload(String payload) throws IOException {
+        if (payload.startsWith("0x" + InvokeDirectlyParams.ParamBuilder.MAGIC) || payload.startsWith(InvokeDirectlyParams.ParamBuilder.MAGIC)) {
+            return decodeHVMPayloadInvokeDirectly(payload);
+        } else {
+            return decodeHVMPayloadInvoke(payload);
+        }
+    }
+
+    /**
+     * decode invoke hvm payload.
+     *
+     * @param payload in: | class length(4B) | name length(2B) | class | class name | bin |
+     * @return HVMPayload
+     */
+    private static HVMPayload decodeHVMPayloadInvoke(String payload) throws IOException {
         byte[] payloadBytes = ByteUtil.fromHex(payload);
         int classLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, 0, 4));
         int nameLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, 4, 2));
@@ -75,5 +91,30 @@ public class Decoder {
         String invokeBeanName = new String(name, "UTF-8");
         String invokeArgs = new String(bin, "UTF-8");
         return new HVMPayload(invokeBeanName, invokeArgs, methodNames);
+    }
+
+    /**
+     * decode invoke directly hvm payload.
+     *
+     * @param payload in: | methodName length(2B) | methodName | params |
+     * @return HVMPayload
+     */
+    private static HVMPayload decodeHVMPayloadInvokeDirectly(String payload) throws IOException {
+        byte[] payloadBytes = ByteUtil.fromHex(payload);
+        int nameLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, 4, 2));
+        byte[] name = ByteUtil.copy(payloadBytes, 6, nameLen);
+        int begin = 6 + nameLen;
+        Map<String,String> invokeArgs = new LinkedHashMap<>();
+        while (begin < payloadBytes.length) {
+            int paramTypeLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, begin, 2));
+            int paramLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, begin + 2, 4));
+            String paramType = new String(ByteUtil.copy(payloadBytes, begin + 6, paramTypeLen));
+            String param = new String(ByteUtil.copy(payloadBytes, begin + 6 + paramTypeLen, paramLen));
+            begin = begin + 6 + paramTypeLen + paramLen;
+            invokeArgs.put(paramType,param);
+        }
+        Set<String> invokeMethodsName = new HashSet<>();
+        invokeMethodsName.add(new String(name, "UTF-8"));
+        return new HVMPayload("", gson.toJson(invokeArgs), invokeMethodsName);
     }
 }
