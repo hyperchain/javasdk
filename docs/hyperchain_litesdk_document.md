@@ -24,6 +24,7 @@
         * [解冻合约](#解冻合约)
            * [HVM](#hvm-4)
            * [EVM](#evm-4)
+     * [交易体的payload](#交易体的payload)
      * [交易体设置TxVersion](#交易体设置TxVersion)
      * [交易体签名](#交易体签名)
      * [创建请求](#创建请求)
@@ -459,6 +460,26 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 ```
 
 创建交易体时需要指定**合约地址**。
+
+### 交易体的payload
+
+在创建交易体时，会根据传入的参数生成payload。如果是HVM合约相关的`transaction`，可通过`Decoder`提供的`decodeHVMPayload(String payload)`方法对payload进行解析，返回`HVMPayload`对象。
+
+```java
+HVMPayload decodeHVMPayload(String payload)
+```
+
+`HVMPayload`结构如下：
+
+```java
+public class HVMPayload {
+    private String invokeBeanName;
+    private String invokeArgs;
+    private Set<String> invokeMethods;
+}
+```
+
+其中`invokeBeanName`为调用的HVM合约的名字，`nvokeArgs`为调用的参数，`invokeMethods`为调用的合约方法
 
 ### 交易体设置TxVersion
 
