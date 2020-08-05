@@ -48,7 +48,9 @@
      * [4.17 查询批量交易by hash list(getBatchTxByHash)](#417-查询批量交易by-hash-listgetbatchtxbyhash)
      * [4.18 查询批量回执by hash list(getBatchReceip)](#418-查询批量回执by-hash-listgetbatchreceip)
      * [4.19 查询指定时间区间内的交易数量(getTxsCountByTime)](#419-查询指定时间区间内的交易数量gettxscountbytime)
-     * [4.20 查询平台当前的交易版本号(getTxVersion)](#420-查询平台当前的交易版本号getTxVersion)
+     * [4.20 查询指定extraID的交易by extraID(getTxsByExtraID)](#420-查询指定extraID的交易by-extraIDgetTxsByExtraID)
+     * [4.21 查询指定filter的交易by filter(getTxsByFilter)](#421-查询指定filter的交易by-filtergetTxsByFilter)
+     * [4.22 查询平台当前的交易版本号(getTxVersion)](#422-查询平台当前的交易版本号getTxVersion)
   * [第五章. BlockService相关接口](#第五章-blockservice相关接口)
      * [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
      * [5.2 查询指定区间的区块by block number(getBlocks)](#52-查询指定区间的区块by-block-numbergetblocks)
@@ -854,9 +856,37 @@ Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int..
 Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 ```
 
+### 4.20 查询指定extraID的交易by extraID(getTxsByExtraID)
+
+参数：
+
+- mode extraID类型。
+- detail 是否返回详细的交易内容。
+- metaData 分页相关参数。
+- filter 交易过滤条件。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxLimitResponse> getTxsByExtraID(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
+```
+
+### 4.21 查询指定filter的交易by filter(getTxsByFilter)
+
+参数：
+
+- mode filter类型，0为与，1为或。
+- detail 是否返回详细的交易内容。
+- metaData 分页相关参数。
+- filter 交易过滤条件。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxLimitResponse> getTxsByFilter(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
+```
 
 
-### 4.20 查询平台当前的交易版本号(getTxVersion)
+
+### 4.22 查询平台当前的交易版本号(getTxVersion)
 
 getTxVersion接口会在创建ProviderManager对象时调用，并设置全局的TxVersion。
 
