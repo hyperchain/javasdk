@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.mq.MQResponse;
+import cn.hyperchain.sdk.service.params.MQParam;
 
 import java.util.List;
 
@@ -18,6 +19,15 @@ public interface MQService {
      * @return {@link Request} of {@link MQResponse}
      */
     Request<MQResponse> registerQueue(String from, String queueName, List<String> routingkeys, Boolean isVerbose, int... nodeIds);
+
+    /**
+     * register mq queue with mq param.
+     *
+     * @param mqParam   mq param
+     * @param nodeIds   specific ids
+     * @return {@link Request} of {@link MQResponse}
+     */
+    Request<MQResponse> registerQueue(MQParam mqParam, int... nodeIds);
 
     /**
      * unregister mq queue.

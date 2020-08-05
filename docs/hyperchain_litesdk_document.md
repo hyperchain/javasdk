@@ -1170,7 +1170,17 @@ Request<MQResponse> informNormal(int... nodeIds)
 Request<MQResponse> registerQueue(String from, String queueName, List<String> routingkeys, Boolean isVerbose, int... nodeIds);
 ```
 
-### 7.3 注销队列
+### 7.3 注册队列(with mqParam)
+
+参数：
+
++ mqParam 注册队列所需参数，除了7.2中的参数外，新增了合约event事件的相关过滤参数
+
+```java
+Request<MQResponse> registerQueue(MQParam mqParam, int... nodeIds);
+```
+
+### 7.4 注销队列
 
 参数：
 
@@ -1183,7 +1193,7 @@ Request<MQResponse> registerQueue(String from, String queueName, List<String> ro
 Request<MQResponse> unRegisterQueue(String from, String queueName, String exchangerName, int... nodeIds);
 ```
 
-### 7.4 获取所有队列名称
+### 7.5 获取所有队列名称
 
 参数
 
@@ -1193,7 +1203,7 @@ Request<MQResponse> unRegisterQueue(String from, String queueName, String exchan
 Request<MQResponse> getAllQueueNames(int... nodeIds);
 ```
 
-### 7.5 获取所有exchanger名称
+### 7.6 获取所有exchanger名称
 
 参数：
 
@@ -1203,7 +1213,7 @@ Request<MQResponse> getAllQueueNames(int... nodeIds);
 Request<MQResponse> getExchangerName(int... nodeIds);
 ```
 
-### 7.6 删除exchanger
+### 7.7 删除exchanger
 
 参数：
 
