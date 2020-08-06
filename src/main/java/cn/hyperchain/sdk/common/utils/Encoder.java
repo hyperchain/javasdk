@@ -1,7 +1,12 @@
 package cn.hyperchain.sdk.common.utils;
 
 import cn.hyperchain.contract.BaseInvoke;
+import cn.hyperchain.sdk.crypto.HashUtil;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.log4j.Logger;
@@ -10,6 +15,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class Encoder {
 
@@ -131,5 +137,38 @@ public class Encoder {
         }
 
         return ByteUtil.toHex(payload);
+    }
+
+    /**
+     * encode contract event to sha3 to get event topics.
+     *
+     * @param abi abi
+     * @return event hash
+     */
+    public static HashMap<String, String> encodeEVMEvent(String abi) {
+        HashMap<String, String> eventMap = new HashMap<String, String>();
+        JsonArray abiArray = new JsonParser().parse(abi).getAsJsonArray();
+
+        // get events abi prepare to decode the event
+        for (int i = 0; i < abiArray.size(); i++) {
+            //solve the event data in abi
+            JsonObject methodBody = abiArray.get(i).getAsJsonObject();
+            if (methodBody.has("name") && methodBody.get("type").getAsString().equals("event") && !methodBody.get("anonymous").getAsBoolean()) {
+                String eventName = methodBody.get("name").getAsString();
+                JsonArray list = methodBody.get("inputs").getAsJsonArray();
+                StringBuilder sb = new StringBuilder("(");
+                for (JsonElement object : list) {
+                    JsonObject eventBody = object.getAsJsonObject();
+                    sb.append(eventBody.get("type").getAsString()).append(",");
+                }
+                sb.setCharAt(sb.length() - 1, ')');
+                String event = eventName + sb.toString();
+                String eventId = "0x" + ByteUtil.toHex(HashUtil.sha3(event.getBytes()));
+                eventMap.put(eventName, eventId);
+
+
+            }
+        }
+        return eventMap;
     }
 }

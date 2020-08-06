@@ -5,6 +5,7 @@ import cn.hyperchain.sdk.request.MQRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.mq.MQResponse;
 import cn.hyperchain.sdk.service.MQService;
+import cn.hyperchain.sdk.service.params.MQParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,13 @@ public class MQServiceImpl implements MQService {
 
         return mqResponseMQRequest;
 
+    }
+
+    @Override
+    public Request<MQResponse> registerQueue(MQParam mqParam, int... nodeIds) {
+        MQRequest mqResponseMQRequest = new MQRequest(MQ_PREFIX + "register", providerManager, MQResponse.class, nodeIds);
+        mqResponseMQRequest.addParams(mqParam.getMetas());
+        return mqResponseMQRequest;
     }
 
     @Override

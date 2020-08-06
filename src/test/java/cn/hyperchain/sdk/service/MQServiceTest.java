@@ -50,7 +50,7 @@ public class MQServiceTest {
     public void testUnRegisterQueue() throws RequestException {
         List<String> queues = mqService.getAllQueueNames().send().getQueueNames();
         if (queues.isEmpty()) {
-            return ;
+            return;
         }
         String queueName = queues.get(0);
 
@@ -62,7 +62,7 @@ public class MQServiceTest {
     @Test
     public void testDeleteExchanger() throws RequestException {
         List<String> queueNames = mqService.getAllQueueNames().send().getQueueNames();
-        for (String queue: queueNames) {
+        for (String queue : queueNames) {
             mqService.unRegisterQueue(from, queue, exchanger).send();
         }
         Request<MQResponse> deleteExchanger = mqService.deleteExchanger(exchanger);
