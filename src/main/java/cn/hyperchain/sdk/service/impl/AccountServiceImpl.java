@@ -13,7 +13,9 @@ import cn.hyperchain.sdk.exception.AccountException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.BalanceRequest;
 import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.account.AccountsByRoleResponse;
 import cn.hyperchain.sdk.response.account.BalanceResponse;
+import cn.hyperchain.sdk.response.account.RolesResponse;
 import cn.hyperchain.sdk.service.AccountService;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
@@ -27,7 +29,8 @@ public class AccountServiceImpl implements AccountService {
     private ProviderManager providerManager;
     private static final String ACC_PREFIX = "account_";
 
-    public AccountServiceImpl() {}
+    public AccountServiceImpl() {
+    }
 
     public AccountServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
@@ -85,6 +88,20 @@ public class AccountServiceImpl implements AccountService {
         BalanceRequest balanceRequest = new BalanceRequest(ACC_PREFIX + "getBalance", providerManager, BalanceResponse.class, nodeIds);
         balanceRequest.addParams(address);
 
+        return balanceRequest;
+    }
+
+    @Override
+    public Request<RolesResponse> getRoles(String address, int... nodeIds) {
+        BalanceRequest balanceRequest = new BalanceRequest(ACC_PREFIX + "getRoles", providerManager, RolesResponse.class, nodeIds);
+        balanceRequest.addParams(address);
+        return balanceRequest;
+    }
+
+    @Override
+    public Request<AccountsByRoleResponse> getAccountsByRole(String role, int... nodeIds) {
+        BalanceRequest balanceRequest = new BalanceRequest(ACC_PREFIX + "getAccountsByRole", providerManager, AccountsByRoleResponse.class, nodeIds);
+        balanceRequest.addParams(role);
         return balanceRequest;
     }
 }

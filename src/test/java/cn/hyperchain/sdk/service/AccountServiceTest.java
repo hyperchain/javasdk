@@ -5,8 +5,11 @@ import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.account.AccountsByRoleResponse;
 import cn.hyperchain.sdk.response.account.BalanceResponse;
+import cn.hyperchain.sdk.response.account.RolesResponse;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -49,5 +52,23 @@ public class AccountServiceTest {
         Request<BalanceResponse> balance = accountService.getBalance(accountAddress);
         BalanceResponse send = balance.send();
         System.out.println(send.getBalance());
+    }
+
+    @Test
+    @Ignore
+    public void testGetRoles() throws RequestException {
+        String accountAddress = "000f1a7a08ccc48e5d30f80850cf1cf283aa3abd";
+        Request<RolesResponse> balance = accountService.getRoles(accountAddress);
+        RolesResponse send = balance.send();
+        System.out.println(send.getRoles());
+    }
+
+    @Test
+    @Ignore
+    public void testGetAccountsByRole() throws RequestException {
+        String role = "admin";
+        Request<AccountsByRoleResponse> balance = accountService.getAccountsByRole(role);
+        AccountsByRoleResponse send = balance.send();
+        System.out.println(send.getAccounts());
     }
 }

@@ -1,8 +1,11 @@
 package cn.hyperchain.sdk.common.utils;
 
+import cn.hyperchain.sdk.bvm.OperationResult;
+import cn.hyperchain.sdk.bvm.Result;
 import com.google.common.io.ByteSource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -72,11 +75,11 @@ public class Decoder {
         ClassReader reader = new ClassReader(is);
         ClassNode classNode = new ClassNode();
         reader.accept(classNode, 0);
-        for (MethodNode mn : (List<MethodNode>)classNode.methods) {
+        for (MethodNode mn : (List<MethodNode>) classNode.methods) {
             if (mn.name.equalsIgnoreCase("invoke") && Type.getReturnType(mn.desc).toString().indexOf("Object") == -1) {
                 Type[] argumentTypes = Type.getArgumentTypes(mn.desc);
                 InsnList instructions = mn.instructions;
-                for (ListIterator<AbstractInsnNode> lan = instructions.iterator(); lan.hasNext();) {
+                for (ListIterator<AbstractInsnNode> lan = instructions.iterator(); lan.hasNext(); ) {
                     AbstractInsnNode cur = lan.next();
                     if (cur instanceof MethodInsnNode) {
                         for (Type t : argumentTypes) {
@@ -116,5 +119,27 @@ public class Decoder {
         Set<String> invokeMethodsName = new HashSet<>();
         invokeMethodsName.add(new String(name, "UTF-8"));
         return new HVMPayload("", gson.toJson(invokeArgs), invokeMethodsName);
+    }
+
+    /**
+     * decode bvm receipt result to bvm.Result.
+     *
+     * @param encode receipt result
+     * @return {@link Result}
+     */
+    public static Result decodeBVM(String encode) {
+        Result result = gson.fromJson(new String(ByteUtil.fromHex(encode)), Result.class);
+        return result;
+    }
+
+    /**
+     * decode ret in bvm.Result to bvm.OperationResult list.
+     *
+     * @param resultRet the list of bvm.OperationResult
+     * @return {@link List<OperationResult/>}
+     */
+    public static List<OperationResult> decodeBVMResult(String resultRet) {
+        return gson.fromJson(resultRet, new TypeToken<List<OperationResult>>() {
+        }.getType());
     }
 }

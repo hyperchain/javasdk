@@ -11,6 +11,7 @@ import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
 import cn.hyperchain.sdk.service.impl.RadarServiceImpl;
 import cn.hyperchain.sdk.service.impl.TxServiceImpl;
+import cn.hyperchain.sdk.service.impl.ConfigServiceImpl;
 
 /**
  * service implements manager.
@@ -58,5 +59,9 @@ public class ServiceManager {
 
     public static FileMgrService getFileMgrService(ProviderManager providerManager) {
         return new FileMgrServiceImpl(providerManager);
+    }
+
+    public static ConfigService getConfigService(ProviderManager providerManager) {
+        return new ConfigServiceImpl(providerManager);
     }
 }

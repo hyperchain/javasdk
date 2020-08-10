@@ -4,6 +4,9 @@ import cn.hyperchain.contract.BaseInvoke;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
+import cn.hyperchain.sdk.bvm.operate.ContractMethod;
+import cn.hyperchain.sdk.bvm.operate.Operation;
+import cn.hyperchain.sdk.bvm.operate.ProposalContentOperation;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -170,5 +173,61 @@ public class Encoder {
             }
         }
         return eventMap;
+    }
+
+    /**
+     * encode ProposalContentOperations.
+     * @param ops proposal content operations
+     * @return encode byte in payload
+     */
+    public static byte[] encodeProposalContents(ProposalContentOperation[] ops) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        // encode : |operation length(4)|operation|...
+        // operation construct with : |method length(4b)|method|params count(4)|params1 length(4)|params1|...
+        try {
+            if (ops == null) {
+
+                bos.write(ByteUtil.intToBytes(0));
+
+            } else {
+                bos.write(ByteUtil.intToBytes(ops.length));
+            }
+            for (ProposalContentOperation pco : ops) {
+                bos.write(encodeOperation(pco));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bos.toByteArray();
+    }
+
+
+    /**
+     * encode Operation to payload.
+     * @param opt operation
+     * @return payload
+     */
+    public static byte[] encodeOperation(Operation opt) {
+        Gson gson = new Gson();
+        // encode : |method length(4b)|method|params count(4)|params1 length(4)|params1|...
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] b = opt.getMethod().getMethodName().getBytes();
+        try {
+            bos.write(ByteUtil.intToBytes(b.length));
+
+            bos.write(b);
+            bos.write(ByteUtil.intToBytes(opt.getArgs().length));
+            for (int i = 0; i < opt.getArgs().length; i++) {
+                byte[] bytes = opt.getMethod() == ContractMethod.ProposalCreate && i == 0 ? Base64.getDecoder().decode(opt.getArgs()[i]) : opt.getArgs()[i].getBytes();
+                byte[] intToBytes = ByteUtil.intToBytes(bytes.length);
+                bos.write(intToBytes);
+                bos.write(bytes);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] bytes = bos.toByteArray();
+        return bos.toByteArray();
     }
 }

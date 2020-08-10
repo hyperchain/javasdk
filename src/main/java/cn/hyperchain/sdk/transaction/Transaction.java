@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.transaction;
 
 import cn.hyperchain.contract.BaseInvoke;
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.solidity.ContractType;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
@@ -176,6 +177,18 @@ public class Transaction {
             transaction.setPayload(payload);
             transaction.setTo(contractAddress);
             transaction.setOpCode(UPDATE);
+            return this;
+        }
+
+        /**
+         * set contract name.
+         *
+         * @param contractName contract name in chain
+         * @return {@link Builder}
+         */
+        public Builder contractName(String contractName) {
+            transaction.setContractName(contractName);
+            transaction.setTo("0x0000000000000000000000000000000000000000");
             return this;
         }
 
@@ -355,10 +368,23 @@ public class Transaction {
          * @param params          invoke params
          * @return {@link Builder}
          */
+        @Deprecated
         public Builder invoke(String contractAddress, String methodName, String... params) {
             super.transaction.setTo(contractAddress);
             String payload = Encoder.encodeBVM(methodName, params);
             super.transaction.setPayload(payload);
+            return this;
+        }
+
+        /**
+         * invoke BVM contract for builtin operation.
+         *
+         * @param opt operation
+         * @return {@link Builder}
+         */
+        public Builder invoke(BuiltinOperation opt) {
+            super.transaction.setTo(opt.getAddress());
+            super.transaction.setPayload(ByteUtil.toHex(Encoder.encodeOperation(opt)));
             return this;
         }
     }
@@ -433,6 +459,14 @@ public class Transaction {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
     }
 
     public String getPayload() {
@@ -552,6 +586,7 @@ public class Transaction {
 
     /**
      * add extra IDLong.
+     *
      * @param extraIDLong -
      */
     public void addExtraIDLong(Long... extraIDLong) {
@@ -572,6 +607,7 @@ public class Transaction {
 
     /**
      * add extra IDString.
+     *
      * @param extraIdString -
      */
     public void addExtraIdString(String... extraIdString) {
@@ -609,6 +645,9 @@ public class Transaction {
         if (this.extraIdString != null && this.extraIdString.size() != 0) {
             map.put("extraIdString", this.extraIdString);
         }
+        if (!(Utils.isBlank(contractName))) {
+            map.put("cname", contractName);
+        }
         map.put("simulate", simulate);
         map.put("signature", signature);
         return map;
@@ -631,7 +670,7 @@ public class Transaction {
      * @return transaction struct
      */
     public static Transaction deSerialize(String txJson) {
-        return gson.fromJson(txJson,Transaction.class);
+        return gson.fromJson(txJson, Transaction.class);
     }
 
     public static class TxDeserializer implements JsonDeserializer<Transaction> {
