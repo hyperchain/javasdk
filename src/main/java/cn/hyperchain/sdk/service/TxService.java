@@ -225,7 +225,17 @@ public interface TxService {
     /**
      * @see TxService#getTransactionsByTimeWithLimit(BigInteger, BigInteger, MetaDataParam, FilterParam, int...)
      */
+    Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, MetaDataParam metaData, int... nodeIds);
+
+    /**
+     * @see TxService#getTransactionsByTimeWithLimit(BigInteger, BigInteger, MetaDataParam, FilterParam, int...)
+     */
     Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, MetaDataParam metaData, FilterParam filter, int... nodeIds);
+
+    /**
+     * @see TxService#getTransactionsByTimeWithLimit(BigInteger, BigInteger, MetaDataParam, FilterParam, int...)
+     */
+    Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, MetaDataParam metaData, int... nodeIds);
 
     /**
      * querying transactions within a specified time interval with limit.
@@ -233,6 +243,7 @@ public interface TxService {
      * @param startTime start time
      * @param endTime   end time
      * @param metaData  meta data
+     * @param filter    filter items
      * @param nodeIds   specific ids
      * @return {@link Request} of {@link TxLimitResponse}
      */
