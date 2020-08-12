@@ -37,10 +37,15 @@ public class TxHashesResponse extends Response {
     public ArrayList<ReceiptResponse> polling() throws RequestException {
         ArrayList<ReceiptResponse> receiptResponses = new ArrayList<>();
         for (int i = 0; i < responses.size(); i++) {
-            ReceiptResponse receiptResponse = responses.get(i).polling();
-            receiptResponses.add(receiptResponse);
+            if (responses.get(i).code == 0) {
+                ReceiptResponse receiptResponse = responses.get(i).polling();
+                receiptResponses.add(receiptResponse);
+            } else {
+                Response response = (Response) responses.get(i);
+                ReceiptResponse receiptResponse = new ReceiptResponse(response, null);
+                receiptResponses.add(receiptResponse);
+            }
         }
-
         return receiptResponses;
     }
 }
