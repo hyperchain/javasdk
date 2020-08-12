@@ -1150,7 +1150,7 @@ public class MQResponse extends Response {
 
 参数：
 
-+ nodeIds 说明请求向哪些节点发送
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
 
 ```java
 Request<MQResponse> informNormal(int... nodeIds)
@@ -1164,7 +1164,7 @@ Request<MQResponse> informNormal(int... nodeIds)
 + queueName 队列名称
 + routingkeys 想要订阅的消息类型
 + isVerbose 推送区块时是否推送交易列表，true表示是
-+ nodeIds 说明请求向哪些节点发送
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
 
 ```java
 Request<MQResponse> registerQueue(String from, String queueName, List<String> routingkeys, Boolean isVerbose, int... nodeIds);
@@ -1187,7 +1187,7 @@ Request<MQResponse> registerQueue(MQParam mqParam, int... nodeIds);
 + from 调用该接口的账户地址
 + queueName 队列名称
 + exchangerName exchanger 名称
-+ nodeIds 说明请求向哪些节点发送
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
 
 ```java
 Request<MQResponse> unRegisterQueue(String from, String queueName, String exchangerName, int... nodeIds);
@@ -1197,7 +1197,7 @@ Request<MQResponse> unRegisterQueue(String from, String queueName, String exchan
 
 参数
 
-+ nodeIds 说明请求向哪些节点发送
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
 
 ```java
 Request<MQResponse> getAllQueueNames(int... nodeIds);
@@ -1207,7 +1207,7 @@ Request<MQResponse> getAllQueueNames(int... nodeIds);
 
 参数：
 
-+ nodeIds 说明请求向哪些节点发送
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
 
 ```java
 Request<MQResponse> getExchangerName(int... nodeIds);
@@ -1218,7 +1218,7 @@ Request<MQResponse> getExchangerName(int... nodeIds);
 参数：
 
 + exchangerName exchanger名称
-+ nodeIds 说明请求向哪些节点发送
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
 
 ```java
 Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
