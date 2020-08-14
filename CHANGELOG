@@ -42,4 +42,8 @@ release v1.0.2
     1. fix fromAccountJson throw wrong message when use wrong password
     2. fix getBatchReceipt
     3. add fileMgr interface
-    4. 
+    4. confirm the TxVersion of platform
+    5. fix decoding invoke directly hvm payload
+    6. add mq register param and mq manual
+    7. add interface getTxsByExtraID(), getTxsByFilter()
+    8. fix user can not get responses when one of the transactions is wrong
