@@ -155,7 +155,7 @@ public class FileMgrServiceImpl implements FileMgrService {
     @Override
     public FileDownloadResponse fileDownload(String filePath, String fileHash, String fileOwner, Account account, int nodeId) throws FileMgrException {
         if (filePath == null || fileHash == null || fileOwner == null || account == null) {
-            throw new FileMgrException("filePath, fileHash, fileOwner and account can't be null");
+            throw new FileMgrException("filePath, fileHash, fileOwner or account can't be null");
         }
         File file = new File(filePath);
         File downloadFile;
@@ -266,8 +266,8 @@ public class FileMgrServiceImpl implements FileMgrService {
      */
     @Override
     public Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String description, Account account, int... nodeIds) throws FileMgrException {
-        if (fileHash == null) {
-            throw new FileMgrException("fileHash can't be empty");
+        if (fileHash == null || account == null) {
+            throw new FileMgrException("fileHash or account can't be empty");
         }
         Request<FileExtraFromFileHashResponse> fileExtraResponseRequest = getFileExtraByFilter(account.getAddress(), fileHash, nodeIds);
         FileExtra fileExtra;
@@ -283,8 +283,8 @@ public class FileMgrServiceImpl implements FileMgrService {
             fileExtra.setNodeList(getNodeHashList(nodeIdList));
         }
         // update description
-        if (description == null || description.equals(EMPTY_STRING)) {
-            logger.debug("description is empty, will not be update.");
+        if (description == null) {
+            logger.debug("description is null, will not be update.");
         } else {
             fileExtra.setFileDescription(description);
         }
@@ -349,7 +349,7 @@ public class FileMgrServiceImpl implements FileMgrService {
      * @throws FileMgrException fileMgr Exception
      */
     private ArrayList<String> getNodeHashList(int... nodeIdList) throws FileMgrException {
-        if (nodeIdList == null || nodeIdList.length < 1) {
+        if (nodeIdList == null || nodeIdList.length == 0) {
             throw new FileMgrException("NodeIdList is empty, please check.");
         }
         ArrayList<String> nodeHashList = new ArrayList<>();

@@ -179,11 +179,13 @@ public class FileUpdateResponse extends Response {
 
 拿到`FileUploadResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执，确认文件已经成功上传。
 
+**因为`fileUpload`接口（包含`getNodeHashList`接口）逻辑较为复杂，因此对输入的参数进行额外检查。**
+
 参数：
-- filePath 待上传的本地文件路径
+- filePath 待上传的本地文件路径(检查filePath非null)
 - description 文件描述信息
-- account 文件上传者的account
-- nodeIdList 拥有文件权限的节点Id列表，至少有1个节点Id，文件会被上传到第一个节点。
+- account 文件上传者的account(检查account非null)
+- nodeIdList 拥有文件权限的节点Id列表，至少有1个节点Id，文件会被上传到第一个节点(检查nodeIdList非null且大小不等于0)
 
 ```java
 FileUploadResponse fileUpload(String filePath, String description, Account account, int... nodeIdList);
@@ -194,13 +196,15 @@ FileUploadResponse fileUpload(String filePath, String description, Account accou
 
 ### 3.2 文件下载(fileDownload)
 
+**因为`fileDownload`逻辑较为复杂，因此对输入的参数进行额外检查。**
+
 参数：
-- filePath 本地存储待下载文件的路径，路径有以下两种形式：
+- filePath 本地存储待下载文件的路径，路径有以下两种形式(检查filePath非null)：
    - 目录路径：要求路径存在，SDK会在目录路径下下载一个以文件hash命名的文件
    - 文件路径：要求文件存在，执行文件的断点续传，若文件大小为s，SDK会请求节点从s的位置传输数据
-- fileHash 待下载文件的hash，同fileOwner唯一确定一个待下载文件
-- fileOwner 文件上传者的address，同fileHash唯一确定一个待下载文件
-- account 文件下载者的account
+- fileHash 待下载文件的hash，同fileOwner唯一确定一个待下载文件(检查fileHash非null)
+- fileOwner 文件上传者的address，同fileHash唯一确定一个待下载文件(检查fileOwner非null)
+- account 文件下载者的account(检查account非null)
 - nodeId 说明向哪个节点发送下载请求
 
 ```java
@@ -224,7 +228,26 @@ FileDownloadResponse fileDownload(String filePath, String txHash, Account accoun
 
 
 
-### 3.3 通过fileOwner和fileHash获取文件信息(getFileExtraByFilter)
+### 3.3 更新文件信息(fileInfoUpdate)
+
+**因为`fileInfoUpdate`逻辑较为复杂，因此对输入的参数进行额外检查。**
+
+拿到`FileUpdateResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执，确认文件信息已经成功更新。
+
+参数：
+- fileHash 文件哈希(检查fileHash非null)
+- nodeIdList 拥有文件权限的节点Id列表，至少有1个节点Id。若为`null`或`nodeIdList.length=0`，则默认不更新。
+- description 文件描述信息。若为`null`，则默认不更新。
+- account 文件上传者的account(检查account非null)
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String description, Account account, int... nodeIds);
+```
+
+
+
+### 3.4 通过fileOwner和fileHash获取文件信息(getFileExtraByFilter)
 
 该方法获取的文件信息是最新的文件信息
 
@@ -240,7 +263,7 @@ Request<FileExtraFromFileHashResponse> getFileExtraByFilter(String fileOwner, St
 
 
 
-### 3.4 通过txHash获取文件信息(getFileExtraByTxHash)
+### 3.5 通过txHash获取文件信息(getFileExtraByTxHash)
 
 该方法获取的文件信息是txHash对应交易存储的fileExtra，若要查询最新的fileExtra需要使用最后一次更新后的txHash
 
@@ -250,24 +273,6 @@ Request<FileExtraFromFileHashResponse> getFileExtraByFilter(String fileOwner, St
 
 ```java
 Request<FileExtraFromTxHashResponse> getFileExtraByTxHash(String txHash, int... nodeIds);
-```
-
-
-
-
-### 3.5 更新文件信息(fileInfoUpdate)
-
-拿到`FileUpdateResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执，确认文件信息已经成功更新。
-
-参数：
-- fileHash 文件哈希
-- nodeIdList 拥有文件权限的节点Id列表，至少有1个节点Id。若为空，则默认不更新。
-- description 文件描述信息。若为空，则默认不更新。
-- account 文件上传者的account
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String description, Account account, int... nodeIds);
 ```
 
 
