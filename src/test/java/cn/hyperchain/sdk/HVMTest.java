@@ -1,6 +1,6 @@
 package cn.hyperchain.sdk;
 
-import cn.hyperchain.logic.entity.Person;
+import cn.test.logic.entity.Person;
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
@@ -10,7 +10,7 @@ import cn.hyperchain.sdk.common.utils.HVMPayload;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.crypto.SignerUtil;
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.hvm.ContractInvoke;
+import cn.test.hvm.ContractInvoke;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -45,7 +45,7 @@ public class HVMTest {
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
         Account backup = account;
-        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-1.0-SNAPSHOT.jar");
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
         Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
@@ -118,7 +118,7 @@ public class HVMTest {
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
         Account backup = account;
-        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-1.0-SNAPSHOT.jar");
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
         Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
