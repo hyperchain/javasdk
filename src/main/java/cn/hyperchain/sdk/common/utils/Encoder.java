@@ -40,8 +40,8 @@ public class Encoder {
                 baos.write(buf, 0, len);
             }
             byte[] buffer = baos.toByteArray();
-            if (buffer.length > 1024 * 64) {
-                throw new IOException("the contract jar should not be larger than 64KB");
+            if (buffer.length > 1024 * 512) {
+                throw new IOException("the contract jar should not be larger than 512KB");
             }
 
             return ByteUtil.toHex(buffer);
