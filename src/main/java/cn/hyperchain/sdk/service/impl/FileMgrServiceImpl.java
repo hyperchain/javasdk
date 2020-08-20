@@ -99,7 +99,6 @@ public class FileMgrServiceImpl implements FileMgrService {
         FileTransferRequest fileTransferRequest = new FileTransferRequest(FILEMGR_PREFIX + "upload", providerManager, FileUploadResponse.class,
                 jsonrpc, FileTransferRequest.FileRequestType.UPLOAD, randomAccessFile, nodeIdList[0]);
         fileTransferRequest.addParams(transaction.commonParamMap());
-        fileTransferRequest.build();
         FileUploadResponse fileUploadResponse = null;
         try {
             fileUploadResponse = (FileUploadResponse) fileTransferRequest.send();
@@ -220,7 +219,6 @@ public class FileMgrServiceImpl implements FileMgrService {
         fileTransferRequest.setPos(pos);
         fileTransferRequest.setFileHash(fileHash);
         fileTransferRequest.addParams(transaction.commonParamMap());
-        fileTransferRequest.build();
         FileDownloadResponse fileDownloadResponse;
         try {
             fileDownloadResponse = (FileDownloadResponse) fileTransferRequest.send();
