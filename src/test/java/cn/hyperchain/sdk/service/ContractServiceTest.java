@@ -31,7 +31,7 @@ public class ContractServiceTest {
     public void deploy() throws RequestException, IOException {
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
-        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-1.0-SNAPSHOT.jar");
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
         Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
