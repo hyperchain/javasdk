@@ -18,14 +18,14 @@ Maven
 <dependency>
     <groupId>cn.hyperchain</groupId>
     <artifactId>litesdk</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
 Gradle
 
 ```
-compile group: 'cn.hyperchain', name: 'litesdk', version: '0.1.0'
+compile group: 'cn.hyperchain', name: 'litesdk', version: '1.0.2'
 ```
 
 |  platform version   | sdk version  |
@@ -33,6 +33,9 @@ compile group: 'cn.hyperchain', name: 'litesdk', version: '0.1.0'
 | hyperchain  | v0.1.0 |
 | solo 2.0  | v1.0.0 |
 | flato 0.0.6 | v1.0.1 |
+| flato 1.0.0 | v1.0.2 |
+
+If you want to use latest sdk for sending transaction to hyperchain, may you can read the docs for more information about how to use.
 
 ### Usage
 

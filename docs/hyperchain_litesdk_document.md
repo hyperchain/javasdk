@@ -138,15 +138,34 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder(10, 10, 10)
 
 每个节点的连接都需要一个`HttpProvider`，而`ProviderManager`负责集成、管理这些`HttpProvider`，创建`ProviderManager`有两种方式，一种是通过`createManager()`创建，另一种是和`HttpProvider`一样通过**Builder**模式创建。使用前者创建会使用`ProvideManager`的默认配置参数，而如果想定制更多的属性则需要通过后者的方式创建，示例如下：
 
-另外，每个节点都有一个对应的TxVersion，可通过`getTxVersion(nodeId)`接口获取对应节点的TxVersion，发送到节点的transaction的TxVersion必须与节点一致才能通过验签。`providerManager`对象在创建时会通过`TxVersion.setGlobalTxVersion`设置全局的TxVersion。`Transaction`对象也可通过`setTxVersion`函数设置单次交易的TxVersion。节点平台与TxVersion对应关系如下：
+另外，每个节点都有一个对应的TxVersion，可通过`getTxVersion(nodeId)`接口获取对应节点的TxVersion，发送到节点的transaction的TxVersion必须与节点一致才能通过验签。`providerManager`对象在创建时会通过`TxVersion.setGlobalTxVersion`设置全局的TxVersion。`Transaction`对象也可通过`setTxVersion`函数设置单次交易的TxVersion。
+
+为全局设置txVersion：
+
+```java
+static {
+    TxVersion.setGlobalTxVersion(TxVersion.TxVersion10);
+}
+```
+
+或者为单个交易设置txVersion：
+
+```java
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).txVersion(TxVersion.TxVersion10).build();
+```
+
+一般而言，使用新版本LiteSDK访问hyperchain是需要设置txVersion为1.0，对于flato来说，sdk将自动识别平台txVersion，不需要手动进行设置。
+
+节点平台与TxVersion对应关系如下：
 
 |  平台使用版本   | TxVersion版本  |
 |  ----  | ----  |
 | hyperchain  | 1.0 |
-| flato 0.0.3-0.0.4  | 2.0 |
-| flato 0.0.5+ | 2.1 |
-| flato 0.7.0 | 2.2 |
+| flato 0.0.3-0.0.4 | 2.0 |
+| flato 0.0.5-0.0.6 | 2.1 |
+| flato 0.0.7 | 2.2 |
 | flato 0.0.8 | 2.3 |
+| flato 1.0.0 | 2.3 |
 
 ```java
 // 方式1
@@ -486,6 +505,10 @@ public class HVMPayload {
 ### 交易体设置TxVersion
 
 `transaction`对象在创建时，其TxVersion属性值默认为全局的TxVersion，也可通过`setTxVersion`函数来设置交易体的TxVersion属性。
+
+```java
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).txVersion(TxVersion.TxVersion10).build();
+```
 
 ### 交易体签名
 
