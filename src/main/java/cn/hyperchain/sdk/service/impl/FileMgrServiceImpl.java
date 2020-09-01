@@ -151,7 +151,6 @@ public class FileMgrServiceImpl implements FileMgrService {
      * @param nodeId    nodeId
      * @return {@link FileDownloadResponse}
      * @throws FileMgrException -
-     * @throws RequestException -
      */
     @Override
     public FileDownloadResponse fileDownload(String filePath, String fileHash, String fileOwner, Account account, int nodeId) throws FileMgrException {
