@@ -3,19 +3,31 @@ package cn.hyperchain.sdk.response.config;
 import cn.hyperchain.sdk.response.Response;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.annotations.Expose;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ProposalResponse extends Response {
 
-    static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    static Gson gson = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .registerTypeAdapter(Proposal.class, new ProposalDeserializer())
+            .create();
 
     @Expose
     private JsonElement result;
 
-    public class Proposal {
+    public static class Proposal {
+
         @Expose
         private int id;
 
@@ -23,10 +35,10 @@ public class ProposalResponse extends Response {
         private String code;
 
         @Expose
-        private int timestamp;
+        private long timestamp;
 
         @Expose
-        private int timeout;
+        private long timeout;
 
         @Expose
         private String status;
@@ -66,11 +78,11 @@ public class ProposalResponse extends Response {
             return code;
         }
 
-        public int getTimestamp() {
+        public long getTimestamp() {
             return timestamp;
         }
 
-        public int getTimeout() {
+        public long getTimeout() {
             return timeout;
         }
 
@@ -135,7 +147,7 @@ public class ProposalResponse extends Response {
         }
     }
 
-    public class VoteInfo {
+    public static class VoteInfo {
         @Expose
         private String addr;
 
@@ -173,5 +185,55 @@ public class ProposalResponse extends Response {
                 ", message='" + message + '\'' +
                 ", namespace='" + namespace + '\'' +
                 '}';
+    }
+
+    public static class ProposalDeserializer implements JsonDeserializer<Proposal> {
+
+        @Override
+        public Proposal deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            Proposal p = new Proposal();
+            JsonObject jo = jsonElement.getAsJsonObject();
+            p.id = jo.get("id").getAsInt();
+            p.code = jo.get("code").getAsString();
+            p.timestamp = jo.get("timestamp").getAsLong();
+            p.timeout = jo.get("timeout").getAsLong();
+            p.status = jo.get("status").getAsString();
+            p.assentor = getVoteInfoList(jo, "assentor");
+            p.objector = getVoteInfoList(jo, "objector");
+            p.threshold = jo.get("threshold").getAsInt();
+            p.score = jo.get("score").getAsInt();
+            p.creator = jo.get("creator").getAsString();
+            p.version = jo.get("version").getAsString();
+            p.type = jo.get("type").getAsString();
+            if (jo.has("completed")) {
+                p.completed = jo.get("completed").getAsString();
+            } else {
+                p.completed = "";
+            }
+            if (jo.has("cancel")) {
+                p.cancel = jo.get("cancel").getAsString();
+            } else {
+                p.cancel = "";
+            }
+            return p;
+        }
+
+        private List<VoteInfo> getVoteInfoList(JsonObject jo, String key) {
+            if (jo.has(key)) {
+                JsonArray assentor = jo.get(key).getAsJsonArray();
+                Iterator<JsonElement> iterator = assentor.iterator();
+                List<VoteInfo> list = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    JsonObject next = iterator.next().getAsJsonObject();
+                    VoteInfo info = new VoteInfo();
+                    info.addr = next.get("addr").getAsString();
+                    info.txHash = next.get("txHash").getAsString();
+                    list.add(info);
+                }
+                return list;
+            } else {
+                return new ArrayList<>();
+            }
+        }
     }
 }

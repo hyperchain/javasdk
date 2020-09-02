@@ -147,7 +147,7 @@ public static class HashBuilder extends BuiltinOperationBuilder {
 
 根据提案的状态以及对提案的操作，可得出一个提案的状态迁移如下图所示：
 
-![image-20200817143508082](/Users/liumingmei/Library/Application Support/typora-user-images/image-20200817143508082.png)
+![image-20200817143508082](./img/image-20200817143508082.png)
 
 对于提案可根据提案内容划分为以下几类：
 
