@@ -78,6 +78,7 @@ public abstract class Account {
         if (privateKey.length == 0) {
             throw new AccountException("password error");
         }
+        addressHex = addressHex.startsWith("0x") ? addressHex.substring(2) : addressHex;
         if (algo.isSM()) {
             ECPoint ecPoint = SM2Util.CURVE.decodePoint(ByteUtil.fromHex(publicKeyHex));
             ECPublicKeyParameters publicKeyParameters = new ECPublicKeyParameters(ecPoint, SM2Util.DOMAIN_PARAMS);
@@ -87,7 +88,6 @@ public abstract class Account {
             ECPoint ecPointPublicKeyFromPrivateKey = fixedPointCombMultiplier.multiply(privateKeyParameters.getParameters().getG(), privateKeyParameters.getD());
             ECPublicKeyParameters publicKeyParametersFromPrivateKey = new ECPublicKeyParameters(ecPointPublicKeyFromPrivateKey, privateKeyParameters.getParameters());
             AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(publicKeyParameters, privateKeyParameters);
-            addressHex = addressHex.startsWith("0x") ? addressHex.substring(2) : addressHex;
             if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParametersFromPrivateKey.getQ().getEncoded(false))))) {
                 throw new AccountException("account address is not matching with private key");
             }

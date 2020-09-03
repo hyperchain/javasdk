@@ -97,6 +97,18 @@ public class ContractServiceImpl implements ContractService {
         return txHashResponseContractRequest;
     }
 
+    @Override
+    public Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds) {
+        ContractRequest txHashResponseContractRequest = new ContractRequest(CONTRACT_PREFIX + "manageContractByVote", providerManager, TxHashResponse.class, transaction, nodeIds);
+        Map<String, Object> params = transaction.commonParamMap();
+
+        txHashResponseContractRequest.addParams(params);
+        txHashResponseContractRequest.setJsonrpc(jsonrpc);
+        txHashResponseContractRequest.setNamespace(namespace);
+
+        return txHashResponseContractRequest;
+    }
+
     private String methodName(String method) {
         return CONTRACT_PREFIX + method;
     }

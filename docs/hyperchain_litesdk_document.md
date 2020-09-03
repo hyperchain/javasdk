@@ -251,7 +251,7 @@ public ReceiptResponse polling() throws RequestException;
 public String getTxHash();
 ```
 
-LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约**三种接口。
+LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约、通过投票管理合约**四种接口。
 
 ```java
 public interface ContractService {
@@ -260,10 +260,12 @@ public interface ContractService {
     Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
 
     Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
+  
+    Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds);
 }
 ```
 
-根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM两种形式的合约**，这两种也会影响到交易体的创建。
+根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM、BVM三种形式的合约**，这几种也会影响到交易体的创建。
 
 ### 转账交易
 
@@ -314,10 +316,18 @@ public interface AccountService {
     Account fromAccountJson(String accountJson, String password);
     
     Request<BalanceResponse> getBalance(String address, int... nodeIds);
+  
+    Request<RolesResponse> getRoles(String address, int... nodeIds);
+
+    Request<AccountsByRoleResponse> getAccountsByRole(String role, int... nodeIds);
 }
 ```
 
-前四个接口是用于生成账户，而`getBalance`方法则可以查询该账户所有的余额，需要传一个**合约地址**为参数。
+前四个接口是用于生成账户。余下接口是查询账户相关信息，其说明如下：
+
+-  `getBalance `方法则可以查询该账户所有的余额，需要传一个**合约地址**为参数。
+-  `getRoles`方法则可以查询该账户所有的角色，需要传一个**合约地址**为参数。
+-  `getAccountsByRole `方法则可以查询具有改角色的账户列表，需要传一个**角色名称**为参数。
 
 目前Account服务支持的所有加密算法如下：
 
@@ -338,7 +348,7 @@ public enum Algo {
 
 #### 交易体创建
 
-**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。HVM和EVM分别有各自的**Builder**：`HVMBuilder`、`EVMBuilder`，继承同一个父类`Builer`。目前**Builder**模式提供了五种交易体的封装，分别对应**部署合约、调用合约、升级合约、冻结合约、解冻合约**，其中前两个服务的交易体分别定义在HVM、EVM各自的`Builder`子类中，后三者都是**管理合约**这一服务的子服务，定义在父类`Builder`中。
+**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。HVM、EVM和BVM分别有各自的**Builder**：`HVMBuilder`、`EVMBuilder、BVMBuilder`，继承同一个父类`Builer`。目前**Builder**模式提供了五种交易体的封装，分别对应**部署合约、调用合约、升级合约、冻结合约、解冻合约**，其中前两个服务的交易体分别定义在HVM、EVM、BVM各自的`Builder`子类中，后三者都是**管理合约**这一服务的子服务，定义在父类`Builder`中。
 
 ```java
 class Builder {
@@ -359,6 +369,10 @@ class EVMBuilder extends Builder {
     // 当合约需要提供abi解析构造方法参数时使用
     Builder deploy(String bin, Abi abi, FuncParams params);
     Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params);
+}
+
+class BVMBuilder extends Builder {
+    Builder invoke(BuiltinOperation opt)
 }
 ```
 

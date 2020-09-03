@@ -22,4 +22,5 @@ public interface ContractService {
 
     Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
 
+    Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds);
 }
