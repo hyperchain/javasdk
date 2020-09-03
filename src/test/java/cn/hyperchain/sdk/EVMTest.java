@@ -99,4 +99,43 @@ public class EVMTest {
         System.out.println(receiptResponse4.getRet());
 
     }
+
+    @Test
+    public void testEVMDestroy() throws Exception {
+        // 1. build provider manager
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
+
+        // 2. build service
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+
+        // 3. build transaction
+        Account account = accountService.genAccount(Algo.SMAES, PASSWORD);
+
+        InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.bin");
+        InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
+        String bin = FileUtil.readFile(inputStream1);
+        String abiStr = FileUtil.readFile(inputStream2);
+        Abi abi = Abi.fromJson(abiStr);
+
+        FuncParams params = new FuncParams();
+        params.addParams("contract01");
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin, abi, params).build();
+        transaction.sign(account);
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        String contractAddress = receiptResponse.getContractAddress();
+        System.out.println("contract address: " + contractAddress);
+        System.out.println("账户私钥:" + account.getPrivateKey());
+//        Assert.assertEquals(transaction.getTransactionHash(), receiptResponse.getTxHash());
+
+        // maintain contract test
+
+        // test destroy
+        Transaction transaction2 = new Transaction.EVMBuilder(account.getAddress()).destroy(contractAddress).build();
+        transaction2.sign(account);
+        ReceiptResponse receiptResponse2 = contractService.maintain(transaction2).send().polling();
+        System.out.println(receiptResponse2.getRet());
+
+    }
 }
