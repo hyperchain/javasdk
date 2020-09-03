@@ -35,10 +35,6 @@
             <name>Yeqi Tao</name>
             <email>taoyeqi@hyperchain.cn</email>
         </developer>
-        <developer>
-            <name>Jianhui Dong</name>
-            <email>dongjianhui@hyperchain.cn</email>
-        </developer>
     </developers>
 
     <build>
