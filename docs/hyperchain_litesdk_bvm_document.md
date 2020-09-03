@@ -15,7 +15,7 @@
 3. 然后再根据实际的需要创建相应的服务`Service`的具体实现类
 4. 最后将请求发送出去拿到响应结果。
 
-初始化的流程中litesdk的主文档中有详细介绍，此次不再赘述。需要说明的是bvm是flato中新加入的，在hyperchain中没有此功能。另外既然是执行合约，需要创建的也是`Service`的实现类`ContractService`。
+初始化的流程中litesdk的主文档中有详细介绍，此次不再赘述。需要说明的是bvm是hyperchain2.0中新加入的，在hyperchain中没有此功能。另外既然是执行合约，需要创建的也是`Service`的实现类`ContractService`。
 
 ### 2.2 执行bvm合约
 

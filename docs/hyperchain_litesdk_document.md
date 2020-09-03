@@ -154,18 +154,14 @@ static {
 Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).txVersion(TxVersion.TxVersion10).build();
 ```
 
-一般而言，使用新版本LiteSDK访问hyperchain是需要设置txVersion为1.0，对于flato来说，sdk将自动识别平台txVersion，不需要手动进行设置。
+一般而言，使用新版本LiteSDK访问hyperchain是需要设置txVersion为1.0，对于hyperchain2.0来说，sdk将自动识别平台txVersion，不需要手动进行设置。
 
 节点平台与TxVersion对应关系如下：
 
 |  平台使用版本   | TxVersion版本  |
 |  ----  | ----  |
-| hyperchain  | 1.0 |
-| flato 0.0.3-0.0.4 | 2.0 |
-| flato 0.0.5-0.0.6 | 2.1 |
-| flato 0.0.7 | 2.2 |
-| flato 0.0.8 | 2.3 |
-| flato 1.0.0 | 2.3 |
+| hyperchain 1.x | 1.0 |
+| hyperchain 2.0.0 | 2.3 |
 
 ```java
 // 方式1
