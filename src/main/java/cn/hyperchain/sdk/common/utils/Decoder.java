@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.common.utils;
 
 import cn.hyperchain.sdk.bvm.OperationResult;
 import cn.hyperchain.sdk.bvm.Result;
+import cn.hyperchain.sdk.common.adapter.StringNullAdapter;
 import com.google.common.io.ByteSource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +17,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -25,7 +27,10 @@ import java.util.LinkedHashMap;
 
 public class Decoder {
 
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    private static final Gson gson = new GsonBuilder()
+            .disableHtmlEscaping()
+            .registerTypeAdapter(String.class, new StringNullAdapter())
+            .create();
 
     /**
      * decode hvm receipt result to specific type.
@@ -45,7 +50,7 @@ public class Decoder {
     /**
      * decode hvm payload.
      *
-     * @param payload  invoke hvm payload or invoke directly hvm payload
+     * @param payload invoke hvm payload or invoke directly hvm payload
      * @return HVMPayload
      */
     public static HVMPayload decodeHVMPayload(String payload) throws IOException {
@@ -107,14 +112,14 @@ public class Decoder {
         int nameLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, 4, 2));
         byte[] name = ByteUtil.copy(payloadBytes, 6, nameLen);
         int begin = 6 + nameLen;
-        Map<String,String> invokeArgs = new LinkedHashMap<>();
+        Map<String, String> invokeArgs = new LinkedHashMap<>();
         while (begin < payloadBytes.length) {
             int paramTypeLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, begin, 2));
             int paramLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, begin + 2, 4));
             String paramType = new String(ByteUtil.copy(payloadBytes, begin + 6, paramTypeLen));
             String param = new String(ByteUtil.copy(payloadBytes, begin + 6 + paramTypeLen, paramLen));
             begin = begin + 6 + paramTypeLen + paramLen;
-            invokeArgs.put(paramType,param);
+            invokeArgs.put(paramType, param);
         }
         Set<String> invokeMethodsName = new HashSet<>();
         invokeMethodsName.add(new String(name, "UTF-8"));
@@ -128,8 +133,7 @@ public class Decoder {
      * @return {@link Result}
      */
     public static Result decodeBVM(String encode) {
-        Result result = gson.fromJson(new String(ByteUtil.fromHex(encode)), Result.class);
-        return result;
+        return gson.fromJson(new String(ByteUtil.fromHex(encode)), Result.class);
     }
 
     /**
@@ -139,7 +143,18 @@ public class Decoder {
      * @return {@link List<OperationResult/>}
      */
     public static List<OperationResult> decodeBVMResult(String resultRet) {
-        return gson.fromJson(resultRet, new TypeToken<List<OperationResult>>() {
+        List<OperationResult> list = gson.fromJson(resultRet, new TypeToken<List<OperationResult>>() {
         }.getType());
+        if (list != null) {
+            for (OperationResult op : list) {
+                if (op.getMsg() == null) {
+                    op.setMsg("");
+                }
+            }
+        } else {
+            list = new ArrayList<>();
+        }
+        return list;
     }
+
 }
