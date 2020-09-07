@@ -19,7 +19,10 @@ public class TxHashesResponse extends Response {
         responses = new ArrayList<>();
     }
 
-
+    public ArrayList<TxHashResponse> getResponses(){
+        return responses;
+    }
+    
     public void setMethod(String method) {
         this.method = method;
     }
