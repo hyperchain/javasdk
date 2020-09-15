@@ -51,3 +51,4 @@ release v1.0.3
     1. support bvm proposal
     2. add contract destroy method
     3. change null point to null string and null list for bvm
+    4. change filter rule json key split by _
