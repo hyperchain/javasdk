@@ -233,8 +233,8 @@ curl localhost:8081 --data '{"jsonrpc":"2.0","namespace":"global","method":"mq_d
                 logToBlock("2").           //表示需要推送log事件的终止区块号
                 logAddress("0x1258b70e2d620805a5351d8553ca76606a0c6fc5").   //表示log事件需要匹配的合约地址
                 logAddress("0xea22068f8ef04f6c4b5b73e55b51c4c758c7276e").   //可多次调用添加多个合约地址
-                logTopics(new String[]{"topicA", "topicB"}).    //表示log事件需要匹配的topic集合
-                logTopics(new String[]{"topicC", "topicD"}).    //可多次调用添加多个topic数组
+                logTopics(new String[]{encodeEventTopic("topicA"), encodeEventTopic("topicB")}).    //表示log事件需要匹配的topic集合
+                logTopics(new String[]{encodeEventTopic("topicC"), encodeEventTopic("topicD")}).    //可多次调用添加多个topic数组
                 //请求发起人自身信息
                 registrant(TEST_FROM).     //表示请求发起者的账户地址，用于权限控制
                 build();
