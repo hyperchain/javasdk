@@ -18,6 +18,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
 public class Encoder {
@@ -173,6 +174,18 @@ public class Encoder {
             }
         }
         return eventMap;
+    }
+
+    /**
+     * encode topic to hash hex
+     * @param topic topic
+     * @return hash hex
+     */
+    public static String encodeEventTopic(String topic) {
+        byte[] data = new byte[32];
+        byte[] topicData = topic.getBytes(Charset.forName("utf-8"));
+        System.arraycopy(topicData, 0, data, 32 - topicData.length, topicData.length);
+        return ByteUtil.toHex(data);
     }
 
     /**
