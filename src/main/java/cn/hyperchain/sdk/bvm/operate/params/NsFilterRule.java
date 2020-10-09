@@ -1,17 +1,21 @@
 package cn.hyperchain.sdk.bvm.operate.params;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class NsFilterRule {
     @Expose
+    @SerializedName("allow_anyone")
     private boolean allowAnyone;
 
     @Expose
+    @SerializedName("authorized_roles")
     private List<String> authorizedRoles;
 
     @Expose
+    @SerializedName("forbidden_roles")
     private List<String> forbiddenRoles;
 
     @Expose

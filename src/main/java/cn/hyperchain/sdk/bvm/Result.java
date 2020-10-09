@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.bvm;
 
 import cn.hyperchain.sdk.common.utils.Base64;
+import com.google.common.base.Strings;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -32,7 +33,7 @@ public class Result {
      * @return decode ret
      */
     public String getRet() {
-        if (!"NULL".equals(ret)) {
+        if (!Strings.isNullOrEmpty(ret)) {
             return new String(Base64.getDecoder().decode(ret));
         }
         return ret;

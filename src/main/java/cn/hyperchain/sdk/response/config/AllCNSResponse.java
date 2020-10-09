@@ -16,9 +16,8 @@ public class AllCNSResponse extends Response {
 
     @Override
     public String toString() {
-        return "HostsResponse{" +
-                "result=" + result +
-                ", jsonrpc='" + jsonrpc + '\'' +
+        return "AllCNSResponse{" +
+                "jsonrpc='" + jsonrpc + '\'' +
                 ", id='" + id + '\'' +
                 ", code=" + code +
                 ", message='" + message + '\'' +

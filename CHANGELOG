@@ -49,3 +49,8 @@ release v1.0.2
     8. fix user can not get responses when one of the transactions is wrong
 release v1.0.3
     1. support bvm proposal
+    2. add contract destroy method
+    3. change null point to null string and null list for bvm
+    4. change filter rule json key split by _
+    5. set default txVersion to 1.0
+    6. add encodeEventTopic() function
