@@ -177,13 +177,13 @@ public class Encoder {
     }
 
     /**
-     * encode topic to hash hex
+     * encode topic to hash hex.
      * @param topic topic
      * @return hash hex
      */
     public static String encodeEventTopic(String topic) {
         byte[] data = new byte[32];
-        byte[] topicData = topic.getBytes(Charset.forName("utf-8"));
+        byte[] topicData = topic.getBytes(Utils.DEFAULT_CHARSET);
         System.arraycopy(topicData, 0, data, 32 - topicData.length, topicData.length);
         return ByteUtil.toHex(data);
     }

@@ -53,3 +53,4 @@ release v1.0.3
     3. change null point to null string and null list for bvm
     4. change filter rule json key split by _
     5. set default txVersion to 1.0
+    6. add encodeEventTopic() function
