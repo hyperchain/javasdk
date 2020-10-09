@@ -140,7 +140,7 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder(10, 10, 10)
 
 另外，每个节点都有一个对应的TxVersion，可通过`getTxVersion(nodeId)`接口获取对应节点的TxVersion，发送到节点的transaction的TxVersion必须与节点一致才能通过验签。`providerManager`对象在创建时会通过`TxVersion.setGlobalTxVersion`设置全局的TxVersion。`Transaction`对象也可通过`setTxVersion`函数设置单次交易的TxVersion。
 
-为全局设置txVersion：
+为全局设置txVersion(不推荐修改)：
 
 ```java
 static {
@@ -154,7 +154,7 @@ static {
 Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).txVersion(TxVersion.TxVersion10).build();
 ```
 
-一般而言，使用新版本LiteSDK访问hyperchain是需要设置txVersion为1.0，对于hyperchain2.0来说，sdk将自动识别平台txVersion，不需要手动进行设置。
+一般而言，使用新版本LiteSDK访问hyperchain默认txVersion为1.0，对于hyperchain2.0来说，sdk将自动识别平台txVersion，**不需要手动进行设置**。
 
 节点平台与TxVersion对应关系如下：
 
@@ -1011,9 +1011,6 @@ getTxVersion接口会在创建ProviderManager对象时调用，并设置全局�
 ```java
 Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
 ```
-
-
-
 
 
 ## 第五章. BlockService相关接口
