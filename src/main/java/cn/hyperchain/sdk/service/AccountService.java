@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.account.AccountsByRoleResponse;
 import cn.hyperchain.sdk.response.account.BalanceResponse;
 import cn.hyperchain.sdk.response.account.RolesResponse;
+import cn.hyperchain.sdk.response.account.StatusResponse;
 
 import java.io.InputStream;
 
@@ -43,4 +44,5 @@ public interface AccountService {
 
     Request<AccountsByRoleResponse> getAccountsByRole(String role, int... nodeIds);
 
+    Request<StatusResponse> getStatus(String address, int... nodeIds);
 }

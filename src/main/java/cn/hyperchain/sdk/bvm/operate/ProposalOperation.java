@@ -26,6 +26,7 @@ public class ProposalOperation extends BuiltinOperation {
         public ProposalBuilder createForNode(NodeOperation... opts) {
             opt.setMethod(ContractMethod.ProposalCreate);
             opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.Node.getTyp());
+            opt.setBase64Index(0);
             return this;
         }
 
@@ -38,6 +39,7 @@ public class ProposalOperation extends BuiltinOperation {
         public ProposalBuilder createForCNS(CNSOperation... opts) {
             opt.setMethod(ContractMethod.ProposalCreate);
             opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.CNS.getTyp());
+            opt.setBase64Index(0);
             return this;
         }
 
@@ -50,6 +52,7 @@ public class ProposalOperation extends BuiltinOperation {
         public ProposalBuilder createForPermission(PermissionOperation... opts) {
             opt.setMethod(ContractMethod.ProposalCreate);
             opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.Permission.getTyp());
+            opt.setBase64Index(0);
             return this;
         }
 
@@ -62,6 +65,7 @@ public class ProposalOperation extends BuiltinOperation {
         public ProposalBuilder createForContract(ContractOperation... opts) {
             opt.setMethod(ContractMethod.ProposalCreate);
             opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.Contract.getTyp());
+            opt.setBase64Index(0);
             return this;
         }
 
@@ -74,6 +78,7 @@ public class ProposalOperation extends BuiltinOperation {
         public ProposalBuilder createForConfig(ConfigOperation... opts) {
             opt.setMethod(ContractMethod.ProposalCreate);
             opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.Config.getTyp());
+            opt.setBase64Index(0);
             return this;
         }
 

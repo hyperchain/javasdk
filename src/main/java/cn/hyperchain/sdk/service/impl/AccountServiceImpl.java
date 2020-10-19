@@ -18,6 +18,7 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.account.AccountsByRoleResponse;
 import cn.hyperchain.sdk.response.account.BalanceResponse;
 import cn.hyperchain.sdk.response.account.RolesResponse;
+import cn.hyperchain.sdk.response.account.StatusResponse;
 import cn.hyperchain.sdk.service.AccountService;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
@@ -146,6 +147,13 @@ public class AccountServiceImpl implements AccountService {
     public Request<AccountsByRoleResponse> getAccountsByRole(String role, int... nodeIds) {
         BalanceRequest balanceRequest = new BalanceRequest(ACC_PREFIX + "getAccountsByRole", providerManager, AccountsByRoleResponse.class, nodeIds);
         balanceRequest.addParams(role);
+        return balanceRequest;
+    }
+
+    @Override
+    public Request<StatusResponse> getStatus(String address, int... nodeIds) {
+        BalanceRequest balanceRequest = new BalanceRequest(ACC_PREFIX + "getStatus", providerManager, StatusResponse.class, nodeIds);
+        balanceRequest.addParams(address);
         return balanceRequest;
     }
 }
