@@ -27,7 +27,7 @@ public class MQServiceImpl implements MQService {
         params.put("from", from);
         params.put("queueName", queueName);
         params.put("routingkeys", routingkeys);
-        params.put("isVerbose", false);
+        params.put("isVerbose", isVerbose);
         mqResponseMQRequest.addParams(params);
 
         return mqResponseMQRequest;
