@@ -1,6 +1,5 @@
 package cn.hyperchain.sdk.crypto.sm.sm2;
 
-import cn.hyperchain.sdk.common.utils.ByteUtil;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.CryptoException;
@@ -8,14 +7,18 @@ import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 
 import java.math.BigInteger;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
+import java.security.Signature;
 
 public class SM2Util {
 
@@ -71,6 +74,40 @@ public class SM2Util {
         signer.init(true, param);
         signer.update(srcData, 0, srcData.length);
         return signer.generateSignature();
+    }
+
+    public static AsymmetricCipherKeyPair genFromPrivKey(byte[] privKey) {
+        ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, privKey), SM2Util.DOMAIN_PARAMS);
+        return new AsymmetricCipherKeyPair(null, privateKeyParameters);
+    }
+
+    /**
+     * Generate an encoded SM2 signature based on the SM3 digest using the
+     * passed in EC private key and input data.
+     * @param ecPrivate the private key for generating the signature with.
+     * @param input the input to be signed.
+     * @return the encoded signature.
+     */
+    public static byte[] generateSM2Signature(PrivateKey ecPrivate, byte[] input) throws GeneralSecurityException {
+        Signature signature = Signature.getInstance("SM3withSM2", "BC");
+        signature.initSign(ecPrivate);
+        signature.update(input);
+        return signature.sign();
+    }
+
+    /**
+     * verify sm2 signature based on its public key, input and signature.
+     *
+     * @param ecPublic the public key of the signature creator.
+     * @param input the input that was supposed to have been signed.
+     * @param encSignature the encoded signature.
+     * @return true if the signature verifies, false otherwise.
+     */
+    public static boolean verifySM2Signature(PublicKey ecPublic, byte[] input, byte[] encSignature) throws GeneralSecurityException {
+        Signature signature = Signature.getInstance("SM3withSM2", "BC");
+        signature.initVerify(ecPublic);
+        signature.update(input);
+        return signature.verify(encSignature);
     }
 
     /**
