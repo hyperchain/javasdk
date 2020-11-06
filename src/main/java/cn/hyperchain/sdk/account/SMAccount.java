@@ -18,6 +18,10 @@ public class SMAccount extends Account {
         this.keyPair = keyPair;
     }
 
+    public AsymmetricCipherKeyPair getKeyPair() {
+        return keyPair;
+    }
+
     @Override
     public byte[] sign(byte[] sourceData) {
         try {

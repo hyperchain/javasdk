@@ -179,9 +179,12 @@ public class BVMTest {
                 new ConfigOperation.ConfigBuilder().setConsensusPoolSize(200).build(),
                 new ConfigOperation.ConfigBuilder().setConsensusSetSize(50).build(),
                 new ConfigOperation.ConfigBuilder().setProposalThreshold(4).build(),
-                new ConfigOperation.ConfigBuilder().setProposalTimeout(Duration.ofMinutes(8).abs()).build()
+                new ConfigOperation.ConfigBuilder().setProposalTimeout(Duration.ofMinutes(8).abs()).build(),
 //                new ConfigOperation.ConfigBuilder().setContractVoteThreshold(3).build(),
 //                new ConfigOperation.ConfigBuilder().setContractVoteEnable(true).build()
+                new ConfigOperation.ConfigBuilder().setProposalTimeout(Duration.ofMinutes(8).abs()).build(),
+                new ConfigOperation.ConfigBuilder().setContractVoteThreshold(3).build(),
+                new ConfigOperation.ConfigBuilder().setContractVoteEnable(true).build()
         ).build());
     }
 

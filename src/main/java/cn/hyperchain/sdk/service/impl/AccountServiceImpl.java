@@ -2,11 +2,13 @@ package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
-import cn.hyperchain.sdk.account.ECAccount;
 import cn.hyperchain.sdk.account.SMAccount;
 import cn.hyperchain.sdk.account.Version;
+import cn.hyperchain.sdk.account.ECAccount;
+import cn.hyperchain.sdk.account.PKIAccount;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
+import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.exception.AccountException;
@@ -21,16 +23,15 @@ import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 public class AccountServiceImpl implements AccountService {
 
     private ProviderManager providerManager;
     private static final String ACC_PREFIX = "account_";
-
-    public AccountServiceImpl() {
-    }
 
     public AccountServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
@@ -71,6 +72,49 @@ public class AccountServiceImpl implements AccountService {
             privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
             return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, ecKey);
         }
+    }
+
+    @Override
+    public Account genAccount(Algo algo, String password, InputStream input) {
+        if (algo.isPKI()) {
+            String privateHex;
+            String publicHex;
+            try {
+                // generate X509Certificate Instance from input stream.
+                X509Certificate cert = CertUtils.getCertFromPFXFile(input, password);
+                // get the primitive output of bytes from X509Certificate Instance.
+                byte[] address = CertUtils.getCNfromCert(cert);
+                // extract the primitive output of bytes of pfx file from input stream.
+                byte[] privateKey = CertUtils.getPrivFromPFXFile(input, password);
+                String curveType = cert.getPublicKey().getAlgorithm();
+                if (curveType.equals("SM2")) {
+                    privateHex = (ByteUtil.toHex(privateKey).substring(CertUtils.smPrivPrefix, CertUtils.smPrivPostfix));
+                    publicHex = (ByteUtil.toHex(privateKey).substring(CertUtils.smPubPrefix, CertUtils.smPubPostfix));
+                } else {
+                    privateHex = (ByteUtil.toHex(privateKey).substring(CertUtils.ecPrivPrefix, CertUtils.ecPrivPostfix));
+                    publicHex = (ByteUtil.toHex(privateKey).substring(CertUtils.ecPubPrefix, CertUtils.ecPubPostfix));
+                }
+                return new PKIAccount(new String(address), publicHex, privateHex, Version.V4, algo, cert);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    // TODO: 非证书账户之间的类型转换。
+    // Currently support change the Non-cert Account to cert Account.
+    @Override
+    public Account changeAccountType(Account acc, String password, InputStream input) {
+        try {
+            X509Certificate cert = CertUtils.getCertFromPFXFile(input, password);
+            byte[] publicKey = cert.getPublicKey().getEncoded();
+            byte[] privateKey = CertUtils.getPrivFromPFXFile(input, password);
+            return new PKIAccount(acc.getAddress(), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, Algo.PKI, cert);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

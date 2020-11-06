@@ -4,25 +4,29 @@ import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.crypto.CipherUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
+import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.crypto.sm.sm4.SM4Util;
 import cn.hyperchain.sdk.exception.AccountException;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
+import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
+import org.bouncycastle.util.encoders.Base64;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.security.cert.X509Certificate;
 
 public abstract class Account {
     protected final Logger logger = Logger.getLogger(Account.class);
@@ -42,6 +46,9 @@ public abstract class Account {
     protected Version version;
     @Expose
     protected Algo algo;
+    // Base64 encoded certificate as String type
+    @Expose
+    protected String certificate;
 
     /**
      * create account json instance by param.
@@ -74,6 +81,24 @@ public abstract class Account {
         String privateKeyHex = jsonObject.get("privateKey").getAsString();
         Version version = Version.getVersion(jsonObject.get("version").getAsString());
         Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
+        // When Algo indicates the input is PKI type, start if condition to generate PKI Account.
+        if (algo == Algo.PKI) {
+            // Obtain the path of relative pfx format certificate as a String type.
+            InputStream in = new ByteArrayInputStream(Base64.decode(jsonObject.get("certificate").getAsString()));
+            try {
+                // Extract the X509Certificate type from input stream, to do this password is necessary(if have).
+                X509Certificate cert = CertUtils.getCertFromPFXFile(in, password);
+                // TODO: check account validate. Should check the certificate is valid or not. And every field of json should match with this certificate.
+                // if(cert.()) {
+                //    return new PKIAccount(addressHex, publicKeyHex, privateKeyHex, Version.V4, algo, cert);
+                //} else{
+                //    throw new Exception("No validity!");
+                //}
+                return new PKIAccount(addressHex, publicKeyHex, privateKeyHex, Version.V4, algo, cert);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         byte[] privateKey = decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password);
         if (privateKey.length == 0) {
             throw new AccountException("password error");
@@ -111,6 +136,7 @@ public abstract class Account {
      */
     public static byte[] decodePrivateKey(byte[] privateKey, Algo algo, String password) {
         switch (algo) {
+            case PKI:
             case ECRAW:
             case SMRAW:
                 break;
@@ -145,6 +171,7 @@ public abstract class Account {
      */
     public static byte[] encodePrivateKey(byte[] privateKey, Algo algo, String password) {
         switch (algo) {
+            case PKI:
             case ECRAW:
             case SMRAW:
                 break;
