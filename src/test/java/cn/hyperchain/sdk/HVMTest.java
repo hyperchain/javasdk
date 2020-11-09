@@ -19,7 +19,7 @@ import cn.hyperchain.sdk.service.AccountService;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
-import com.sun.xml.internal.ws.policy.AssertionSet;
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -178,5 +178,18 @@ public class HVMTest {
         // 8. get result & decode result
         System.out.println("调用返回(未解码): " + receiptResponse1.getRet());
         System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse1.getRet(), String.class));
+    }
+
+    @Test
+    public void testDecodePayload() throws Exception {
+        AccountService accountService = ServiceManager.getAccountService(null);
+        // 3. build transaction
+        Account account = accountService.genAccount(Algo.SMRAW);
+        InvokeDirectlyParams invokeDirectlyParams = new InvokeDirectlyParams.ParamBuilder("transfer").addString("AAA").addString("BBB").addlong(100).build();
+        System.out.println(new String(ByteUtil.fromHex(invokeDirectlyParams.getParams())));
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invokeDirectly("0x0", invokeDirectlyParams).build();
+        HVMPayload hvmPayload = Decoder.decodeHVMPayload(transaction.getPayload());
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(hvmPayload));
     }
 }

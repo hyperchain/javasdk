@@ -96,9 +96,21 @@ public class Decoder {
                 }
             }
         }
-        String invokeBeanName = new String(name, "UTF-8");
-        String invokeArgs = new String(bin, "UTF-8");
+        String invokeBeanName = new String(name, Utils.DEFAULT_CHARSET);
+        String invokeArgs = new String(bin, Utils.DEFAULT_CHARSET);
         return new HVMPayload(invokeBeanName, invokeArgs, methodNames);
+    }
+
+    static class InvokeParam {
+        private String name;
+        private String type;
+        private String value;
+
+        public InvokeParam(String name, String type, String value) {
+            this.name = name;
+            this.type = type;
+            this.value = value;
+        }
     }
 
     /**
@@ -107,22 +119,22 @@ public class Decoder {
      * @param payload in: | methodName length(2B) | methodName | params |
      * @return HVMPayload
      */
-    private static HVMPayload decodeHVMPayloadInvokeDirectly(String payload) throws IOException {
+    private static HVMPayload decodeHVMPayloadInvokeDirectly(String payload) {
         byte[] payloadBytes = ByteUtil.fromHex(payload);
         int nameLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, 4, 2));
         byte[] name = ByteUtil.copy(payloadBytes, 6, nameLen);
         int begin = 6 + nameLen;
-        Map<String, String> invokeArgs = new LinkedHashMap<>();
+        List<InvokeParam> invokeArgs = new ArrayList<>();
         while (begin < payloadBytes.length) {
             int paramTypeLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, begin, 2));
             int paramLen = ByteUtil.bytesToInteger(ByteUtil.copy(payloadBytes, begin + 2, 4));
             String paramType = new String(ByteUtil.copy(payloadBytes, begin + 6, paramTypeLen));
             String param = new String(ByteUtil.copy(payloadBytes, begin + 6 + paramTypeLen, paramLen));
             begin = begin + 6 + paramTypeLen + paramLen;
-            invokeArgs.put(paramType, param);
+            invokeArgs.add(new InvokeParam(null, paramType, param));
         }
         Set<String> invokeMethodsName = new HashSet<>();
-        invokeMethodsName.add(new String(name, "UTF-8"));
+        invokeMethodsName.add(new String(name, Utils.DEFAULT_CHARSET));
         return new HVMPayload("", gson.toJson(invokeArgs), invokeMethodsName);
     }
 
