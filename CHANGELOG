@@ -54,3 +54,7 @@ release v1.0.3
     4. change filter rule json key split by _
     5. set default txVersion to 1.0
     6. add encodeEventTopic() function
+release v1.0.4
+    1. add pki account support
+    2. fix isVerbose is always false for mq
+    3. fix decode the payload of hvm invoke directly
