@@ -19,6 +19,8 @@ import org.apache.log4j.Logger;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
+import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.util.encoders.Base64;
@@ -33,6 +35,7 @@ public abstract class Account {
 
     protected static final byte[] ECFlag = new byte[]{0};
     protected static final byte[] SMFlag = new byte[]{1};
+    protected static final byte[] ED25519Flag = new byte[]{2};
 
     private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -117,12 +120,25 @@ public abstract class Account {
                 throw new AccountException("account address is not matching with private key");
             }
             return new SMAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
-        } else {
+        } else if (algo.isEC()) {
             ECKey ecKey = ECKey.fromPrivate(privateKey);
             if (!addressHex.equals(ByteUtil.toHex(ecKey.getAddress()))) {
                 throw new AccountException("account address is not matching with private key");
             }
             return new ECAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, ecKey);
+        } else {
+            byte[] realPrivateKey = new byte[32];
+            byte[] publicKey = new byte[32];
+            System.arraycopy(privateKey, 0, realPrivateKey, 0, 32);
+            System.arraycopy(privateKey, 32, publicKey, 0, 32);
+            Ed25519PrivateKeyParameters ed25519PrivateKeyParameters = new Ed25519PrivateKeyParameters(realPrivateKey, 0);
+            Ed25519PublicKeyParameters ed25519PublicKeyParameters = new Ed25519PublicKeyParameters(publicKey, 0);
+            AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(ed25519PublicKeyParameters, ed25519PrivateKeyParameters);
+
+            if (!addressHex.equals(ByteUtil.toHex((HashUtil.sha2_256omit12(ed25519PublicKeyParameters.getEncoded()))))) {
+                throw new AccountException("account address is not matching with private key");
+            }
+            return new ED25519Account(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
         }
     }
 
@@ -139,17 +155,21 @@ public abstract class Account {
             case PKI:
             case ECRAW:
             case SMRAW:
+            case ED25519RAW:
                 break;
             case ECDES:
             case SMDES:
+            case ED25519DES:
                 privateKey = CipherUtil.decryptDES(privateKey, password);
                 break;
             case ECAES:
             case SMAES:
+            case ED25519AES:
                 privateKey = CipherUtil.decryptAES(privateKey, password);
                 break;
             case EC3DES:
             case SM3DES:
+            case ED255193DES:
                 privateKey = CipherUtil.decrypt3DES(privateKey, password);
                 break;
             case SMSM4:
@@ -174,17 +194,21 @@ public abstract class Account {
             case PKI:
             case ECRAW:
             case SMRAW:
+            case ED25519RAW:
                 break;
             case ECDES:
             case SMDES:
+            case ED25519DES:
                 privateKey = CipherUtil.encryptDES(privateKey, password);
                 break;
             case ECAES:
             case SMAES:
+            case ED25519AES:
                 privateKey = CipherUtil.encryptAES(privateKey, password);
                 break;
             case EC3DES:
             case SM3DES:
+            case ED255193DES:
                 privateKey = CipherUtil.encrypt3DES(privateKey, password);
                 break;
             case SMSM4:

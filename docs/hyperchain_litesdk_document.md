@@ -297,7 +297,7 @@ AccountService accountService = ServiceManager.getAccountService(providerManager
 Account account = accountService.genAccount(Algo.SMRAW);
 ```
 
-如第二章所说，创建`Service`对象需要指定`ProviderManager`对象，且使用`genAccount()`创建账户时需要指定加密算法，如示例中使用**SMRAW算法**（只有**ECRAW**、**SMRAW**不需要密码参数，其余的加密算法需要手动设置**password**）。另外，对于要使用**PKI算法**创建的账户，需要传入其使用的**PFX证书**的输入流以及该证书对应的密码。原因是PFX证书内包含生成其的私钥，解密该私钥需要对应密码。
+如第二章所说，创建`Service`对象需要指定`ProviderManager`对象，且使用`genAccount()`创建账户时需要指定加密算法，如示例中使用**SMRAW算法**（只有**ECRAW**、**SMRAW**、**ED25519RAW**不需要密码参数，其余的加密算法需要手动设置**password**）。另外，对于要使用**PKI算法**创建的账户，需要传入其使用的**PFX证书**的输入流以及该证书对应的密码。原因是PFX证书内包含生成其的私钥，解密该私钥需要对应密码。
 
 `AccountService`提供的接口如下：
 
@@ -341,6 +341,11 @@ public enum Algo {
     SMRAW("0x13"),
     SMAES("0x14"),
     SM3DES("0x15"),
+    
+    ED25519DES("0x21"),
+    ED25519RAW("0x22"),
+    ED25519AES("0x23"),
+    ED255193DES("0x24"),
 
     PKI("0x41");
 }
