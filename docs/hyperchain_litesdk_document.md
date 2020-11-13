@@ -318,6 +318,8 @@ public interface AccountService {
     Request<RolesResponse> getRoles(String address, int... nodeIds);
 
     Request<AccountsByRoleResponse> getAccountsByRole(String role, int... nodeIds);
+  
+    Request<StatusResponse> getStatus(String address, int... nodeIds);
 }
 ```
 
@@ -326,6 +328,7 @@ public interface AccountService {
 -  `getBalance `方法则可以查询该账户所有的余额，需要传一个**合约地址**为参数。
 -  `getRoles`方法则可以查询该账户所有的角色，需要传一个**合约地址**为参数。
 -  `getAccountsByRole `方法则可以查询具有改角色的账户列表，需要传一个**角色名称**为参数。
+-  `getStatus` 方法则可以查询普通账户的状态，需要穿一个普通**账户地址**为参数。
 
 目前Account服务支持的所有加密算法如下：
 

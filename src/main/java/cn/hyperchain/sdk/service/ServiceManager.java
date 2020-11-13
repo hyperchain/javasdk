@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.service.impl.AccountServiceImpl;
 import cn.hyperchain.sdk.service.impl.ArchiveServiceImpl;
+import cn.hyperchain.sdk.service.impl.AuthServiceImpl;
 import cn.hyperchain.sdk.service.impl.BlockServiceImpl;
 import cn.hyperchain.sdk.service.impl.CompileServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
@@ -63,5 +64,9 @@ public class ServiceManager {
 
     public static ConfigService getConfigService(ProviderManager providerManager) {
         return new ConfigServiceImpl(providerManager);
+    }
+
+    public static AuthService getAuthService(ProviderManager providerManager) {
+        return new AuthServiceImpl(providerManager);
     }
 }

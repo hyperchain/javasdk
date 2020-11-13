@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.provider;
 
+import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.common.utils.HttpsUtils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
@@ -23,6 +24,7 @@ public class DefaultHttpProvider implements HttpProvider {
     protected String url;
     protected volatile PStatus status;
     protected String httpPrefix;
+    protected Account account;
 
     protected DefaultHttpProvider() {
     }
@@ -109,6 +111,20 @@ public class DefaultHttpProvider implements HttpProvider {
         }
 
         /**
+         * use inspector.
+         * @param defaultAccount the account to send request.
+         * @return {@link Builder}
+         */
+        public Builder enableInspector(Account defaultAccount) {
+            if (defaultAccount == null) {
+                logger.warn("enable inspector's account is null");
+                throw new RuntimeException("enable inspector error, cause account is null");
+            }
+            defaultHttpProvider.account = defaultAccount;
+            return this;
+        }
+
+        /**
          * get default http provider instance.
          * @return {@link DefaultHttpProvider}
          */
@@ -121,6 +137,7 @@ public class DefaultHttpProvider implements HttpProvider {
 
     @Override
     public String post(cn.hyperchain.sdk.request.Request rawRequest) throws RequestException {
+
         Map<String, String> headers = rawRequest.getHeaders();
         String body = rawRequest.requestBody();
         RequestBody requestBody = RequestBody.create(JSON, body);
@@ -182,5 +199,9 @@ public class DefaultHttpProvider implements HttpProvider {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Random;
 
 public class Utils {
@@ -82,5 +83,14 @@ public class Utils {
      */
     public static boolean isAbsolutePath(String path) {
         return path.startsWith("/") || path.startsWith("file:/") || path.contains(":\\");
+    }
+
+    /**
+     * get timestamp.
+     *
+     * @return timestamp for unixNano
+     */
+    public static Long genTimestamp() {
+        return new Date().getTime() * 1000000 + Utils.randInt(1000, 1000000);
     }
 }

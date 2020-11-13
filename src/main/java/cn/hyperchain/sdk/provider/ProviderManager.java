@@ -195,6 +195,15 @@ public class ProviderManager {
                 logger.debug("[REQUEST] request node id: " + ((startIndex + i) % providerSize + 1));
                 try {
                     request.setNamespace(this.namespace);
+                    DefaultHttpProvider dProvider = (DefaultHttpProvider) hProvider;
+                    if (dProvider.account != null) {
+                        // use dProvider sign
+                        Request.Authentication auth = new Request.Authentication(Utils.genTimestamp(), dProvider.account.getAddress());
+                        String needHashString = auth.getNeedHashString();
+                        byte[] sourceData = needHashString.getBytes(Utils.DEFAULT_CHARSET);
+                        auth.setSignature(ByteUtil.toHex(dProvider.account.sign(sourceData)));
+                        request.setAuth(auth);
+                    }
                     return sendTo(request, hProvider);
                 } catch (RequestException e) {
                     if (e.getCode().equals(RequestExceptionCode.NETWORK_GETBODY_FAILED.getCode())) {
