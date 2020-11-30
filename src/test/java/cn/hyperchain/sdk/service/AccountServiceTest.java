@@ -8,6 +8,7 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.account.AccountsByRoleResponse;
 import cn.hyperchain.sdk.response.account.BalanceResponse;
 import cn.hyperchain.sdk.response.account.RolesResponse;
+import cn.hyperchain.sdk.response.account.StatusResponse;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -70,5 +71,14 @@ public class AccountServiceTest {
         Request<AccountsByRoleResponse> balance = accountService.getAccountsByRole(role);
         AccountsByRoleResponse send = balance.send();
         System.out.println(send.getAccounts());
+    }
+
+    @Test
+    @Ignore
+    public void testGetStatus() throws RequestException {
+        String address = "0x37a1100567bf7e0de2f5a0dc1917f0552aa43d88";
+        Request<StatusResponse> balance = accountService.getStatus(address);
+        StatusResponse send = balance.send();
+        System.out.println(send.getStatus());
     }
 }

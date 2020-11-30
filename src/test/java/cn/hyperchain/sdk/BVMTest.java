@@ -3,6 +3,7 @@ package cn.hyperchain.sdk;
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.bvm.OperationResult;
 import cn.hyperchain.sdk.bvm.Result;
+import cn.hyperchain.sdk.bvm.operate.AccountOperation;
 import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.bvm.operate.CNSOperation;
 import cn.hyperchain.sdk.bvm.operate.ConfigOperation;
@@ -303,6 +304,69 @@ public class BVMTest {
         return voteAndExecute();
     }
 
+    @Test
+    @Ignore
+    public void testRegister() throws RequestException {
+        String address = "0xffffffffffbf7e0de2f5a0dc1917f0552aa43d87";
+        String cert = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICVjCCAgKgAwIBAgIIcy8/n1XOqQQwCgYIKoZIzj0EAwIwdDEJMAcGA1UECBMA\n" +
+                "MQkwBwYDVQQHEwAxCTAHBgNVBAkTADEJMAcGA1UEERMAMQ4wDAYDVQQKEwVmbGF0\n" +
+                "bzEJMAcGA1UECxMAMQ4wDAYDVQQDEwVub2RlMTELMAkGA1UEBhMCWkgxDjAMBgNV\n" +
+                "BCoTBWVjZXJ0MB4XDTIwMTExMjAwMDAwMFoXDTIxMTAyMTAwMDAwMFowYTELMAkG\n" +
+                "A1UEBhMCQ04xDjAMBgNVBAoTBWZsYXRvMTEwLwYDVQQDEyhmZmZmZmZmZmZmYmY3\n" +
+                "ZTBkZTJmNWEwZGMxOTE3ZjA1NTJhYTQzZDg3MQ8wDQYDVQQqEwZpZGNlcnQwVjAQ\n" +
+                "BgcqhkjOPQIBBgUrgQQACgNCAAQYF3xQqTY5Hr9f8I65BLCKOxuR9U+39HDqF6ba\n" +
+                "/G2vTjGFDbOw/LXVIPk+GNrife1EDtvpBtQi2b9G0o+fxrzoo4GTMIGQMA4GA1Ud\n" +
+                "DwEB/wQEAwIB7jAxBgNVHSUEKjAoBggrBgEFBQcDAgYIKwYBBQUHAwEGCCsGAQUF\n" +
+                "BwMDBggrBgEFBQcDBDAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTzl9gKHb19nd5m\n" +
+                "rRnyavoaiQQrJzAPBgNVHSMECDAGgAQBAgMEMA0GAypWAQQGaWRjZXJ0MAoGCCqG\n" +
+                "SM49BAMCA0IAon0Hym4rdLsZQnioh38SPrpQV66c9aWoBN4T9eYH8Nlouxi9C6Od\n" +
+                "OqdJnRWkgUVw/kA+egZTzx0Bm/yF/VNgYAE=\n" +
+                "-----END CERTIFICATE-----\n";
+        Account ac = accountService.fromAccountJson(accountJsons[5]);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new AccountOperation.AccountBuilder().register(address, cert).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertEquals("", result.getErr());
+    }
+
+    @Test
+    @Ignore
+    public void testLogout() throws RequestException {
+        String address = "0xffffffffffbf7e0de2f5a0dc1917f0552aa43d87";
+        String sdkCert = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICVjCCAgKgAwIBAgIIQjE4PWfTGPAwCgYIKoZIzj0EAwIwdDEJMAcGA1UECBMA\n" +
+                "MQkwBwYDVQQHEwAxCTAHBgNVBAkTADEJMAcGA1UEERMAMQ4wDAYDVQQKEwVmbGF0\n" +
+                "bzEJMAcGA1UECxMAMQ4wDAYDVQQDEwVub2RlMTELMAkGA1UEBhMCWkgxDjAMBgNV\n" +
+                "BCoTBWVjZXJ0MB4XDTIwMTAxNjAwMDAwMFoXDTIwMTAxNjAwMDAwMFowYjELMAkG\n" +
+                "A1UEBhMCQ04xDjAMBgNVBAoTBWZsYXRvMTMwMQYDVQQDEyoweDk2MzkxNTIxNTBk\n" +
+                "ZjkxMDVjMTRhZTM1M2M3YzdlNGQ1ZTU2YTAxYTMxDjAMBgNVBCoTBWVjZXJ0MFYw\n" +
+                "EAYHKoZIzj0CAQYFK4EEAAoDQgAEial3WRUmVgLeB+Oi8R/FQDtpp4egSGnQ007x\n" +
+                "M4uDHTIqlQmz6VAe4d2caMIXREecbYTkAK4HNR6y7A54ISc9pqOBkjCBjzAOBgNV\n" +
+                "HQ8BAf8EBAMCAe4wMQYDVR0lBCowKAYIKwYBBQUHAwIGCCsGAQUFBwMBBggrBgEF\n" +
+                "BQcDAwYIKwYBBQUHAwQwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQU+7HuCW+CEqcP\n" +
+                "UbcUJ2Ad5evjrIswDwYDVR0jBAgwBoAEAQIDBDAMBgMqVgEEBWVjZXJ0MAoGCCqG\n" +
+                "SM49BAMCA0IA7aV3A20YOObn+H72ksXcUHx8PdC0z/rULhes2uFiINsqEPkGkaH9\n" +
+                "HjBiP8uYn4YLtYVZ5pdmfoTHa7/CjVyOUwA=\n" +
+                "-----END CERTIFICATE-----";
+        Account ac = accountService.fromAccountJson(accountJsons[5]);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new AccountOperation.AccountBuilder().abandon(address, sdkCert).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertEquals("", result.getErr());
+    }
 }
 
 

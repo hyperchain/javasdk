@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.common.utils;
 
 import cn.hyperchain.contract.BaseInvoke;
+import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
@@ -221,7 +222,6 @@ public class Encoder {
      * @return payload
      */
     public static byte[] encodeOperation(Operation opt) {
-        Gson gson = new Gson();
         // encode : |method length(4b)|method|params count(4)|params1 length(4)|params1|...
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -231,8 +231,14 @@ public class Encoder {
 
             bos.write(b);
             bos.write(ByteUtil.intToBytes(opt.getArgs().length));
+
+            boolean[] base64Index = null;
+            if (opt instanceof BuiltinOperation) {
+                BuiltinOperation bo = (BuiltinOperation) opt;
+                base64Index = bo.getBase64Index();
+            }
             for (int i = 0; i < opt.getArgs().length; i++) {
-                byte[] bytes = opt.getMethod() == ContractMethod.ProposalCreate && i == 0 ? Base64.getDecoder().decode(opt.getArgs()[i]) : opt.getArgs()[i].getBytes();
+                byte[] bytes = base64Index != null && base64Index[i] ? Base64.getDecoder().decode(opt.getArgs()[i]) : opt.getArgs()[i].getBytes();
                 byte[] intToBytes = ByteUtil.intToBytes(bytes.length);
                 bos.write(intToBytes);
                 bos.write(bytes);
@@ -240,7 +246,6 @@ public class Encoder {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        byte[] bytes = bos.toByteArray();
         return bos.toByteArray();
     }
 }
