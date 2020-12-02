@@ -29,6 +29,8 @@ import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -100,24 +102,25 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account genAccount(Algo algo, String password, InputStream input) {
         if (algo.isPKI()) {
-            String privateHex;
-            String publicHex;
             try {
-                // generate X509Certificate Instance from input stream.
-                X509Certificate cert = CertUtils.getCertFromPFXFile(input, password);
-                // get the primitive output of bytes from X509Certificate Instance.
-                byte[] address = CertUtils.getCNfromCert(cert);
-                // extract the primitive output of bytes of pfx file from input stream.
-                byte[] privateKey = CertUtils.getPrivFromPFXFile(input, password);
-                String curveType = cert.getPublicKey().getAlgorithm();
-                if (curveType.equals("SM2")) {
-                    privateHex = (ByteUtil.toHex(privateKey).substring(CertUtils.smPrivPrefix, CertUtils.smPrivPostfix));
-                    publicHex = (ByteUtil.toHex(privateKey).substring(CertUtils.smPubPrefix, CertUtils.smPubPostfix));
-                } else {
-                    privateHex = (ByteUtil.toHex(privateKey).substring(CertUtils.ecPrivPrefix, CertUtils.ecPrivPostfix));
-                    publicHex = (ByteUtil.toHex(privateKey).substring(CertUtils.ecPubPrefix, CertUtils.ecPubPostfix));
+                // tmp store inputstream for 2nd use.
+                ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = input.read(buffer)) > -1 ) {
+                    tmp.write(buffer, 0, len);
                 }
-                return new PKIAccount(new String(address), publicHex, privateHex, Version.V4, algo, cert);
+                tmp.flush();
+                InputStream tmp1 = new ByteArrayInputStream(tmp.toByteArray());
+                // generate X509Certificate Instance from input stream.
+                X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
+                // get the primitive output of bytes from X509Certificate Instance.
+                String address = CertUtils.getCNFromCert(cert);
+                // extract the primitive output of bytes of pfx file from input stream.
+                InputStream tmp2 = new ByteArrayInputStream(tmp.toByteArray());
+                String privateHex = CertUtils.getPrivFromPFXFile(tmp2, password);
+                String publicHex = ByteUtil.toHex(cert.getPublicKey().getEncoded());
+                return new PKIAccount(address, publicHex, privateHex, Version.V4, algo, cert);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -132,8 +135,8 @@ public class AccountServiceImpl implements AccountService {
         try {
             X509Certificate cert = CertUtils.getCertFromPFXFile(input, password);
             byte[] publicKey = cert.getPublicKey().getEncoded();
-            byte[] privateKey = CertUtils.getPrivFromPFXFile(input, password);
-            return new PKIAccount(acc.getAddress(), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, Algo.PKI, cert);
+            String privateKey = CertUtils.getPrivFromPFXFile(input, password);
+            return new PKIAccount(acc.getAddress(), ByteUtil.toHex(publicKey), privateKey, Version.V4, Algo.PKI, cert);
         } catch (Exception e) {
             e.printStackTrace();
         }

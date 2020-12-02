@@ -25,20 +25,11 @@ public class PKIAccount extends Account {
     @Override
     public byte[] sign(byte[] sourceData) { // This sign function will signature the sourceData depending on the certificate algo type which can be ECDSA and SM2.
         if (this.cert.getPublicKey().getAlgorithm().equals("SM2")) {
-            AsymmetricCipherKeyPair keyPair = SM2Util.genFromPrivKey(Hex.decode(this.privateKey));
-            try {
-                byte[] publicKey = ByteUtil.fromHex(this.publicKey);
-                byte[] signature = SM2Util.sign(keyPair, sourceData);
-                return ByteUtil.merge(SMFlag, publicKey, signature);
-            } catch (CryptoException e) {
-                logger.error("sign transaction error " + e.getMessage());
-                return ByteUtil.EMPTY_BYTE_ARRAY;
-            }
+            SMAccount tmpSMAccount = new SMAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, SM2Util.genFromPrivKey(Hex.decode(this.privateKey)));
+            return tmpSMAccount.sign(sourceData);
         } else {
-            ECKey eckey = ECKey.fromPrivate(Hex.decode(this.privateKey));
-            byte[] hash = HashUtil.sha3(sourceData);
-            byte[] signature = eckey.sign(hash).toByteArray();
-            return ByteUtil.merge(ECFlag, signature);
+            ECAccount tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.privateKey)));
+            return tmpECAccount.sign(sourceData);
         }
     }
 

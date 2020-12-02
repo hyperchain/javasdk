@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.crypto.cert;
 
+import cn.hyperchain.sdk.common.utils.ByteUtil;
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DEROctetString;
@@ -14,21 +15,17 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
-import java.security.Key;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
+
+import java.io.*;
 import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.PrivateKey;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.security.UnrecoverableKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Arrays;
 
 
 public class CertUtils {
@@ -117,14 +114,29 @@ public class CertUtils {
      * @throws IOException -
      * @throws UnrecoverableKeyException -
      */
-    public static byte[] getPrivFromPFXFile(InputStream res, String password) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException, UnrecoverableKeyException {
-        // create a KeyStore instance by specifying an encoding scheme, in this case PKCS12 should be specified.
+    public static String getPrivFromPFXFile(InputStream res, String password) throws CertificateException, IOException, UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException, InvalidKeySpecException {
+        // tmp store inputstream for 2nd use.
+        ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = res.read(buffer)) > -1 ) {
+            tmp.write(buffer, 0, len);
+        }
+        tmp.flush();
+        InputStream tmp1 = new ByteArrayInputStream(tmp.toByteArray());
+        InputStream tmp2 = new ByteArrayInputStream(tmp.toByteArray());
         KeyStore ks = KeyStore.getInstance("PKCS12");
-        // created KeyStore instance loads the p12 file and its password for further use.
-        ks.load(res, password.toCharArray());
-        // get its Key from KeyStore
-        Key hexKey = ks.getKey(ks.aliases().nextElement(), password.toCharArray());
-        return hexKey.getEncoded();
+        ks.load(tmp1, password.toCharArray());
+        String alias = ks.aliases().nextElement();
+        KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(alias, new KeyStore.PasswordProtection(password.toCharArray()));
+        X509Certificate tmpCert = getCertFromPFXFile(tmp2, password);
+        String privateKey = null;
+        if (tmpCert.getPublicKey().getAlgorithm().equals("SM2")) {
+            privateKey = ByteUtil.toHex(pkEntry.getPrivateKey().getEncoded()).substring(66, 130);
+        } else {
+            privateKey = ByteUtil.toHex(pkEntry.getPrivateKey().getEncoded()).substring(66, 130);
+        }
+        return privateKey;
     }
 
     /**
@@ -133,15 +145,17 @@ public class CertUtils {
      * @return      CN of RDN in byte[]
      * @throws      Exception -
      */
-    public static byte[] getCNfromCert(X509Certificate cert) throws Exception {
+    public static String getCNFromCert(X509Certificate cert) throws Exception {
         try {
             // get X500Name which is derived from ASN1 Object by creating a new Holder from BC libraries.
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             // Relative Distinguished Name comes from the internal of X500Name, that stores Common Name.
             RDN cn = x500name.getRDNs(BCStyle.CN)[0];
-            return IETFUtils.valueToString(cn.getFirst().getValue()).getBytes();
+            return IETFUtils.valueToString(cn.getFirst().getValue());
         } catch (Exception e) {
             throw new Exception("Get CN error");
         }
     }
+
+
 }
