@@ -20,6 +20,7 @@ import java.util.Map;
 public class ContractServiceImpl implements ContractService {
     private ProviderManager providerManager;
     private static final String CONTRACT_PREFIX = "contract_";
+    private static final String SIMULATE_PREFIX = "simulate_";
     private String namespace = "global";
     private String jsonrpc = "2.0";
 
@@ -36,7 +37,7 @@ public class ContractServiceImpl implements ContractService {
      */
     @Override
     public Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds) {
-        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("deployContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("deployContract", transaction), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = transaction.commonParamMap();
         txParamMap.remove("to");
@@ -56,7 +57,7 @@ public class ContractServiceImpl implements ContractService {
      */
     @Override
     public Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds) {
-        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("invokeContract"), providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("invokeContract", transaction), providerManager, TxHashResponse.class, transaction, nodeIds);
 
         Map<String, Object> txParamMap = transaction.commonParamMap();
 
@@ -87,7 +88,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds) {
-        ContractRequest txHashResponseContractRequest = new ContractRequest(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("maintainContract", transaction), providerManager, TxHashResponse.class, transaction, nodeIds);
         Map<String, Object> params = transaction.commonParamMap();
 
         txHashResponseContractRequest.addParams(params);
@@ -99,7 +100,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds) {
-        ContractRequest txHashResponseContractRequest = new ContractRequest(CONTRACT_PREFIX + "manageContractByVote", providerManager, TxHashResponse.class, transaction, nodeIds);
+        ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("manageContractByVote", transaction), providerManager, TxHashResponse.class, transaction, nodeIds);
         Map<String, Object> params = transaction.commonParamMap();
 
         txHashResponseContractRequest.addParams(params);
@@ -109,7 +110,11 @@ public class ContractServiceImpl implements ContractService {
         return txHashResponseContractRequest;
     }
 
-    private String methodName(String method) {
-        return CONTRACT_PREFIX + method;
+    private String methodName(String method, Transaction transaction) {
+        if (transaction.isSimulate() && transaction.getTxVersion().getVersion() != "1.0") {
+            return SIMULATE_PREFIX + method;
+        } else {
+            return CONTRACT_PREFIX + method;
+        }
     }
 }
