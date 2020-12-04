@@ -24,7 +24,7 @@ import java.io.InputStream;
  * @ClassName AccountTest1
  * @date 2019-07-10
  */
-public class AccountTest1 {
+public class  AccountTest1 {
     private static AccountService accountService = ServiceManager.getAccountService(null);
 
     public static Account genAccount(Algo algo, String password) {

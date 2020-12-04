@@ -2,11 +2,11 @@ package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
-import cn.hyperchain.sdk.account.SMAccount;
-import cn.hyperchain.sdk.account.ED25519Account;
-import cn.hyperchain.sdk.account.Version;
 import cn.hyperchain.sdk.account.ECAccount;
+import cn.hyperchain.sdk.account.ED25519Account;
 import cn.hyperchain.sdk.account.PKIAccount;
+import cn.hyperchain.sdk.account.SMAccount;
+import cn.hyperchain.sdk.account.Version;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
@@ -28,6 +28,7 @@ import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
+import org.bouncycastle.util.encoders.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -80,7 +81,7 @@ public class AccountServiceImpl implements AccountService {
             publicKey = ecKey.getPubKey();
             privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
             return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, ecKey);
-        } else {
+        } else if (algo.isED()) {
             Ed25519KeyPairGenerator ed25519KeyPairGenerator = new Ed25519KeyPairGenerator();
             ed25519KeyPairGenerator.init(new Ed25519KeyGenerationParameters(new SecureRandom()));
             keyPair = ed25519KeyPairGenerator.generateKeyPair();
@@ -96,6 +97,8 @@ public class AccountServiceImpl implements AccountService {
             privateKey = Account.encodePrivateKey(mergedPrivateKey, algo, password);
             address = HashUtil.sha2_256omit12(publicKey);
             return new ED25519Account(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, keyPair);
+        } else {
+            throw new AccountException("illegal account type, you can only generate this account type");
         }
     }
 
@@ -114,13 +117,22 @@ public class AccountServiceImpl implements AccountService {
                 InputStream tmp1 = new ByteArrayInputStream(tmp.toByteArray());
                 // generate X509Certificate Instance from input stream.
                 X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
+                String encodedCert = Base64.toBase64String(cert.getEncoded());
                 // get the primitive output of bytes from X509Certificate Instance.
                 String address = CertUtils.getCNFromCert(cert);
                 // extract the primitive output of bytes of pfx file from input stream.
                 InputStream tmp2 = new ByteArrayInputStream(tmp.toByteArray());
-                String privateHex = CertUtils.getPrivFromPFXFile(tmp2, password);
-                String publicHex = ByteUtil.toHex(cert.getPublicKey().getEncoded());
-                return new PKIAccount(address, publicHex, privateHex, Version.V4, algo, cert);
+                String publicHex = CertUtils.getPubFromPFXFile(tmp2,password);
+                Algo tmpAlgo;
+                if (cert.getPublicKey().getAlgorithm().equals("EC")) {
+                    tmpAlgo = Algo.ECAES;
+                } else {
+                    tmpAlgo = Algo.SMSM4;
+                }
+                InputStream tmp3 = new ByteArrayInputStream(tmp.toByteArray());
+                String raw = CertUtils.getPrivFromPFXFile(tmp3, password);
+                String privateHex = ByteUtil.toHex(Account.encodePrivateKey(ByteUtil.fromHex(raw), tmpAlgo, password));
+                return new PKIAccount(address, publicHex, privateHex, Version.V4, algo, encodedCert, cert, raw);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -134,9 +146,16 @@ public class AccountServiceImpl implements AccountService {
     public Account changeAccountType(Account acc, String password, InputStream input) {
         try {
             X509Certificate cert = CertUtils.getCertFromPFXFile(input, password);
+            String encodedCert = Base64.toBase64String(cert.getEncoded());
             byte[] publicKey = cert.getPublicKey().getEncoded();
             String privateKey = CertUtils.getPrivFromPFXFile(input, password);
-            return new PKIAccount(acc.getAddress(), ByteUtil.toHex(publicKey), privateKey, Version.V4, Algo.PKI, cert);
+            Algo tmpAlgo;
+            if (cert.getPublicKey().getAlgorithm().equals("EC")) {
+                tmpAlgo = Algo.ECAES;
+            } else {
+                tmpAlgo = Algo.SMSM4;
+            }
+            return new PKIAccount(acc.getAddress(), ByteUtil.toHex(publicKey), ByteUtil.toHex(Account.encodePrivateKey(privateKey.getBytes(), tmpAlgo, password)), Version.V4, Algo.PKI, encodedCert, cert, privateKey);
         } catch (Exception e) {
             e.printStackTrace();
         }

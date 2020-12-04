@@ -21,8 +21,10 @@ import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
+import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
+import org.bouncycastle.util.encoders.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -48,9 +50,6 @@ public abstract class Account {
     protected Version version;
     @Expose
     protected Algo algo;
-    // Base64 encoded certificate as String type
-    @Expose
-    protected String certificate;
 
     /**
      * create account json instance by param.
@@ -85,8 +84,18 @@ public abstract class Account {
                 InputStream tmp1 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
                 // Extract the X509Certificate type from input stream, to do this password is necessary(if have).
                 X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
+                String encodedCert = Base64.toBase64String(cert.getEncoded());
+                ECPublicKey tmpKey = (ECPublicKey)cert.getPublicKey();
+                String publicHex = ByteUtil.toHex(tmpKey.getEncoded());
                 InputStream tmp2 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
-                return new PKIAccount(CertUtils.getCNFromCert(cert), ByteUtil.toHex(cert.getPublicKey().getEncoded()), CertUtils.getPrivFromPFXFile(tmp2, password), Version.V4, algo, cert);
+                Algo tmpAlgo;
+                if (cert.getPublicKey().getAlgorithm().equals("EC")) {
+                    tmpAlgo = Algo.ECAES;
+                } else {
+                    tmpAlgo = Algo.SMSM4;
+                }
+                String raw = CertUtils.getPrivFromPFXFile(tmp2, password);
+                return new PKIAccount(CertUtils.getCNFromCert(cert), publicHex, ByteUtil.toHex(Account.encodePrivateKey(raw.getBytes(), tmpAlgo, password)), Version.V4, algo, encodedCert, cert, raw);
             } catch (Exception e) {
                 e.printStackTrace();
             }
