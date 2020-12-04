@@ -58,3 +58,9 @@ release v1.0.4
     1. add pki account support
     2. fix isVerbose is always false for mq
     3. fix decode the payload of hvm invoke directly
+    4. add ed25519 support
+    5. add operation for manage account life cycle
+    6. add simulate transaction processing code
+    7. fix fileMrg request's params lack of namespace
+    8. check account whether is null in fileUpdate and add the description of parameter judgment in docs
+    9. refactor pki account implementation and relative function
