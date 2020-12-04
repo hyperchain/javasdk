@@ -21,6 +21,7 @@ import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
+import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.util.encoders.Base64;
@@ -49,9 +50,6 @@ public abstract class Account {
     protected Version version;
     @Expose
     protected Algo algo;
-    // Base64 encoded certificate as String type
-    @Expose
-    protected String certificate;
 
     /**
      * create account json instance by param.
@@ -79,29 +77,33 @@ public abstract class Account {
     public static Account fromAccountJson(String accountJson, String password) {
         accountJson = parseAccountJson(accountJson, password);
         JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
-        String addressHex = jsonObject.get("address").getAsString();
-        String publicKeyHex = jsonObject.get("publicKey").getAsString();
-        String privateKeyHex = jsonObject.get("privateKey").getAsString();
-        Version version = Version.getVersion(jsonObject.get("version").getAsString());
         Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
         // When Algo indicates the input is PKI type, start if condition to generate PKI Account.
         if (algo == Algo.PKI) {
-            // Obtain the path of relative pfx format certificate as a String type.
-            InputStream in = new ByteArrayInputStream(Base64.decode(jsonObject.get("certificate").getAsString()));
             try {
+                InputStream tmp1 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
                 // Extract the X509Certificate type from input stream, to do this password is necessary(if have).
-                X509Certificate cert = CertUtils.getCertFromPFXFile(in, password);
-                // TODO: check account validate. Should check the certificate is valid or not. And every field of json should match with this certificate.
-                // if(cert.()) {
-                //    return new PKIAccount(addressHex, publicKeyHex, privateKeyHex, Version.V4, algo, cert);
-                //} else{
-                //    throw new Exception("No validity!");
-                //}
-                return new PKIAccount(addressHex, publicKeyHex, privateKeyHex, Version.V4, algo, cert);
+                X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
+                String encodedCert = Base64.toBase64String(cert.getEncoded());
+                ECPublicKey tmpKey = (ECPublicKey)cert.getPublicKey();
+                String publicHex = ByteUtil.toHex(tmpKey.getEncoded());
+                InputStream tmp2 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
+                Algo tmpAlgo;
+                if (cert.getPublicKey().getAlgorithm().equals("EC")) {
+                    tmpAlgo = Algo.ECAES;
+                } else {
+                    tmpAlgo = Algo.SMSM4;
+                }
+                String raw = CertUtils.getPrivFromPFXFile(tmp2, password);
+                return new PKIAccount(CertUtils.getCNFromCert(cert), publicHex, ByteUtil.toHex(Account.encodePrivateKey(raw.getBytes(), tmpAlgo, password)), Version.V4, algo, encodedCert, cert, raw);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        String addressHex = jsonObject.get("address").getAsString();
+        String publicKeyHex = jsonObject.get("publicKey").getAsString();
+        String privateKeyHex = jsonObject.get("privateKey").getAsString();
+        Version version = Version.getVersion(jsonObject.get("version").getAsString());
         byte[] privateKey = decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password);
         if (privateKey.length == 0) {
             throw new AccountException("password error");

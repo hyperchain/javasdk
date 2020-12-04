@@ -14,18 +14,25 @@ import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Lam
  * @ClassName AccountTest1
  * @date 2019-07-10
  */
-public class AccountTest1 {
+public class  AccountTest1 {
     private static AccountService accountService = ServiceManager.getAccountService(null);
 
     public static Account genAccount(Algo algo, String password) {
         return accountService.genAccount(algo, password);
+    }
+
+    public static Account genAccount(Algo algo, String password, InputStream input) {
+        return accountService.genAccount(algo, password, input);
     }
 
     @Test
@@ -35,6 +42,18 @@ public class AccountTest1 {
         Account smAccountTmp = Account.fromAccountJson(smAccount.toJson(), "123");
         System.out.println(smAccountTmp);
         Assert.assertEquals(smAccount.toJson(), smAccountTmp.toJson());
+    }
+
+    @Test
+    public void testGenPKIAccount() throws FileNotFoundException {
+        String path = "/Users/ziyang/Downloads/certificate.pfx";
+        String accountJson = "{\"version\":\"4.0\",\"algo\":\"0x03\"}";
+
+        Account pkiAccount = genAccount(Algo.PKI, "123456", new FileInputStream(path));
+        Account pkiAccount1 = accountService.fromAccountJson(accountJson, "123456");
+        System.out.println(pkiAccount);
+        //System.out.println(pkiAccount1);
+        //Assert.assertEquals(pkiAccount.toJson(), pkiAccount1.toJson());
     }
 
     @Test
