@@ -789,6 +789,14 @@ public class Transaction {
         transactionHash[4] = nonce;
         transactionHash[5] = ByteUtil.hex2Base64(signature);
         String hashJson = gson.toJson(transactionHash);
-        return "0x" + Hex.toHexString(HashUtil.sha3(hashJson.getBytes()));
+
+        byte[] hashBytes = HashUtil.sha3(hashJson.getBytes());
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion25)) {
+            byte[] timestampBytes = ByteUtil.longToBytes(timestamp);
+            for (int i = 0 ; i < timestampBytes.length ; i ++) {
+                hashBytes[i] = timestampBytes[i];
+            }
+        }
+        return "0x" + Hex.toHexString(hashBytes);
     }
 }
