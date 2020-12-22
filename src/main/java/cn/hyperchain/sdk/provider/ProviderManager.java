@@ -252,6 +252,9 @@ public class ProviderManager {
         tCertRequest.addHeader("msg", ByteUtil.toHex(bodyBytes));
         String response = provider.post(tCertRequest);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
+        if (tCertResponse.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
+            throw new RequestException(tCertResponse.getCode(), tCertResponse.getMessage());
+        }
         return tCertResponse.getTCert();
     }
 
@@ -316,6 +319,17 @@ public class ProviderManager {
             String txVersionResult = "";
             int count = 0;
             for (int i = 1; i <= nodeNum; i++) {
+                if (providerManager.tCertPool != null && !TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion20) && !providerManager.isCFCA){
+                    try {
+                        String tCert = providerManager.getTCert(providerManager.tCertPool.getUniquePubKey(), providerManager.tCertPool.getSdkCertKeyPair(), providerManager.httpProviders.get(i - 1));
+                        providerManager.tCertPool.setTCert(providerManager.httpProviders.get(i - 1).getUrl(), tCert);
+                    } catch (RequestException e) {
+                        if (e.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
+                            logger.info(e.getMessage() + ". set txVersion to 2.0.");
+                            TxVersion.setGlobalTxVersion("2.0");
+                        }
+                    }
+                }
                 TxVersionResponse txVersionResponse = txService.getTxVersion(i).send();
                 String txVersion = txVersionResponse.getTxVersionResult();
                 if (txVersionResult.equals(txVersion)) {
