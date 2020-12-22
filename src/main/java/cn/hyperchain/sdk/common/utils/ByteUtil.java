@@ -242,6 +242,12 @@ public class ByteUtil {
         return ByteBuffer.allocate(4).putInt(val).array();
     }
 
+    /**
+     * Converts long value into a byte array.
+     *
+     * @param val - long value to convert
+     * @return <code>byte[]</code> of length 4, representing the long value
+     */
     public static byte[] longToBytes(long val) {
         byte[] buffer = new byte[8];
         for (int i = 0; i < 8; i++) {
