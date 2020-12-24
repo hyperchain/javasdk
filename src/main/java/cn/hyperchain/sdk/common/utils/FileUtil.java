@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.common.utils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,5 +78,26 @@ public class FileUtil {
         }
         return fis;
 
+    }
+
+    /**
+     * get getStringStream of the stream for the given string.
+     * @param sInputString given string
+     * @return input stream for the given string
+     * @throws Exception may not find file
+     */
+    public static InputStream getStringStream(String sInputString) {
+        if (sInputString != null && !sInputString.trim().equals("")) {
+            try {
+                ByteArrayInputStream tInputStringStream = new ByteArrayInputStream(sInputString.getBytes());
+                if (tInputStringStream.toString() == null) {
+                    throw new Exception(sInputString + "is null");
+                }
+                return tInputStringStream;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return null;
     }
 }
