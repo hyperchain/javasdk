@@ -241,4 +241,13 @@ public class ByteUtil {
     public static byte[] intToBytes(int val) {
         return ByteBuffer.allocate(4).putInt(val).array();
     }
+
+    public static byte[] longToBytes(long val) {
+        byte[] buffer = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            int offset = 64 - (i + 1) * 8;
+            buffer[i] = (byte) ((val >> offset) & 0xff);
+        }
+        return buffer;
+    }
 }
