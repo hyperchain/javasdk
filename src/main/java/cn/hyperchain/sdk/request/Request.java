@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.request;
 
 import cn.hyperchain.sdk.common.utils.Async;
+import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.Response;
@@ -38,6 +39,33 @@ public abstract class Request<K extends Response> {
     private String method;
     @Expose
     private List<Object> params;
+    @Expose
+    private Authentication auth;
+
+    public static class Authentication {
+        @Expose
+        private String signature;
+        @Expose
+        private long timestamp;
+        @Expose
+        private String address;
+
+        public Authentication(long timestamp, String address) {
+            this.timestamp = timestamp;
+            this.address = address;
+        }
+
+        public void setSignature(String signature) {
+            this.signature = signature;
+        }
+
+        public String getNeedHashString() {
+            return "address=" + Utils.addHexPre(this.address) +
+                    "&timestamp=0x" + Long.toHexString(this.timestamp);
+        }
+    }
+
+
 
     Request(String method, ProviderManager providerManager, Class<K> clazz, int... nodeIds) {
         this.clazz = clazz;
@@ -133,5 +161,13 @@ public abstract class Request<K extends Response> {
 
     public final void addHeader(String key, String value) {
         this.headers.put(key, value);
+    }
+
+    public Authentication getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Authentication auth) {
+        this.auth = auth;
     }
 }
