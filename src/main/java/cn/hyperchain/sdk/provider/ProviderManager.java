@@ -339,7 +339,7 @@ public class ProviderManager {
                 logger.warn("the TxVersion of nodes is different, the platform's TxVersion is " + TxVersion.GLOBAL_TX_VERSION);
             }
         } catch (RequestException e) {
-            logger.error(e.toString());
+            logger.info(e.toString());
         }
     }
 }
