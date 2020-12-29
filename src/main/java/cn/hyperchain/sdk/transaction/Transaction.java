@@ -10,6 +10,7 @@ import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.common.utils.Utils;
+import cn.hyperchain.sdk.common.utils.MethodNameUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.transaction.proto.TransactionValueProto;
 import com.google.gson.Gson;
@@ -344,6 +345,7 @@ public class Transaction {
          */
         public Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params) {
             super.transaction.setTo(contractAddress);
+            methodName = MethodNameUtil.getNormalizedMethodName(methodName);
             ContractType.Function abiFunction = abi.getFunction(methodName);
             if (abiFunction == null) {
                 throw new NullPointerException("Evm method name error, so we can't find method " + methodName + ", please check the document at https://github.com/hyperchain/javasdk/tree/master/docs!");
