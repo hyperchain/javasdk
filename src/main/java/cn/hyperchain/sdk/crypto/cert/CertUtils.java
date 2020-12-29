@@ -5,6 +5,7 @@ import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -14,6 +15,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.util.io.pem.PemObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -34,6 +36,8 @@ import java.security.UnrecoverableEntryException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CertUtils {
@@ -43,13 +47,25 @@ public class CertUtils {
      * @return is guomi cert
      * @throws Exception -
      */
-    public static PEMKeyPair getPEM(InputStream pem) throws Exception {
+    public static PrivateKeyInfo[] getPEM(InputStream pem) throws Exception {
         PEMParser pemRd = openPEMResource(pem);
         if (pemRd == null) {
             throw new Exception("Open pem error");
         }
-        PEMKeyPair pemPair = (PEMKeyPair) pemRd.readObject();
-        return pemPair;
+        List<PrivateKeyInfo> priv = new ArrayList<>();
+        while (true){
+            Object object = pemRd.readObject();
+            if (object == null){
+                break;
+            }
+            if (object instanceof  PEMKeyPair){
+                priv.add(((PEMKeyPair)object).getPrivateKeyInfo());
+            } else if (object instanceof PrivateKeyInfo){
+                priv.add((PrivateKeyInfo)object);
+            }
+
+        }
+        return priv.toArray(new PrivateKeyInfo[priv.size()]);
     }
 
     /**
@@ -59,22 +75,28 @@ public class CertUtils {
      * @return primitive output of private key
      * @throws Exception -
      */
-    public static PrivateKey getPrivateKeyFromPEM(PEMKeyPair pemPair, boolean isGM) throws Exception {
-
-        if (isGM) {
-            DLSequence dl = (DLSequence) pemPair.getPrivateKeyInfo().parsePrivateKey();
-            ASN1Encodable[] dls = dl.toArray();
-            BigInteger priv = null;
-            if (dls[1] instanceof DEROctetString) {
-                priv = new BigInteger(((DEROctetString) dls[1]).getOctets());
-            } else if (dls[1] instanceof ASN1Integer) {
-                priv = ((ASN1Integer) dls[1]).getValue();
-            }
-            return new SM2Priv(priv);
-        } else {
-            KeyPair pair = new JcaPEMKeyConverter().setProvider(new BouncyCastleProvider()).getKeyPair(pemPair);
-            return pair.getPrivate();
+    public static PrivateKey[] getPrivateKeyFromPEM(PrivateKeyInfo[] pemPair, boolean isGM) throws Exception {
+        List<PrivateKey> privs = new ArrayList<>();
+        for (int i = 0; i < pemPair.length; i++) {
+//            if (isGM) {
+//                DLSequence dl = (DLSequence) pemPair[i].parsePrivateKey();
+//                ASN1Encodable[] dls = dl.toArray();
+//                BigInteger priv = null;
+//                if (dls[1] instanceof DEROctetString) {
+//                    priv = new BigInteger(((DEROctetString) dls[1]).getOctets());
+//                } else if (dls[1] instanceof ASN1Integer) {
+//                    priv = ((ASN1Integer) dls[1]).getValue();
+//                }
+//                privs.add(new SM2Priv(priv));
+//
+//            } else {
+//                PrivateKey pair = new JcaPEMKeyConverter().getPrivateKey(pemPair[i]);
+//                privs.add(pair);
+//            }
+            PrivateKey pair = new JcaPEMKeyConverter().getPrivateKey(pemPair[i]);
+            privs.add(pair);
         }
+        return privs.toArray(new PrivateKey[privs.size()]);
     }
 
     private static PEMParser openPEMResource(InputStream res) {

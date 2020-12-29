@@ -8,8 +8,9 @@ package cn.hyperchain.sdk.common.utils;
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.cert.SM2Priv;
 import org.apache.log4j.Logger;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
-import sun.security.x509.X500Name;
+
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
@@ -25,10 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -43,7 +41,8 @@ public class HttpsUtils {
     public static class SSLParams {
         private SSLSocketFactory sSLSocketFactory;
         private X509TrustManager trustManager;
-
+        private boolean isgm;
+        public boolean isGm() {return isgm;}
         public SSLSocketFactory getsSLSocketFactory() {
             return sSLSocketFactory;
         }
@@ -66,12 +65,22 @@ public class HttpsUtils {
         InputStream isCa = certificates;
         try {
             TrustManager[] trustManagers = prepareTrustManager(isCa);
-            KeyManager[] keyManagers = prepareKeyManager(tlsPeerCert, tlsPeerPriv, password);
-            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+            KeyStore keyStore = prepareKeyManager(tlsPeerCert, tlsPeerPriv, password);
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, password.toCharArray());
+
             X509TrustManager trustManager = new MyTrustManager(chooseTrustManager(trustManagers));
-            sslContext.init(keyManagers, new TrustManager[]{trustManager}, null);
-            sslParams.sSLSocketFactory = sslContext.getSocketFactory();
             sslParams.trustManager = trustManager;
+            sslParams.isgm = keyStore.size() > 1;
+            SSLContext sslContext = null;
+            if (sslParams.isgm){
+                 sslContext = SSLContext.getInstance("GMTLS");
+            } else {
+                sslContext = SSLContext.getInstance("TLSv1.2");
+            }
+            sslContext.init(keyManagerFactory.getKeyManagers(), new TrustManager[]{trustManager}, null);
+            sslParams.sSLSocketFactory = sslContext.getSocketFactory();
+
             return sslParams;
         } catch (Exception e) {
             throw new AssertionError(e);
@@ -87,9 +96,11 @@ public class HttpsUtils {
             @Override
             public boolean verify(String s, SSLSession sslSession) {
                 try {
-                    X500Name x500Name = (X500Name) sslSession.getPeerCertificateChain()[0].getIssuerDN();
-                    String commonName = x500Name.getCommonName();
-                    return commonName.equals("hyperchain.cn");
+                    String raw = sslSession.getPeerCertificateChain()[0].getIssuerDN().getName();
+                    return raw.contains("CN=hyperchain.cn");
+//                    X500Name x500Name = (X500Name) sslSession.getPeerCertificateChain()[0].getIssuerDN();
+//                    String commonName = x500Name.getCommonName();
+//                    return commonName.equals("hyperchain.cn");
                 } catch (Exception e) {
                     logger.error(e);
                 }
@@ -132,14 +143,12 @@ public class HttpsUtils {
 
     }
 
-    private static KeyManager[] prepareKeyManager(InputStream tlsPeerCert, InputStream tlsPeerPriv, String password) {
+    private static KeyStore prepareKeyManager(InputStream tlsPeerCert, InputStream tlsPeerPriv, String password) {
         try {
 //            KeyStore clientKeyStore = KeyStore.getInstance("JKS");
 //            clientKeyStore.load(bksFile, password.toCharArray());
             KeyStore clientKeyStore = createKeyStore(tlsPeerCert, tlsPeerPriv, password);
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            keyManagerFactory.init(clientKeyStore, password.toCharArray());
-            return keyManagerFactory.getKeyManagers();
+            return clientKeyStore;
         } catch (Exception e) {
             logger.error(e);
         }
@@ -201,11 +210,14 @@ public class HttpsUtils {
         final KeyStore keystore = KeyStore.getInstance("JKS");
         keystore.load(null);
         // Import private key
-        PEMKeyPair pem = CertUtils.getPEM(privateKeyPem);
-        boolean isGM = pem.getPrivateKeyInfo().getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
+        PrivateKeyInfo[] pem = CertUtils.getPEM(privateKeyPem);
+        boolean isGM = pem[0].getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
 
-        final PrivateKey key = CertUtils.getPrivateKeyFromPEM(pem, isGM);
-        keystore.setKeyEntry("tlsCertPriv", key, password.toCharArray(), cert);
+        final PrivateKey[] key = CertUtils.getPrivateKeyFromPEM(pem, isGM);
+        for (int i = 0; i < key.length; i++){
+            String keyAlias = Integer.toString(i);
+            keystore.setKeyEntry(keyAlias, key[i], password.toCharArray(), cert/*new X509Certificate[]{cert[i]}*/);
+        }
         return keystore;
     }
 

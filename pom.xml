@@ -10,6 +10,24 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>http://nexus.hyperchain.cn/repository/hyperchain/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
     <groupId>cn.hyperchain</groupId>
     <artifactId>litesdk</artifactId>
     <version>${litesdk.version}</version>
@@ -267,7 +285,13 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.61</version>
+            <version>1.66</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>gmtls</artifactId>
+            <version>1.66</version>
         </dependency>
 
         <dependency>
@@ -301,11 +325,21 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>3.13.1</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.13.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <version>1.17.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
