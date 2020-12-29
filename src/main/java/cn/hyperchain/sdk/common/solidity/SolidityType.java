@@ -297,8 +297,10 @@ public abstract class SolidityType {
     }
 
     public static class Bytes32Type extends SolidityType {
+        public int bytesNum = Int32Size; //number of bytes, example: bytes16's bytesNum is 16.
         public Bytes32Type(String s) {
             super(s);
+            bytesNum = Integer.parseInt(s.substring(5));
         }
 
         @Override
@@ -323,7 +325,13 @@ public abstract class SolidityType {
 
         @Override
         public Object decode(byte[] encoded, int offset) {
-            return decodeBytes32(encoded, offset);
+            return decodeBytes1to32(encoded, offset);
+        }
+
+        //decode Bytes1, Bytes2, Bytes3, ..., Bytes32
+        public byte[] decodeBytes1to32(byte[] encoded, int offset) {
+            byte[] result = Arrays.copyOfRange(encoded, offset, offset + bytesNum);
+            return result;
         }
 
         public static byte[] decodeBytes32(byte[] encoded, int offset) {
