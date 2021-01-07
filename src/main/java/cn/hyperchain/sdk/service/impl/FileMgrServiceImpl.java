@@ -10,14 +10,16 @@ import cn.hyperchain.sdk.request.FileTransferRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.filemgr.FileDownloadResponse;
 import cn.hyperchain.sdk.response.filemgr.FileExtraFromFileHashResponse;
-import cn.hyperchain.sdk.response.filemgr.FileExtraFromTxHashResponse;
 import cn.hyperchain.sdk.response.filemgr.FileUpdateResponse;
 import cn.hyperchain.sdk.response.filemgr.FileUploadResponse;
+import cn.hyperchain.sdk.response.filemgr.FilePushResponse;
+import cn.hyperchain.sdk.response.filemgr.FileExtraFromTxHashResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
 import cn.hyperchain.sdk.service.FileMgrService;
 import cn.hyperchain.sdk.service.NodeService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.service.TxService;
+import cn.hyperchain.sdk.service.params.FileUploadParams;
 import cn.hyperchain.sdk.service.params.FilterParam;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
@@ -30,7 +32,9 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FileMgrServiceImpl implements FileMgrService {
     private ProviderManager providerManager;
@@ -98,7 +102,9 @@ public class FileMgrServiceImpl implements FileMgrService {
         transaction.sign(account);
         FileTransferRequest fileTransferRequest = new FileTransferRequest(FILEMGR_PREFIX + "upload", providerManager, FileUploadResponse.class,
                 jsonrpc, FileTransferRequest.FileRequestType.UPLOAD, randomAccessFile, nodeIdList[0]);
-        fileTransferRequest.addParams(transaction.commonParamMap());
+        Map<String, Object> params = transaction.commonParamMap();
+
+        fileTransferRequest.addParams(params);
         FileUploadResponse fileUploadResponse = null;
         try {
             fileUploadResponse = (FileUploadResponse) fileTransferRequest.send();
@@ -113,6 +119,86 @@ public class FileMgrServiceImpl implements FileMgrService {
         fileUploadResponse.setFileHash(fileHash);
         fileUploadResponse.setProviderManager(providerManager);
         fileUploadResponse.setNodeIds(nodeIdList[0]);
+        return fileUploadResponse;
+    }
+
+    /**
+     * upload file.
+     *
+     * @param fileParams    the file upload related params
+     * @param nodeId  nodeId
+     * @return {@link FileUploadResponse}
+     * @throws FileMgrException fileMgrException
+     */
+    @Override
+    public FileUploadResponse fileUpload(FileUploadParams fileParams,int nodeId) throws FileMgrException {
+        String filePath = fileParams.getFilePath();
+        Account account = fileParams.getAccount();
+        if (filePath == null || account == null) {
+            throw new FileMgrException("file path and account can't be null");
+        }
+
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile()) {
+            throw new FileMgrException("file is not exist/is not file");
+        }
+        RandomAccessFile randomAccessFile;
+        String fileHash;
+        try {
+            randomAccessFile = new RandomAccessFile(file, "rw");
+            fileHash = FileExtra.getFileMD5String(randomAccessFile);
+        } catch (Exception e) {
+            throw new FileMgrException("get file md5 failed," + e.getMessage());
+        }
+
+        FileExtra fileExtra = new FileExtra.FileExtraBuilder()
+                .hash(fileHash)
+                .fileDescription(fileParams.getDescription())
+                .fileName(file.getName())
+                .fileSize(file.length())
+                .userList(getUserList(fileParams.getUserList()))
+                .nodeList(getNodeHashList(fileParams.getNodeIdList()))
+                .build();
+        Transaction transaction = new Transaction.Builder(account.getAddress())
+                .transfer(account.getAddress(), 0)
+                .extraIDString(fileHash)
+                .extra(fileExtra.toJson())
+                .build();
+        transaction.sign(account);
+        FileTransferRequest fileTransferRequest = new FileTransferRequest(FILEMGR_PREFIX + "upload", providerManager, FileUploadResponse.class,
+                jsonrpc, FileTransferRequest.FileRequestType.UPLOAD, randomAccessFile, nodeId);
+        Map<String, Object> params = transaction.commonParamMap();
+        StringBuilder optionExtra = new StringBuilder();
+        if (fileParams.getPushNodes() != null) {
+            try {
+                int[] pushNodes = fileParams.getPushNodes();
+                for (int i = 0; i < pushNodes.length; i++) {
+                    optionExtra.append(this.nodeService.getNodeHash(pushNodes[i]).send().getResult());
+                    if (i != pushNodes.length - 1) {
+                        optionExtra.append(",");
+                    }
+                }
+            } catch (RequestException e) {
+                throw new FileMgrException("Get node hash failed.");
+            }
+        }
+        params.put("optionExtra",optionExtra);
+        fileTransferRequest.addParams(params);
+        fileTransferRequest.build();
+        FileUploadResponse fileUploadResponse = null;
+        try {
+            fileUploadResponse = (FileUploadResponse) fileTransferRequest.send();
+        } catch (RequestException e) {
+            throw new FileMgrException("File upload failed" + e.getMsg());
+        }
+        try {
+            randomAccessFile.close();
+        } catch (IOException e) {
+            logger.warn("close randomAccessFile failed");
+        }
+        fileUploadResponse.setFileHash(fileHash);
+        fileUploadResponse.setProviderManager(providerManager);
+        fileUploadResponse.setNodeIds(nodeId);
         return fileUploadResponse;
     }
 
@@ -256,6 +342,7 @@ public class FileMgrServiceImpl implements FileMgrService {
      *
      * @param fileHash    file hash
      * @param nodeIdList  nodeId list, if nodeIdList is empty or null, nodeIdList will not be update
+     * @param userList    userList
      * @param description file description, if description is empty or null, file description will not be update
      * @param account     account
      * @param nodeIds     nodeIds
@@ -263,9 +350,9 @@ public class FileMgrServiceImpl implements FileMgrService {
      * @throws FileMgrException -
      */
     @Override
-    public Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String description, Account account, int... nodeIds) throws FileMgrException {
+    public Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String[] userList, String description, Account account, int... nodeIds) throws FileMgrException {
         if (fileHash == null || account == null) {
-            throw new FileMgrException("fileHash or account can't be empty");
+            throw new FileMgrException("fileHash can't be empty");
         }
         Request<FileExtraFromFileHashResponse> fileExtraResponseRequest = getFileExtraByFilter(account.getAddress(), fileHash, nodeIds);
         FileExtra fileExtra;
@@ -275,11 +362,14 @@ public class FileMgrServiceImpl implements FileMgrService {
             throw new FileMgrException("Get primary fileExtra failed" + e.getMsg());
         }
         // update nodeIdList
-        if (nodeIdList == null || nodeIdList.length == 0) {
-            logger.debug("nodeIdList is empty, will not be update.");
-        } else {
+        try {
             fileExtra.setNodeList(getNodeHashList(nodeIdList));
+        } catch (FileMgrException e) {
+            throw new FileMgrException("Set node list failed" + e.getMessage());
         }
+        // update userList
+        fileExtra.setUserList(getUserList(userList));
+
         // update description
         if (description == null) {
             logger.debug("description is null, will not be update.");
@@ -295,6 +385,40 @@ public class FileMgrServiceImpl implements FileMgrService {
         transaction.sign(account);
         Request request = new FileInfoRequest(FILEMGR_PREFIX + "updateFileInfo", providerManager, FileUpdateResponse.class, jsonrpc, nodeIds);
         request.addParams(transaction.commonParamMap());
+        return request;
+    }
+
+    @Override
+    public Request<FilePushResponse> filePush(String fileHash, int[] pushNodes, Account account, int nodeId) {
+        if (fileHash == null) {
+            throw new FileMgrException("fileHash can't be empty");
+        }
+        FileExtra fileExtra = new FileExtra.FileExtraBuilder()
+                .hash(fileHash)
+                .build();
+        Transaction transaction = new Transaction.Builder(account.getAddress())
+                .transfer(account.getAddress(), 0)
+                .extra(fileExtra.toJson())
+                .extraIDString(fileExtra.getHash())
+                .build();
+        transaction.sign(account);
+        Request request = new FileInfoRequest(FILEMGR_PREFIX + "push", providerManager, FilePushResponse.class, jsonrpc, nodeId);
+        Map<String, Object> params = transaction.commonParamMap();
+        StringBuilder optionExtra = new StringBuilder();
+        if (pushNodes != null) {
+            try {
+                for (int i = 0; i < pushNodes.length; i++) {
+                    optionExtra.append(this.nodeService.getNodeHash(pushNodes[i]).send().getResult());
+                    if (i != pushNodes.length - 1) {
+                        optionExtra.append(",");
+                    }
+                }
+            } catch (RequestException e) {
+                throw new FileMgrException("Get node hash failed.");
+            }
+        }
+        params.put("optionExtra",optionExtra);
+        request.addParams(params);
         return request;
     }
 
@@ -347,10 +471,10 @@ public class FileMgrServiceImpl implements FileMgrService {
      * @throws FileMgrException fileMgr Exception
      */
     private ArrayList<String> getNodeHashList(int... nodeIdList) throws FileMgrException {
-        if (nodeIdList == null || nodeIdList.length == 0) {
-            throw new FileMgrException("NodeIdList is empty, please check.");
-        }
         ArrayList<String> nodeHashList = new ArrayList<>();
+        if (nodeIdList == null || nodeIdList.length == 0) {
+            return nodeHashList;
+        }
         try {
             for (int id : nodeIdList) {
                 nodeHashList.add(this.nodeService.getNodeHash(id).send().getResult());
@@ -359,5 +483,21 @@ public class FileMgrServiceImpl implements FileMgrService {
             throw new FileMgrException("Get node hash failed.");
         }
         return nodeHashList;
+    }
+
+    /**
+     * get userList by userList.
+     *
+     * @param userList userList
+     * @return {@link ArrayList} of {@link String}
+     * @throws FileMgrException fileMgr Exception
+     */
+    private ArrayList<String> getUserList(String[] userList) {
+        ArrayList<String> realUserList = new ArrayList<>();
+        if (userList == null || userList.length < 1) {
+            return realUserList;
+        }
+        Collections.addAll(realUserList, userList);
+        return realUserList;
     }
 }

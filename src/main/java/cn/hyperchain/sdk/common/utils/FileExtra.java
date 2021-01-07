@@ -31,6 +31,9 @@ public class FileExtra {
     @Expose()
     @SerializedName("node_list")
     private ArrayList<String> nodeList;
+    @Expose()
+    @SerializedName("user_list")
+    private ArrayList<String> userList;
     @SerializedName("update_time")
     @Expose()
     private String updateTime;
@@ -97,6 +100,14 @@ public class FileExtra {
         this.nodeList = nodeList;
     }
 
+    public ArrayList<String> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(ArrayList<String> userList) {
+        this.userList = userList;
+    }
+
     public String getUpdateTime() {
         return updateTime;
     }
@@ -138,6 +149,12 @@ public class FileExtra {
             fileExtra.nodeList = nodeList;
             return this;
         }
+
+        public FileExtraBuilder userList(ArrayList<String> userList) {
+            fileExtra.userList = userList;
+            return this;
+        }
+
 
         public FileExtraBuilder fileDescription(String fileDescription) {
             fileExtra.fileDescription = fileDescription;

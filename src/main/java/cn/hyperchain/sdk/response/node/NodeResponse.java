@@ -31,6 +31,8 @@ public class NodeResponse extends Response {
         @Expose
         private boolean isvp;
         @Expose
+        private String peerType;
+        @Expose
         private int status;
         @Expose
         private int delay;
@@ -67,6 +69,10 @@ public class NodeResponse extends Response {
             return isvp;
         }
 
+        public String getPeerType() {
+            return peerType;
+        }
+
         public int getStatus() {
             return status;
         }
@@ -86,6 +92,7 @@ public class NodeResponse extends Response {
                     + ", hostname='" + hostname + '\''
                     + ", isPrimary=" + isPrimary
                     + ", isvp=" + isvp
+                    + ", peerType='" + peerType + '\''
                     + ", status=" + status
                     + ", delay=" + delay
                     + '}';
