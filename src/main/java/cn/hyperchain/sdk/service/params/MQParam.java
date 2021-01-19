@@ -76,11 +76,11 @@ public class MQParam {
         }
 
         /**
-         * set delay mode
+         * set delay mode.
          *
          * @param delay if delay is true, the correctness and order of the messages are guaranteed,
          *              but block and log message won't be pushed until checkpoint happen
-         * @return
+         * @return Builder
          */
         public Builder delayMode(boolean delay) {
             param.metas.put("delay", delay);

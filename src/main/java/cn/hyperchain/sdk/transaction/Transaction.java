@@ -39,6 +39,7 @@ public class Transaction {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping()
             .registerTypeAdapter(Transaction.class, new TxDeserializer()).create();
     public static final long DEFAULT_GAS_LIMIT = 1000000000;
+    public static final long DEFAULT_GAS_LIMIT_FLATO = 10000000;
     private static final int EXTRAID_STRING_MAX_LENGTH = 1024;
     private static final int EXTRAID_LIST_MAX_LENGTH = 30;
 
@@ -749,6 +750,9 @@ public class Transaction {
      * @return transaction hash
      */
     public String getTransactionHash() {
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
+            return getTransactionHash(DEFAULT_GAS_LIMIT_FLATO);
+        }
         return getTransactionHash(DEFAULT_GAS_LIMIT);
     }
 
