@@ -243,7 +243,6 @@ public class ProviderManager {
                 request.addHeader("tcert", tCert);
                 request.addHeader("signature", this.tCertPool.getUniqueKeyPair().signData(bodyBytes));
             }
-            request.addHeader("msg", ByteUtil.toHex(bodyBytes));
         }
         return provider.post(request);
     }
@@ -258,7 +257,6 @@ public class ProviderManager {
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         tCertRequest.addHeader("tcert", sdkCertKeyPair.getPublicKey());
         tCertRequest.addHeader("signature", sdkCertKeyPair.signData(bodyBytes));
-        tCertRequest.addHeader("msg", ByteUtil.toHex(bodyBytes));
         String response = provider.post(tCertRequest);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
         if (tCertResponse.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
@@ -333,7 +331,7 @@ public class ProviderManager {
                         String tCert = providerManager.getTCert(providerManager.tCertPool.getUniquePubKey(), providerManager.tCertPool.getSdkCertKeyPair(), providerManager.httpProviders.get(i - 1));
                         providerManager.tCertPool.setTCert(providerManager.httpProviders.get(i - 1).getUrl(), tCert);
                     } catch (RequestException e) {
-                        if (e.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
+                        if (e.getCode().equals(RequestExceptionCode.METHOD_NOT_FOUND.getCode())) {
                             logger.info(e.getMessage() + ". set txVersion to 2.0.");
                             TxVersion.setGlobalTxVersion("2.0");
                         }
