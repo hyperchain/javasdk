@@ -13,6 +13,7 @@ public final class ECKeyPairGenerator {
 
     public static final String ALGORITHM = "EC";
     public static final String CURVE_NAME = "secp256k1";
+    public static final String CURVE_NAMER1 = "secp256r1";
 
     private static final String algorithmAssertionMsg =
             "Assumed JRE supports EC key pair generation";
@@ -22,6 +23,9 @@ public final class ECKeyPairGenerator {
 
     private static final ECGenParameterSpec SECP256K1_CURVE
             = new ECGenParameterSpec(CURVE_NAME);
+
+    private static final ECGenParameterSpec SECP256R1_CURVE
+            = new ECGenParameterSpec(CURVE_NAMER1);
 
     private ECKeyPairGenerator() {
     }
@@ -61,6 +65,18 @@ public final class ECKeyPairGenerator {
         try {
             final KeyPairGenerator gen = KeyPairGenerator.getInstance(ALGORITHM, provider);
             gen.initialize(SECP256K1_CURVE, random);
+            return gen;
+        } catch (NoSuchAlgorithmException ex) {
+            throw new AssertionError(algorithmAssertionMsg);
+        } catch (InvalidAlgorithmParameterException ex) {
+            throw new AssertionError(keySpecAssertionMsg);
+        }
+    }
+
+    public static KeyPairGenerator getInstanceR1(final Provider provider, final SecureRandom random) {
+        try {
+            final KeyPairGenerator gen = KeyPairGenerator.getInstance(ALGORITHM, provider);
+            gen.initialize(SECP256R1_CURVE, random);
             return gen;
         } catch (NoSuchAlgorithmException ex) {
             throw new AssertionError(algorithmAssertionMsg);
