@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.service;
 
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
+import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.account.AccountsByRoleResponse;
 import cn.hyperchain.sdk.response.account.BalanceResponse;
@@ -25,6 +26,10 @@ public interface AccountService {
      */
     Account genAccount(Algo algo, String password, InputStream input);
 
+    Account genDIDAccount(Algo algo, String suffix);
+
+    Account genDIDAccount(Algo algo, String password, String suffix);
+
     /**
      * change the type of account instance by param.
      *
@@ -37,6 +42,8 @@ public interface AccountService {
     Account fromAccountJson(String accountJson) ;
 
     Account fromAccountJson(String accountJson, String password);
+
+    Account genDIDAccountFromAccountJson(String accountJson, String password, String suffix);
 
     Request<BalanceResponse> getBalance(String address, int... nodeIds);
 

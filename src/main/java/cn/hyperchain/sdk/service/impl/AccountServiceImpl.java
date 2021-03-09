@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.account.ECAccount;
 import cn.hyperchain.sdk.account.ED25519Account;
@@ -45,6 +46,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
     }
+
 
     @Override
     public Account genAccount(Algo algo) {
@@ -110,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
                 ByteArrayOutputStream tmp = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
                 int len;
-                while ((len = input.read(buffer)) > -1 ) {
+                while ((len = input.read(buffer)) > -1) {
                     tmp.write(buffer, 0, len);
                 }
                 tmp.flush();
@@ -122,7 +124,7 @@ public class AccountServiceImpl implements AccountService {
                 String address = CertUtils.getCNFromCert(cert);
                 // extract the primitive output of bytes of pfx file from input stream.
                 InputStream tmp2 = new ByteArrayInputStream(tmp.toByteArray());
-                String publicHex = CertUtils.getPubFromPFXFile(tmp2,password);
+                String publicHex = CertUtils.getPubFromPFXFile(tmp2, password);
                 Algo tmpAlgo;
                 if (cert.getPublicKey().getAlgorithm().equals("EC")) {
                     tmpAlgo = Algo.ECAES;
@@ -138,6 +140,26 @@ public class AccountServiceImpl implements AccountService {
             }
         }
         return null;
+    }
+
+    @Override
+    public Account genDIDAccount(Algo algo, String suffix) {
+        if (suffix.length() == 0) {
+            throw new AccountException("illegal suffix, the suffix can't be null");
+        }
+        Account account = genAccount(algo);
+        String didAddress = DIDAccount.DID_PREFIX + providerManager.getChainID() + ":" + suffix;
+        return new DIDAccount(account, didAddress);
+    }
+
+    @Override
+    public Account genDIDAccount(Algo algo, String password, String suffix) {
+        if (suffix.length() == 0) {
+            throw new AccountException("illegal suffix, the suffix can't be null");
+        }
+        Account account = genAccount(algo, password);
+        String didAddress = DIDAccount.DID_PREFIX + providerManager.getChainID() + ":" + suffix;
+        return new DIDAccount(account, didAddress);
     }
 
     // TODO: 非证书账户之间的类型转换。
@@ -170,6 +192,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account fromAccountJson(String accountJson, String password) {
         return Account.fromAccountJson(accountJson, password);
+    }
+
+    @Override
+    public Account genDIDAccountFromAccountJson(String accountJson, String password, String suffix) {
+        return Account.genDIDAccountFromAccountJson(accountJson, password, suffix, providerManager.getChainID());
     }
 
     @Override

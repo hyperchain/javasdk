@@ -67,16 +67,28 @@ public abstract class Account {
         this.algo = algo;
     }
 
+    public Account() {
+
+    }
+
     /**
      * get account from account json.
-     *
-     * @param accountJson account json
-     * @param password    password
+     * @param accounJson account json
+     * @param password password
      * @return {@link Account}
      */
-    public static Account fromAccountJson(String accountJson, String password) {
-        accountJson = parseAccountJson(accountJson, password);
-        JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
+    public static Account fromAccountJson(String accounJson, String password) {
+        JsonObject jsonObject = new JsonParser().parse(accounJson).getAsJsonObject();
+        JsonElement didElement = jsonObject.get("didAddress");
+        if (didElement != null) {
+            String didAddress = didElement.getAsString();
+            String json = jsonObject.get("account").toString();
+            Account account = fromAccountJson(json, password);
+            return new DIDAccount(account, didAddress);
+        }
+        String json = parseAccountJson(accounJson, password);
+        JsonElement accountJsonElement = new JsonParser().parse(json);
+        jsonObject = accountJsonElement.getAsJsonObject();
         Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
         // When Algo indicates the input is PKI type, start if condition to generate PKI Account.
         if (algo == Algo.PKI) {
@@ -85,7 +97,7 @@ public abstract class Account {
                 // Extract the X509Certificate type from input stream, to do this password is necessary(if have).
                 X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
                 String encodedCert = Base64.toBase64String(cert.getEncoded());
-                ECPublicKey tmpKey = (ECPublicKey)cert.getPublicKey();
+                ECPublicKey tmpKey = (ECPublicKey) cert.getPublicKey();
                 String publicHex = ByteUtil.toHex(tmpKey.getEncoded());
                 InputStream tmp2 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
                 Algo tmpAlgo;
@@ -142,6 +154,20 @@ public abstract class Account {
             }
             return new ED25519Account(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
         }
+    }
+
+    /**
+     * genarate didAccount by accounJson.
+     *
+     * @param accountJson a non-did account json
+     * @param password password
+     * @param suffix used to generate the did address
+     * @return {@link Account}
+     */
+    public static Account genDIDAccountFromAccountJson(String accountJson, String password, String suffix, String chainID) {
+        Account account = fromAccountJson(accountJson, password);
+        String didAddress = DIDAccount.DID_PREFIX + chainID + ":" + suffix;
+        return new DIDAccount(account, didAddress);
     }
 
     /**
@@ -244,7 +270,12 @@ public abstract class Account {
 
     public abstract byte[] sign(byte[] sourceData);
 
+    protected abstract byte[] sign(byte[] sourceData, boolean isDID);
+
     public abstract boolean verify(byte[] sourceData, byte[] signature);
+
+    protected abstract boolean verify(byte[] sourceData, byte[] signature, boolean isDID);
+
 
     @Deprecated
     private static String parseAccountJson(String accountJson, String password) {
