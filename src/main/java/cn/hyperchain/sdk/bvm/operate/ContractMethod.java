@@ -34,6 +34,9 @@ public enum ContractMethod {
 
     HashSet("Set"),
     HashGet("Get"),
+
+    AccountRegister("Register"),
+    AccountAbandon("Abandon"),
     ;
     private String methodName;
 

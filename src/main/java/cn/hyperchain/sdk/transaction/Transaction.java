@@ -10,6 +10,7 @@ import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.common.utils.Utils;
+import cn.hyperchain.sdk.common.utils.MethodNameUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.transaction.proto.TransactionValueProto;
 import com.google.gson.Gson;
@@ -38,6 +39,7 @@ public class Transaction {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping()
             .registerTypeAdapter(Transaction.class, new TxDeserializer()).create();
     public static final long DEFAULT_GAS_LIMIT = 1000000000;
+    public static final long DEFAULT_GAS_LIMIT_FLATO = 10000000;
     private static final int EXTRAID_STRING_MAX_LENGTH = 1024;
     private static final int EXTRAID_LIST_MAX_LENGTH = 30;
 
@@ -344,6 +346,7 @@ public class Transaction {
          */
         public Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params) {
             super.transaction.setTo(contractAddress);
+            methodName = MethodNameUtil.getNormalizedMethodName(methodName);
             ContractType.Function abiFunction = abi.getFunction(methodName);
             if (abiFunction == null) {
                 throw new NullPointerException("Evm method name error, so we can't find method " + methodName + ", please check the document at https://github.com/hyperchain/javasdk/tree/master/docs!");
@@ -747,6 +750,9 @@ public class Transaction {
      * @return transaction hash
      */
     public String getTransactionHash() {
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
+            return getTransactionHash(DEFAULT_GAS_LIMIT_FLATO);
+        }
         return getTransactionHash(DEFAULT_GAS_LIMIT);
     }
 
@@ -789,6 +795,14 @@ public class Transaction {
         transactionHash[4] = nonce;
         transactionHash[5] = ByteUtil.hex2Base64(signature);
         String hashJson = gson.toJson(transactionHash);
-        return "0x" + Hex.toHexString(HashUtil.sha3(hashJson.getBytes()));
+
+        byte[] hashBytes = HashUtil.sha3(hashJson.getBytes());
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion25)) {
+            byte[] timestampBytes = ByteUtil.longToBytes(timestamp);
+            for (int i = 0 ; i < timestampBytes.length ; i ++) {
+                hashBytes[i] = timestampBytes[i];
+            }
+        }
+        return "0x" + Hex.toHexString(hashBytes);
     }
 }

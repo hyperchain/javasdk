@@ -6,11 +6,8 @@ import cn.hyperchain.sdk.common.utils.FileExtra;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
-import cn.hyperchain.sdk.response.filemgr.FileDownloadResponse;
-import cn.hyperchain.sdk.response.filemgr.FileExtraFromFileHashResponse;
-import cn.hyperchain.sdk.response.filemgr.FileExtraFromTxHashResponse;
-import cn.hyperchain.sdk.response.filemgr.FileUpdateResponse;
-import cn.hyperchain.sdk.response.filemgr.FileUploadResponse;
+import cn.hyperchain.sdk.response.filemgr.*;
+import cn.hyperchain.sdk.service.params.FileUploadParams;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,7 +44,9 @@ public class FileMgrServiceTest {
     @Ignore
     public void testFileMgr() throws Exception {
         testFileUpload();
+        testFileUploadWithParams();
         testFileDownload();
+        testFilePush();
         testFileInfoUpdate();
         testGetFileExtraByTxHash();
     }
@@ -55,9 +54,30 @@ public class FileMgrServiceTest {
     public void testFileUpload() throws Exception {
         String path = dirPath + File.separator + "uploadFile.txt";
         System.out.println(path);
-        createFile(path, 323400);
+        createFile(path, 100);
         int[] nodeIdList = {1, 2, 3};
         FileUploadResponse fileUploadResponse = fileMgrService.fileUpload(path, "des", account1, nodeIdList);
+        txHash = fileUploadResponse.getTxHash();
+        fileHash = fileUploadResponse.getFileHash();
+        System.out.println(fileUploadResponse.getTxHash());
+        System.out.println(fileUploadResponse.getFileHash());
+        ReceiptResponse receiptResponse = fileUploadResponse.polling();
+        System.out.println(receiptResponse.toString());
+    }
+
+    public void testFileUploadWithParams() throws Exception {
+        String path = dirPath + File.separator + "uploadFile.txt";
+        System.out.println(path);
+        createFile(path, 10);
+        int[] nodeIdList = {1, 2, 3};
+        int[] pushNodes = {3};
+        String[] userList = {account1.getAddress()};
+        FileUploadParams params = new FileUploadParams.Builder(path,"des",account1)
+                .nodeIdList(nodeIdList)
+                .pushNodes(pushNodes)
+                .userList(userList)
+                .build();
+        FileUploadResponse fileUploadResponse = fileMgrService.fileUpload(params,1);
         txHash = fileUploadResponse.getTxHash();
         fileHash = fileUploadResponse.getFileHash();
         System.out.println(fileUploadResponse.getTxHash());
@@ -82,8 +102,9 @@ public class FileMgrServiceTest {
         System.out.println(fileExtra1.toJson());
 
         int[] nodeIdList = {1, 2};
+        String[] userList = {account1.getAddress()};
 
-        Request<FileUpdateResponse> fileInfoUpdate = fileMgrService.fileInfoUpdate(fileHash, nodeIdList, "newdes", account1, 1);
+        Request<FileUpdateResponse> fileInfoUpdate = fileMgrService.fileInfoUpdate(fileHash, nodeIdList,userList , "newdes", account1, 1);
         FileUpdateResponse fileUpdateResponse = fileInfoUpdate.send();
         System.out.println(fileUpdateResponse.toString());
         ReceiptResponse receiptResponse = fileUpdateResponse.polling();
@@ -94,6 +115,14 @@ public class FileMgrServiceTest {
         FileExtraFromFileHashResponse response2 = request2.send();
         FileExtra fileExtra2 = response2.getFileExtra();
         System.out.println(fileExtra2.toJson());
+    }
+
+    public void testFilePush() throws Exception {
+        int[] pushNodes = {2, 3};
+
+        Request<FilePushResponse> filePush = fileMgrService.filePush(fileHash, pushNodes, account1, 1);
+        FilePushResponse FilePushResponse = filePush.send();
+        System.out.println(FilePushResponse.toString());
     }
 
     public void testGetFileExtraByTxHash() throws Exception {

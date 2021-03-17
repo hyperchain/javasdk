@@ -25,6 +25,8 @@ public class MQParam {
         this.metas.put("toBlock", "");
         this.metas.put("addresses", new ArrayList<String>());
         this.metas.put("topics", new ArrayList<String[]>());
+        // delay push
+        this.metas.put("delay", false);
     }
 
     public Map<String, Object> getMetas() {
@@ -42,6 +44,7 @@ public class MQParam {
 
         /**
          * set queue name.
+         *
          * @param qName queue name
          * @return Builder instance
          */
@@ -52,6 +55,7 @@ public class MQParam {
 
         /**
          * set msg types.
+         *
          * @param msgTypes msg types
          * @return Builder instance
          */
@@ -62,6 +66,7 @@ public class MQParam {
 
         /**
          * set registrant.
+         *
          * @param from registrant address
          * @return Builder instance
          */
@@ -71,7 +76,20 @@ public class MQParam {
         }
 
         /**
+         * set delay mode.
+         *
+         * @param delay if delay is true, the correctness and order of the messages are guaranteed,
+         *              but block and log message won't be pushed until checkpoint happen
+         * @return Builder
+         */
+        public Builder delayMode(boolean delay) {
+            param.metas.put("delay", delay);
+            return this;
+        }
+
+        /**
          * set block verbose.
+         *
          * @param isVerbose block is verbose or not
          * @return Builder instance
          */
@@ -82,6 +100,7 @@ public class MQParam {
 
         /**
          * set log from block.
+         *
          * @param from from block
          * @return Builder instance
          */
@@ -92,6 +111,7 @@ public class MQParam {
 
         /**
          * set log to block.
+         *
          * @param to to block
          * @return Builder instance
          */
@@ -102,6 +122,7 @@ public class MQParam {
 
         /**
          * set log address.
+         *
          * @param address log address
          * @return Builder instance
          */
@@ -119,6 +140,7 @@ public class MQParam {
 
         /**
          * set log topics.
+         *
          * @param topic log topic
          * @return Builder instance
          */
@@ -136,6 +158,7 @@ public class MQParam {
 
         /**
          * build mq param.
+         *
          * @return MQParam instance
          */
         public MQParam build() {

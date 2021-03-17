@@ -195,6 +195,15 @@ public class ProviderManager {
                 logger.debug("[REQUEST] request node id: " + ((startIndex + i) % providerSize + 1));
                 try {
                     request.setNamespace(this.namespace);
+                    DefaultHttpProvider dProvider = (DefaultHttpProvider) hProvider;
+                    if (dProvider.account != null) {
+                        // use dProvider sign
+                        Request.Authentication auth = new Request.Authentication(Utils.genTimestamp(), dProvider.account.getAddress());
+                        String needHashString = auth.getNeedHashString();
+                        byte[] sourceData = needHashString.getBytes(Utils.DEFAULT_CHARSET);
+                        auth.setSignature(ByteUtil.toHex(dProvider.account.sign(sourceData)));
+                        request.setAuth(auth);
+                    }
                     return sendTo(request, hProvider);
                 } catch (RequestException e) {
                     if (e.getCode().equals(RequestExceptionCode.NETWORK_GETBODY_FAILED.getCode())) {
@@ -234,7 +243,6 @@ public class ProviderManager {
                 request.addHeader("tcert", tCert);
                 request.addHeader("signature", this.tCertPool.getUniqueKeyPair().signData(bodyBytes));
             }
-            request.addHeader("msg", ByteUtil.toHex(bodyBytes));
         }
         return provider.post(request);
     }
@@ -249,9 +257,11 @@ public class ProviderManager {
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         tCertRequest.addHeader("tcert", sdkCertKeyPair.getPublicKey());
         tCertRequest.addHeader("signature", sdkCertKeyPair.signData(bodyBytes));
-        tCertRequest.addHeader("msg", ByteUtil.toHex(bodyBytes));
         String response = provider.post(tCertRequest);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
+        if (tCertResponse.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
+            throw new RequestException(tCertResponse.getCode(), tCertResponse.getMessage());
+        }
         return tCertResponse.getTCert();
     }
 
@@ -316,6 +326,17 @@ public class ProviderManager {
             String txVersionResult = "";
             int count = 0;
             for (int i = 1; i <= nodeNum; i++) {
+                if (providerManager.tCertPool != null && !TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion20) && !providerManager.isCFCA) {
+                    try {
+                        String tCert = providerManager.getTCert(providerManager.tCertPool.getUniquePubKey(), providerManager.tCertPool.getSdkCertKeyPair(), providerManager.httpProviders.get(i - 1));
+                        providerManager.tCertPool.setTCert(providerManager.httpProviders.get(i - 1).getUrl(), tCert);
+                    } catch (RequestException e) {
+                        if (e.getCode().equals(RequestExceptionCode.METHOD_NOT_FOUND.getCode())) {
+                            logger.info(e.getMessage() + ". set txVersion to 2.0.");
+                            TxVersion.setGlobalTxVersion("2.0");
+                        }
+                    }
+                }
                 TxVersionResponse txVersionResponse = txService.getTxVersion(i).send();
                 String txVersion = txVersionResponse.getTxVersionResult();
                 if (txVersionResult.equals(txVersion)) {
@@ -330,7 +351,7 @@ public class ProviderManager {
                 logger.warn("the TxVersion of nodes is different, the platform's TxVersion is " + TxVersion.GLOBAL_TX_VERSION);
             }
         } catch (RequestException e) {
-            logger.error(e.toString());
+            logger.info(e.toString());
         }
     }
 }

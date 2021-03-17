@@ -1,26 +1,38 @@
 package cn.hyperchain.sdk.account;
 
+import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.crypto.SignerUtil;
 import cn.hyperchain.sdk.exception.AccountException;
 import cn.hyperchain.sdk.exception.RequestException;
-import cn.hyperchain.sdk.service.AccountService;
-import cn.hyperchain.sdk.service.AccountServiceTest;
-import cn.hyperchain.sdk.service.Common;
-import cn.hyperchain.sdk.service.ServiceManager;
+import cn.hyperchain.sdk.provider.DefaultHttpProvider;
+import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.service.*;
+import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Lam
  * @ClassName AccountTest1
  * @date 2019-07-10
  */
-public class AccountTest1 {
+public class  AccountTest1 {
     private static AccountService accountService = ServiceManager.getAccountService(null);
 
     public static Account genAccount(Algo algo, String password) {
         return accountService.genAccount(algo, password);
+    }
+
+    public static Account genAccount(Algo algo, String password, InputStream input) {
+        return accountService.genAccount(algo, password, input);
     }
 
     @Test
@@ -30,6 +42,18 @@ public class AccountTest1 {
         Account smAccountTmp = Account.fromAccountJson(smAccount.toJson(), "123");
         System.out.println(smAccountTmp);
         Assert.assertEquals(smAccount.toJson(), smAccountTmp.toJson());
+    }
+
+    @Test
+    public void testGenPKIAccount() throws FileNotFoundException {
+        String path = "/Users/ziyang/Downloads/certificate.pfx";
+        String accountJson = "{\"version\":\"4.0\",\"algo\":\"0x03\"}";
+
+        Account pkiAccount = genAccount(Algo.PKI, "123456", new FileInputStream(path));
+        Account pkiAccount1 = accountService.fromAccountJson(accountJson, "123456");
+        System.out.println(pkiAccount);
+        //System.out.println(pkiAccount1);
+        //Assert.assertEquals(pkiAccount.toJson(), pkiAccount1.toJson());
     }
 
     @Test
@@ -43,6 +67,23 @@ public class AccountTest1 {
         Common.deployEVM(account);
         Common.deployEVM(account1);
         Common.deployEVM(account2);
+    }
+
+    @Test
+    public void testEd25519Account() throws RequestException {
+        Account account = accountService.genAccount(Algo.ED25519DES, "1234567812345678");
+        String accountJson = account.toJson();
+        Account accountTmp = accountService.fromAccountJson(accountJson, "1234567812345678");
+
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl("localhost:8081").build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
+        TxService sendTxService = ServiceManager.getTxService(providerManager);
+
+        Transaction transaction = new Transaction.Builder(account.getAddress()).transfer("794BF01AB3D37DF2D1EA1AA4E6F4A0E988F4DEA5", 0).build();
+        transaction.sign(account);
+        Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
+        Assert.assertTrue(SignerUtil.verifySign(transaction.getNeedHashString(), transaction.getSignature(), account.getPublicKey()));
+        ReceiptResponse response = sendTxService.sendTx(transaction).send().polling();
     }
 
     @Test

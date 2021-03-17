@@ -9,6 +9,7 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.CompileResponse;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class CompileServiceTest {
     }
 
     @Test
+    @Ignore
     public void testDeploy() throws RequestException, IOException {
         AccountService accountService = ServiceManager.getAccountService(providerManager);
         Account account = accountService.genAccount(Algo.SMRAW);

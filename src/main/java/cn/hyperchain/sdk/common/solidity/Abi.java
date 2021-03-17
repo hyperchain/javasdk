@@ -17,6 +17,7 @@
  */
 package cn.hyperchain.sdk.common.solidity;
 
+import cn.hyperchain.sdk.common.utils.MethodNameUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -131,6 +132,7 @@ public class Abi {
     }
 
     public ContractType.Function getFunction(String name) {
+        name = MethodNameUtil.getNormalizedMethodName(name);
         return functions.get(name);
     }
 

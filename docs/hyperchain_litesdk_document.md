@@ -297,7 +297,7 @@ AccountService accountService = ServiceManager.getAccountService(providerManager
 Account account = accountService.genAccount(Algo.SMRAW);
 ```
 
-如第二章所说，创建`Service`对象需要指定`ProviderManager`对象，且使用`genAccount()`创建账户时需要指定加密算法，如示例中使用**SMRAW算法**（只有**ECRAW**、**SMRAW**不需要密码参数，其余的加密算法需要手动设置**password**）。
+如第二章所说，创建`Service`对象需要指定`ProviderManager`对象，且使用`genAccount()`创建账户时需要指定加密算法，如示例中使用**SMRAW算法**（只有**ECRAW**、**SMRAW**、**ED25519RAW**不需要密码参数，其余的加密算法需要手动设置**password**）。另外，对于要使用**PKI算法**创建的账户，需要传入其使用的**PFX证书**的输入流以及该证书对应的密码。原因是PFX证书内包含生成其的私钥，解密该私钥需要对应密码。
 
 `AccountService`提供的接口如下：
 
@@ -307,23 +307,28 @@ public interface AccountService {
 
     Account genAccount(Algo algo, String password);
 
+    Account genAccount(Algo algo, String password, FileInputStream input);
+
     Account fromAccountJson(String accountJson);
 
     Account fromAccountJson(String accountJson, String password);
-    
+
     Request<BalanceResponse> getBalance(String address, int... nodeIds);
-  
+
     Request<RolesResponse> getRoles(String address, int... nodeIds);
 
     Request<AccountsByRoleResponse> getAccountsByRole(String role, int... nodeIds);
+  
+    Request<StatusResponse> getStatus(String address, int... nodeIds);
 }
 ```
 
-前四个接口是用于生成账户。余下接口是查询账户相关信息，其说明如下：
+前五个接口是用于生成账户。余下接口是查询账户相关信息，其说明如下：
 
 -  `getBalance `方法则可以查询该账户所有的余额，需要传一个**合约地址**为参数。
 -  `getRoles`方法则可以查询该账户所有的角色，需要传一个**合约地址**为参数。
 -  `getAccountsByRole `方法则可以查询具有改角色的账户列表，需要传一个**角色名称**为参数。
+-  `getStatus` 方法则可以查询普通账户的状态，需要穿一个普通**账户地址**为参数。
 
 目前Account服务支持的所有加密算法如下：
 
@@ -338,7 +343,14 @@ public enum Algo {
     SMDES("0x12"),
     SMRAW("0x13"),
     SMAES("0x14"),
-    SM3DES("0x15");
+    SM3DES("0x15"),
+    
+    ED25519DES("0x21"),
+    ED25519RAW("0x22"),
+    ED25519AES("0x23"),
+    ED255193DES("0x24"),
+
+    PKI("0x41");
 }
 ```
 

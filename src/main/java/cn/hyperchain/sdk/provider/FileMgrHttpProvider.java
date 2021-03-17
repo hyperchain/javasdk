@@ -82,6 +82,7 @@ public class FileMgrHttpProvider extends DefaultHttpProvider {
     public String post(cn.hyperchain.sdk.request.Request rawRequest) throws RequestException {
         if (rawRequest instanceof FileTransferRequest) {
             FileTransferRequest fileTransferRequest = (FileTransferRequest) rawRequest;
+            fileTransferRequest.build();
             Map<String, String> headers = fileTransferRequest.getHeaders();
             String body = fileTransferRequest.requestBody();
             okhttp3.Request request = null;

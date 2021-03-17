@@ -23,7 +23,21 @@ public enum Algo {
     @SerializedName("0x14")
     SMAES("0x14"),
     @SerializedName("0x15")
-    SM3DES("0x15");
+    SM3DES("0x15"),
+
+    @SerializedName("0x21")
+    ED25519DES("0x21"),
+    @SerializedName("0x22")
+    ED25519RAW("0x22"),
+    @SerializedName("0x23")
+    ED25519AES("0x23"),
+    @SerializedName("0x24")
+    ED255193DES("0x24"),
+
+    // PKI requires a pkcs12 certificate as an input in PKI Account.
+    @SerializedName("0x41")
+    PKI("0x41");
+
 
     private String algo;
     Algo(String algo) {
@@ -51,11 +65,29 @@ public enum Algo {
             case "0x13": return SMRAW;
             case "0x14": return SMAES;
             case "0x15": return SM3DES;
+            case "0x21": return ED25519DES;
+            case "0x22": return ED25519RAW;
+            case "0x23": return ED25519AES;
+            case "0x24": return ED255193DES;
+            case "0x41": return PKI;
             default: return ECRAW;
         }
     }
 
+    // The following method are used for determining the Algo type.
+    public boolean isEC() {
+        return this.algo.startsWith("0x0");
+    }
+
     public boolean isSM() {
         return this.algo.startsWith("0x1");
+    }
+
+    public boolean isED() {
+        return this.algo.startsWith("0x2");
+    }
+
+    public boolean isPKI() {
+        return this.algo.startsWith("0x4");
     }
 }

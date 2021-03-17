@@ -2,6 +2,9 @@ package cn.hyperchain.sdk.crypto;
 
 import cn.hyperchain.sdk.crypto.cryptohash.Keccak256;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import static java.util.Arrays.copyOfRange;
 
 public class HashUtil {
@@ -26,6 +29,29 @@ public class HashUtil {
      */
     public static byte[] sha3omit12(byte[] input) {
         byte[] hash = sha3(input);
+        return copyOfRange(hash, 12, hash.length);
+    }
+
+    /**
+     * 利用java原生的类实现SHA256加密.
+     * @param data data for hash
+     * @return encodeData
+     */
+    public static byte[] sha2_256(byte[] data) {
+        byte[] encodeData = null;
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(data);
+            encodeData = messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return encodeData;
+    }
+
+    public static byte[] sha2_256omit12(byte[] input) {
+        byte[] hash = sha2_256(input);
         return copyOfRange(hash, 12, hash.length);
     }
 }
