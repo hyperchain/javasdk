@@ -1,12 +1,26 @@
 package cn.hyperchain.sdk.service;
 
-import cn.hyperchain.sdk.response.config.AddressResponse;
+import cn.hyperchain.sdk.bvm.operate.ContractOperation;
+import cn.hyperchain.sdk.bvm.operate.ProposalType;
+import cn.hyperchain.sdk.bvm.operate.params.ContractManageOption;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
-import cn.hyperchain.sdk.response.config.*;
+import cn.hyperchain.sdk.response.config.AddressResponse;
+import cn.hyperchain.sdk.response.config.AllCNSResponse;
+import cn.hyperchain.sdk.response.config.AllRolesResponse;
+import cn.hyperchain.sdk.response.config.ConfigResponse;
+import cn.hyperchain.sdk.response.config.HostsResponse;
+import cn.hyperchain.sdk.response.config.NameResponse;
+import cn.hyperchain.sdk.response.config.ProposalResponse;
+import cn.hyperchain.sdk.response.config.RoleExistResponse;
+import cn.hyperchain.sdk.response.config.VSetResponse;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.List;
 
 public class ConfigServiceTest {
     private static ProviderManager providerManager = Common.soloProviderManager;
@@ -17,7 +31,17 @@ public class ConfigServiceTest {
     public void testGetProposal() throws RequestException {
         Request<ProposalResponse> request = configService.getProposal();
         ProposalResponse response = request.send();
-        System.out.println(response.getProposal());
+        ProposalResponse.Proposal proposal = response.getProposal();
+        System.out.println(proposal);
+
+        // marshal proposal code to contract operations if the proposal is contract proposal
+        if (ProposalType.Contract.getTyp().equals(proposal.getType())) {
+            Gson gson = new Gson();
+            List<ContractOperation> opes = gson.fromJson(response.getProposal().getCode(), new TypeToken<List<ContractOperation>>() {}.getType());
+            ContractManageOption option = gson.fromJson(opes.get(0).getArgs()[0], ContractManageOption.class);
+            System.out.println(option.getSource());
+            System.out.println(option.getBin());
+        }
     }
 
     @Test

@@ -75,8 +75,8 @@ public class FileMgrServiceImpl implements FileMgrService {
         }
 
         File file = new File(filePath);
-        if (!file.exists() || !file.isFile()) {
-            throw new FileMgrException("file is not exist/is not file");
+        if (!file.exists() || !file.isFile() || file.length() == 0) {
+            throw new FileMgrException("file is not exist/is not file/is empty");
         }
         RandomAccessFile randomAccessFile;
         String fileHash;
@@ -139,8 +139,8 @@ public class FileMgrServiceImpl implements FileMgrService {
         }
 
         File file = new File(filePath);
-        if (!file.exists() || !file.isFile()) {
-            throw new FileMgrException("file is not exist/is not file");
+        if (!file.exists() || !file.isFile() || file.length() == 0) {
+            throw new FileMgrException("file is not exist/is not file/is empty");
         }
         RandomAccessFile randomAccessFile;
         String fileHash;
@@ -352,7 +352,7 @@ public class FileMgrServiceImpl implements FileMgrService {
     @Override
     public Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String[] userList, String description, Account account, int... nodeIds) throws FileMgrException {
         if (fileHash == null || account == null) {
-            throw new FileMgrException("fileHash can't be empty");
+            throw new FileMgrException("fileHash or account can't be empty");
         }
         Request<FileExtraFromFileHashResponse> fileExtraResponseRequest = getFileExtraByFilter(account.getAddress(), fileHash, nodeIds);
         FileExtra fileExtra;
@@ -497,7 +497,13 @@ public class FileMgrServiceImpl implements FileMgrService {
         if (userList == null || userList.length < 1) {
             return realUserList;
         }
-        Collections.addAll(realUserList, userList);
+        for (String user : userList) {
+            realUserList.add(chPrefix(user));
+        }
         return realUserList;
+    }
+
+    private static String chPrefix(String origin) {
+        return origin.startsWith("0x") ? origin : "0x" + origin;
     }
 }

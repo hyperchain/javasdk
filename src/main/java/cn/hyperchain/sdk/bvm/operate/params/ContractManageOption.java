@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.bvm.operate.params;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.transaction.VMType;
 import com.google.gson.annotations.Expose;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.util.Base64;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class ContractManageOption {
     }
 
     public String getSource() {
-        return source;
+        return new String(Base64.getDecoder().decode(source));
     }
 
     public void setSource(String source) {
@@ -46,7 +47,7 @@ public class ContractManageOption {
     }
 
     public String getBin() {
-        return bin;
+        return new String(Hex.encode(Base64.getDecoder().decode(bin)));
     }
 
     public void setBin(String bin) {
