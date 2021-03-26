@@ -37,6 +37,8 @@ public enum ContractMethod {
 
     AccountRegister("Register"),
     AccountAbandon("Abandon"),
+
+    DIDSetChainID("SetChainID"),
     ;
     private String methodName;
 

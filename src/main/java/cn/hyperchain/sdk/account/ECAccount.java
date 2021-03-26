@@ -27,6 +27,16 @@ public class ECAccount extends Account {
     }
 
     @Override
+    protected byte[] sign(byte[] sourceData, boolean isDID) {
+        byte[] hash = HashUtil.sha3(sourceData);
+        byte[] signature = ecKey.sign(hash).toByteArray();
+        if (isDID) {
+            return ByteUtil.merge(ecKey.getPubKey(), signature);
+        }
+        return ByteUtil.merge(ECFlag, signature);
+    }
+
+    @Override
     public boolean verify(byte[] sourceData, byte[] signature) {
         if (signature[0] != 0) {
             throw new IllegalSignatureException();
@@ -34,6 +44,21 @@ public class ECAccount extends Account {
         int lenSig = signature.length;
         byte[] realSig = new byte[lenSig - 1];
         System.arraycopy(signature, 1, realSig, 0, lenSig - 1);
+        return ECUtil.verify(sourceData, realSig, this.ecKey);
+    }
+
+
+    @Override
+    protected boolean verify(byte[] sourceData, byte[] signature, boolean isDID) {
+        if (!isDID) {
+            return verify(sourceData, signature);
+        }
+        int lenSig = signature.length;
+        if (lenSig <= 65) {
+            throw new IllegalSignatureException();
+        }
+        byte[] realSig = new byte[lenSig - 65];
+        System.arraycopy(signature, 65, realSig, 0, lenSig - 65);
         return ECUtil.verify(sourceData, realSig, this.ecKey);
     }
 }

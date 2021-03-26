@@ -52,6 +52,11 @@ public class PKIAccount extends Account {
     }
 
     @Override
+    protected byte[] sign(byte[] sourceData, boolean isDID) {
+        return new byte[0];
+    }
+
+    @Override
     public boolean verify(byte[] sourceData, byte[] signature) {    // This verify function will verify the signed sourceData by corresponding signature depending on the certificate algo type which can be ECDSA and SM2.
         if (!this.cert.getPublicKey().getAlgorithm().equals("EC")) {
             SMAccount tmpSMAccount = new SMAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, SM2Util.genFromPrivKey(Hex.decode(this.privateKey)));
@@ -60,5 +65,10 @@ public class PKIAccount extends Account {
             ECAccount tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.privateKey)));
             return tmpECAccount.verify(sourceData, signature);
         }
+    }
+
+    @Override
+    protected boolean verify(byte[] sourceData, byte[] signature, boolean isDID) {
+        return false;
     }
 }
