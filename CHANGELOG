@@ -64,3 +64,5 @@ release v1.0.4
     7. fix fileMrg request's params lack of namespace
     8. check account whether is null in fileUpdate and add the description of parameter judgment in docs
     9. refactor pki account implementation and relative function
+release v1.0.5
+    1. add DID service
