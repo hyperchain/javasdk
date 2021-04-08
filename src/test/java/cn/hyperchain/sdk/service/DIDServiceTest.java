@@ -163,9 +163,9 @@ public class DIDServiceTest {
         Account didAccount2 = this.RegisterNewDidAccount(new String[]{didAdmin.getAddress()});
 
         DIDPublicKey publicKey = DIDPublicKey.getPublicKeyFromAccount(didAccount2);
-        Transaction transaction = new Transaction.DIDBuilder(didAccount1.getAddress()).
+        Transaction transaction = new Transaction.DIDBuilder(didAdmin.getAddress()).
                 updatePublicKey(didAccount1.getAddress(), publicKey).build();
-        transaction.sign(didAccount1);
+        transaction.sign(didAdmin);
         ReceiptResponse receiptResponse = didService.updatePublicKey(transaction).send().polling();
         boolean res = gson.fromJson(ByteUtil.decodeHex(receiptResponse.getRet()), Boolean.class);
         Assert.assertTrue(res);
@@ -228,8 +228,8 @@ public class DIDServiceTest {
         Account adminAccount2 = this.RegisterNewDidAccount(new String[]{});
         Account account = this.RegisterNewDidAccount(new String[]{adminAccount.getAddress(), adminAccount2.getAddress()});
 
-        Transaction transaction2 = new Transaction.DIDBuilder(account.getAddress()).freeze(account.getAddress()).build();
-        transaction2.sign(account);
+        Transaction transaction2 = new Transaction.DIDBuilder(adminAccount.getAddress()).freeze(account.getAddress()).build();
+        transaction2.sign(adminAccount);
         ReceiptResponse receiptResponse2 = didService.freeze(transaction2).send().polling();
         Assert.assertEquals("true", ByteUtil.decodeHex(receiptResponse2.getRet()));
 
@@ -270,8 +270,8 @@ public class DIDServiceTest {
         }
         Assert.assertTrue(flag);
 
-        Transaction transaction3 = new Transaction.DIDBuilder(account.getAddress()).updateAdmins(account.getAddress(), null).build();
-        transaction3.sign(account);
+        Transaction transaction3 = new Transaction.DIDBuilder(adminAccount.getAddress()).updateAdmins(account.getAddress(), new String[]{account.getAddress()}).build();
+        transaction3.sign(adminAccount);
         ReceiptResponse receiptResponse3 = didService.updateAdmins(transaction3).send().polling();
         Assert.assertEquals("true", ByteUtil.decodeHex(receiptResponse3.getRet()));
 
@@ -312,9 +312,10 @@ public class DIDServiceTest {
 
     @Test
     public void testAbandonDID() throws RequestException {
-        Account account = this.RegisterNewDidAccount(new String[]{});
-        Transaction transaction1 =  new Transaction.DIDBuilder(account.getAddress()).destroy(account.getAddress()).build();
-        transaction1.sign(account);
+        Account admin = this.RegisterNewDidAccount(new String[]{});
+        Account account = this.RegisterNewDidAccount(new String[]{admin.getAddress()});
+        Transaction transaction1 =  new Transaction.DIDBuilder(admin.getAddress()).destroy(account.getAddress()).build();
+        transaction1.sign(admin);
         ReceiptResponse receiptResponse1 = didService.destroy(transaction1).send().polling();
         Assert.assertEquals("true", ByteUtil.decodeHex(receiptResponse1.getRet()));
 
@@ -349,8 +350,8 @@ public class DIDServiceTest {
         Account adminAccount = this.RegisterNewDidAccount(new String[]{});
         Account account = this.RegisterNewDidAccount(new String[]{adminAccount.getAddress()});
 
-        Transaction transaction2 = new Transaction.DIDBuilder(account.getAddress()).destroy(account.getAddress()).build();
-        transaction2.sign(account);
+        Transaction transaction2 = new Transaction.DIDBuilder(adminAccount.getAddress()).destroy(account.getAddress()).build();
+        transaction2.sign(adminAccount);
         ReceiptResponse receiptResponse2 = didService.destroy(transaction2).send().polling();
         Assert.assertEquals("true", ByteUtil.decodeHex(receiptResponse2.getRet()));
 
