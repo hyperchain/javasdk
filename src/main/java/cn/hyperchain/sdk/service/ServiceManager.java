@@ -14,6 +14,7 @@ import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
 import cn.hyperchain.sdk.service.impl.RadarServiceImpl;
 import cn.hyperchain.sdk.service.impl.TxServiceImpl;
 import cn.hyperchain.sdk.service.impl.ConfigServiceImpl;
+import cn.hyperchain.sdk.service.impl.SqlServiceImpl;
 
 /**
  * service implements manager.
@@ -73,5 +74,9 @@ public class ServiceManager {
 
     public static DIDService getDIDService(ProviderManager providerManager) {
         return new DIDServiceImpl(providerManager);
+    }
+
+    public static SqlService getSqlService(ProviderManager providerManager) {
+        return new SqlServiceImpl(providerManager);
     }
 }
