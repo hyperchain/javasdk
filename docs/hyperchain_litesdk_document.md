@@ -504,6 +504,19 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 
 创建交易体时需要指定**合约地址**。
 
+### simulate交易
+
+simulate交易执行不会更改区块链的账本状态，这是其和普通交易最大的不同。在使用方式上，两者没有什么区别，只需要在构建simulate交易时设置其`simulate`标志，即可如发送普通交易一样，发送simulate交易。
+
+构建simulate交易示例如下
+
+```java
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress())
+  .invoke(receiptResponse.getContractAddress(), invoke)
+  .simulate()
+  .build();
+```
+
 ### 交易体的payload
 
 在创建交易体时，会根据传入的参数生成payload。如果是HVM合约相关的`transaction`，可通过`Decoder`提供的`decodeHVMPayload(String payload)`方法对payload进行解析，返回`HVMPayload`对象。
