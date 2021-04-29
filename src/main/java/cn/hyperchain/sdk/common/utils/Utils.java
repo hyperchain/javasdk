@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.common.utils;
 
+import cn.hyperchain.sdk.crypto.HashUtil;
 import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
@@ -92,5 +93,33 @@ public class Utils {
      */
     public static Long genTimestamp() {
         return new Date().getTime() * 1000000 + Utils.randInt(1000, 1000000);
+    }
+
+    /**
+     * Checksum address encoding as per <a
+     * href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md">EIP-55</a>.
+     *
+     * @param address a valid hex encoded address
+     * @return hex encoded checksum address
+     */
+    public static String convertToCheckSumAddress(String address) {
+
+
+        String lowercaseAddress = deleteHexPre(address).toLowerCase();
+        String addressHash = deleteHexPre(ByteUtil.toHex(HashUtil.sha3(lowercaseAddress.getBytes(StandardCharsets.UTF_8))));
+
+        StringBuilder result = new StringBuilder(lowercaseAddress.length() + 2);
+
+        result.append("0x");
+
+        for (int i = 0; i < lowercaseAddress.length(); i++) {
+            if (Integer.parseInt(String.valueOf(addressHash.charAt(i)), 16) >= 8) {
+                result.append(String.valueOf(lowercaseAddress.charAt(i)).toUpperCase());
+            } else {
+                result.append(lowercaseAddress.charAt(i));
+            }
+        }
+
+        return result.toString();
     }
 }
