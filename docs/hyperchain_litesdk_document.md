@@ -405,6 +405,7 @@ InputStream inputStream1 = FileUtil.readFileAsStream("solidity/sol2/TestContract
 InputStream inputStream2 = FileUtil.readFileAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
 String bin = FileUtil.readFile(inputStream1);
 String abiStr = FileUtil.readFile(inputStream2);
+Abi abi = Abi.fromJson(abiStr);
 
 FuncParams params = new FuncParams();
 params.addParams("contract01");
