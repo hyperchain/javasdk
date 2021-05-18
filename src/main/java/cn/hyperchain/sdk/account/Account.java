@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.crypto.CipherUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
+import cn.hyperchain.sdk.crypto.ecdsa.R1Util;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.crypto.sm.sm4.SM4Util;
 import cn.hyperchain.sdk.exception.AccountException;
@@ -37,6 +38,7 @@ public abstract class Account {
     protected static final byte[] ECFlag = new byte[]{0};
     protected static final byte[] SMFlag = new byte[]{1};
     protected static final byte[] ED25519Flag = new byte[]{2};
+    protected static final byte[] R1Flag = new byte[]{5};
 
     private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -135,11 +137,19 @@ public abstract class Account {
             }
             return new SMAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
         } else if (algo.isEC()) {
-            ECKey ecKey = ECKey.fromPrivate(privateKey);
-            if (!addressHex.equals(ByteUtil.toHex(ecKey.getAddress()))) {
-                throw new AccountException("account address is not matching with private key");
+            if (!algo.isR1()) {
+                ECKey ecKey = ECKey.fromPrivate(privateKey);
+                if (!addressHex.equals(ByteUtil.toHex(ecKey.getAddress()))) {
+                    throw new AccountException("account address is not matching with private key");
+                }
+                return new ECAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, ecKey);
+            } else {
+                AsymmetricCipherKeyPair asymmetricCipherKeyPair = R1Util.genFromPrivKey(privateKey);
+                if (!addressHex.equals(ByteUtil.toHex(R1Util.getAddress(asymmetricCipherKeyPair)))) {
+                    throw new AccountException("account address is not matching with private key");
+                }
+                return new R1Account(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
             }
-            return new ECAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, ecKey);
         } else {
             byte[] realPrivateKey = new byte[32];
             byte[] publicKey = new byte[32];
@@ -184,20 +194,24 @@ public abstract class Account {
             case ECRAW:
             case SMRAW:
             case ED25519RAW:
+            case ECRAWR1:
                 break;
             case ECDES:
             case SMDES:
             case ED25519DES:
+            case ECDESR1:
                 privateKey = CipherUtil.decryptDES(privateKey, password);
                 break;
             case ECAES:
             case SMAES:
             case ED25519AES:
+            case ECAESR1:
                 privateKey = CipherUtil.decryptAES(privateKey, password);
                 break;
             case EC3DES:
             case SM3DES:
             case ED255193DES:
+            case EC3DESR1:
                 privateKey = CipherUtil.decrypt3DES(privateKey, password);
                 break;
             case SMSM4:
@@ -223,20 +237,24 @@ public abstract class Account {
             case ECRAW:
             case SMRAW:
             case ED25519RAW:
+            case ECRAWR1:
                 break;
             case ECDES:
             case SMDES:
             case ED25519DES:
+            case ECDESR1:
                 privateKey = CipherUtil.encryptDES(privateKey, password);
                 break;
             case ECAES:
             case SMAES:
             case ED25519AES:
+            case ECAESR1:
                 privateKey = CipherUtil.encryptAES(privateKey, password);
                 break;
             case EC3DES:
             case SM3DES:
             case ED255193DES:
+            case EC3DESR1:
                 privateKey = CipherUtil.encrypt3DES(privateKey, password);
                 break;
             case SMSM4:

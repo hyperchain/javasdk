@@ -14,6 +14,17 @@ public enum Algo {
     @SerializedName("0x05")
     EC3DES("0x05"),
 
+    @SerializedName("0x011")
+    ECKDF2R1("0x011"),
+    @SerializedName("0x021")
+    ECDESR1("0x021"),
+    @SerializedName("0x031")
+    ECRAWR1("0x031"),
+    @SerializedName("0x041")
+    ECAESR1("0x041"),
+    @SerializedName("0x051")
+    EC3DESR1("0x051"),
+
     @SerializedName("0x11")
     SMSM4("0x11"),
     @SerializedName("0x12")
@@ -70,6 +81,11 @@ public enum Algo {
             case "0x23": return ED25519AES;
             case "0x24": return ED255193DES;
             case "0x41": return PKI;
+            case "0x011": return ECKDF2R1;
+            case "0x021": return ECDESR1;
+            case "0x031": return ECRAWR1;
+            case "0x041": return ECAESR1;
+            case "0x051": return EC3DESR1;
             default: return ECRAW;
         }
     }
@@ -81,6 +97,10 @@ public enum Algo {
 
     public boolean isSM() {
         return this.algo.startsWith("0x1");
+    }
+
+    public boolean isR1() {
+        return this.algo.startsWith("0x0") & this.algo.endsWith("1") & (this.algo.length() == 5);
     }
 
     public boolean isED() {

@@ -6,12 +6,14 @@ import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.account.ECAccount;
 import cn.hyperchain.sdk.account.ED25519Account;
 import cn.hyperchain.sdk.account.PKIAccount;
+import cn.hyperchain.sdk.account.R1Account;
 import cn.hyperchain.sdk.account.SMAccount;
 import cn.hyperchain.sdk.account.Version;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
+import cn.hyperchain.sdk.crypto.ecdsa.R1Util;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.exception.AccountException;
 import cn.hyperchain.sdk.provider.ProviderManager;
@@ -54,6 +56,7 @@ public class AccountServiceImpl implements AccountService {
             case ECRAW:
             case SMRAW:
             case ED25519RAW:
+            case ECRAWR1:
                 return this.genAccount(algo, null);
             default:
                 throw new AccountException("illegal account type, you can only generate raw account type");
@@ -78,11 +81,24 @@ public class AccountServiceImpl implements AccountService {
             address = HashUtil.sha3omit12(publicKey);
             return new SMAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, keyPair);
         } else if (algo.isEC()) {
-            ecKey = new ECKey(new SecureRandom());
-            address = ecKey.getAddress();
-            publicKey = ecKey.getPubKey();
-            privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
-            return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, ecKey);
+            if (algo.isR1()) {
+                keyPair = R1Util.generateKeyPair();
+                ECPrivateKeyParameters ecPriv = (ECPrivateKeyParameters) keyPair.getPrivate();
+                ECPublicKeyParameters ecPub = (ECPublicKeyParameters) keyPair.getPublic();
+                BigInteger privateKeyBI = ecPriv.getD();
+
+                publicKey = ecPub.getQ().getEncoded(false);
+                privateKey = Account.encodePrivateKey(ByteUtil.biConvert32Bytes(privateKeyBI), algo, password);
+                address = HashUtil.sha3omit12(publicKey);
+
+                return new R1Account(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, keyPair);
+            } else {
+                ecKey = new ECKey(new SecureRandom());
+                address = ecKey.getAddress();
+                publicKey = ecKey.getPubKey();
+                privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
+                return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, ecKey);
+            }
         } else if (algo.isED()) {
             Ed25519KeyPairGenerator ed25519KeyPairGenerator = new Ed25519KeyPairGenerator();
             ed25519KeyPairGenerator.init(new Ed25519KeyGenerationParameters(new SecureRandom()));
