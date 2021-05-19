@@ -13,12 +13,10 @@ import cn.hyperchain.sdk.bvm.operate.HashOperation;
 import cn.hyperchain.sdk.bvm.operate.NodeOperation;
 import cn.hyperchain.sdk.bvm.operate.PermissionOperation;
 import cn.hyperchain.sdk.bvm.operate.ProposalOperation;
+import cn.hyperchain.sdk.bvm.operate.CertOperation;
 import cn.hyperchain.sdk.bvm.operate.params.NsFilterRule;
 import cn.hyperchain.sdk.common.solidity.Abi;
-import cn.hyperchain.sdk.common.utils.ByteUtil;
-import cn.hyperchain.sdk.common.utils.Decoder;
-import cn.hyperchain.sdk.common.utils.FileUtil;
-import cn.hyperchain.sdk.common.utils.FuncParams;
+import cn.hyperchain.sdk.common.utils.*;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
@@ -167,6 +165,150 @@ public class BVMTest {
         Assert.assertTrue(result.isSuccess());
         Assert.assertEquals("", result.getErr());
         Assert.assertEquals(value, result.getRet());
+    }
+
+    @Test
+    @Ignore
+    public void testCertOperationRevoke() throws Exception {
+        String ecert = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICODCCAeSgAwIBAgIBATAKBggqhkjOPQQDAjB0MQkwBwYDVQQIEwAxCTAHBgNV\n" +
+                "BAcTADEJMAcGA1UECRMAMQkwBwYDVQQREwAxDjAMBgNVBAoTBWZsYXRvMQkwBwYD\n" +
+                "VQQLEwAxDjAMBgNVBAMTBW5vZGUxMQswCQYDVQQGEwJaSDEOMAwGA1UEKhMFZWNl\n" +
+                "cnQwIBcNMjAwNTIxMDQyNTQ0WhgPMjEyMDA0MjcwNTI1NDRaMHQxCTAHBgNVBAgT\n" +
+                "ADEJMAcGA1UEBxMAMQkwBwYDVQQJEwAxCTAHBgNVBBETADEOMAwGA1UEChMFZmxh\n" +
+                "dG8xCTAHBgNVBAsTADEOMAwGA1UEAxMFbm9kZTExCzAJBgNVBAYTAlpIMQ4wDAYD\n" +
+                "VQQqEwVlY2VydDBWMBAGByqGSM49AgEGBSuBBAAKA0IABDoBjgQsvY4xhyIy3aWh\n" +
+                "4HLOTTY6te1VbmZaH5EZnKzqjU1f436bVsfi9HLE3/MCeZD6ISe1U5giM5NuwF6T\n" +
+                "ZEOjaDBmMA4GA1UdDwEB/wQEAwIChDAmBgNVHSUEHzAdBggrBgEFBQcDAgYIKwYB\n" +
+                "BQUHAwEGAioDBgOBCwEwDwYDVR0TAQH/BAUwAwEB/zANBgNVHQ4EBgQEAQIDBDAM\n" +
+                "BgMqVgEEBWVjZXJ0MAoGCCqGSM49BAMCA0IAuVuDqguvjPPveimWruESBYqMJ1qq\n" +
+                "ryhXiMhlYwzH1FgUz0TcayuY+4KebRhFhb14ZDXBBPXcn9CYdtbbSxXTogE=\n" +
+                "-----END CERTIFICATE-----";
+        String priv = "-----BEGIN EC PRIVATE KEY-----\n" +
+                "MHQCAQEEIFO8E/zYebPTI++gmHNYZEUetgn3DychVadgTUMIJX3VoAcGBSuBBAAK\n" +
+                "oUQDQgAEOgGOBCy9jjGHIjLdpaHgcs5NNjq17VVuZlofkRmcrOqNTV/jfptWx+L0\n" +
+                "csTf8wJ5kPohJ7VTmCIzk27AXpNkQw==\n" +
+                "-----END EC PRIVATE KEY-----";
+
+        Account ac = accountService.fromAccountJson(accountJsons[5]);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().revoke(
+                        ecert, priv).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result.toString());
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertEquals("", result.getErr());
+
+        transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().revoke(
+                        ecert, priv).build()).
+                build();
+        transaction.sign(ac);
+        receiptResponse = contractService.invoke(transaction).send().polling();
+        result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result.toString());
+        Assert.assertFalse(result.isSuccess());
+        Assert.assertEquals("cert is already revoked", result.getErr());
+    }
+
+    @Test
+    @Ignore
+    public void testCertOperationCheck() throws Exception {
+        String ecert = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICSTCCAfWgAwIBAgIBATAKBggqhkjOPQQDAjB0MQkwBwYDVQQIEwAxCTAHBgNV\n" +
+                "BAcTADEJMAcGA1UECRMAMQkwBwYDVQQREwAxDjAMBgNVBAoTBWZsYXRvMQkwBwYD\n" +
+                "VQQLEwAxDjAMBgNVBAMTBW5vZGUyMQswCQYDVQQGEwJaSDEOMAwGA1UEKhMFZWNl\n" +
+                "cnQwIBcNMjAwNTIxMDU1MTE0WhgPMjEyMDA0MjcwNjUxMTRaMHQxCTAHBgNVBAgT\n" +
+                "ADEJMAcGA1UEBxMAMQkwBwYDVQQJEwAxCTAHBgNVBBETADEOMAwGA1UEChMFZmxh\n" +
+                "dG8xCTAHBgNVBAsTADEOMAwGA1UEAxMFbm9kZTExCzAJBgNVBAYTAlpIMQ4wDAYD\n" +
+                "VQQqEwVlY2VydDBWMBAGByqGSM49AgEGBSuBBAAKA0IABBI3ewNK21vHNOPG6U3X\n" +
+                "mKJohSNNz72QKDxUpRt0fCJHwaGYfSvY4cnqkbliclfckUTpCkFSRr4cqN6PURCF\n" +
+                "zkWjeTB3MA4GA1UdDwEB/wQEAwIChDAmBgNVHSUEHzAdBggrBgEFBQcDAgYIKwYB\n" +
+                "BQUHAwEGAioDBgOBCwEwDwYDVR0TAQH/BAUwAwEB/zANBgNVHQ4EBgQEAQIDBDAP\n" +
+                "BgNVHSMECDAGgAQBAgMEMAwGAypWAQQFZWNlcnQwCgYIKoZIzj0EAwIDQgB3Cfo8\n" +
+                "/Vdzzlz+MW+MIVuYQkcNkACY/yU/IXD1sHDGZQWcGKr4NR7FHJgsbjGpbUiCofw4\n" +
+                "4rK6biAEEAOcv1BQAA==\n" +
+                "-----END CERTIFICATE-----";
+
+        Account ac = accountService.fromAccountJson(accountJsons[5]);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().check(
+                        ecert.getBytes()).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+
+        System.out.println(new String(ByteUtil.fromHex(receiptResponse.getRet())));
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertEquals("", result.getErr());
+    }
+
+    @Test
+    @Ignore
+    public void testCertOperationFreeze() throws Exception {
+        String sdkcert = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICFDCCAbqgAwIBAgIIbGmp7HEb95UwCgYIKoEcz1UBg3UwPTELMAkGA1UEBhMC\n" +
+                "Q04xEzARBgNVBAoTCkh5cGVyY2hhaW4xDjAMBgNVBAMTBW5vZGUxMQkwBwYDVQQq\n" +
+                "EwAwHhcNMjEwMzEwMDAwMDAwWhcNMjUwMzEwMDAwMDAwWjA/MQswCQYDVQQGEwJD\n" +
+                "TjEOMAwGA1UEChMFZmxhdG8xDjAMBgNVBAMTBW5vZGUxMRAwDgYDVQQqEwdzZGtj\n" +
+                "ZXJ0MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE1hoClj022lTxWSUCw0Ht4PT+dr8/\n" +
+                "n0BQLeuQVBCnZWKNntBg6cMyVSbMVtcyhAyB8s4+tvzS5bIOqYjLqdO18KOBpDCB\n" +
+                "oTAOBgNVHQ8BAf8EBAMCAe4wMQYDVR0lBCowKAYIKwYBBQUHAwIGCCsGAQUFBwMB\n" +
+                "BggrBgEFBQcDAwYIKwYBBQUHAwQwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUEo46\n" +
+                "euyltTBBzeqlUhbr7DhPVvowHwYDVR0jBBgwFoAUmrWTObRDvo/F/zj5lGV+tYEr\n" +
+                "LbswDgYDKlYBBAdzZGtjZXJ0MAoGCCqBHM9VAYN1A0gAMEUCIHnScuepuomkq2OT\n" +
+                "prJL44lxsSkc4Zhpq6c+IpX5cbmZAiEA6l2BMWHuDrVudJ2COYWo8E42mvn7lLPD\n" +
+                "mpMkfrWt5ek=\n" +
+                "-----END CERTIFICATE-----\n";
+        String priv = "-----BEGIN EC PRIVATE KEY-----\n" +
+                "MHQCAQEEICKWeh1X4x1cZI+nfsAw5VXDgLPspN9vixkTlOTSllknoAcGBSuBBAAK\n" +
+                "oUQDQgAE1hoClj022lTxWSUCw0Ht4PT+dr8/n0BQLeuQVBCnZWKNntBg6cMyVSbM\n" +
+                "VtcyhAyB8s4+tvzS5bIOqYjLqdO18A==\n" +
+                "-----END EC PRIVATE KEY-----\n";
+
+        Account ac = accountService.fromAccountJson(accountJsons[5]);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().freeze(sdkcert, priv).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+
+        System.out.println(new String(ByteUtil.fromHex(receiptResponse.getRet())));
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertEquals("", result.getErr());
+
+        transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().check(sdkcert.getBytes()).build()).
+                build();
+        transaction.sign(ac);
+        receiptResponse = contractService.invoke(transaction).send().polling();
+
+        System.out.println(new String(ByteUtil.fromHex(receiptResponse.getRet())));
+        result = Decoder.decodeBVM(receiptResponse.getRet());
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertEquals("this cert is freezing", result.getErr());
+
+        transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().unfreeze(sdkcert, priv).build()).
+                build();
+        transaction.sign(ac);
+        receiptResponse = contractService.invoke(transaction).send().polling();
+
+        System.out.println(new String(ByteUtil.fromHex(receiptResponse.getRet())));
+        result = Decoder.decodeBVM(receiptResponse.getRet());
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertEquals("", result.getErr());
     }
 
     @Test
@@ -327,7 +469,7 @@ public class BVMTest {
         Assert.assertEquals("", result.getErr());
 
         System.out.println(result.getRet());
-        List<OperationResult> resultList = Decoder.decodeBVMResult(result.getRet());
+        List<OperationResult> resultList = Decoder.decodeBVMResult((String) result.getRet());
         for (OperationResult or : resultList) {
             Assert.assertEquals(SuccessCode.getCode(), or.getCode());
             Assert.assertEquals(SuccessCode.getCode(), or.getCode());
