@@ -83,7 +83,6 @@ import java.util.Arrays;
  * <p>The ECDSA algorithm supports <i>key recovery</i> in which a signature plus a couple of discriminator bits can
  * be reversed to find the public key used to calculate it. This can be convenient when you have a message and a
  * signature and want to find out who signed it, rather than requiring the user to provide the expected identity.</p>
- * <p>
  * This code is borrowed from the bitcoinj project and altered to fit Ethereum.<br>
  * See <a href="https://github.com/bitcoinj/bitcoinj/blob/master/core/src/main/java/com/google/bitcoin/core/ECKey.java">
  * bitcoinj on GitHub</a>.

@@ -112,7 +112,27 @@ function prepare_flato() {
     cp -r ${certsPath}/node${i}/* namespaces/global/certs/
 
     cd configuration
-
+    sed -ig "s/enable = true/enable = false/" whitelist.toml
+    checkPath=global/ns_static.toml
+    sed -ig "s/enable     = true/enable     = false/" ${checkPath}
+    pwd="${testPath}/node$i/configuration/system.toml"
+    if [[ ! -f $pwd ]];then
+      echo "use old global.toml"
+      # shellcheck disable=SC2129
+      echo "[http.request]" >> global.toml
+      echo "max_content_length = \"2mb\"" >> global.toml
+      echo "[p2p.grpc]" >> global.toml
+      echo "maxRecvMessageSize = \"5000mb\"" >> global.toml
+      echo "maxSendMessageSize = \"5000mb\"" >> global.toml
+    else
+      echo "use system.toml"
+      # shellcheck disable=SC2129
+      echo "[http.request]" >> system.toml
+      echo "max_content_length = \"2mb\"" >> system.toml
+      echo "[p2p.grpc]" >> system.toml
+      echo "maxRecvMessageSize = \"5000mb\"" >> system.toml
+      echo "maxSendMessageSize = \"5000mb\"" >> system.toml
+    fi
     # modify ports on dynamical.toml
     sed -ig "s/= 8081/= 808$i/" dynamic.toml
     sed -ig "s/= 9001/= 900$i/" dynamic.toml
@@ -120,9 +140,6 @@ function prepare_flato() {
     sed -ig "s/= 50081/= 5008$i/" dynamic.toml
     sed -ig "s/= 50051/= 5005$i/" dynamic.toml
     sed -ig "s/= 50011/= 5001$i/" dynamic.toml
-    sed -ig "s/max_content_length = \"100kb\"/max_content_length = \"2mb\"/" global.toml
-    sed -ig "s/maxSendMessageSize = \"50mb\"/maxSendMessageSize = \"5000mb\"/" global.toml
-    sed -ig "s/maxRecvMessageSize = \"50mb\"/maxRecvMessageSize = \"5000mb\"/" global.toml
     # modify addrs on dynamic.toml
     sed -ig "/self/s/node1/node$i/g" dynamic.toml
     sed -ig "s/domain=\"domain1\"/domain=\"domain$i\"/" dynamic.toml
@@ -134,7 +151,7 @@ function prepare_flato() {
 
     # modify nodes on ns_dynamic.toml
     cd global
-    sed -ig "s/hostname    = \"node1\"   #/hostname    = \"node$i\"   #/" ns_dynamic.toml
+    sed -i "0,/hostname    = \"node1\"/s//hostname    = \"node$i\"/" ns_dynamic.toml
     sed -ig "/^.*certs\/distributed/c ecert  = \"certs/certs\"" ns_static.toml
 
   done
@@ -209,4 +226,3 @@ case ${blockchain} in
   ;;
 
 esac
-

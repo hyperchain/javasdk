@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.crypto.CipherUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
+import cn.hyperchain.sdk.crypto.ecdsa.R1Util;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.crypto.sm.sm4.SM4Util;
 import cn.hyperchain.sdk.exception.AccountException;
@@ -37,6 +38,7 @@ public abstract class Account {
     protected static final byte[] ECFlag = new byte[]{0};
     protected static final byte[] SMFlag = new byte[]{1};
     protected static final byte[] ED25519Flag = new byte[]{2};
+    protected static final byte[] R1Flag = new byte[]{5};
 
     private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -67,16 +69,28 @@ public abstract class Account {
         this.algo = algo;
     }
 
+    public Account() {
+
+    }
+
     /**
      * get account from account json.
-     *
-     * @param accountJson account json
-     * @param password    password
+     * @param accounJson account json
+     * @param password password
      * @return {@link Account}
      */
-    public static Account fromAccountJson(String accountJson, String password) {
-        accountJson = parseAccountJson(accountJson, password);
-        JsonObject jsonObject = new JsonParser().parse(accountJson).getAsJsonObject();
+    public static Account fromAccountJson(String accounJson, String password) {
+        JsonObject jsonObject = new JsonParser().parse(accounJson).getAsJsonObject();
+        JsonElement didElement = jsonObject.get("didAddress");
+        if (didElement != null) {
+            String didAddress = didElement.getAsString();
+            String json = jsonObject.get("account").toString();
+            Account account = fromAccountJson(json, password);
+            return new DIDAccount(account, didAddress);
+        }
+        String json = parseAccountJson(accounJson, password);
+        JsonElement accountJsonElement = new JsonParser().parse(json);
+        jsonObject = accountJsonElement.getAsJsonObject();
         Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
         // When Algo indicates the input is PKI type, start if condition to generate PKI Account.
         if (algo == Algo.PKI) {
@@ -85,7 +99,7 @@ public abstract class Account {
                 // Extract the X509Certificate type from input stream, to do this password is necessary(if have).
                 X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
                 String encodedCert = Base64.toBase64String(cert.getEncoded());
-                ECPublicKey tmpKey = (ECPublicKey)cert.getPublicKey();
+                ECPublicKey tmpKey = (ECPublicKey) cert.getPublicKey();
                 String publicHex = ByteUtil.toHex(tmpKey.getEncoded());
                 InputStream tmp2 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
                 Algo tmpAlgo;
@@ -123,11 +137,19 @@ public abstract class Account {
             }
             return new SMAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
         } else if (algo.isEC()) {
-            ECKey ecKey = ECKey.fromPrivate(privateKey);
-            if (!addressHex.equals(ByteUtil.toHex(ecKey.getAddress()))) {
-                throw new AccountException("account address is not matching with private key");
+            if (!algo.isR1()) {
+                ECKey ecKey = ECKey.fromPrivate(privateKey);
+                if (!addressHex.equals(ByteUtil.toHex(ecKey.getAddress()))) {
+                    throw new AccountException("account address is not matching with private key");
+                }
+                return new ECAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, ecKey);
+            } else {
+                AsymmetricCipherKeyPair asymmetricCipherKeyPair = R1Util.genFromPrivKey(privateKey);
+                if (!addressHex.equals(ByteUtil.toHex(R1Util.getAddress(asymmetricCipherKeyPair)))) {
+                    throw new AccountException("account address is not matching with private key");
+                }
+                return new R1Account(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
             }
-            return new ECAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, ecKey);
         } else {
             byte[] realPrivateKey = new byte[32];
             byte[] publicKey = new byte[32];
@@ -145,6 +167,20 @@ public abstract class Account {
     }
 
     /**
+     * genarate didAccount by accounJson.
+     *
+     * @param accountJson a non-did account json
+     * @param password password
+     * @param suffix used to generate the did address
+     * @return {@link Account}
+     */
+    public static Account genDIDAccountFromAccountJson(String accountJson, String password, String suffix, String chainID) {
+        Account account = fromAccountJson(accountJson, password);
+        String didAddress = DIDAccount.DID_PREFIX + chainID + ":" + suffix;
+        return new DIDAccount(account, didAddress);
+    }
+
+    /**
      * decode private key by password and specific account algo.
      *
      * @param privateKey private key bytes
@@ -158,20 +194,24 @@ public abstract class Account {
             case ECRAW:
             case SMRAW:
             case ED25519RAW:
+            case ECRAWR1:
                 break;
             case ECDES:
             case SMDES:
             case ED25519DES:
+            case ECDESR1:
                 privateKey = CipherUtil.decryptDES(privateKey, password);
                 break;
             case ECAES:
             case SMAES:
             case ED25519AES:
+            case ECAESR1:
                 privateKey = CipherUtil.decryptAES(privateKey, password);
                 break;
             case EC3DES:
             case SM3DES:
             case ED255193DES:
+            case EC3DESR1:
                 privateKey = CipherUtil.decrypt3DES(privateKey, password);
                 break;
             case SMSM4:
@@ -197,20 +237,24 @@ public abstract class Account {
             case ECRAW:
             case SMRAW:
             case ED25519RAW:
+            case ECRAWR1:
                 break;
             case ECDES:
             case SMDES:
             case ED25519DES:
+            case ECDESR1:
                 privateKey = CipherUtil.encryptDES(privateKey, password);
                 break;
             case ECAES:
             case SMAES:
             case ED25519AES:
+            case ECAESR1:
                 privateKey = CipherUtil.encryptAES(privateKey, password);
                 break;
             case EC3DES:
             case SM3DES:
             case ED255193DES:
+            case EC3DESR1:
                 privateKey = CipherUtil.encrypt3DES(privateKey, password);
                 break;
             case SMSM4:
@@ -244,7 +288,12 @@ public abstract class Account {
 
     public abstract byte[] sign(byte[] sourceData);
 
+    protected abstract byte[] sign(byte[] sourceData, boolean isDID);
+
     public abstract boolean verify(byte[] sourceData, byte[] signature);
+
+    protected abstract boolean verify(byte[] sourceData, byte[] signature, boolean isDID);
+
 
     @Deprecated
     private static String parseAccountJson(String accountJson, String password) {

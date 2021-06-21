@@ -7,6 +7,7 @@ import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 
+
 public class ED25519Account extends Account {
 
     private AsymmetricCipherKeyPair keyPair;
@@ -33,6 +34,21 @@ public class ED25519Account extends Account {
     }
 
     @Override
+    protected byte[] sign(byte[] sourceData, boolean isDID) {
+        try {
+            byte[] publicKey = ByteUtil.fromHex(this.publicKey);
+            byte[] signature = ED25519Util.sign(keyPair, sourceData);
+            if (isDID) {
+                return ByteUtil.merge(publicKey, signature);
+            }
+            return ByteUtil.merge(ED25519Flag, publicKey, signature);
+        } catch (CryptoException e) {
+            logger.error("sign transaction error " + e.getMessage());
+            return ByteUtil.EMPTY_BYTE_ARRAY;
+        }
+    }
+
+    @Override
     public boolean verify(byte[] sourceData, byte[] signature) {
         int lenSig = signature.length;
 
@@ -41,6 +57,21 @@ public class ED25519Account extends Account {
         }
         byte[] realSig = new byte[lenSig - 33];
         System.arraycopy(signature, 33, realSig, 0, lenSig - 33);
+        Ed25519PublicKeyParameters ed25519PublicKeyParameters = (Ed25519PublicKeyParameters) this.keyPair.getPublic();
+        return ED25519Util.verify(sourceData, realSig, ed25519PublicKeyParameters);
+    }
+
+    @Override
+    protected boolean verify(byte[] sourceData, byte[] signature, boolean isDID) {
+        if (!isDID) {
+            return verify(sourceData, signature);
+        }
+        int lenSig = signature.length;
+        if (lenSig <= 32) {
+            throw new IllegalSignatureException();
+        }
+        byte[] realSig = new byte[lenSig - 32];
+        System.arraycopy(signature, 32, realSig, 0, lenSig - 32);
         Ed25519PublicKeyParameters ed25519PublicKeyParameters = (Ed25519PublicKeyParameters) this.keyPair.getPublic();
         return ED25519Util.verify(sourceData, realSig, ed25519PublicKeyParameters);
     }
