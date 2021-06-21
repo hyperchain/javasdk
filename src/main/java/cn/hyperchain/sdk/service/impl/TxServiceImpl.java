@@ -94,7 +94,7 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxResponse> getTxByHash(String txHash, int... nodeIds) {
-        return getTxByHash(txHash, false);
+        return getTxByHash(txHash, false, nodeIds);
     }
 
 

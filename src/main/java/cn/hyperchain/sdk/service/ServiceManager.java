@@ -7,6 +7,7 @@ import cn.hyperchain.sdk.service.impl.AuthServiceImpl;
 import cn.hyperchain.sdk.service.impl.BlockServiceImpl;
 import cn.hyperchain.sdk.service.impl.CompileServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
+import cn.hyperchain.sdk.service.impl.DIDServiceImpl;
 import cn.hyperchain.sdk.service.impl.FileMgrServiceImpl;
 import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
@@ -68,5 +69,9 @@ public class ServiceManager {
 
     public static AuthService getAuthService(ProviderManager providerManager) {
         return new AuthServiceImpl(providerManager);
+    }
+
+    public static DIDService getDIDService(ProviderManager providerManager) {
+        return new DIDServiceImpl(providerManager);
     }
 }

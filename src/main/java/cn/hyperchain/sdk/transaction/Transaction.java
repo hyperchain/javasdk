@@ -2,6 +2,7 @@ package cn.hyperchain.sdk.transaction;
 
 import cn.hyperchain.contract.BaseInvoke;
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.solidity.ContractType;
@@ -12,6 +13,9 @@ import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.common.utils.MethodNameUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
+import cn.hyperchain.sdk.did.DIDCredential;
+import cn.hyperchain.sdk.did.DIDDocument;
+import cn.hyperchain.sdk.did.DIDPublicKey;
 import cn.hyperchain.sdk.transaction.proto.TransactionValueProto;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +32,6 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +51,16 @@ public class Transaction {
     private static final int FREEZE = 2;
     private static final int UNFREEZE = 3;
     private static final int DESTROY = 5;
+
+    private static final int DID_REGISTER = 200;
+    private static final int DID_FREEZE = 201;
+    private static final int DID_UNFREEZE = 202;
+    private static final int DID_ABANDON = 203;
+    private static final int DID_UPDATEPUBLICKEY = 204;
+    private static final int DID_UPDATEADMINS = 205;
+    private static final int DIDCREDENTIAL_UPLOAD = 206;
+    private static final int DIDCREDENTIAL_DOWNLOAD = 207;
+    private static final int DIDCREDENTIAL_ABANDON = 208;
 
     private String from;
     private String to;
@@ -76,7 +89,7 @@ public class Transaction {
          */
         public Builder(String from) {
             transaction = new Transaction();
-            transaction.setFrom(chPrefix(from));
+            transaction.setFrom(from);
             transaction.setVmType(VMType.EVM);
         }
 
@@ -243,6 +256,23 @@ public class Transaction {
         }
 
         /**
+         * set invoke contract address.
+         *
+         * @param contractAddress contract address in chain
+         * @param isDID           didAccount
+         * @return {@link Builder}
+         */
+        protected Builder invokeContractAddr(String contractAddress, boolean isDID, String chainID) {
+            if (isDID) {
+                String didContractAddress = DIDAccount.DID_PREFIX + chainID + ":" + contractAddress;
+                transaction.setTo(didContractAddress);
+            } else {
+                transaction.setTo(contractAddress);
+            }
+            return this;
+        }
+
+        /**
          * build transaction instance.
          *
          * @return {@link Transaction}
@@ -281,10 +311,21 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder invoke(String contractAddress, BaseInvoke baseInvoke) {
+            return invoke(contractAddress, baseInvoke, false, null);
+        }
+
+        /**
+         * create invoking transaction for {@link VMType} HVM.
+         *
+         * @param contractAddress contract address in chain
+         * @param baseInvoke      an instance of {@link BaseInvoke}
+         * @param isDID           didAccount invoke
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, BaseInvoke baseInvoke, boolean isDID, String chainID) {
             String payload = Encoder.encodeInvokeBeanJava(baseInvoke);
-            super.transaction.setTo(contractAddress);
             super.transaction.setPayload(payload);
-            return this;
+            return invokeContractAddr(contractAddress, isDID, chainID);
         }
 
         /**
@@ -295,10 +336,21 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder invokeDirectly(String contractAddress, InvokeDirectlyParams invokeDirectlyParams) {
+            return invokeDirectly(contractAddress, invokeDirectlyParams, false, null);
+        }
+
+        /**
+         * create invoking transaction for {@link VMType} HVM.
+         *
+         * @param contractAddress      contract address in chain
+         * @param invokeDirectlyParams params of directly invoking contract
+         * @param isDID                didAccount invoke
+         * @return {@link Builder}
+         */
+        public Builder invokeDirectly(String contractAddress, InvokeDirectlyParams invokeDirectlyParams, boolean isDID, String chainID) {
             String payload = invokeDirectlyParams.getParams();
-            super.transaction.setTo(contractAddress);
             super.transaction.setPayload(payload);
-            return this;
+            return invokeContractAddr(contractAddress, isDID, chainID);
         }
 
     }
@@ -345,7 +397,19 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params) {
-            super.transaction.setTo(contractAddress);
+            return invoke(contractAddress, methodName, abi, params, false, null);
+        }
+
+        /**
+         * invoke Solidity contract whit specific method and params.
+         * @param contractAddress contract address in chain
+         * @param methodName method name
+         * @param abi contract abi
+         * @param params invoke params
+         * @param isDID didAccount invoke
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String methodName, Abi abi, FuncParams params, boolean isDID, String chainID) {
             methodName = MethodNameUtil.getNormalizedMethodName(methodName);
             ContractType.Function abiFunction = abi.getFunction(methodName);
             if (abiFunction == null) {
@@ -353,7 +417,7 @@ public class Transaction {
             }
             String payload = ByteUtil.toHex(abiFunction.encode(params.getParams()));
             super.transaction.setPayload(payload);
-            return this;
+            return invokeContractAddr(contractAddress, isDID, chainID);
         }
 
         /**
@@ -363,6 +427,7 @@ public class Transaction {
          * @param value goal account
          * @return {@link Builder}
          */
+        @Override
         public Builder transfer(String to, long value) {
             transaction.setTo(to);
             transaction.setValue(value);
@@ -399,8 +464,141 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder invoke(BuiltinOperation opt) {
-            super.transaction.setTo(opt.getAddress());
+            return invoke(opt, false, null);
+        }
+
+        /**
+         * invoke BVM contract for builtin operation.
+         * @param opt operation
+         * @param isDID didAccount invoke
+         * @return {@link Builder}
+         */
+        public Builder invoke(BuiltinOperation opt, boolean isDID, String chainID) {
             super.transaction.setPayload(ByteUtil.toHex(Encoder.encodeOperation(opt)));
+            return invokeContractAddr(opt.getAddress(), isDID, chainID);
+        }
+    }
+
+    public static class DIDBuilder extends Builder {
+        public DIDBuilder(String from) {
+            super(from);
+            super.transaction.setVmType(VMType.TRANSFER);
+        }
+
+        /**
+         * register a didAccount.
+         * @param didDocument represent a didAccount
+         * @return {@link Builder}
+         */
+        public Builder create(DIDDocument didDocument) {
+            super.transaction.setTo(super.transaction.getFrom());
+            String param = gson.toJson(didDocument);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DID_REGISTER);
+            return this;
+        }
+
+        /**
+         * freeze a didAccount.
+         * @param to didAddress to be freezed
+         * @return {@link Builder}
+         */
+        @Override
+        public Builder freeze(String to) {
+            super.transaction.setOpCode(DID_FREEZE);
+            super.transaction.setTo(to);
+            return this;
+        }
+
+        /**
+         * unfreeze a didAccount.
+         * @param to didAddress
+         * @return {@link Builder}
+         */
+        @Override
+        public Builder unfreeze(String to) {
+            super.transaction.setOpCode(DID_UNFREEZE);
+            super.transaction.setTo(to);
+            return this;
+        }
+
+        /**
+         * destroy a didAccount.
+         * @param to didAddress
+         * @return {@link Builder}
+         */
+        @Override
+        public Builder destroy(String to) {
+            super.transaction.setOpCode(DID_ABANDON);
+            super.transaction.setTo(to);
+            return this;
+        }
+
+        /**
+         * update the publicKey of didAccount.
+         * @param to didAddress
+         * @param publickey publickey
+         * @return {@link Builder}
+         */
+        public Builder updatePublicKey(String to, DIDPublicKey publickey) {
+            String param = gson.toJson(publickey);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setTo(to);
+            super.transaction.setOpCode(DID_UPDATEPUBLICKEY);
+            return this;
+        }
+
+        /**
+         * update the admins of didAccount.
+         * @param to didAddress
+         * @param admins admins
+         * @return {@link Builder}
+         */
+        public Builder updateAdmins(String to, String[] admins) {
+            String param = gson.toJson(admins);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setTo(to);
+            super.transaction.setOpCode(DID_UPDATEADMINS);
+            return this;
+        }
+
+        //todo 更新did extra
+//        public DIDBuilder updateExtra()
+
+        /**
+         * upload credential.
+         * @param credential credential
+         * @return {@link Builder}
+         */
+        public Builder uploadCredential(DIDCredential credential) {
+            super.transaction.setTo(super.transaction.getFrom());
+            String param = gson.toJson(credential);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DIDCREDENTIAL_UPLOAD);
+            return this;
+        }
+
+        /**
+         * download a credential.
+         * @param credentialID the id of credential
+         * @return {@link Builder}
+         */
+        public Builder downloadCredential(String credentialID) {
+            super.transaction.setTo(super.transaction.getFrom());
+            super.transaction.setPayload(ByteUtil.toHex(credentialID.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DIDCREDENTIAL_DOWNLOAD);
+            return this;
+        }
+
+        /**
+         * destroy a credential.
+         * @param credentialID the id of credential
+         * @return {@link Builder}
+         */
+        public Builder destroyCredential(String credentialID) {
+            super.transaction.setTo(super.transaction.getFrom());
+            super.transaction.setPayload(ByteUtil.toHex(credentialID.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DIDCREDENTIAL_ABANDON);
             return this;
         }
     }
@@ -409,13 +607,13 @@ public class Transaction {
         // flato
         if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
             String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
-            this.needHashString = "from=" + chPrefix(this.from.toLowerCase())
-                    + "&to=" + chPrefix(this.to.toLowerCase())
+            this.needHashString = "from=" + chPrefix(from.toLowerCase())
+                    + "&to=" + chPrefix(to.toLowerCase())
                     + "&value=" + chPrefix(Long.toHexString(this.value))
                     + "&payload=" + payload
                     + "&timestamp=0x" + Long.toHexString(this.timestamp)
                     + "&nonce=0x" + Long.toHexString(this.nonce)
-                    + "&opcode=" + this.opCode
+                    + "&opcode=" + Integer.toHexString(this.opCode)
                     + "&extra=" + this.extra
                     + "&vmtype=" + this.vmType.getType()
                     + "&version=" + this.txVersion.getVersion();
@@ -458,14 +656,21 @@ public class Transaction {
     }
 
     private static Long genTimestamp() {
-        return new Date().getTime() * 1000000 + Utils.randInt(1000, 1000000);
+        return System.currentTimeMillis() * 1000000 + Utils.randInt(1000, 1000000);
     }
 
     public String getFrom() {
         return from;
     }
 
+    /**
+     * set the transaction from address, hex coding.
+     * @param from address
+     */
     public void setFrom(String from) {
+        if (from != null && from.startsWith(DIDAccount.DID_PREFIX)) {
+            from = ByteUtil.toHex(from.getBytes(Utils.DEFAULT_CHARSET));
+        }
         this.from = from;
     }
 
@@ -473,7 +678,14 @@ public class Transaction {
         return to;
     }
 
+    /**
+     * set the transaction to address, hex coding.
+     * @param to address
+     */
     public void setTo(String to) {
+        if (to != null && to.startsWith(DIDAccount.DID_PREFIX)) {
+            to = ByteUtil.toHex(to.getBytes(Utils.DEFAULT_CHARSET));
+        }
         this.to = to;
     }
 
@@ -799,7 +1011,7 @@ public class Transaction {
         byte[] hashBytes = HashUtil.sha3(hashJson.getBytes());
         if (txVersion.isGreaterOrEqual(TxVersion.TxVersion25)) {
             byte[] timestampBytes = ByteUtil.longToBytes(timestamp);
-            for (int i = 0 ; i < timestampBytes.length ; i ++) {
+            for (int i = 0; i < timestampBytes.length; i++) {
                 hashBytes[i] = timestampBytes[i];
             }
         }

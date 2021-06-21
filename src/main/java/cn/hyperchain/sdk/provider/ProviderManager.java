@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.provider;
 
+import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.common.utils.Async;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Utils;
@@ -12,9 +13,12 @@ import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
 import cn.hyperchain.sdk.response.TCertResponse;
+import cn.hyperchain.sdk.response.did.DIDResponse;
 import cn.hyperchain.sdk.response.tx.TxVersionResponse;
+import cn.hyperchain.sdk.service.DIDService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.service.TxService;
+import cn.hyperchain.sdk.service.impl.DIDServiceImpl;
 import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +36,7 @@ import java.util.Map;
  */
 public class ProviderManager {
     private String namespace = "global";
+    public  String chainID = "";
     private TCertPool tCertPool;
     private List<HttpProvider> httpProviders;
     private List<HttpProvider> fileMgrHttpProviders;
@@ -183,13 +188,13 @@ public class ProviderManager {
     public String send(Request request, int... ids) throws RequestException {
         List<HttpProvider> hProviders;
         if (request instanceof FileTransferRequest) {
-            hProviders = checkIds(fileMgrHttpProviders ,ids);
+            hProviders = checkIds(fileMgrHttpProviders, ids);
         } else {
-            hProviders = checkIds(httpProviders ,ids);
+            hProviders = checkIds(httpProviders, ids);
         }
         int providerSize = hProviders.size();
         int startIndex = Utils.randInt(1, providerSize);
-        for (int i = 0; i < providerSize; i ++) {
+        for (int i = 0; i < providerSize; i++) {
             HttpProvider hProvider = hProviders.get((startIndex + i) % providerSize);
             if (hProvider.getStatus() == PStatus.NORMAL) {
                 logger.debug("[REQUEST] request node id: " + ((startIndex + i) % providerSize + 1));
@@ -353,5 +358,27 @@ public class ProviderManager {
         } catch (RequestException e) {
             logger.info(e.toString());
         }
+    }
+
+    /**
+     * set the global chainID.
+     */
+    public void setLocalChainID() {
+        DIDService didService = ServiceManager.getDIDService(this);
+        try {
+            if (TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion26)) {
+                DIDResponse didResponse = didService.getChainID().send();
+                chainID = didResponse.getResult();
+            } else {
+                logger.warn(TxVersion.GLOBAL_TX_VERSION + " platform does't support DID service  ");
+            }
+        } catch (RequestException e) {
+            logger.info(e.toString());
+        }
+
+    }
+
+    public String getChainID() {
+        return chainID;
     }
 }
