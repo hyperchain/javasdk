@@ -405,6 +405,7 @@ InputStream inputStream1 = FileUtil.readFileAsStream("solidity/sol2/TestContract
 InputStream inputStream2 = FileUtil.readFileAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
 String bin = FileUtil.readFile(inputStream1);
 String abiStr = FileUtil.readFile(inputStream2);
+Abi abi = Abi.fromJson(abiStr);
 
 FuncParams params = new FuncParams();
 params.addParams("contract01");
@@ -503,6 +504,19 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 ```
 
 创建交易体时需要指定**合约地址**。
+
+### simulate交易
+
+simulate交易执行不会更改区块链的账本状态，这是其和普通交易最大的不同。在使用方式上，两者没有什么区别，只需要在构建simulate交易时设置其`simulate`标志，即可如发送普通交易一样，发送simulate交易。
+
+构建simulate交易示例如下
+
+```java
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress())
+  .invoke(receiptResponse.getContractAddress(), invoke)
+  .simulate()
+  .build();
+```
 
 ### 交易体的payload
 

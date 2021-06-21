@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.5](https://git.hyperchain.cn///compare/v1.0.5-2...v1.0.5) (2021-06-21)
+
+
+### Features
+
+* **mq:** update mq doc ([3a18286](https://git.hyperchain.cn///commit/3a18286d0ebf90bd7a408948c80f2430a580a8e2))
+
+
+### Bug Fixes
+
+* **docs:** add simulate transaction doc ([5e8226f](https://git.hyperchain.cn///commit/5e8226ffa8d6cceca6d5dcf96df96246566286da))
+* **docs:** fix litesdk_document ([eeb67fd](https://git.hyperchain.cn///commit/eeb67fd8f45a62b533647fb763a9d9aee56124a0))
+
 ### [1.0.5-2](https://git.hyperchain.cn///compare/v1.0.5-1...v1.0.5-2) (2021-06-10)
 
 
