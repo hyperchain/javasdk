@@ -196,4 +196,26 @@ public class EVMTest {
             System.out.println(o);
         }
     }
+
+    @Test
+    public void testFallback() throws RequestException {
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+
+        Account account = accountService.genAccount(Algo.SMAES, PASSWORD);
+
+        String abiStr = "[{\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"fallback\"}]";
+        String bin = "60606040523415600b57fe5b5b60408060196000396000f30060606040525b3415600c57fe5b60125b5b565b0000a165627a7a72305820da73a26f1801158e8f11824010aeb3ab15393887f07dbf97609059c820798b340029";
+        Abi abi = Abi.fromJson(abiStr);
+
+        Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deploy(bin).build();
+        transaction.sign(account);
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        String contractAddress = receiptResponse.getContractAddress();
+        System.out.println("contract address: " + contractAddress);
+        System.out.println("账户私钥:" + account.getPrivateKey());
+        Assert.assertEquals(transaction.getTransactionHash(), receiptResponse.getTxHash());
+    }
 }

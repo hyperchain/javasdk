@@ -1,7 +1,17 @@
 package cn.hyperchain.sdk.common.solidity;
 
+import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.FuncParams;
+import cn.hyperchain.sdk.exception.RequestException;
+import cn.hyperchain.sdk.provider.DefaultHttpProvider;
+import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.service.AccountService;
+import cn.hyperchain.sdk.service.ContractService;
+import cn.hyperchain.sdk.service.ServiceManager;
+import cn.hyperchain.sdk.transaction.Transaction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -47,5 +57,13 @@ public class AbiTest {
                 ",{\"indexed\":true,\"name\":\"b\",\"type\":\"string\"}],\"name\":\"eventA\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"eventB\",\"type\":\"event\"}]";
         Abi abi = Abi.fromJson(contractAbi);
         System.out.println(abi.getConstructor().formatSignature("TypeTestContract"));
+    }
+
+
+    @Test
+    public void testFallback() {
+        String abiStr = "[{\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"fallback\"}]";
+        Abi abi = Abi.fromJson(abiStr);
+        System.out.println(abi.toString());
     }
 }
