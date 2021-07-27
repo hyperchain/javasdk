@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 if [[ $1 == *"-h"* ]]; then
   echo "功能 : 拉取文件系统的 区块链包，复制到testEnv,修改成4节点配置后，启动"
   echo "step 0 根据输入的参数 选择拉取的 区块链平台包： ex: hyperchain  或flato"
@@ -34,22 +34,47 @@ gitlabSourceBranch=$4
 
 if [[ $BRANCH == "coverage" ]]; then
   BRANCH="coverage"
-elif [[ $BRANCH == *"tag"* ]]; then
+elif [[ $BRANCH == *"tag"* || $BRANCH == v** ]]; then
   BRANCH="tag"
 elif [[ $BRANCH == *"pre-release"* ]]; then
   BRANCH="release"
 else
   BRANCH="smoke"
 fi
+echo "BRANCH :" $BRANCH
+
+
+tag="v1.0.8"
+version="latest"
+if [[ $tag =~ "release" ]]; then
+  version=${tag#release-}
+fi
+if [[ $tag == "v"** ]]; then
+  echo ${tag}
+  version=${tag#v}
+  echo ${version}
+  version=${version%-*}
+  echo ${version}
+fi
+if [[ $tag =~ "develop" ]]; then
+  version="latest"
+fi
+echo "current version is:" ${version}
+
 package=""
-echo "Get flato0.0"
+prefixpackage="flato00"
+Unzippackage="flato0.0"
+echo "Get flato source pakage"
 if [[ $BRANCH == "coverage" ]]; then
   package="-coverage"
-  nohup goc server >/tmp/goc.log 2>&1 &
+  goc_result=`nohup goc server >/tmp/goc.log 2>&1 &`
+  echo "start goc server"
+  cat /tmp/goc.log
 elif [[ $BRANCH == "tag" ]]; then
+  prefixpackage=flato${version//./_}
   package=""
 elif [[ $BRANCH == "release" ]]; then
-  smoke_package="-release"
+  package="-release"
 else
   smoke_package=${gitlabSourceBranch##*/}
   if [[ ! -n "$BRANCH" ]]; then
@@ -81,13 +106,13 @@ function prepare_flato() {
   mkdir -p ${WORKSPACE}/testEnv/0.0/node3
   mkdir -p ${WORKSPACE}/testEnv/0.0/node4
   if [ ${BIN_IN_LOCAL} == "false" ]; then
-    curl -O http://nexus.hyperchain.cn/repository/hyper-test/binary/${blockchain}/Centos7/${blockchain}00${package}.tar.gz
-    tar zxvf ${blockchain}00${package}.tar.gz
+    curl -O http://nexus.hyperchain.cn/repository/hyper-test/binary/${blockchain}/Centos7/${prefixpackage}${package}.tar.gz
+    tar zxvf ${prefixpackage}${package}.tar.gz
   fi
 
   curl -O http://nexus.hyperchain.cn/repository/hyper-test/certs/certs.tar.gz
   tar zxvf certs.tar.gz
-  rm ${blockchain}00${package}.tar.gz
+  rm ${prefixpackage}${package}.tar.gz
   rm certs.tar.gz
   testPath="${WORKSPACE}/testEnv/0.0"
   blockchainPath="${WORKSPACE}/${blockchain}0.0"
