@@ -37,6 +37,12 @@ public class DIDPublicKey {
 
 ```
 
+* didAddress 即DID的账户地址，其结构为did+分隔符+前缀+chainID+分隔符+唯一账户标识。例如：did:hpc:chainID:accountId。其中，chainID为链管理员设置的链ID，accountId为该did账户的唯一标识
+* state 即did账户的状态，包括正常，冻结，销毁三种状态。
+* publicKey 即账户的公钥，其中的type为公钥类型，包括"sm2","ecdsa","ed25519"三种类型。
+* admins 即账户的管理员的账户地址列表
+* extra 即账户的extra信息
+
 #### 创建DID账户
 
 `AccountService`提供了多种生成DID账户的接口，其中包括通过指定算法和后缀生成DID账户的`genDIDAccount`接口，通过DID账户的json字符串生成DID账户的`fromAccountJson`接口，以及通过原有证书账户的json字符串生成DID账户的`genDIDAccountFromAccountJson`接口。
