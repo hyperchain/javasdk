@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.archive.ArchiveBoolResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveFilterIdResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveResponse;
+import cn.hyperchain.sdk.response.archive.ArchiveStringResponse;
 import cn.hyperchain.sdk.service.ArchiveService;
 
 import java.math.BigInteger;
@@ -74,7 +75,7 @@ public class ArchiveServiceImpl implements ArchiveService {
     }
 
     @Override
-    public Request<ArchiveBoolResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds) {
+    public Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds) {
         ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "archiveNoPredict", providerManager, ArchiveBoolResponse.class, nodeIds);
         archiveRequest.addParams(blkNumber);
         return archiveRequest;
@@ -96,7 +97,7 @@ public class ArchiveServiceImpl implements ArchiveService {
     }
 
     @Override
-    public Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds) {
+    public Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds) {
         ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "queryArchive", providerManager, ArchiveBoolResponse.class, nodeIds);
         archiveRequest.addParams(filterId);
         return archiveRequest;

@@ -1397,12 +1397,15 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 - ArchiveResponse
 - ArchiveFilterIdResponse
 - ArchiveBoolResponse
+- ArchiveStringResponse
 
 详细结构请参考第十章。
 
+### 9.1 Hyperchain1.x相关接口
 
+以下接口供hyperchain1.x使用，其中部分接口已经在hyperchain2.x中废弃。
 
-### 9.1 制作快照
+#### 9.1.1 制作快照
 
 参数：
 
@@ -1419,7 +1422,7 @@ Request<ArchiveFilterIdResponse> snapshot(BigInteger blockNumber, int... nodeIds
 Request<ArchiveFilterIdResponse> snapshot(String blockNumber, int... nodeIds);
 ```
 
-### 9.2 查询快照是否存在
+#### 9.1.2 查询快照是否存在
 
 参数：
 
@@ -1430,7 +1433,7 @@ Request<ArchiveFilterIdResponse> snapshot(String blockNumber, int... nodeIds);
 Request<ArchiveBoolResponse> querySnapshotExist(String filterId, int... nodeIds);
 ```
 
-### 9.3 检查快照是否正确
+#### 9.1.3 检查快照是否正确
 
 参数：
 
@@ -1441,7 +1444,7 @@ Request<ArchiveBoolResponse> querySnapshotExist(String filterId, int... nodeIds)
 Request<ArchiveBoolResponse> checkSnapshot(String filterId, int... nodeIds);
 ```
 
-### 9.4 删除快照
+#### 9.1.4 删除快照
 
 参数：
 
@@ -1452,7 +1455,7 @@ Request<ArchiveBoolResponse> checkSnapshot(String filterId, int... nodeIds);
 Request<ArchiveBoolResponse> deleteSnapshot(String filterId, int... nodeIds);
 ```
 
-### 9.5 列出所有快照
+#### 9.1.5 列出所有快照
 
 参数：
 
@@ -1462,7 +1465,7 @@ Request<ArchiveBoolResponse> deleteSnapshot(String filterId, int... nodeIds);
 Request<ArchiveResponse> listSnapshot(int... nodeIds);
 ```
 
-### 9.6 查看快照
+#### 9.1.6 查看快照
 
 参数：
 
@@ -1473,7 +1476,7 @@ Request<ArchiveResponse> listSnapshot(int... nodeIds);
 Request<ArchiveResponse> readSnapshot(String filterId, int... nodeIds);
 ```
 
-### 9.7 数据归档（预约归档）
+#### 9.1.7 数据归档（预约归档）
 
 参数：
 
@@ -1485,7 +1488,7 @@ Request<ArchiveResponse> readSnapshot(String filterId, int... nodeIds);
 Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeIds);
 ```
 
-### 9.8 数据归档（直接归档）
+#### 9.1.8 数据归档（直接归档）
 
 参数：
 
@@ -1493,10 +1496,10 @@ Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeI
 - nodeIds 说明请求向哪些节点发送
 
 ```java
-Request<ArchiveBoolResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
+Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
 ```
 
-### 9.9 恢复某归档数据
+#### 9.1.9 恢复某归档数据
 
 参数：
 
@@ -1507,7 +1510,7 @@ Request<ArchiveBoolResponse> archiveNoPredict(BigInteger blkNumber, int... nodeI
 Request<ArchiveBoolResponse> restore(String filterId, boolean sync, int... nodeIds);
 ```
 
-### 9.10 恢复所有归档数据
+#### 9.1.10 恢复所有归档数据
 
 参数：
 
@@ -1518,7 +1521,7 @@ Request<ArchiveBoolResponse> restore(String filterId, boolean sync, int... nodeI
 Request<ArchiveBoolResponse> restoreAll(boolean sync, int... nodeIds);
 ```
 
-### 9.11 查询归档数据状态
+#### 9.1.11 查询归档数据状态
 
 参数：
 
@@ -1526,10 +1529,10 @@ Request<ArchiveBoolResponse> restoreAll(boolean sync, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送
 
 ```java
-Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
+Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 ```
 
-### 9.12 查询所有待完成的快照请求
+#### 9.1.12 查询所有待完成的快照请求
 
 参数：
 
@@ -1539,7 +1542,43 @@ Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
 Request<ArchiveResponse> pending(int... nodeIds);
 ```
 
+### 9.2 Hyperchain2.x相关接口
 
+以下接口供hyperchain2.x使用。
+
+#### 9.2.1 列出所有快照
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveResponse> listSnapshot(int... nodeIds);
+```
+
+#### 9.2.2 数据归档（直接归档）
+
+参数：
+
+- blkNumber 区块号
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
+```
+
+#### 9.2.3 查询归档数据状态
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
+```
+
+#### 
 
 ## 第十章. 接口响应类型结构体介绍
 
@@ -1709,6 +1748,7 @@ public class BlockCountResponse extends Response {
 - ArchiveResponse
 - ArchiveFilterIdResponse
 - ArchiveBoolResponse
+- ArchiveStringResponse
 
 分别对应的结构如下：
 
@@ -1748,6 +1788,16 @@ public class ArchiveFilterIdResponse extends Response {
 ```java
 public class ArchiveBoolResponse extends Response {
     private Boolean result;
+}
+```
+
+**ArchiveStringResponse**
+
+通过`result`接收返回结果，`result`实际结构是`String`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveBoolResponse extends Response {
+    private String result;
 }
 ```
 
