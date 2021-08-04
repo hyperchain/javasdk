@@ -14,12 +14,13 @@ public class ArchiveStringResponse extends Response {
 
     @Override
     public String toString() {
-        return "ArchiveBoolResponse{" +
+        return "ArchiveStringResponse{" +
                 "result=" + result +
                 ", jsonrpc='" + jsonrpc + '\'' +
                 ", id='" + id + '\'' +
                 ", code=" + code +
                 ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
                 '}';
     }
 }

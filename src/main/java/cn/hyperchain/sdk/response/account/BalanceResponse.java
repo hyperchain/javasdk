@@ -12,4 +12,16 @@ public class BalanceResponse extends Response {
     public long getBalance() {
         return Long.parseLong(Utils.deleteHexPre(result), 16);
     }
+
+    @Override
+    public String toString() {
+        return "BalanceResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
+                '}';
+    }
 }

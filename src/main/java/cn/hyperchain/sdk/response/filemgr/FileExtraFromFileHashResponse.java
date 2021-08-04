@@ -26,4 +26,17 @@ public class FileExtraFromFileHashResponse extends Response {
         return FileExtra.fromJson(extra);
     }
 
+    @Override
+    public String toString() {
+        return "FileExtraFromFileHashResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
+                "}";
+    }
+
+
 }
