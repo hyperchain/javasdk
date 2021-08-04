@@ -74,7 +74,7 @@ public class DIDCredentialResponse extends Response {
 
         @Override
         public String toString() {
-            return "credential {" +
+            return "{" +
                     "id=" + id +
                     ", type=" + type +
                     ", issuer=" + issuer +
@@ -94,7 +94,7 @@ public class DIDCredentialResponse extends Response {
 
     @Override
     public String toString() {
-        return "DIDDocumentResponse {" +
+        return "DIDCredentialResponse {" +
                 "result=" + result +
                 ", jsonrpc='" + jsonrpc + '\'' +
                 ", id='" + id + '\'' +
