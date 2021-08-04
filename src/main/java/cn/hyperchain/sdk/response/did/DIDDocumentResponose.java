@@ -1,15 +1,11 @@
 package cn.hyperchain.sdk.response.did;
 
 import cn.hyperchain.sdk.response.Response;
-import cn.hyperchain.sdk.response.tx.TxResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -53,11 +49,11 @@ public class DIDDocumentResponose extends Response {
 
         @Override
         public String toString() {
-            return "document {" +
-                    " didAddress=" + didAddress +
+            return "{" +
+                    "didAddress=" + didAddress +
                     ", state=" + state +
                     ", publicKey=" + publicKey +
-                    ", admins=" + admins +
+                    ", admins=" + Arrays.toString(admins) +
                     ", extra=" + extra +
                     "}";
         }
@@ -75,6 +71,14 @@ public class DIDDocumentResponose extends Response {
 
         public String getKey() {
             return key;
+        }
+
+        @Override
+        public String toString() {
+            return "{" +
+                    "type=" + type +
+                    ", key=" + key +
+                    "}";
         }
     }
 
