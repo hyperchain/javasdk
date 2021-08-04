@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.6-1](https://git.hyperchain.cn///compare/v1.0.5...v1.0.6-1) (2021-08-04)
+
+
+### Features
+
+* **docs:** add some information to did doc ([ed1f03d](https://git.hyperchain.cn///commit/ed1f03d961d7564b607cfff7afae9111ab1a27ff))
+* **gas:** add special gas receipt interface ([e37922e](https://git.hyperchain.cn///commit/e37922ecd4fe82fab594b854b4248a80682bd6a6))
+* **prepare_node:** change prepare_nodes.sh ([779c3ce](https://git.hyperchain.cn///commit/779c3ce2f1caf1d516b899c475c1f36a0614eb5e))
+
+
+### Bug Fixes
+
+* **archive:** #QAGC-153, change the doc and response of archive service ([12f213d](https://git.hyperchain.cn///commit/12f213db2cd9e392d2b160252e80987a6e9e8d77)), closes [#QAGC-153](https://git.hyperchain.cn///issues/QAGC-153)
+* **fallback:** #QAGC-151, fix fallback null ([3481a0d](https://git.hyperchain.cn///commit/3481a0d4a155c7cb82de6612d766d3a89748e255))
+* **response:** fix toString func of DID service response ([d3446f7](https://git.hyperchain.cn///commit/d3446f75f2bc7bb46b8f312466d4b0fb69953fd6))
+
 ### [1.0.5](https://git.hyperchain.cn///compare/v1.0.5-2...v1.0.5) (2021-06-21)
 
 
