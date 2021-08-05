@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.6-2](https://git.hyperchain.cn///compare/v1.0.6-1...v1.0.6-2) (2021-08-05)
+
+
+### Bug Fixes
+
+* **response:** fix toString func of response ([b5878bb](https://git.hyperchain.cn///commit/b5878bb8b1266559b1db6f24ad52d810b5c65eb2))
+
 ### [1.0.6-1](https://git.hyperchain.cn///compare/v1.0.5...v1.0.6-1) (2021-08-04)
 
 
