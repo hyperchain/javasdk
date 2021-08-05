@@ -121,6 +121,7 @@ public class ReceiptResponse extends Response {
                 + ", id='" + id + '\''
                 + ", code=" + code
                 + ", message='" + message + '\''
+                + ", namespace='" + namespace + '\''
                 + '}';
     }
 }

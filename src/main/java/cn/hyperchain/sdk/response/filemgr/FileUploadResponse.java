@@ -27,6 +27,7 @@ public class FileUploadResponse extends PollingResponse {
                 ", id='" + id + '\'' +
                 ", code=" + code +
                 ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
                 ", fileHash='" + fileHash + '\'' +
                 '}';
     }

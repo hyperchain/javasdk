@@ -11,4 +11,16 @@ public class TCertResponse extends Response {
     public String getTCert() {
         return result.getAsJsonObject().get("tcert").getAsString();
     }
+
+    @Override
+    public String toString() {
+        return "TCertResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
+                '}';
+    }
 }
