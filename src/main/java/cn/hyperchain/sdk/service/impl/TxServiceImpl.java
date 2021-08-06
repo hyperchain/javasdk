@@ -166,9 +166,14 @@ public class TxServiceImpl implements TxService {
     @Override
     public Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds) {
         ReceiptRequest pollingRequest = new ReceiptRequest(TX_PREFIX + "getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
-
         pollingRequest.addParams(txHash);
+        return pollingRequest;
+    }
 
+    @Override
+    public Request<ReceiptResponse> getTransactionReceiptWithGas(String txHash, int... nodeIds) {
+        ReceiptRequest pollingRequest = new ReceiptRequest(TX_PREFIX + "getTransactionReceiptWithGas", providerManager, ReceiptResponse.class, nodeIds);
+        pollingRequest.addParams(txHash);
         return pollingRequest;
     }
 

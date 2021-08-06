@@ -20,8 +20,13 @@ public class DIDResponse extends Response {
 
     @Override
     public String toString() {
-        return "DIDResponse {" +
-                "result:" + result +
+        return "DIDResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
                 "}";
     }
 

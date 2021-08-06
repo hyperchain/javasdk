@@ -34,6 +34,7 @@ import java.util.Map;
 public class Abi {
 
     private ContractType.Constructor constructor;
+    private ContractType.Fallback fallback;
     private Map<String, ContractType.Function> functions;
     private Map<String, ContractType.Event> events;
 
@@ -66,6 +67,8 @@ public class Abi {
                     abi.constructor = new ContractType.Constructor(inputs, outputs);
                     break;
                 case fallback:
+                    abi.fallback = new ContractType.Fallback(payable);
+                    break;
                 case function:
                     ContractType.Function function = new ContractType.Function(constant, name, inputs, outputs, payable);
                     StringBuilder funcSB = new StringBuilder(name + "(");

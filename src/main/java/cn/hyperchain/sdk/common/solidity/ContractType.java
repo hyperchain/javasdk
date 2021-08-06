@@ -161,6 +161,12 @@ public abstract class ContractType {
         }
     }
 
+    public static class Fallback extends  ContractType {
+        public Fallback(Boolean payable) {
+            super(false, false, "", null, null, Type.fallback, payable);
+        }
+    }
+
     public static class Function extends ContractType {
 
         private static final int ENCODED_SIGN_LENGTH = 4;

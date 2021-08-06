@@ -18,4 +18,16 @@ public class FileExtraFromTxHashResponse extends Response {
         String extra = result.getExtra();
         return FileExtra.fromJson(extra);
     }
+
+    @Override
+    public String toString() {
+        return "FileExtraFromTxHashResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
+                '}';
+    }
 }

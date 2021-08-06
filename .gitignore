@@ -2,6 +2,7 @@
 target
 
 .idea
+.gradle
 *.iml
 
 #vscode
