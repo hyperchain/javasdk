@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.7-1](https://git.hyperchain.cn///compare/v1.0.6...v1.0.7-1) (2021-08-06)
+
+
+### Features
+
+* add sql service ([60516c4](https://git.hyperchain.cn///commit/60516c4a8d21d8a3eeb3af23f12923f6bc36b17e))
+
+
+### Bug Fixes
+
+* **archive:** fix queryArchive, archiveNoPredict interface ([36dec35](https://git.hyperchain.cn///commit/36dec35e41c9705d814b04f39e74f7999614b294))
+
 ### [1.0.6](https://git.hyperchain.cn///compare/v1.0.6-2...v1.0.6) (2021-08-06)
 
 ### [1.0.6-2](https://git.hyperchain.cn///compare/v1.0.6-1...v1.0.6-2) (2021-08-05)
