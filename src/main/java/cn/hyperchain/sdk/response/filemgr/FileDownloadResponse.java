@@ -23,10 +23,14 @@ public class FileDownloadResponse extends Response {
      *
      * @return a String of FileTransferResponse
      */
+    @Override
     public String toString() {
         return "FileDownloadResponse{" +
-                "code=" + code +
+                "jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
                 ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
                 '}';
     }
 

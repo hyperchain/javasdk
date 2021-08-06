@@ -19,9 +19,14 @@ public class TxVersionResponse extends Response {
 
     @Override
     public String toString() {
-        return "TxVersionResponse{"
-                + ", version='" + result + '\''
-                + '}';
+        return "TxVersionResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
+                '}';
     }
 
     public String getTxVersionResult() {

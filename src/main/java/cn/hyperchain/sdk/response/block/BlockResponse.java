@@ -115,6 +115,7 @@ public class BlockResponse extends Response {
                 ", id='" + id + '\'' +
                 ", code=" + code +
                 ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
                 '}';
     }
 }

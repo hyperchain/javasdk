@@ -16,6 +16,9 @@ public class TxHashResponse extends PollingResponse {
                 + "result=" + getTxHash()
                 + ", jsonrpc='" + jsonrpc + '\''
                 + ", id='" + id + '\''
+                + ", code=" + code
+                + ", message='" + message + '\''
+                + ", namespace='" + namespace + '\''
                 + '}';
     }
 }

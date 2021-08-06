@@ -27,9 +27,7 @@ public class ReceiptRequest extends Request {
             ) {
                 return response;
             }
-
             throw e;
         }
-
     }
 }

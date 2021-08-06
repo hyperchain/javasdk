@@ -1,20 +1,20 @@
-package cn.hyperchain.sdk.response;
+package cn.hyperchain.sdk.response.archive;
 
-import com.google.gson.JsonElement;
+
+import cn.hyperchain.sdk.response.Response;
 import com.google.gson.annotations.Expose;
 
-public class TCertResponse extends Response {
-
+public class ArchiveStringResponse extends Response {
     @Expose
-    private JsonElement result;
+    private String result;
 
-    public String getTCert() {
-        return result.getAsJsonObject().get("tcert").getAsString();
+    public String getResult() {
+        return result;
     }
 
     @Override
     public String toString() {
-        return "TCertResponse{" +
+        return "ArchiveStringResponse{" +
                 "result=" + result +
                 ", jsonrpc='" + jsonrpc + '\'' +
                 ", id='" + id + '\'' +

@@ -26,6 +26,7 @@ public class TxAvgTimeResponse extends Response {
                 ", id='" + id + '\'' +
                 ", code=" + code +
                 ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
                 '}';
     }
 }
