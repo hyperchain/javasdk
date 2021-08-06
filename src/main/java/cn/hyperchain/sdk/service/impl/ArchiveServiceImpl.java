@@ -76,7 +76,7 @@ public class ArchiveServiceImpl implements ArchiveService {
 
     @Override
     public Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds) {
-        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "archiveNoPredict", providerManager, ArchiveBoolResponse.class, nodeIds);
+        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "archiveNoPredict", providerManager, ArchiveStringResponse.class, nodeIds);
         archiveRequest.addParams(blkNumber);
         return archiveRequest;
     }
@@ -98,7 +98,7 @@ public class ArchiveServiceImpl implements ArchiveService {
 
     @Override
     public Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds) {
-        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "queryArchive", providerManager, ArchiveBoolResponse.class, nodeIds);
+        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "queryArchive", providerManager, ArchiveStringResponse.class, nodeIds);
         archiveRequest.addParams(filterId);
         return archiveRequest;
     }
