@@ -1,7 +1,8 @@
 package cn.hyperchain.sdk.common.utils;
 
 import cn.hyperchain.sdk.crypto.HashUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -10,7 +11,7 @@ import java.util.Date;
 import java.util.Random;
 
 public class Utils {
-    private static final Logger logger = Logger.getLogger(Utils.class);
+    private static final Logger logger = LogManager.getLogger(Utils.class);
 
     private static Random random;
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;

@@ -11,7 +11,8 @@ import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,7 @@ public class Common {
 
     public static final String bin = "solidity/sol2/TestContract_sol_TypeTestContract.bin";
     public static final String abi = "solidity/sol2/TestContract_sol_TypeTestContract.abi";
-    private static Logger logger = Logger.getLogger(Common.class);
+    private static Logger logger = LogManager.getLogger(Common.class);
 
     static {
 

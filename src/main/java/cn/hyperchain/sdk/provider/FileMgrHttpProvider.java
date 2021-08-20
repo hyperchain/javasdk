@@ -10,7 +10,8 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSink;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ public class FileMgrHttpProvider extends DefaultHttpProvider {
         super();
     }
 
-    private static Logger logger = Logger.getLogger(FileMgrHttpProvider.class);
+    private static Logger logger = LogManager.getLogger(FileMgrHttpProvider.class);
     protected static final MediaType STREAM = MediaType.parse("application/octet-stream; charset=utf-8");
 
     public static class Builder extends DefaultHttpProvider.Builder {
