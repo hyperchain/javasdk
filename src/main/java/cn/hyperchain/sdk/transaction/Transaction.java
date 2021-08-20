@@ -1025,6 +1025,16 @@ public class Transaction {
         }
         input.setOpValue(opCode);
         input.setExtra(ByteString.copyFromUtf8(extra));
+        ArrayList<Object> extraID = new ArrayList<Object>();
+        if (extraIdLong != null) {
+            extraID.addAll(extraIdLong);
+        }
+        if (extraIdString != null) {
+            extraID.addAll(extraIdString);
+        }
+        if (extraID.size() > 0) {
+            input.setExtraId(ByteString.copyFromUtf8(gson.toJson(extraID.toArray())));
+        }
 
         if (vmType == VMType.EVM) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
