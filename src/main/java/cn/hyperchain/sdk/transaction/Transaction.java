@@ -63,6 +63,7 @@ public class Transaction {
     private static final int DIDCREDENTIAL_ABANDON = 208;
 
     private Account account;
+    private boolean resend;
 
     private String from;
     private String to;
@@ -282,6 +283,7 @@ public class Transaction {
         public Transaction build() {
             transaction.setTimestamp(genTimestamp());
             transaction.setNonce(genNonce());
+            transaction.resend = false;
             return transaction;
         }
     }
@@ -778,6 +780,14 @@ public class Transaction {
 
     public TxVersion getTxVersion() {
         return txVersion;
+    }
+
+    public boolean getResend() {
+        return resend;
+    }
+
+    public void setResend(boolean resend) {
+        this.resend = resend;
     }
 
     public Account getAccount() {
