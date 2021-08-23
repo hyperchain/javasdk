@@ -3,12 +3,14 @@ package cn.hyperchain.sdk.response;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.PollingRequest;
+import cn.hyperchain.sdk.request.Request;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 
 public abstract class PollingResponse extends Response {
+    protected Request tranRequest;
     @Expose
     protected JsonElement result;
     protected static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -18,6 +20,11 @@ public abstract class PollingResponse extends Response {
     public void setNodeIds(int... nodeIds) {
         this.nodeIds = nodeIds;
     }
+
+    public void setTranRequest(Request request) {
+        this.tranRequest = request;
+    }
+
 
     public void setProviderManager(ProviderManager providerManager) {
         this.providerManager = providerManager;
@@ -49,7 +56,8 @@ public abstract class PollingResponse extends Response {
             return new ReceiptResponse(this, receipt);
         }
 
-        PollingRequest pollingRequest = new PollingRequest("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        PollingRequest pollingRequest = new PollingRequest("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, tranRequest.getTransaction(), nodeIds);
+        pollingRequest.setTranRequest(tranRequest);
         pollingRequest.setAttempt(attempt);
         pollingRequest.setSleepTime(sleepTime);
         pollingRequest.setStepSize(stepSize);
@@ -83,7 +91,8 @@ public abstract class PollingResponse extends Response {
             return new ReceiptResponse(this, receipt);
         }
 
-        PollingRequest pollingRequest = new PollingRequest("tx_getTransactionReceiptWithGas", providerManager, ReceiptResponse.class, nodeIds);
+        PollingRequest pollingRequest = new PollingRequest("tx_getTransactionReceiptWithGas", providerManager, ReceiptResponse.class, tranRequest.getTransaction(), nodeIds);
+        pollingRequest.setTranRequest(tranRequest);
         pollingRequest.setAttempt(attempt);
         pollingRequest.setSleepTime(sleepTime);
         pollingRequest.setStepSize(stepSize);

@@ -15,13 +15,14 @@ import cn.hyperchain.sdk.transaction.Transaction;
 public class ContractRequest extends Request {
 
     public ContractRequest(String method, ProviderManager providerManager, Class clazz, Transaction transaction, int... ids) {
-        super(method, providerManager, clazz, ids);
+        super(method, providerManager, clazz, transaction, ids);
     }
 
     @Override
     public Response send() throws RequestException {
         TxHashResponse response = (TxHashResponse) super.send();
 
+        response.setTranRequest(this);
         response.setNodeIds(this.nodeIds);
         response.setProviderManager(this.providerManager);
 

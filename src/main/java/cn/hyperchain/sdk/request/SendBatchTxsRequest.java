@@ -54,6 +54,7 @@ public class SendBatchTxsRequest extends Request {
 
         for (int i = 0; i < txHashResponses.size(); i++) {
             TxHashResponse txHashResponse = txHashResponses.get(i);
+            txHashResponse.setTranRequest(this.requests.get(i));
             txHashResponse.setNodeIds(nodeIds);
             txHashResponse.setProviderManager(this.providerManager);
             responses.addResponse(txHashResponse);
