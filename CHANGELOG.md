@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.7](https://git.hyperchain.cn///compare/v1.0.6...v1.0.7) (2021-08-23)
+
+
+### Features
+
+* resend tran if the error is txversion not equal platform's ([c9a898a](https://git.hyperchain.cn///commit/c9a898af58b223db0027f741b27414eb8f9952f2))
+
+
+### Bug Fixes
+
+* **transaction:** fix getTransactionHash when extraID is not null ([2a59315](https://git.hyperchain.cn///commit/2a59315b2bb43926649c3e120c266d38b69e4086))
+
 ### [1.0.6](https://git.hyperchain.cn///compare/v1.0.6-2...v1.0.6) (2021-08-06)
 
 ### [1.0.6-2](https://git.hyperchain.cn///compare/v1.0.6-1...v1.0.6-2) (2021-08-05)
