@@ -468,7 +468,7 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds) {
-        SendTxRequest sendTxRequest = new SendTxRequest(TX_PREFIX + "sendTransaction", providerManager, TxHashResponse.class, nodeIds);
+        SendTxRequest sendTxRequest = new SendTxRequest(TX_PREFIX + "sendTransaction", providerManager, TxHashResponse.class, transaction, nodeIds);
         sendTxRequest.addParams(transaction.commonParamMap());
         return sendTxRequest;
     }

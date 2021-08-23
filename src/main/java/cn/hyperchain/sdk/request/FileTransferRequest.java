@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.request;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.transaction.Transaction;
 
 import java.io.RandomAccessFile;
 
@@ -26,8 +27,8 @@ public class FileTransferRequest extends Request {
      * @param randomAccessFile file random read-write stream
      * @param nodeIds          specific ids
      */
-    public FileTransferRequest(String method, ProviderManager providerManager, Class clazz, String jsonRpc, FileRequestType type, RandomAccessFile randomAccessFile, int... nodeIds) {
-        super(method, providerManager, clazz, nodeIds);
+    public FileTransferRequest(String method, ProviderManager providerManager, Class clazz, String jsonRpc, FileRequestType type, RandomAccessFile randomAccessFile, Transaction transaction, int... nodeIds) {
+        super(method, providerManager, clazz, transaction, nodeIds);
         this.setJsonrpc(jsonRpc);
         this.type = type;
         this.randomAccessFile = randomAccessFile;

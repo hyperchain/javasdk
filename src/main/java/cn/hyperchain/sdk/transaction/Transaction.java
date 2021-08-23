@@ -62,6 +62,9 @@ public class Transaction {
     private static final int DIDCREDENTIAL_DOWNLOAD = 207;
     private static final int DIDCREDENTIAL_ABANDON = 208;
 
+    private Account account;
+    private boolean resend;
+
     private String from;
     private String to;
     private String payload = "";
@@ -280,6 +283,7 @@ public class Transaction {
         public Transaction build() {
             transaction.setTimestamp(genTimestamp());
             transaction.setNonce(genNonce());
+            transaction.resend = false;
             return transaction;
         }
     }
@@ -642,6 +646,7 @@ public class Transaction {
      * @param account sign account
      */
     public void sign(Account account) {
+        this.account = account;
         this.setNeedHashString();
         byte[] sourceData = this.needHashString.getBytes(Utils.DEFAULT_CHARSET);
         this.signature = ByteUtil.toHex(account.sign(sourceData));
@@ -775,6 +780,18 @@ public class Transaction {
 
     public TxVersion getTxVersion() {
         return txVersion;
+    }
+
+    public boolean getResend() {
+        return resend;
+    }
+
+    public void setResend(boolean resend) {
+        this.resend = resend;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 
     public void setTxVersion(TxVersion txVersion) {
@@ -985,6 +1002,16 @@ public class Transaction {
         }
         input.setOpValue(opCode);
         input.setExtra(ByteString.copyFromUtf8(extra));
+        ArrayList<Object> extraID = new ArrayList<Object>();
+        if (extraIdLong != null) {
+            extraID.addAll(extraIdLong);
+        }
+        if (extraIdString != null) {
+            extraID.addAll(extraIdString);
+        }
+        if (extraID.size() > 0) {
+            input.setExtraId(ByteString.copyFromUtf8(gson.toJson(extraID.toArray())));
+        }
 
         if (vmType == VMType.EVM) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
