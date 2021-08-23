@@ -24,7 +24,7 @@ public class DIDServiceImpl implements DIDService {
 
 
     private Request<TxHashResponse> sendDIDTransaction(Transaction transaction, int...nodeIds) {
-        SendDIDTxRequest sendDIDTxRequest = new SendDIDTxRequest(DID_PREFIX + "sendDIDTransaction", providerManager, TxHashResponse.class, nodeIds);
+        SendDIDTxRequest sendDIDTxRequest = new SendDIDTxRequest(DID_PREFIX + "sendDIDTransaction", providerManager, TxHashResponse.class, transaction, nodeIds);
         sendDIDTxRequest.addParams(transaction.commonParamMap());
         return sendDIDTxRequest;
     }

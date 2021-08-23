@@ -32,7 +32,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,7 +100,7 @@ public class FileMgrServiceImpl implements FileMgrService {
                 .build();
         transaction.sign(account);
         FileTransferRequest fileTransferRequest = new FileTransferRequest(FILEMGR_PREFIX + "upload", providerManager, FileUploadResponse.class,
-                jsonrpc, FileTransferRequest.FileRequestType.UPLOAD, randomAccessFile, nodeIdList[0]);
+                jsonrpc, FileTransferRequest.FileRequestType.UPLOAD, randomAccessFile, transaction, nodeIdList[0]);
         Map<String, Object> params = transaction.commonParamMap();
 
         fileTransferRequest.addParams(params);
@@ -116,6 +115,7 @@ public class FileMgrServiceImpl implements FileMgrService {
         } catch (IOException e) {
             logger.warn("close randomAccessFile failed");
         }
+        fileUploadResponse.setTranRequest(fileTransferRequest);
         fileUploadResponse.setFileHash(fileHash);
         fileUploadResponse.setProviderManager(providerManager);
         fileUploadResponse.setNodeIds(nodeIdList[0]);
@@ -166,7 +166,7 @@ public class FileMgrServiceImpl implements FileMgrService {
                 .build();
         transaction.sign(account);
         FileTransferRequest fileTransferRequest = new FileTransferRequest(FILEMGR_PREFIX + "upload", providerManager, FileUploadResponse.class,
-                jsonrpc, FileTransferRequest.FileRequestType.UPLOAD, randomAccessFile, nodeId);
+                jsonrpc, FileTransferRequest.FileRequestType.UPLOAD, randomAccessFile, transaction, nodeId);
         Map<String, Object> params = transaction.commonParamMap();
         StringBuilder optionExtra = new StringBuilder();
         if (fileParams.getPushNodes() != null) {
@@ -196,6 +196,7 @@ public class FileMgrServiceImpl implements FileMgrService {
         } catch (IOException e) {
             logger.warn("close randomAccessFile failed");
         }
+        fileUploadResponse.setTranRequest(fileTransferRequest);
         fileUploadResponse.setFileHash(fileHash);
         fileUploadResponse.setProviderManager(providerManager);
         fileUploadResponse.setNodeIds(nodeId);
@@ -301,7 +302,7 @@ public class FileMgrServiceImpl implements FileMgrService {
         transaction.sign(account);
 
         FileTransferRequest fileTransferRequest = new FileTransferRequest(FILEMGR_PREFIX + "download", providerManager, FileDownloadResponse.class,
-                jsonrpc, FileTransferRequest.FileRequestType.DOWNLOAD, randomAccessFile, nodeId);
+                jsonrpc, FileTransferRequest.FileRequestType.DOWNLOAD, randomAccessFile, transaction, nodeId);
         fileTransferRequest.setPos(pos);
         fileTransferRequest.setFileHash(fileHash);
         fileTransferRequest.addParams(transaction.commonParamMap());
@@ -383,7 +384,7 @@ public class FileMgrServiceImpl implements FileMgrService {
                 .extraIDString(fileExtra.getHash())
                 .build();
         transaction.sign(account);
-        Request request = new FileInfoRequest(FILEMGR_PREFIX + "updateFileInfo", providerManager, FileUpdateResponse.class, jsonrpc, nodeIds);
+        Request request = new FileInfoRequest(FILEMGR_PREFIX + "updateFileInfo", providerManager, FileUpdateResponse.class, jsonrpc, transaction, nodeIds);
         request.addParams(transaction.commonParamMap());
         return request;
     }
@@ -402,7 +403,7 @@ public class FileMgrServiceImpl implements FileMgrService {
                 .extraIDString(fileExtra.getHash())
                 .build();
         transaction.sign(account);
-        Request request = new FileInfoRequest(FILEMGR_PREFIX + "push", providerManager, FilePushResponse.class, jsonrpc, nodeId);
+        Request request = new FileInfoRequest(FILEMGR_PREFIX + "push", providerManager, FilePushResponse.class, jsonrpc, transaction, nodeId);
         Map<String, Object> params = transaction.commonParamMap();
         StringBuilder optionExtra = new StringBuilder();
         if (pushNodes != null) {
