@@ -377,4 +377,5 @@ public class TxServiceTest {
         TxVersionResponse txVersionResponse = txVersionResponseRequest.send();
         System.out.println(txVersionResponse.getTxVersionResult());
     }
+
 }

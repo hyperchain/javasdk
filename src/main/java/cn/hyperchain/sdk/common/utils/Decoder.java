@@ -3,6 +3,10 @@ package cn.hyperchain.sdk.common.utils;
 import cn.hyperchain.sdk.bvm.OperationResult;
 import cn.hyperchain.sdk.bvm.Result;
 import cn.hyperchain.sdk.common.adapter.StringNullAdapter;
+import cn.hyperchain.sdk.kvsqlutil.Chunk;
+import cn.hyperchain.sdk.kvsqlutil.Column;
+import cn.hyperchain.sdk.kvsqlutil.IntegerDataType;
+import cn.hyperchain.sdk.kvsqlutil.KVSQLField;
 import com.google.common.io.ByteSource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,10 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import java.util.Map;
-import java.util.LinkedHashMap;
 
 public class Decoder {
+    private static final int KVSQL_DECODEVERSION1 = 0;
 
     private static final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
@@ -80,7 +83,7 @@ public class Decoder {
         ClassReader reader = new ClassReader(is);
         ClassNode classNode = new ClassNode();
         reader.accept(classNode, 0);
-        for (MethodNode mn : (List<MethodNode>) classNode.methods) {
+        for (MethodNode mn : classNode.methods) {
             if (mn.name.equalsIgnoreCase("invoke") && Type.getReturnType(mn.desc).toString().indexOf("Object") == -1) {
                 Type[] argumentTypes = Type.getArgumentTypes(mn.desc);
                 InsnList instructions = mn.instructions;
@@ -102,9 +105,9 @@ public class Decoder {
     }
 
     static class InvokeParam {
-        private String name;
-        private String type;
-        private String value;
+        private final String name;
+        private final String type;
+        private final String value;
 
         public InvokeParam(String name, String type, String value) {
             this.name = name;
@@ -169,4 +172,85 @@ public class Decoder {
         return list;
     }
 
+    /**
+     * decodeKVSQL receipt result to kvsql.
+     *
+     * @param encode receipt result
+     * @return {@link Chunk}
+     */
+    public static Chunk decodeKVSQL(String encode) {
+        Buffer buffer = new Buffer(ByteUtil.fromHex(encode));
+        int decodeVersion = (int) buffer.readInteger(IntegerDataType.INT1);
+        switch (decodeVersion) {
+            case KVSQL_DECODEVERSION1:
+                return decodeVersion1(buffer);
+            default:
+                throw new RuntimeException("UNKNOW decode Version");
+        }
+    }
+
+    private static Chunk decodeVersion1(Buffer resultPacket) {
+        long columnCount = resultPacket.readInteger(IntegerDataType.INT4);
+        if (columnCount == 0) {
+            return buildResultSetForUpdate(resultPacket);
+        } else {
+            return buildResultSetForQuery((int) columnCount, resultPacket);
+        }
+    }
+
+    private static Chunk buildResultSetForUpdate(Buffer resultPacket) {
+        long updateCount = resultPacket.readInteger(IntegerDataType.INT4);
+        long lastInsertID = resultPacket.readInteger(IntegerDataType.INT8);
+        return new Chunk(updateCount, lastInsertID);
+    }
+
+    private static Chunk buildResultSetForQuery(int columnCount, Buffer resultPacket) {
+        KVSQLField[] fields = new KVSQLField[columnCount];
+        Column[] columns = new Column[columnCount];
+        for (int i = 0; i < columnCount; i++) {
+            fields[i] = unPackField(resultPacket);
+        }
+
+        int rowLength = (int) resultPacket.readInteger(IntegerDataType.INT4);
+
+        for (int i = 0; i < columnCount; i++) {
+            columns[i] = unPackColumn(resultPacket);
+        }
+
+        Chunk chunk = new Chunk(rowLength, fields, columns);
+
+        return chunk;
+    }
+
+    private static final KVSQLField unPackField(Buffer packet) {
+        String tableName = new String(packet.readLenByteArray());
+        String originalTableName = new String(packet.readLenByteArray());
+        String columnName = new String(packet.readLenByteArray());
+        String originalColumnName;
+        byte[] res = packet.readLenByteArray();
+        if (res == null) {
+            originalColumnName = null;
+        } else {
+            originalColumnName = new String(res);
+        }
+
+        short collationIndex = (short) packet.readInteger(IntegerDataType.INT2);
+        long colLength = packet.readInteger(IntegerDataType.INT4);
+        int colType = (int) packet.readInteger(IntegerDataType.INT1);
+        short colFlag = (short) packet.readInteger(IntegerDataType.INT2);
+        int colDecimals = (int) packet.readInteger(IntegerDataType.INT1);
+        return new KVSQLField(tableName, originalTableName, columnName, originalColumnName, colLength, colType, colFlag, colDecimals, collationIndex);
+    }
+
+    private static Column unPackColumn(Buffer packet) {
+        byte[] data = packet.readLenByteArray();
+        byte[] nullBitmap = packet.readLenByteArray();
+
+        int len = (int) packet.readInteger(IntegerDataType.INT_LENENC);
+        int[] offsets = new int[len];
+        for (int i = 0; i < len; i++) {
+            offsets[i] = (int) packet.readInteger(IntegerDataType.INT4);
+        }
+        return new Column(data, nullBitmap, offsets);
+    }
 }
