@@ -30,6 +30,10 @@ public enum TxVersion {
         return this.intVersion >= txV.intVersion;
     }
 
+    public boolean equal(TxVersion txV) {
+        return this.intVersion == txV.intVersion;
+    }
+
     public static volatile TxVersion GLOBAL_TX_VERSION = TxVersion26;
 
     public static void setGlobalTxVersion(TxVersion txV) {
