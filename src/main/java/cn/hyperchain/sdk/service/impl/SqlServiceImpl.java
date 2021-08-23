@@ -22,21 +22,21 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds) {
-        SendTxRequest sendTxRequest = new SendTxRequest(CONTRACT_PREFIX + "invokeContract", providerManager, TxHashResponse.class, nodeIds);
+        SendTxRequest sendTxRequest = new SendTxRequest(CONTRACT_PREFIX + "invokeContract", providerManager, TxHashResponse.class, transaction, nodeIds);
         sendTxRequest.addParams(transaction.commonParamMap());
         return sendTxRequest;
     }
 
     @Override
     public Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds) {
-        SendTxRequest sendTxRequest = new SendTxRequest(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, nodeIds);
+        SendTxRequest sendTxRequest = new SendTxRequest(CONTRACT_PREFIX + "maintainContract", providerManager, TxHashResponse.class, transaction, nodeIds);
         sendTxRequest.addParams(transaction.commonParamMap());
         return sendTxRequest;
     }
 
     @Override
     public Request<TxHashResponse> create(Transaction transaction, int... nodeIds) {
-        SendTxRequest sendTxRequest = new SendTxRequest(CONTRACT_PREFIX + "deployContract", providerManager, TxHashResponse.class, nodeIds);
+        SendTxRequest sendTxRequest = new SendTxRequest(CONTRACT_PREFIX + "deployContract", providerManager, TxHashResponse.class, transaction, nodeIds);
         Map param = transaction.commonParamMap();
         param.remove("to");
         sendTxRequest.addParams(param);
