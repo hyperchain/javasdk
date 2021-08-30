@@ -76,4 +76,27 @@ public class SqlServiceTest {
         receiptResponse = sqlService.invoke(transaction).send().polling();
         System.out.println(receiptResponse.getRet());
     }
+
+    @Test
+    @Ignore
+    public void testSimulate() throws Exception {
+        SqlService sqlService = ServiceManager.getSqlService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+        Account account = accountService.genAccount(Algo.SMRAW);
+
+        Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).create().build();
+        transaction.sign(account);
+        ReceiptResponse receiptResponse = sqlService.create(transaction).send().polling();
+        System.out.println(receiptResponse.getContractAddress());
+
+        String databaseAddr = receiptResponse.getContractAddress();
+        Assert.assertEquals(databaseAddr.length(), 42);
+
+        String str = "CREATE TABLE IF NOT EXISTS testTable (id bigint(20) NOT NULL, name varchar(32) NOT NULL, exp bigint(20), money double(16,2) NOT NULL DEFAULT '99', primary key (id), unique key name (name));";
+        transaction = new Transaction.SQLBuilder(account.getAddress()).invoke(databaseAddr, str).build();
+        transaction.setSimulate(true);
+        transaction.sign(account);
+        receiptResponse = sqlService.invoke(transaction).send().polling();
+        System.out.println(receiptResponse.getRet());
+    }
 }
