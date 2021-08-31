@@ -13,7 +13,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassLoaderRepository;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 
 public class Encoder {
 
-    private static final Logger logger = Logger.getLogger(Encoder.class);
+    private static final Logger logger = LogManager.getLogger(Encoder.class);
 
     /**
      * get deploy payload.

@@ -16,7 +16,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.Gson;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
@@ -33,7 +34,7 @@ import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 
 public abstract class Account {
-    protected final Logger logger = Logger.getLogger(Account.class);
+    protected final Logger logger = LogManager.getLogger(Account.class);
 
     protected static final byte[] ECFlag = new byte[]{0};
     protected static final byte[] SMFlag = new byte[]{1};
