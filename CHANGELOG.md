@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8-2](https://git.hyperchain.cn///compare/v1.0.7...v1.0.8-2) (2021-09-01)
+
+
+### Bug Fixes
+
+* **log:** chang log4j 1.2.17 to org.apache.logging.log4j:log4j-core 2.14.1 ([93b6ca1](https://git.hyperchain.cn///commit/93b6ca10e5835160a255290fe47a1640295a4118))
+* **sql:** add sql simulate ([3400ec0](https://git.hyperchain.cn///commit/3400ec05f6af1bf498420fd1e2e2df608bd0713c))
+* **sql:** fix request param ([60158dc](https://git.hyperchain.cn///commit/60158dcc232a446e1b34da7fb57a0d58c0243565))
+* **transaction:** fix getTransactionHash when extraID is not null ([c9e2c10](https://git.hyperchain.cn///commit/c9e2c1060b86bd1abc142a559efa1dc36eb24eaf))
+
+### [1.0.7-1](https://git.hyperchain.cn///compare/v1.0.6...v1.0.7-1) (2021-08-06)
+
+
+### Features
+
+* add sql service ([60516c4](https://git.hyperchain.cn///commit/60516c4a8d21d8a3eeb3af23f12923f6bc36b17e))
+
+
+### Bug Fixes
+
+* **archive:** fix queryArchive, archiveNoPredict interface ([36dec35](https://git.hyperchain.cn///commit/36dec35e41c9705d814b04f39e74f7999614b294))
+
 ### [1.0.7](https://git.hyperchain.cn///compare/v1.0.6...v1.0.7) (2021-08-23)
 
 
