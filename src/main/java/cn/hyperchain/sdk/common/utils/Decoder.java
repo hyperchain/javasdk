@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.common.utils;
 import cn.hyperchain.sdk.bvm.OperationResult;
 import cn.hyperchain.sdk.bvm.Result;
 import cn.hyperchain.sdk.common.adapter.StringNullAdapter;
+import cn.hyperchain.sdk.common.protos.ProposalOuterClass;
 import cn.hyperchain.sdk.kvsqlutil.Chunk;
 import cn.hyperchain.sdk.kvsqlutil.Column;
 import cn.hyperchain.sdk.kvsqlutil.IntegerDataType;
@@ -11,6 +12,8 @@ import com.google.common.io.ByteSource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -22,14 +25,17 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
 public class Decoder {
     private static final int KVSQL_DECODEVERSION1 = 0;
 
+    private static int defaultLen = 4;
     private static final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
             .registerTypeAdapter(String.class, new StringNullAdapter())
@@ -253,4 +259,44 @@ public class Decoder {
         }
         return new Column(data, nullBitmap, offsets);
     }
+
+    /**
+     * decodeProposalLog decode proposal from MQLog.Data of proposalContract.
+     *
+     * @param data MQLog.Data
+     * @return {@link cn.hyperchain.sdk.common.protos.ProposalOuterClass.Proposal}
+     */
+    public static ProposalOuterClass.Proposal decodeProposalLog(String data) throws InvalidProtocolBufferException {
+        ProposalOuterClass.Proposal proposal = ProposalOuterClass.Proposal.parseFrom(ByteUtil.fromHex(data));
+        return proposal.toBuilder().setCode(decodeProposalContent(proposal.getCode().toByteArray())).build();
+    }
+
+    private static ByteString decodeProposalContent(byte[] code) {
+        int operateLen = ByteUtil.bytesToInteger(ByteUtil.copy(code, 0, defaultLen));
+        int index = defaultLen;
+        Object[] content = new Object[operateLen];
+        for (int i = 0; i < operateLen; i++) {
+            int methodNameLen = ByteUtil.bytesToInteger(ByteUtil.copy(code, index, defaultLen));
+            index += defaultLen;
+            String methodName = new String(ByteUtil.copy(code, index, methodNameLen));
+            index += methodNameLen;
+            int paramCount = ByteUtil.bytesToInteger(ByteUtil.copy(code, index, defaultLen));
+            index += defaultLen;
+            String[] params = new String[paramCount];
+            for (int j = 0; j < paramCount; j++) {
+                int paramLen = ByteUtil.bytesToInteger(ByteUtil.copy(code, index, defaultLen));
+                index += defaultLen;
+                String param = new String(ByteUtil.copy(code, index, paramLen));
+                index += paramLen;
+                params[j] = param;
+            }
+            Map<String, Object> opt = new HashMap<>();
+            opt.put("MethodName", methodName);
+            opt.put("Params", params);
+            content[i] = opt;
+        }
+
+        return ByteString.copyFromUtf8(gson.toJson(content));
+    }
+
 }

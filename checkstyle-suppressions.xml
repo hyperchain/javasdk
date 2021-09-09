@@ -15,4 +15,6 @@
               files="cn.hyperchain.sdk.common.solidity"/>
     <suppress checks="Check"
               files="cn.hyperchain.sdk.transaction.proto.TransactionValueProto"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.common.protos.ProposalOuterClass"/>
 </suppressions>

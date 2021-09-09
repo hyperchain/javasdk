@@ -20,10 +20,10 @@ public class MQServiceTest {
     @Before
     @Ignore
     public void init() throws RequestException {
-        Request<MQResponse> request = mqService.informNormal();
+        Request<MQResponse> request = mqService.informNormal(1);
         request.send();
 
-        Request<MQResponse> exchangerName = mqService.getExchangerName();
+        Request<MQResponse> exchangerName = mqService.getExchangerName(1);
         exchanger = exchangerName.send().getExchanger();
     }
 
@@ -85,5 +85,20 @@ public class MQServiceTest {
 
         mqService.informNormal().send();
         exchanger = mqService.getExchangerName().send().getExchanger();
+    }
+
+    @Test
+    @Ignore
+    public void testRegisterProposalQueue() throws RequestException {
+        ArrayList<String> array = new ArrayList<String>();
+        String proposalAddr = "0x0000000000000000000000000000000000ffff02";
+        array.add("MQLog");
+        String queueName = "litesdk_bvmTest";
+        boolean isVerbose = false;
+
+        Request<MQResponse> registerQueue = mqService.registerQueue(from, queueName, array, isVerbose, 1);
+        MQResponse mqResponse = registerQueue.send();
+        System.out.println(mqResponse);
+
     }
 }
