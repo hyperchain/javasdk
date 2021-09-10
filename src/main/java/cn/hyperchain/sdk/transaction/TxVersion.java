@@ -11,7 +11,8 @@ public enum TxVersion {
     TxVersion26("2.6", 8),
     TxVersion27("2.7", 9),
     TxVersion28("2.8", 10),
-    TxVersion29("2.9", 11);
+    TxVersion29("2.9", 11),
+    TxVersion30("3.0", 12);
 
 
     private String strVersion;
@@ -34,7 +35,7 @@ public enum TxVersion {
         return this.intVersion == txV.intVersion;
     }
 
-    public static volatile TxVersion GLOBAL_TX_VERSION = TxVersion26;
+    public static volatile TxVersion GLOBAL_TX_VERSION = TxVersion30;
 
     public static void setGlobalTxVersion(TxVersion txV) {
         TxVersion.GLOBAL_TX_VERSION = txV;
@@ -79,6 +80,9 @@ public enum TxVersion {
                 break;
             case "2.9":
                 GLOBAL_TX_VERSION = TxVersion29;
+                break;
+            case "3.0":
+                GLOBAL_TX_VERSION = TxVersion30;
                 break;
             default:
                 break;
