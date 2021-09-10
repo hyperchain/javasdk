@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8-3](https://git.hyperchain.cn///compare/v1.0.8-2...v1.0.8-3) (2021-09-10)
+
+
+### Features
+
+* **txVersion:** add txVersin 3.0 ([28de7b0](https://git.hyperchain.cn///commit/28de7b0c1938e454b8d5aca3fc4875dc67faed52))
+
 ### [1.0.8-2](https://git.hyperchain.cn///compare/v1.0.7...v1.0.8-2) (2021-09-01)
 
 
