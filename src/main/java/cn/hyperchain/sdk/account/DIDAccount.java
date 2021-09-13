@@ -98,6 +98,20 @@ public class DIDAccount extends Account {
         return account.getPublicKey();
     }
 
+    @Override
+    public String getPrivateKey() {
+        return account.getPrivateKey();
+    }
+
+    @Override
+    public Version getVersion() {
+        return account.getVersion();
+    }
+
+    public static String getChainID() {
+        return CHAINID;
+    }
+
     public Account getAccount() {
         return account;
     }
