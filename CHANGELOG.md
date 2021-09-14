@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8-4](https://git.hyperchain.cn///compare/v1.0.8-3...v1.0.8-4) (2021-09-14)
+
+
+### Features
+
+* encode jar in sdk and add txVersion 3.0 ([f0be882](https://git.hyperchain.cn///commit/f0be88234aeb41bfbc01ab0c7b94ea91befabd8a))
+* **did:** add did account getter ([e1605f7](https://git.hyperchain.cn///commit/e1605f766b9000c85704f7ab76e5dc842461e2e0))
+* **proposal:** add a function to decode MQLog.Data to proposal ([fb536c6](https://git.hyperchain.cn///commit/fb536c6acaf3964265200966f42e0ffcd20dc28c))
+
 ### [1.0.8-3](https://git.hyperchain.cn///compare/v1.0.8-2...v1.0.8-3) (2021-09-10)
 
 
