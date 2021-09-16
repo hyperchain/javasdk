@@ -32,6 +32,7 @@ import java.util.zip.ZipEntry;
 public class Encoder {
 
     private static final Logger logger = LogManager.getLogger(Encoder.class);
+    public static final String DEPLOYMAGIC = "fefffbcd";
     private static final int jarLimit = 1024 * 512; // 512k
     private static final int classLimit = 1024 * 64; // 64k
 
@@ -84,7 +85,7 @@ public class Encoder {
             if (result.length > jarLimit) {
                 throw new IOException("the contract jar content should not be larger than 512KB");
             }
-            return ByteUtil.toHex(result);
+            return DEPLOYMAGIC + ByteUtil.toHex(result);
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
