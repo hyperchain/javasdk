@@ -141,8 +141,30 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder(10, 10, 10)
 * `setUrl()`可以设置连接的节点**URL**（格式为**ip+jsonRPC端口**）;
 * `https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
 
+### 2.2 创建GrpcProvider对象
 
-### 2.2 创建ProviderManager对象
+`GrpcProvider`是接口`HttpProvider`的一个实现类，`DefaultHttpProvider`通过jsonrpc与节点进行通信，而`GrpcProvider`通过grpc双向流与节点进行通信，创建`GrpcProvider`需要通过Builder模式创建，示例如下：
+
+```java
+public static final String node1 = "localhost:11001";
+
+// 方式一
+GrpcProvider grpcProvider = new GrpcProvider.Builder()
+  							.setUrl("localhost:11001")
+  							.build();
+
+// 方式二
+GrpcProvider grpcProvider = new GrpcProvider.Builder(3000)
+  							.setUrl("localhost:11001")
+  							.setStreamNum(3)
+  							.build();
+```
+
+* `Builder(long time)`自定义grpc向节点请求的超时时间，单位为ms。
+* `setUrl`可以设置连接的节点**URL**（格式为**ip+grpc**端口）
+* `setStreamNum`设置本连接与节点之间同一种类型的grpc双向流的最大数量，默认值为1，通常来说其值可设置为使用该`GrpcProvider`的线程数量。
+
+### 2.3 创建ProviderManager对象
 
 每个节点的连接都需要一个`HttpProvider`，而`ProviderManager`负责集成、管理这些`HttpProvider`，创建`ProviderManager`有两种方式，一种是通过`createManager()`创建，另一种是和`HttpProvider`一样通过**Builder**模式创建。使用前者创建会使用`ProvideManager`的默认配置参数，而如果想定制更多的属性则需要通过后者的方式创建，示例如下：
 
@@ -179,6 +201,7 @@ ProviderManager providerManager = ProviderManager.createManager(HttpProvider);
 providerManager = new ProviderManager.Builder()
                 .namespace("global")
                 .providers(httpProvider1, httpProvider2, httpProvider3, httpProvider4)
+  							.grpcProviders(grpcProvider1, grpcProvider2, grpcProvider3, grpcProvider4)
                 .enableTCert(sdkcert_cert, sdkcert_priv, unique_pub, unique_priv)
                 .build();
 ```
@@ -190,11 +213,12 @@ providerManager = new ProviderManager.Builder()
 方式2：
 * `namespace()`可以设置对应的**namespace名**;
 * `providers()`设置需要管理的`HttpProvider`对象们;
+* `grpcProviders`设置需要管理的`GrpcProvider`对象；
 * `enableTCert()`设置使用的证书(**需要传的参数类型为输入流)**。注：例子中未出现的方法还有一个`cfca(InputStream sdkCert, InputStream sdkCertPriv)`，功能与`enableTCert()`相同，两者的区别是证书校验是否通过**cfca机构**，且在创建`ProvideManager`对象过程中两个方法只能使用其中一个。
 
 注：enableTcert里面的sdkcert_cert，sdkcert_priv，unique_pub，unique_priv，分别对应证书目录下的sdkcert_cert，key_priv，unique_pub，unique_priv文件。
 
-### 2.3 创建服务
+### 2.4 创建服务
 
 相关的一类服务集合由一个专门的`Service`接口管理，并通过对应的实现类实现具体的创建过程（如封装发送请求需要附带的参数）。**LiteSDK**通过`ServiceManager`类负责管理创建所有的`Service`对象，以下是一个创建获取节点信息的服务的例子：
 
@@ -214,7 +238,7 @@ NodeRequest nodeRequest = nodeService.getNodes();
 - `send()`: 同步发送返回`Request`根据不同接口绑定的`Response`
 - `sendAsync()`: 异步发送返回`Request`根据不同接口绑定了`Response`的`Future`接口
 
-### 2.4 获取结果
+### 2.5 获取结果
 
 同样地，响应也都继承了共同的父类——`Response`，通过调用`Request`的`send()`方法得到，**LitesSDK**会将不同的返回结果`result`根据接口封装成不同的`Response`子类，如 **2.3** 所说`Response`类型在生成`Request`时绑定。`Response`可以获取状态码、状态消息等，而不同的`Response`可以获取到不同的结果，有时也需要进一步获取到更具体的信息。示例如下：
 
@@ -235,7 +259,7 @@ System.out.println(nodeResponse.getResult());
 
 以交易体结构为核心的交易主要应用在合约交易上，即将想要执行的操作和数据封装成一笔交易体，再调用合约服务(`ContractService`)的接口去执行。
 
-绑定合约接口的`Response`子类只有`TxHashResponse`，里面封装了`ReceiptResponse`类型的参数，实际是**tx hash**，拿到`TxHashResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执。
+绑定合约接口的`Response`子类只有`TxHashResponse`和`ReceiptResponse`，前者封装了`ReceiptResponse`类型的参数，实际是**tx hash**，拿到`TxHashResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执；后者`ReceiptResponse`即为交易回执，无需再调用**polling**查询。
 
 `TxHashResponse`的主要方法如下：
 
@@ -256,7 +280,7 @@ public ReceiptResponse polling() throws RequestException;
 public String getTxHash();
 ```
 
-LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约、通过投票管理合约**四种接口。
+LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约、通过投票管理合约**四种接口。其中以grpc开头的接口表示该接口只有在创建`ProviderManager`对象时，设置了`GrpcProvider`与节点通信才可使用，且绑定了`ReceiptResponse`。
 
 ```java
 public interface ContractService {
@@ -267,6 +291,15 @@ public interface ContractService {
     Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
   
     Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds);
+  
+  	Request<ReceiptResponse> grpcDeployReturnReceipt(Transaction transaction, int... nodeIds);
+    
+  	Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
+  
+    Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds);
+
+	  Request<ReceiptResponse> grpcManageContractByVoteReturnReceipt(Transaction transaction, int... nodeIds);
+
 }
 ```
 
@@ -274,15 +307,18 @@ public interface ContractService {
 
 ### 转账交易
 
-转账交易的实现主要是TxService提供，主要有两个接口。
+转账交易的实现主要是TxService提供，主要有三个接口。
 
 ```java
 Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds);
 
 Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds);
+
+Request<ReceiptResponse> grpcSendTxReturnReceipt(Transaction transaction, int... nodeIds);
+
 ```
 
-分别绑定了`TxHashResponse`和`TxHashesResponse`，当拿到这两个响应时调用`polling()`方法就可以获取真正的交易回执，前者返回`ReceiptResponse`，后者返回`ArrayList<ReceiptResponse>`。转账交易和合约接口类似，主要的不同在于交易体的创建，转账交易通过内部类`Builder`调用`transfer()`方法创建。
+前两个接口分别绑定了`TxHashResponse`和`TxHashesResponse`，当拿到这两个响应时调用`polling()`方法就可以获取真正的交易回执，前者返回`ReceiptResponse`，后者返回`ArrayList<ReceiptResponse>`。第三个接口`grpcSendTxReturnReceipt`绑定了`ReceiptResponse`，即可以直接获得交易回执。转账交易和合约接口类似，主要的不同在于交易体的创建，转账交易通过内部类`Builder`调用`transfer()`方法创建。
 
 ```java
 class Builder {
@@ -585,15 +621,24 @@ transaction.sign(account);
 
 ```java
 ContractService contractService = ServiceManager.getContractService(providerManager);
+
+//方式一
 Request<TxHashResponse> contractRequest = contractService.deploy(transaction);
+
+//方式二
+Request<ReceiptResponse> contractGrpcRequest = contractService.grpcDeployReturnReceipt(transaction);
 ```
 
 ### 发送交易体
 
-这个过程实际分为两步，调用`send()`部署合约拿到响应，再对响应解析拿到`ReceiptResponse`（执行结果），这是合约相关接口独有的，其他接口一般只需要调用`send()`方法拿到响应就结束了。
+如果创建请求调用的是普通接口，不是**grpc**的服务接口，那么这个过程实际分为两步，调用`send()`部署合约拿到响应，再对响应解析拿到`ReceiptResponse`（执行结果）。如果创建请求调用的是**grpc**服务接口，只需要调用`send()`方法拿到`ReceiptResponse`响应就结束了。
 
 ```java
+//方式一
 ReceiptResponse receiptResponse = contractRequest.send().polling();
+
+//方式二
+ReceiptResponse receiptResponse2 = contractGrpcRequest.send();
 ```
 
 
@@ -1440,7 +1485,11 @@ Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
 - nodeIds 说明请求向哪些节点发送
 
 ```java
+//方式一
 Request<TxHashResponse> create(Transaction transaction, int... nodeIds);
+
+//方式二（设置GrpcProvider方可使用）
+Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 ### 10.3 管理数据库生命周期
@@ -1452,7 +1501,11 @@ Request<TxHashResponse> create(Transaction transaction, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送
 
 ```java
+//方式一
 Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
+
+//方式二（设置GrpcProvider方可使用）
+Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 ### 10.4 调用SQL
@@ -1464,7 +1517,11 @@ Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送
 
 ```java
+//方式一
 Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+
+//方式二（设置GrpcProvider方可使用）
+Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 ### 10.5 SQL执行结果解码

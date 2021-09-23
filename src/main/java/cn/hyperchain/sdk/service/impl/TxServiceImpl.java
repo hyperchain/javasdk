@@ -596,6 +596,13 @@ public class TxServiceImpl implements TxService {
     }
 
     @Override
+    public Request<ReceiptResponse> grpcSendTxReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(TX_PREFIX + "sendTransactionReturnReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        receiptRequest.addParams(transaction.commonParamMap());
+        return receiptRequest;
+    }
+
+    @Override
     public Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds) {
         ArrayList<Request> requests = new ArrayList<>();
         TxService txService = ServiceManager.getTxService(providerManager);

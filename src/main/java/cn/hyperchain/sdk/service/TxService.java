@@ -523,6 +523,15 @@ public interface TxService {
      */
     Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds);
 
+
+    /**
+     *
+     * @param transaction transaction to be send.
+     * @param nodeIds  specific ids
+     * @return {@link Request} of {@link ReceiptResponse}
+     */
+    Request<ReceiptResponse> grpcSendTxReturnReceipt(Transaction transaction, int... nodeIds);
+
     /**
      * send batch txs.
      *

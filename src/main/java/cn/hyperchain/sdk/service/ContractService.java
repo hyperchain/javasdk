@@ -17,13 +17,25 @@ public interface ContractService {
 
     Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds);
 
+    Request<ReceiptResponse> grpcDeployReturnReceipt(Transaction transaction, int... nodeIds);
+
+
     Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+
+    Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
+
 
     Request<ReceiptResponse> getReceipt(String txHash, int... nodeIds);
 
     Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
 
+    Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds);
+
+
     Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds);
+
+    Request<ReceiptResponse> grpcManageContractByVoteReturnReceipt(Transaction transaction, int... nodeIds);
+
 
     Request<DeployerListResponse> getDeployedList(String address, int... nodeIds);
 }
