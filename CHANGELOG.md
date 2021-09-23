@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8-5](https://git.hyperchain.cn///compare/v1.0.8-4...v1.0.8-5) (2021-09-23)
+
+
+### Bug Fixes
+
+* **hvm:** add magic when encode contract jar ([33086cf](https://git.hyperchain.cn///commit/33086cf5e2ae5d7e8563bedc060ffab7583c914a))
+
 ### [1.0.8-4](https://git.hyperchain.cn///compare/v1.0.8-3...v1.0.8-4) (2021-09-14)
 
 
