@@ -10,4 +10,5 @@ target
 .project
 .settings
 .vscode
+.factorypath
 lite-docs
