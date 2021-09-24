@@ -23,7 +23,8 @@ import cn.hyperchain.sdk.service.params.FileUploadParams;
 import cn.hyperchain.sdk.service.params.FilterParam;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class FileMgrServiceImpl implements FileMgrService {
     private static final String EMPTY_STRING = "";
     private String jsonrpc = "2.1";
 
-    private static Logger logger = Logger.getLogger(FileMgrServiceImpl.class);
+    private static Logger logger = LogManager.getLogger(FileMgrServiceImpl.class);
 
     /**
      * constructor.

@@ -24,6 +24,7 @@ import cn.hyperchain.sdk.service.TxService;
 import cn.hyperchain.sdk.service.params.FilterParam;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
+import cn.hyperchain.sdk.transaction.VMType;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

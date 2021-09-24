@@ -1580,9 +1580,155 @@ Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 
 #### 
 
-## 第十章. 接口响应类型结构体介绍
+## 第十章. SqlService相关接口
 
-### 10.1 TxService接口对应的响应类型
+### 10.1 创建SQL交易体
+
+**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。SQL交易体由SQLBuilder负责创建，其提供了5种SQL交易体的封装，包括**创建数据库**、**冻结数据库**、**解冻数据库**、**删除数据库**、**调用SQL**。
+
+**创建数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  create().
+  build();
+```
+
+**冻结数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  freeze(databaseAddr).
+  build();
+```
+
+**解冻数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  unfreeze(databaseAddr).
+  build();
+```
+
+**删除数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  destroy(databaseAddr).
+  build();
+```
+
+**调用SQL**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  invoke(databaseAddr, SQLStr).
+  build();
+```
+
+### 10.2 创建数据库
+
+创建数据库交易成功后，可通过交易回执查询创建的数据库地址。
+
+参数：
+
+* transaction 创建数据库的交易体
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxHashResponse> create(Transaction transaction, int... nodeIds);
+```
+
+### 10.3 管理数据库生命周期
+
+参数：
+
+* transaction 管理数据库生命周期的交易体，即冻结数据库、解冻数据库或者删除数据库的交易体
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
+```
+
+### 10.4 调用SQL
+
+参数：
+
+* transaction 调用SQL的交易体
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+```
+
+### 10.5 SQL执行结果解码
+
+类似于HVM，SQL的执行结果解码方法在Decoder类中
+
+参数：
+
+- encode sql的执行结果，即sql交易的回执
+
+```java
+public static Chunk decodeKVSQL(String encode);
+```
+
+### 10.6 Chunk结构的使用
+
+chunk结构保存了sql的执行结果，使用方法类似于jdbc的ResultSet
+
+**10.6.1 DML语句**
+
+对于DML语句，通过getUpdateCount方法可以获得sql语句对应的修改行数
+
+```java
+public long getUpdateCount();
+```
+
+也可以通过getLastInsertID获得插入的自增键
+
+```java
+public long getLastInsertID();
+```
+
+**10.6.2 DQL语句**
+
+对于DQL语句，chunk的使用方法类似于jdbc的ResultSet
+
+调用next接口将游标移动到查询结果的下一行，游标初始位置为第一行之前。
+
+```java
+public boolean next();
+```
+
+如果返回结果为false表示游标已经移动到最后一行之后了。
+
+
+
+调用getValue接口将获得游标指向的当前行以及参数对应列所指向的数据的值。返回结果的类型取决于该列在数据库表中的数据类型。
+
+参数
+
+- columnIdex 列坐标，范围为[0,n-1]，n为列的数量
+
+```java
+public Object getValue(int columnIndex);
+```
+
+
+
+chunk同时也提供指定类型的数据获取的方法，对应方法如下，XXX表示类型，如getFloat，getTime等。该类使用方法与getValue一致，不过需要注意的是，XXX类型必须和数据库表中该列的类型一致或者能过相互转换，否则无法获得正确的结果或者会抛出异常。
+
+```java
+public XXX getXXX(int columnIndex);
+```
+
+## 第十一章. 接口响应类型结构体介绍
+
+### 11.1 TxService接口对应的响应类型
 
 - TxResponse
 - TxCountWithTSResponse
@@ -1678,7 +1824,7 @@ public class Receipt {
 }
 ```
 
-### 10.2 BlockService接口对应的响应类型
+### 11.2 BlockService接口对应的响应类型
 
 - BlockResponse
 - BlockNumberResponse 
@@ -1743,7 +1889,7 @@ public class BlockCountResponse extends Response {
 }
 ```
 
-### 10.3 ArchiveService接口对应的响应类型
+### 11.3 ArchiveService接口对应的响应类型
 
 - ArchiveResponse
 - ArchiveFilterIdResponse

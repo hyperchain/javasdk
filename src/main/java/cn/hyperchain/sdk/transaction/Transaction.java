@@ -30,6 +30,7 @@ import org.bouncycastle.util.encoders.Hex;
 
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -301,9 +302,22 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder deploy(InputStream fis) {
-            String payload = Encoder.encodeDeployJar(fis);
+            String payload = Encoder.encodeDeployJar(fis, transaction.txVersion);
             super.transaction.setTo("0x0");
             super.transaction.setPayload(payload);
+            return this;
+        }
+
+        /**
+         * upgrade hvm contract.
+         * @param contractAddress contract address in chain
+         * @param fis FileInputStream for the given jar file
+         * @return {@link Builder}
+         */
+        public Builder upgrade(String contractAddress, InputStream fis) {
+            transaction.setPayload(Encoder.encodeDeployJar(fis, transaction.txVersion));
+            transaction.setTo(contractAddress);
+            transaction.setOpCode(UPDATE);
             return this;
         }
 
@@ -603,6 +617,45 @@ public class Transaction {
             super.transaction.setTo(super.transaction.getFrom());
             super.transaction.setPayload(ByteUtil.toHex(credentialID.getBytes(Utils.DEFAULT_CHARSET)));
             super.transaction.setOpCode(DIDCREDENTIAL_ABANDON);
+            return this;
+        }
+    }
+
+    public static class SQLBuilder extends Builder {
+
+        // default invoke kvsql use rawsql
+        public static final byte rawSql = 0;
+
+        /**
+         * create transfer or generate transaction.
+         * @param from account address
+         */
+        public SQLBuilder(String from) {
+            super(from);
+            super.transaction.setVmType(VMType.KVSQL);
+        }
+
+        /**
+         * invoke sql.
+         * @param to database address
+         * @param sql sql text
+         * @return {@link Builder}
+         */
+        public Builder invoke(String to, String sql) {
+            this.transaction.setTo(to);
+            byte[] data = ByteUtil.merge(new byte[]{rawSql}, sql.getBytes(Charset.defaultCharset()));
+            this.transaction.setPayload(ByteUtil.toHex(data));
+            return this;
+        }
+
+        /**
+         * create a kvsql database.
+         * @return {@link Builder}
+         */
+        public Builder create() {
+            this.transaction.setTo("0x0");
+            //KVSQL
+            this.transaction.setPayload("0x4b5653514c");
             return this;
         }
     }
