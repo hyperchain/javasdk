@@ -10,7 +10,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Request;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +30,7 @@ public class DefaultHttpProvider implements HttpProvider {
     protected DefaultHttpProvider() {
     }
 
-    private static Logger logger = Logger.getLogger(DefaultHttpProvider.class);
+    private static Logger logger = LogManager.getLogger(DefaultHttpProvider.class);
     //media type
     protected static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 

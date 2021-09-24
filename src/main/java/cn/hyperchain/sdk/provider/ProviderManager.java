@@ -22,7 +22,8 @@ import cn.hyperchain.sdk.service.impl.DIDServiceImpl;
 import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class ProviderManager {
     private ProviderManager() {
     }
 
-    private static Logger logger = Logger.getLogger(ProviderManager.class);
+    private static Logger logger =  LogManager.getLogger(ProviderManager.class);
 
     public static class Builder {
         private ProviderManager providerManager;

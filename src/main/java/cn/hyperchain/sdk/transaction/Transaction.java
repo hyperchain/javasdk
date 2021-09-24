@@ -302,9 +302,22 @@ public class Transaction {
          * @return {@link Builder}
          */
         public Builder deploy(InputStream fis) {
-            String payload = Encoder.encodeDeployJar(fis);
+            String payload = Encoder.encodeDeployJar(fis, transaction.txVersion);
             super.transaction.setTo("0x0");
             super.transaction.setPayload(payload);
+            return this;
+        }
+
+        /**
+         * upgrade hvm contract.
+         * @param contractAddress contract address in chain
+         * @param fis FileInputStream for the given jar file
+         * @return {@link Builder}
+         */
+        public Builder upgrade(String contractAddress, InputStream fis) {
+            transaction.setPayload(Encoder.encodeDeployJar(fis, transaction.txVersion));
+            transaction.setTo(contractAddress);
+            transaction.setOpCode(UPDATE);
             return this;
         }
 

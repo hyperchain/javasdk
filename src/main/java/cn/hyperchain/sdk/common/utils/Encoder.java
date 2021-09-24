@@ -3,9 +3,9 @@ package cn.hyperchain.sdk.common.utils;
 import cn.hyperchain.contract.BaseInvoke;
 import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.crypto.HashUtil;
+import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
-import cn.hyperchain.sdk.bvm.operate.ContractMethod;
 import cn.hyperchain.sdk.bvm.operate.Operation;
 import cn.hyperchain.sdk.bvm.operate.ProposalContentOperation;
 import com.google.gson.Gson;
@@ -13,18 +13,101 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassLoaderRepository;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.io.FileOutputStream;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
 
 public class Encoder {
 
-    private static final Logger logger = Logger.getLogger(Encoder.class);
+    private static final Logger logger = LogManager.getLogger(Encoder.class);
+    public static final String DEPLOYMAGIC = "fefffbcd";
+    private static final int jarLimit = 1024 * 512; // 512k
+    private static final int classLimit = 1024 * 64; // 64k
+
+    /**
+     * encode deploy jar, get payload.
+     * @param fis FileinputStream for the given jar file
+     * @return payload
+     */
+    // Main-Class name length (2 bytes) | Main-Class name | class length (4 bytes) | name length (2 bytes) | class | name | ...
+    private static String encodeJar(InputStream fis) {
+        FileOutputStream fos = null;
+        File file = null;
+        JarFile jarFile = null;
+
+        try {
+            file = new File("temp" + System.currentTimeMillis() + ".jar");
+            fos = new FileOutputStream(file);
+            int len = 0;
+            byte[] buf = new byte[1024];
+            while ((len = fis.read(buf)) != -1) {
+                fos.write(buf, 0, len);
+            }
+            jarFile = new JarFile(file);
+            Manifest manifest = jarFile.getManifest();
+            String mainClass = manifest.getMainAttributes().getValue("Main-Class");
+            if (mainClass == null || mainClass.equals("")) {
+                throw new RuntimeException("can't not get mainClass from manifest");
+            }
+            byte[] mainClassBytes = mainClass.getBytes(StandardCharsets.UTF_8);
+            byte[] result = ByteUtil.merge(ByteUtil.shortToBytes((short) mainClassBytes.length), mainClassBytes);
+            Enumeration<? extends ZipEntry> entrys = jarFile.entries();
+            while (entrys.hasMoreElements()) {
+                ZipEntry jarEntry = entrys.nextElement();
+                String jarName = jarEntry.getName();
+                if (jarName.endsWith(".class")) {
+                    InputStream in = jarFile.getInputStream(jarEntry);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    int readLen;
+                    while ((readLen = in.read()) != -1) {
+                        byteArrayOutputStream.write(readLen);
+                    }
+                    byte[] bs = byteArrayOutputStream.toByteArray();
+                    if (bs.length > classLimit) {
+                        throw new IOException("the single class content should not be larger than 64KB");
+                    }
+                    byte[] nameBytes = jarName.substring(0, jarName.length() - 6).getBytes(StandardCharsets.UTF_8);
+                    result = ByteUtil.merge(result, ByteUtil.intToBytes(bs.length), ByteUtil.shortToBytes((short) nameBytes.length), bs, nameBytes);
+                }
+            }
+            if (result.length > jarLimit) {
+                throw new IOException("the contract jar content should not be larger than 512KB");
+            }
+            return DEPLOYMAGIC + ByteUtil.toHex(result);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (jarFile != null) {
+                    jarFile.close();
+                }
+                if (file != null) {
+                    file.delete();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+        }
+        return null;
+    }
 
     /**
      * get deploy payload.
@@ -33,6 +116,20 @@ public class Encoder {
      * @return payload
      */
     public static String encodeDeployJar(InputStream fis) {
+        return Encoder.encodeDeployJar(fis, TxVersion.TxVersion30);
+    }
+
+
+    /**
+     * get deploy payload.
+     * @param fis FileinputStream for the given jar file
+     * @param txVersion transaction txversion
+     * @return payload
+     */
+    public static String encodeDeployJar(InputStream fis, TxVersion txVersion) {
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion30)) {
+            return encodeJar(fis);
+        }
         BufferedInputStream bis = null;
         ByteArrayOutputStream baos = null;
 

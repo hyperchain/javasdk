@@ -23,7 +23,8 @@ import cn.hyperchain.sdk.crypto.jce.ECKeyFactory;
 import cn.hyperchain.sdk.crypto.jce.ECKeyPairGenerator;
 import cn.hyperchain.sdk.crypto.jce.ECSignatureFactory;
 import cn.hyperchain.sdk.crypto.jce.SpongyCastleProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DLSequence;
@@ -89,7 +90,7 @@ import java.util.Arrays;
  */
 public class ECKey implements Serializable {
 
-    private static Logger logger = Logger.getLogger(ECKey.class);
+    private static Logger logger = LogManager.getLogger(ECKey.class);
 
     /**
      * The parameters of the secp256k1 curve that Ethereum uses.
