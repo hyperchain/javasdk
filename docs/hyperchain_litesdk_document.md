@@ -87,6 +87,7 @@
      * [9.10 恢复所有归档数据](#910-恢复所有归档数据)
      * [9.11 查询归档数据状态](#911-查询归档数据状态)
      * [9.12 查询所有待完成的快照请求](#912-查询所有待完成的快照请求)
+     * [9.13 查询最近一次归档的进度](#913-查询最近一次归档的进度)
   * [第十章. 接口响应类型结构体介绍](#第十章-接口响应类型结构体介绍)
      * [10.1 TxService接口对应的响应类型](#101-TxService接口对应的响应类型)
      * [10.2 BlockService接口对应的响应类型](#102-BlockService接口对应的响应类型)
@@ -1540,6 +1541,16 @@ Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 
 ```java
 Request<ArchiveResponse> pending(int... nodeIds);
+```
+
+#### 9.1.13 查询最近一次归档的进度
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds);
 ```
 
 ### 9.2 Hyperchain2.x相关接口
