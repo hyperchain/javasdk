@@ -1,3 +1,19 @@
+- [第一章. 前言](#第一章-前言)
+- [第二章. 初始化](#第二章-初始化)
+  - [2.1 创建FileMgrHttpProvider对象](#21-创建filemgrhttpprovider对象)
+  - [2.2 创建DefaultHttpProvider对象](#22-创建defaulthttpprovider对象)
+  - [2.3 创建HttpProvider对象](#23-创建httpprovider对象)
+  - [2.4 创建FileMgrService服务](#24-创建filemgrservice服务)
+  - [2.5 调用FileMgrService服务](#25-调用filemgrservice服务)
+- [第三章. FileMgr接口(FileMgrService)](#第三章-filemgr接口filemgrservice)
+  - [3.1 文件上传(fileUpload)](#31-文件上传fileupload)
+  - [3.2 文件下载(fileDownload)](#32-文件下载filedownload)
+  - [3.3 更新文件信息(fileInfoUpdate)](#33-更新文件信息fileinfoupdate)
+  - [3.4 文件主动推送(filePush)](#34-文件主动推送filepush)
+  - [3.5 通过fileOwner和fileHash获取文件信息(getFileExtraByFilter)](#35-通过fileowner和filehash获取文件信息getfileextrabyfilter)
+  - [3.6 通过txHash获取文件信息(getFileExtraByTxHash)](#36-通过txhash获取文件信息getfileextrabytxhash)
+- [第四章. 大文件存储接口使用示例](#第四章-大文件存储接口使用示例)
+
 ## 第一章. 前言
 
 本文档是**LiteSDK**的补充文档，提供hyperchain大文件存储的使用指南，部分在主文档提到内容不再进行赘述。
