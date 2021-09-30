@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.request;
 
+import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
 import cn.hyperchain.sdk.provider.ProviderManager;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 /**
  * request need to get receipt by polling.
+ *
  * @author tomkk
  * @version 0.0.1
  */
@@ -63,10 +65,10 @@ public class PollingRequest extends Request {
             } catch (RequestException e) {
                 if (e.getMsg().contains("Invalid signature")) {
                     ProviderManager.setTxVersion(providerManager);
-                    if (transaction != null && !transaction.getResend()) {
+                    if (transaction != null && !transaction.getTxVersion().equal(TxVersion.GLOBAL_TX_VERSION)) {
                         transaction.setTxVersion(TxVersion.GLOBAL_TX_VERSION);
+                        transaction.updatePayload();
                         transaction.sign(transaction.getAccount());
-                        transaction.setResend(true);
                         return reSendTransaction(tranRequest, transaction);
                     }
                 }
@@ -96,7 +98,7 @@ public class PollingRequest extends Request {
             txParamMap.remove("to");
         } else if (request.getMethod().contains("fm_upload") || request.getMethod().contains("fm_push")) {
             List params = request.getListParams();
-            Map param = (Map)params.get(0);
+            Map param = (Map) params.get(0);
             if (params.get(0) != null && ((Map) params.get(0)).get("optionExtra") != null) {
                 txParamMap.put("optionExtra", ((Map) params.get(0)).get("optionExtra"));
             }

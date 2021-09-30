@@ -28,6 +28,7 @@ import com.google.gson.JsonParseException;
 import com.google.protobuf.ByteString;
 import org.bouncycastle.util.encoders.Hex;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -64,7 +65,6 @@ public class Transaction {
     private static final int DIDCREDENTIAL_ABANDON = 208;
 
     private Account account;
-    private boolean resend;
 
     private String from;
     private String to;
@@ -284,7 +284,6 @@ public class Transaction {
         public Transaction build() {
             transaction.setTimestamp(genTimestamp());
             transaction.setNonce(genNonce());
-            transaction.resend = false;
             return transaction;
         }
     }
@@ -835,14 +834,6 @@ public class Transaction {
         return txVersion;
     }
 
-    public boolean getResend() {
-        return resend;
-    }
-
-    public void setResend(boolean resend) {
-        this.resend = resend;
-    }
-
     public Account getAccount() {
         return account;
     }
@@ -1096,5 +1087,21 @@ public class Transaction {
             }
         }
         return "0x" + Hex.toHexString(hashBytes);
+    }
+
+    /**
+     * update payload for deploy or update hvm contract tx.
+     */
+    public void updatePayload() {
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion30)) {
+            if (payload.startsWith("0x" + Encoder.DEPLOYMAGIC) || payload.startsWith(Encoder.DEPLOYMAGIC)) {
+                return;
+            }
+            if (vmType.equals(VMType.HVM) && (opCode == UPDATE || (to.equals("0x0") && contractName.length() == 0))) {
+                InputStream fis = new ByteArrayInputStream(ByteUtil.fromHex(payload));
+                String newPayload = Encoder.encodeDeployJar(fis, txVersion);
+                this.setPayload(newPayload);
+            }
+        }
     }
 }
