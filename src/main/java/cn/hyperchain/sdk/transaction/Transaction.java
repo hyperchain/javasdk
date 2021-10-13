@@ -107,6 +107,7 @@ public class Transaction {
         public Builder transfer(String to, long value) {
             transaction.setTo(to);
             transaction.setValue(value);
+            transaction.setVmType(VMType.TRANSFER);
             return this;
         }
 
