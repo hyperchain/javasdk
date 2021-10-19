@@ -1,13 +1,13 @@
 package cn.hyperchain.sdk;
 
+import cn.hyperchain.sdk.common.hvm.HVMBeanAbi;
+import cn.hyperchain.sdk.common.utils.*;
+import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.response.block.BlockResponse;
+import cn.hyperchain.sdk.service.BlockService;
 import cn.test.logic.entity.Person;
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
-import cn.hyperchain.sdk.common.utils.ByteUtil;
-import cn.hyperchain.sdk.common.utils.Decoder;
-import cn.hyperchain.sdk.common.utils.FileUtil;
-import cn.hyperchain.sdk.common.utils.HVMPayload;
-import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.crypto.SignerUtil;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.test.hvm.ContractInvoke;
@@ -224,4 +224,111 @@ public class HVMTest {
         Gson gson = new Gson();
         System.out.println(gson.toJson(hvmPayload));
     }
+
+
+    @Test
+    public void testHvmBeanAbiInvoke() throws IOException, RequestException {
+        // 1. build provider manager
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
+        BlockService blockService = ServiceManager.getBlockService(providerManager);
+        Request<BlockResponse> blockResponseBlockRequest = blockService.getLatestBlock();
+        BlockResponse blockResponse = blockResponseBlockRequest.send();
+        System.out.println("lastBlock"+blockResponse.getResult());
+
+        // 2. build service
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+
+        // 3. build transaction
+        Account account = accountService.genAccount(Algo.SMRAW);
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contract-auction.jar");
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
+        transaction.sign(account);
+        // 4. get request
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        // 5. polling && get result && decode result
+        String contractAddress = receiptResponse.getContractAddress();
+        System.out.println("合约地址: " + contractAddress);
+        System.out.println("部署返回(未解码): " + receiptResponse.getRet());
+        System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
+        // 6.invokeBean type
+        InputStream inputStream = FileUtil.readFileAsStream("hvm-abi/hvm-auction.abi");
+        String abiJson = FileUtil.readFile(inputStream);
+        InvokeHVMAbiParams.ParamBuilder params = new InvokeHVMAbiParams.ParamBuilder(abiJson, HVMBeanAbi.BeanType.InvokeBean, "invoke.InvokeBid");
+        params.addParam(1);
+        params.addParam(2);
+        params.addParam(3);
+        params.addParam(4.1);
+        char a ='\u4E25';
+        params.addParam(a);
+        params.addParam(a);
+        params.addParam(a);
+        params.addParam(1000);
+        params.addParam(99999);
+        params.addParam(false);
+        params.addParam(new InvokeBean(18,"张三"));
+        transaction = new Transaction.HVMBuilder(account.getAddress()).invokeByBeanAbi(contractAddress, params.build())
+                .build();
+        transaction.sign(account);
+
+        ReceiptResponse invokeRes = contractService.invoke(transaction).send().polling();
+        String decode = Decoder.decodeHVM(invokeRes.getRet(), String.class);
+        System.out.println("invokeBean解码前:" + invokeRes.getRet());
+        System.out.println("invokeBean解码后: " + decode);
+
+        //7. methodBean type
+        params = new InvokeHVMAbiParams.ParamBuilder(abiJson, HVMBeanAbi.BeanType.MethodBean, "bid");
+        params.addParam(50);
+        transaction = new Transaction.HVMBuilder(account.getAddress()).invokeByBeanAbi(contractAddress, params.build())
+                .build();
+        transaction.sign(account);
+
+        invokeRes = contractService.invoke(transaction).send().polling();
+        decode = Decoder.decodeHVM(invokeRes.getRet(), String.class);
+        System.out.println("methodBean解码前:" + invokeRes.getRet());
+        System.out.println("methodBean解码后: " + decode);
+
+    }
+
+
+
+
+
+    public static class InvokeBean{
+
+        private Integer age;
+
+        private String name;
+
+        public Integer getAge() {
+            return age;
+        }
+
+        public void setAge(Integer age) {
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public InvokeBean(Integer age, String name) {
+            this.age = age;
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "InvokeBean{" +
+                    "age=" + age +
+                    ", name='" + name + '\'' +
+                    '}';
+        }
+    }
+
 }
