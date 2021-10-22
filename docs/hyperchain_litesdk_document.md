@@ -201,13 +201,14 @@ providerManager = new ProviderManager.Builder()
 
 方式1：
 
-​		只需要传`HttpProvider`对象，其他都使用`ProvideManager`的默认配置，如不启用证书、使用的**namespace**配置项为**global**。
+只需要传`HttpProvider`对象，其他都使用`ProvideManager`的默认配置，如不启用证书、使用的**namespace**配置项为**global**。
 
 方式2：
 * `namespace()`可以设置对应的**namespace名**;
 * `providers()`设置需要管理的`HttpProvider`对象们;
 * `enableTCert()`设置使用的证书(**需要传的参数类型为输入流)**。注：例子中未出现的方法还有一个`cfca(InputStream sdkCert, InputStream sdkCertPriv)`，功能与`enableTCert()`相同，两者的区别是证书校验是否通过**cfca机构**，且在创建`ProvideManager`对象过程中两个方法只能使用其中一个。
 
+注：enableTcert里面的sdkcert_cert，sdkcert_priv，unique_pub，unique_priv，分别对应证书目录下的sdkcert_cert，key_priv，unique_pub，unique_priv文件。
 
 ### 2.3 创建服务
 
