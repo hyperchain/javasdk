@@ -90,6 +90,7 @@
     - [9.1.10 恢复所有归档数据](#9110-恢复所有归档数据)
     - [9.1.11 查询归档数据状态](#9111-查询归档数据状态)
     - [9.1.12 查询所有待完成的快照请求](#9112-查询所有待完成的快照请求)
+    - [9.1.13 查询最近一次归档的进度](#9113-查询最近一次归档的进度)
   - [9.2 Hyperchain2.x相关接口](#92-hyperchain2x相关接口)
     - [9.2.1 列出所有快照](#921-列出所有快照)
     - [9.2.2 数据归档（直接归档）](#922-数据归档直接归档)
@@ -1563,6 +1564,16 @@ Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 
 ```java
 Request<ArchiveResponse> pending(int... nodeIds);
+```
+
+#### 9.1.13 查询最近一次归档的进度
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds);
 ```
 
 ### 9.2 Hyperchain2.x相关接口

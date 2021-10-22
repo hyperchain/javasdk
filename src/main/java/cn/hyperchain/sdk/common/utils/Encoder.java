@@ -87,7 +87,7 @@ public class Encoder {
             }
             return DEPLOYMAGIC + ByteUtil.toHex(result);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            throw new RuntimeException(e);
         } finally {
             try {
                 if (fis != null) {
@@ -103,10 +103,9 @@ public class Encoder {
                     fos.close();
                 }
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                logger.error("close stream fail, " + e.getMessage());
             }
         }
-        return null;
     }
 
     /**
@@ -116,7 +115,7 @@ public class Encoder {
      * @return payload
      */
     public static String encodeDeployJar(InputStream fis) {
-        return Encoder.encodeDeployJar(fis, TxVersion.TxVersion30);
+        return Encoder.encodeDeployJar(fis, TxVersion.GLOBAL_TX_VERSION);
     }
 
 

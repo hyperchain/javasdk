@@ -5,6 +5,7 @@ import cn.hyperchain.sdk.response.archive.ArchiveBoolResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveFilterIdResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveStringResponse;
+import cn.hyperchain.sdk.response.archive.ArchiveLatestResponse;
 
 import java.math.BigInteger;
 
@@ -123,6 +124,14 @@ public interface ArchiveService {
      * @return {@link Request} of {@link ArchiveBoolResponse}
      */
     Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
+
+    /**
+     * query latest archive.
+     *
+     * @param nodeIds  specific ids
+     * @return {@link Request} of {@link ArchiveBoolResponse}
+     */
+    Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds);
 
     /**
      * read pending archives.
