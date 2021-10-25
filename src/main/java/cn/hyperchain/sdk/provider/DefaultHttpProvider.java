@@ -4,8 +4,17 @@ import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.common.utils.HttpsUtils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
-import okhttp3.*;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
+import okhttp3.MediaType;
+import okhttp3.TlsVersion;
 import okhttp3.internal.Util;
+import okhttp3.Request;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.Headers;
+import okhttp3.Response;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,15 +27,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class DefaultHttpProvider implements HttpProvider {
-    protected static final String HTTP = "http://";
-    protected static final String HTTPS = "https://";
-
-    protected String url;
-    protected volatile PStatus status;
-    protected String httpPrefix;
-    protected Account account;
-
     private static List<ConnectionSpec> GmTlsSpecs;
+
     static {
         final ConnectionSpec tls = ConnectionSpec.COMPATIBLE_TLS;
         List<CipherSuite> cs = tls.cipherSuites();
@@ -42,14 +44,21 @@ public class DefaultHttpProvider implements HttpProvider {
 
             versions.toArray(vers);
             vers[vers.length - 1] = TlsVersion.GMTLS;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        ConnectionSpec gmtls = (new ConnectionSpec.Builder(tls)).cipherSuites(cs.toArray(new CipherSuite[cs.size()])).
-                tlsVersions(vers).build();
+        ConnectionSpec gmtls = (new ConnectionSpec.Builder(tls)).cipherSuites(cs.toArray(new CipherSuite[cs.size()])).tlsVersions(vers).build();
         GmTlsSpecs = Util.immutableList(new ConnectionSpec[]{gmtls, ConnectionSpec.CLEARTEXT});
     }
+    
+    protected static final String HTTP = "http://";
+    protected static final String HTTPS = "https://";
 
+    protected String url;
+    protected volatile PStatus status;
+    protected String httpPrefix;
+    protected Account account;
+    
     protected DefaultHttpProvider() {
     }
 
@@ -128,7 +137,7 @@ public class DefaultHttpProvider implements HttpProvider {
          */
         public Builder https(InputStream tlsCa, InputStream tlsPeerCert, InputStream tlsPeerPriv) {
             HttpsUtils.SSLParams sslSocketFactory = HttpsUtils.getSslSocketFactory(tlsCa, tlsPeerCert, tlsPeerPriv, HttpsUtils.DEFAULT_PASSWORD);
-            if (sslSocketFactory.isGm()){
+            if (sslSocketFactory.isGm()) {
                 builder.connectionSpecs(GmTlsSpecs);
             }
             builder.sslSocketFactory(sslSocketFactory.getsSLSocketFactory(), sslSocketFactory.getTrustManager())

@@ -53,14 +53,14 @@ public class CertUtils {
             throw new Exception("Open pem error");
         }
         List<PrivateKeyInfo> priv = new ArrayList<>();
-        while (true){
+        while (true) {
             Object object = pemRd.readObject();
-            if (object == null){
+            if (object == null) {
                 break;
             }
-            if (object instanceof  PEMKeyPair){
+            if (object instanceof  PEMKeyPair) {
                 priv.add(((PEMKeyPair)object).getPrivateKeyInfo());
-            } else if (object instanceof PrivateKeyInfo){
+            } else if (object instanceof PrivateKeyInfo) {
                 priv.add((PrivateKeyInfo)object);
             }
 

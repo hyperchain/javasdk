@@ -27,7 +27,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.*;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -43,7 +46,11 @@ public class HttpsUtils {
         private SSLSocketFactory sSLSocketFactory;
         private X509TrustManager trustManager;
         private boolean isgm;
-        public boolean isGm() {return isgm;}
+        
+        public boolean isGm() {
+            return isgm;
+        }
+        
         public SSLSocketFactory getsSLSocketFactory() {
             return sSLSocketFactory;
         }
@@ -74,8 +81,8 @@ public class HttpsUtils {
             sslParams.trustManager = trustManager;
             sslParams.isgm = keyStore.size() > 1;
             SSLContext sslContext = null;
-            if (sslParams.isgm){
-                 sslContext = SSLContext.getInstance("GMTLS");
+            if (sslParams.isgm) {
+                sslContext = SSLContext.getInstance("GMTLS");
             } else {
                 sslContext = SSLContext.getInstance("TLSv1.2");
             }
@@ -215,7 +222,7 @@ public class HttpsUtils {
         boolean isGM = pem[0].getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
 
         final PrivateKey[] key = CertUtils.getPrivateKeyFromPEM(pem, isGM);
-        for (int i = 0; i < key.length; i++){
+        for (int i = 0; i < key.length; i++) {
             String keyAlias = Integer.toString(i);
             keystore.setKeyEntry(keyAlias, key[i], password.toCharArray(), cert/*new X509Certificate[]{cert[i]}*/);
         }
