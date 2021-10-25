@@ -18,15 +18,26 @@ public class SMAccount extends Account {
         this.keyPair = keyPair;
     }
 
-    public AsymmetricCipherKeyPair getKeyPair() {
-        return keyPair;
-    }
-
     @Override
     public byte[] sign(byte[] sourceData) {
         try {
             byte[] publicKey = ByteUtil.fromHex(this.publicKey);
             byte[] signature = SM2Util.sign(keyPair, sourceData);
+            return ByteUtil.merge(SMFlag, publicKey, signature);
+        } catch (CryptoException e) {
+            logger.error("sign transaction error " + e.getMessage());
+            return ByteUtil.EMPTY_BYTE_ARRAY;
+        }
+    }
+
+    @Override
+    protected byte[] sign(byte[] sourceData, boolean isDID) {
+        try {
+            byte[] publicKey = ByteUtil.fromHex(this.publicKey);
+            byte[] signature = SM2Util.sign(keyPair, sourceData);
+            if (isDID) {
+                return ByteUtil.merge(publicKey, signature);
+            }
             return ByteUtil.merge(SMFlag, publicKey, signature);
         } catch (CryptoException e) {
             logger.error("sign transaction error " + e.getMessage());
@@ -42,6 +53,21 @@ public class SMAccount extends Account {
         }
         byte[] realSig = new byte[lenSig - 66];
         System.arraycopy(signature, 66, realSig, 0, lenSig - 66);
+        ECPublicKeyParameters ecPublicKeyParameters = (ECPublicKeyParameters) this.keyPair.getPublic();
+        return SM2Util.verify(sourceData, realSig, ecPublicKeyParameters);
+    }
+
+    @Override
+    protected boolean verify(byte[] sourceData, byte[] signature, boolean isDID) {
+        if (!isDID) {
+            return verify(sourceData, signature);
+        }
+        int lenSig = signature.length;
+        if (lenSig <= 65) {
+            throw new IllegalSignatureException();
+        }
+        byte[] realSig = new byte[lenSig - 65];
+        System.arraycopy(signature, 65, realSig, 0, lenSig - 65);
         ECPublicKeyParameters ecPublicKeyParameters = (ECPublicKeyParameters) this.keyPair.getPublic();
         return SM2Util.verify(sourceData, realSig, ecPublicKeyParameters);
     }

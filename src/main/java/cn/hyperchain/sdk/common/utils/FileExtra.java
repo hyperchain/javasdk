@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class FileExtra {
-    private static Logger logger = Logger.getLogger(FileExtra.class);
+    private static Logger logger = LogManager.getLogger(FileExtra.class);
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -31,6 +32,9 @@ public class FileExtra {
     @Expose()
     @SerializedName("node_list")
     private ArrayList<String> nodeList;
+    @Expose()
+    @SerializedName("user_list")
+    private ArrayList<String> userList;
     @SerializedName("update_time")
     @Expose()
     private String updateTime;
@@ -97,6 +101,14 @@ public class FileExtra {
         this.nodeList = nodeList;
     }
 
+    public ArrayList<String> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(ArrayList<String> userList) {
+        this.userList = userList;
+    }
+
     public String getUpdateTime() {
         return updateTime;
     }
@@ -138,6 +150,12 @@ public class FileExtra {
             fileExtra.nodeList = nodeList;
             return this;
         }
+
+        public FileExtraBuilder userList(ArrayList<String> userList) {
+            fileExtra.userList = userList;
+            return this;
+        }
+
 
         public FileExtraBuilder fileDescription(String fileDescription) {
             fileExtra.fileDescription = fileDescription;

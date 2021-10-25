@@ -115,4 +115,16 @@ public class NodeStateResponse extends Response {
 
         return nodeStates;
     }
+
+    @Override
+    public String toString() {
+        return "NodeStateResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
+                "}";
+    }
 }

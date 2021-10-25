@@ -24,6 +24,7 @@ import cn.hyperchain.sdk.service.TxService;
 import cn.hyperchain.sdk.service.params.FilterParam;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
+import cn.hyperchain.sdk.transaction.VMType;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxResponse> getTxByHash(String txHash, int... nodeIds) {
-        return getTxByHash(txHash, false);
+        return getTxByHash(txHash, false, nodeIds);
     }
 
 
@@ -166,9 +167,14 @@ public class TxServiceImpl implements TxService {
     @Override
     public Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds) {
         ReceiptRequest pollingRequest = new ReceiptRequest(TX_PREFIX + "getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
-
         pollingRequest.addParams(txHash);
+        return pollingRequest;
+    }
 
+    @Override
+    public Request<ReceiptResponse> getTransactionReceiptWithGas(String txHash, int... nodeIds) {
+        ReceiptRequest pollingRequest = new ReceiptRequest(TX_PREFIX + "getTransactionReceiptWithGas", providerManager, ReceiptResponse.class, nodeIds);
+        pollingRequest.addParams(txHash);
         return pollingRequest;
     }
 
@@ -463,7 +469,7 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds) {
-        SendTxRequest sendTxRequest = new SendTxRequest(TX_PREFIX + "sendTransaction", providerManager, TxHashResponse.class, nodeIds);
+        SendTxRequest sendTxRequest = new SendTxRequest(TX_PREFIX + "sendTransaction", providerManager, TxHashResponse.class, transaction, nodeIds);
         sendTxRequest.addParams(transaction.commonParamMap());
         return sendTxRequest;
     }

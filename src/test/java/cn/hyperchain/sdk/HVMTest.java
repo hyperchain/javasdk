@@ -113,7 +113,7 @@ public class HVMTest {
         // 3. build transaction
         Account account = accountService.genAccount(Algo.SMRAW);
         Account backup = account;
-        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-1.0-SNAPSHOT.jar");
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
         Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
         transaction.sign(accountService.fromAccountJson(account.toJson()));
         Assert.assertTrue(account.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
@@ -178,6 +178,38 @@ public class HVMTest {
         // 8. get result & decode result
         System.out.println("调用返回(未解码): " + receiptResponse1.getRet());
         System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse1.getRet(), String.class));
+    }
+
+    @Test
+    public void testTcert() throws IOException, RequestException {
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+
+        String sdkcert_cert = "certs/guomi/sdkcert_guomi.cert";
+        String sdkcert_priv = "certs/guomi/sdkcert_guomi.priv";
+        String unique_pub = "certs/guomi/unique_guomi.pub";
+        String unique_priv = "certs/guomi/unique_guomi.priv";
+        InputStream sdkcert_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_cert);
+        InputStream sdkcert_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_priv);
+        InputStream unique_pub_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(unique_pub);
+        InputStream unique_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(unique_priv);
+
+        ProviderManager providerManager = new ProviderManager.Builder()
+                .providers(defaultHttpProvider)
+                .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
+                .build();
+
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+
+        Account account = accountService.genAccount(Algo.SMRAW);
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
+        transaction.sign(accountService.fromAccountJson(account.toJson()));
+
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        String contractAddress = receiptResponse.getContractAddress();
+        System.out.println("合约地址: " + contractAddress);
+        System.out.println("部署返回：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
     }
 
     @Test

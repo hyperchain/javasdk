@@ -4,9 +4,6 @@
 [![Build Status](https://travis-ci.org/hyperchain/javasdk.svg?branch=master)](https://travis-ci.org/hyperchain/javasdk)
 [![Coverage Status](https://coveralls.io/repos/github/hyperchain/javasdk/badge.svg?branch=master)](https://coveralls.io/github/hyperchain/javasdk?branch=master)
 
-This is a light JavaSDK for [Hyperchain](http://www.hyperchain.cn).
-
-To get more information you can view [docs](http://docs.hyperchain.cn), use `hvmd` and `liteSDK` to start a enjoyable journey.
 
 ## Get started
 
@@ -18,14 +15,14 @@ Maven
 <dependency>
     <groupId>cn.hyperchain</groupId>
     <artifactId>litesdk</artifactId>
-    <version>1.0.3</version>
+    <version>x.x.x</version>
 </dependency>
 ```
 
 Gradle
 
 ```
-compile group: 'cn.hyperchain', name: 'litesdk', version: '1.0.3'
+compile group: 'cn.hyperchain', name: 'litesdk', version: 'x.x.x'
 ```
 
 It's better to use latest sdk to send transaction, now it will be compatible with hyperchain 1.0 and 2.0

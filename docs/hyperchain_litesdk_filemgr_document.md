@@ -1,3 +1,19 @@
+- [第一章. 前言](#第一章-前言)
+- [第二章. 初始化](#第二章-初始化)
+  - [2.1 创建FileMgrHttpProvider对象](#21-创建filemgrhttpprovider对象)
+  - [2.2 创建DefaultHttpProvider对象](#22-创建defaulthttpprovider对象)
+  - [2.3 创建HttpProvider对象](#23-创建httpprovider对象)
+  - [2.4 创建FileMgrService服务](#24-创建filemgrservice服务)
+  - [2.5 调用FileMgrService服务](#25-调用filemgrservice服务)
+- [第三章. FileMgr接口(FileMgrService)](#第三章-filemgr接口filemgrservice)
+  - [3.1 文件上传(fileUpload)](#31-文件上传fileupload)
+  - [3.2 文件下载(fileDownload)](#32-文件下载filedownload)
+  - [3.3 更新文件信息(fileInfoUpdate)](#33-更新文件信息fileinfoupdate)
+  - [3.4 文件主动推送(filePush)](#34-文件主动推送filepush)
+  - [3.5 通过fileOwner和fileHash获取文件信息(getFileExtraByFilter)](#35-通过fileowner和filehash获取文件信息getfileextrabyfilter)
+  - [3.6 通过txHash获取文件信息(getFileExtraByTxHash)](#36-通过txhash获取文件信息getfileextrabytxhash)
+- [第四章. 大文件存储接口使用示例](#第四章-大文件存储接口使用示例)
+
 ## 第一章. 前言
 
 本文档是**LiteSDK**的补充文档，提供hyperchain大文件存储的使用指南，部分在主文档提到内容不再进行赘述。
@@ -91,7 +107,7 @@ FileMgrService包含了大文件存储所需的所有接口，大文件存储接
 
 - 直接返回`Response`，如文件的上传和下载接口直接发送请求并得到响应
 ```java
-FileMgrResponse fileDownloadResponse = fileMgrService.fileUpload(path, des, nodeIdList, account1);
+FileDownloadResponse fileDownloadResponse1 = fileMgrService.fileDownload(path, txHash, account1, 1);
 ```
 - 返回Request，通过调用`Request`的`send`方法获取`Response`： 
 ```java
@@ -191,8 +207,21 @@ public class FileUpdateResponse extends Response {
 FileUploadResponse fileUpload(String filePath, String description, Account account, int... nodeIdList);
 ```
 
+重载方法如下：
 
+参数：
+- params 文件上传参数结构体
+   - 文件路径：要求文件存在，执行文件的断点续传，若文件大小为s，SDK会请求节点从s的位置传输数据
+   - description 文件描述信息
+   - account 文件下载者的account
+   - nodeIdList 节点白名单列表，为空代表所有节点都能范围，若不为空，数组第一个元素需与nodeId一致
+   - userList 用户白名单列表，为空代表所有账户均能下载，若为只有一个元素none的数组，代表除了上传者均不能下载，若为用户地址列表，代表仅上传者和列表中的用户可以下载
+   - pushNodes 要推送的节点列表
+- nodeId 说明向哪个节点发送上传请求
 
+```java
+    FileUploadResponse fileUpload(FileUploadParams params,int nodeId)；
+```
 
 ### 3.2 文件下载(fileDownload)
 
@@ -236,18 +265,36 @@ FileDownloadResponse fileDownload(String filePath, String txHash, Account accoun
 
 参数：
 - fileHash 文件哈希(检查fileHash非null)
-- nodeIdList 拥有文件权限的节点Id列表，至少有1个节点Id。若为`null`或`nodeIdList.length=0`，则默认不更新。
+- nodeIdList 节点白名单列表，为空代表所有节点都能范围，若不为空，数组第一个元素需与原列表中的第一个nodeId一致。
+- userList 用户白名单列表，为空代表所有账户均能下载，若为只有一个元素none的数组，代表除了上传者均不能下载，若为用户地址列表，代表仅上传者和列表中的用户可以下载
 - description 文件描述信息。若为`null`，则默认不更新。
 - account 文件上传者的account(检查account非null)
 - nodeIds 说明请求向哪些节点发送
 
 ```java
-Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String description, Account account, int... nodeIds);
+Request<FileUpdateResponse> fileInfoUpdate(String fileHash, int[] nodeIdList, String[] userList, String description, Account account, int... nodeIds);;
 ```
 
 
 
-### 3.4 通过fileOwner和fileHash获取文件信息(getFileExtraByFilter)
+### 3.4 文件主动推送(filePush)
+
+该方法用于主动通知目标节点将文件推送至其他节点
+
+参数：
+- fileHash 待下载文件的hash，同fileOwner唯一确定一个待下载文件
+- pushNodes 要推送的节点列表
+- account 文件上传者的account(检查account非null)
+- nodeId 说明请求向哪个节点发送推送请求
+
+```java
+Request<FilePushResponse> filePush(String fileHash, int[] pushNodes, Account account, int nodeId);
+```
+
+
+
+
+### 3.5 通过fileOwner和fileHash获取文件信息(getFileExtraByFilter)
 
 该方法获取的文件信息是最新的文件信息
 
@@ -263,7 +310,7 @@ Request<FileExtraFromFileHashResponse> getFileExtraByFilter(String fileOwner, St
 
 
 
-### 3.5 通过txHash获取文件信息(getFileExtraByTxHash)
+### 3.6 通过txHash获取文件信息(getFileExtraByTxHash)
 
 该方法获取的文件信息是txHash对应交易存储的fileExtra，若要查询最新的fileExtra需要使用最后一次更新后的txHash
 
@@ -324,6 +371,26 @@ public class FileMgrDemo {
         ReceiptResponse receiptResponse1 = fileUploadResponse.polling();
         System.out.println("文件上传交易对应的回执:");
         System.out.println(receiptResponse1.toString());
+    
+        // 文件上传重载接口
+        String path = dirPath + File.separator + "uploadFile.txt";
+        System.out.println(path);
+        createFile(path, 10);
+        int[] nodeIdList = {1, 2, 3};
+        int[] pushNodes = {3};
+        String[] userList = {account1.getAddress()};
+        FileUploadParams params = new FileUploadParams.Builder(path,"des",account1)
+                .nodeIdList(nodeIdList)
+                .pushNodes(pushNodes)
+                .userList(userList)
+                .build();
+        FileUploadResponse fileUploadResponse = fileMgrService.fileUpload(params,1);
+        txHash = fileUploadResponse.getTxHash();
+        fileHash = fileUploadResponse.getFileHash();
+        System.out.println(fileUploadResponse.getTxHash());
+        System.out.println(fileUploadResponse.getFileHash());
+        ReceiptResponse receiptResponse = fileUploadResponse.polling();
+        System.out.println(receiptResponse.toString());
 
         // 文件下载
         String downloadPath = "";
@@ -345,13 +412,20 @@ public class FileMgrDemo {
 
         // 文件信息更新
         int[] newNodeList = {1, 2};
-        Request<FileUpdateResponse> fileInfoUpdate = fileMgrService.fileInfoUpdate(fileHash, newNodeList, "newDes", account, 1);
+        String[] userList = {account2.getAddress(),account3.getAddress};
+        Request<FileUpdateResponse> fileInfoUpdate = fileMgrService.fileInfoUpdate(fileHash, newNodeList,userList, "newDes", account, 1);
         FileUpdateResponse fileUpdateResponse = fileInfoUpdate.send();
         System.out.println("文件信息更新Response:");
         System.out.println(fileUpdateResponse.toString());
         ReceiptResponse receiptResponse2 = fileUpdateResponse.polling();
         System.out.println("文件信息交易回执:");
         System.out.println(receiptResponse2.toString());
+
+        // 文件推送
+        int[] pushNodes = {2, 3};
+        Request<FilePushResponse> filePush = fileMgrService.filePush(fileHash, pushNodes, account1, 1);
+        FilePushResponse FilePushResponse = filePush.send();
+        System.out.println(FilePushResponse.toString());
 
         // 查询更新以后的信息
         Request<FileExtraFromFileHashResponse> request2 = fileMgrService.getFileExtraByFilter(account.getAddress(), fileHash, 1);

@@ -11,4 +11,15 @@ public class NodeHashResponse extends Response {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "NodeHashResponse{" +
+                "result=" + result +
+                ", jsonrpc='" + jsonrpc + '\'' +
+                ", id='" + id + '\'' +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
+                "}";
+    }
 }

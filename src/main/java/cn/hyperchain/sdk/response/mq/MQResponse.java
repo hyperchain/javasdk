@@ -44,7 +44,8 @@ public class MQResponse extends Response {
                 ", id='" + id + '\'' +
                 ", code=" + code +
                 ", message='" + message + '\'' +
-                ", result" + result.toString() + '\'' +
+                ", namespace='" + namespace + '\'' +
+                ", result" + result + '\'' +
                 '}';
     }
 }

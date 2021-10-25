@@ -37,6 +37,13 @@ public enum ContractMethod {
 
     AccountRegister("Register"),
     AccountAbandon("Abandon"),
+
+    DIDSetChainID("SetChainID"),
+
+    CertRevoke("CertRevoke"),
+    CertCheck("CertCheck"),
+    CertFreeze("CertFreeze"),
+    CertUnfreeze("CertUnfreeze"),
     ;
     private String methodName;
 

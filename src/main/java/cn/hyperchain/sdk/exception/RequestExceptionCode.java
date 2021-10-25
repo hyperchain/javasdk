@@ -9,7 +9,8 @@ public enum RequestExceptionCode {
     NETWORK_GETBODY_FAILED(-9999, "get response body failed"),
     RECEIPT_NOT_FOUND(-32001, "can not find receipt"),
     SYSTEM_BUSY(-32006, "system is busy"),
-    HTTP_TIME_OUT(-32096, "request time out");
+    HTTP_TIME_OUT(-32096, "request time out"),
+    METHOD_NOT_FOUND(-32601, "method not found");
 
     private Integer code;
     private String msg;

@@ -1,96 +1,121 @@
-  * [第一章. 前言](#第一章-前言)
-  * [第二章. 初始化](#第二章-初始化)
-     * [2.1 创建HttpProvider对象](#21-创建httpprovider对象)
-     * [2.2 创建ProviderManager对象](#22-创建providemanager对象)
-     * [2.3 创建服务](#23-创建服务)
-     * [2.4 获取结果](#24-获取结果)
-  * [第三章. 交易](#第三章-交易)
-     * [合约接口](#合约接口)
-     * [转账交易](#转账交易)
-        * [创建账户](#创建账户)
-        * [交易体创建](#交易体创建)
-        * [部署合约](#部署合约)
-           * [HVM](#hvm)
-           * [EVM](#evm)
-        * [调用合约](#调用合约)
-           * [HVM](#hvm-1)
-           * [EVM](#evm-1)
-        * [升级合约](#升级合约)
-           * [HVM](#hvm-2)
-           * [EVM](#evm-2)
-        * [冻结合约](#冻结合约)
-           * [HVM](#hvm-3)
-           * [EVM](#evm-3)
-        * [解冻合约](#解冻合约)
-           * [HVM](#hvm-4)
-           * [EVM](#evm-4)
-     * [交易体的payload](#交易体的payload)
-     * [交易体设置TxVersion](#交易体设置TxVersion)
-     * [交易体签名](#交易体签名)
-     * [创建请求](#创建请求)
-     * [发送交易体](#发送交易体)
-  * [第四章. Transaction接口(TxService)](#第四章-transaction接口txservice)
-     * [4.1 查询指定区块区间的交易(getTxss)](#41-查询指定区块区间的交易gettxs)
-     * [4.2 查询所有非法交易(getDiscardTransactions)](#42-查询所有非法交易getdiscardtransactions)
-     * [4.3 查询交易by transaction hash(getTransactionByHash)](#43-查询交易by-transaction-hashgettransactionbyhash)
-     * [4.4 查询交易by block hash(getTxByBlockHashAndIndex)](#44-查询交易by-block-hashgettxbyblockhashandindex)
-     * [4.5 查询交易by block number(getTxByBlockNumAndIndex)](#45-查询交易by-block-numbergettxbyblocknumandindex)
-     * [4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#46-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
-     * [4.7 查询链上所有交易量(getTransactionsCount)](#47-查询链上所有交易量gettransactionscount)
-     * [4.8 查询交易回执信息by transaction hash(getTransactionReceipt)](#48-查询交易回执信息by-transaction-hashgettransactionreceipt)
-     * [4.9 查询区块交易数量by block hash(getBlockTxCountByHash)](#49-查询区块交易数量by-block-hashgetblocktxcountbyhash)
-     * [4.10 查询区块交易数量by block number(getBlockTxCountByNumber)](#410-查询区块交易数量by-block-numbergetblocktxcountbynumber)
-     * [4.11 获取交易签名哈希(getSignHash)](#411-获取交易签名哈希getsignhash)
-     * [4.12 查询指定时间区间内的交易(getTransactionsByTime)](#412-查询指定时间区间内的交易gettransactionsbytime)
-     * [4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)](#413-查询指定时间区间内的非法交易getdiscardtransactionsbytime)
-     * [4.14 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)](#414-查询区块区间交易数量by-contract-addressgettransactionscountbycontractaddr)
-     * [4.15 查询下一页交易(getNextPageTransactions)](#415-查询下一页交易getnextpagetransactions)
-     * [4.16 查询上一页交易(getPrevPageTransactions)](#416-查询上一页交易getprevpagetransactions)
-     * [4.17 查询批量交易by hash list(getBatchTxByHash)](#417-查询批量交易by-hash-listgetbatchtxbyhash)
-     * [4.18 查询批量回执by hash list(getBatchReceip)](#418-查询批量回执by-hash-listgetbatchreceip)
-     * [4.19 查询指定时间区间内的交易数量(getTxsCountByTime)](#419-查询指定时间区间内的交易数量gettxscountbytime)
-     * [4.20 查询指定extraID的交易by extraID(getTxsByExtraID)](#420-查询指定extraID的交易by-extraIDgetTxsByExtraID)
-     * [4.21 查询指定filter的交易by filter(getTxsByFilter)](#421-查询指定filter的交易by-filtergetTxsByFilter)
-     * [4.22 查询平台当前的交易版本号(getTxVersion)](#422-查询平台当前的交易版本号getTxVersion)
-  * [第五章. BlockService相关接口](#第五章-blockservice相关接口)
-     * [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
-     * [5.2 查询指定区间的区块by block number(getBlocks)](#52-查询指定区间的区块by-block-numbergetblocks)
-     * [5.3 查询区块by block hash(getBlockByHash)](#53-查询区块by-block-hashgetblockbyhash)
-     * [5.4 查询区块by block number(getBlockByNum)](#54-查询区块by-block-numbergetblockbynum)
-     * [5.5 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)](#55-查询区块平均生成时间getavggeneratetimebyblocknumber)
-     * [5.6 查询指定时间区间内的区块数量(getBlocksByTime)](#56-查询指定时间区间内的区块数量getblocksbytime)
-     * [5.7 查询最新区块号，即链高(getChainHeight)](#57-查询最新区块号即链高getchainheight)
-     * [5.8 查询创世区块号(getChainHeight)](#58-查询创世区块号getchainheight)
-     * [5.9 查询批量区块by block hash list(getBatchBlocksByHash)](#59-查询批量区块by-block-hash-listgetbatchblocksbyhash)
-     * [5.10 查询批量区块by block number list(getBatchBlocksByNum)](#510-查询批量区块by-block-number-listgetbatchblocksbynum)
-  * [第六章. Node相关接口（NodeService）](#第六章-node相关接口nodeservice)
-     * [6.1 获取节点信息](#61-获取节点信息)
-  * [第七章. MQ相关接口(MQService)](#第七章-mq相关接口mqservice)
-     * [7.1 通知MQ服务器正常工作](#71-通知mq服务器正常工作)
-     * [7.2 注册队列](#72-注册队列)
-     * [7.3 注销队列](#73-注销队列)
-     * [7.4 获取所有队列名称](#74-获取所有队列名称)
-     * [7.5 获取所有exchanger名称](#75-获取所有exchanger名称)
-     * [7.6 删除exchanger](#76-删除exchanger)
-  * [第八章. Radar相关接口（RadarService）](#第八章-radar相关接口radarservice)
-     * [8.1 监听合约](#81-监听合约)
-  * [第九章. ArchiveService相关接口](#第九章-archiveservice相关接口)
-     * [9.1 制作快照](#91-制作快照)
-     * [9.2 查询快照是否存在](#92-查询快照是否存在)
-     * [9.3 检查快照是否正确](#93-检查快照是否正确)
-     * [9.4 删除快照](#94-删除快照)
-     * [9.5 列出所有快照](#95-列出所有快照)
-     * [9.6 查看快照](#96-查看快照)
-     * [9.7 数据归档（预约归档）](#97-数据归档预约归档)
-     * [9.8 数据归档（直接归档）](#98-数据归档直接归档)
-     * [9.9 恢复某归档数据](#99-恢复某归档数据)
-     * [9.10 恢复所有归档数据](#910-恢复所有归档数据)
-     * [9.11 查询归档数据状态](#911-查询归档数据状态)
-     * [9.12 查询所有待完成的快照请求](#912-查询所有待完成的快照请求)
-  * [第十章. 接口响应类型结构体介绍](#第十章-接口响应类型结构体介绍)
-     * [10.1 TxService接口对应的响应类型](#101-TxService接口对应的响应类型)
-     * [10.2 BlockService接口对应的响应类型](#102-BlockService接口对应的响应类型)
-     * [10.3 ArchiveService接口对应的响应类型](#103-ArchiveService接口对应的响应类型)
+- [第一章. 前言](#第一章-前言)
+- [第二章. 初始化](#第二章-初始化)
+  - [2.1 创建HttpProvider对象](#21-创建httpprovider对象)
+  - [2.2 创建ProviderManager对象](#22-创建providermanager对象)
+  - [2.3 创建服务](#23-创建服务)
+  - [2.4 获取结果](#24-获取结果)
+- [第三章. 交易](#第三章-交易)
+  - [合约接口](#合约接口)
+  - [转账交易](#转账交易)
+    - [创建账户](#创建账户)
+    - [交易体创建](#交易体创建)
+    - [部署合约](#部署合约)
+      - [HVM](#hvm)
+      - [EVM](#evm)
+    - [调用合约](#调用合约)
+      - [HVM](#hvm-1)
+      - [EVM](#evm-1)
+    - [升级合约](#升级合约)
+      - [HVM](#hvm-2)
+      - [EVM](#evm-2)
+    - [冻结合约](#冻结合约)
+      - [HVM](#hvm-3)
+      - [EVM](#evm-3)
+    - [解冻合约](#解冻合约)
+      - [HVM](#hvm-4)
+      - [EVM](#evm-4)
+  - [simulate交易](#simulate交易)
+  - [交易体的payload](#交易体的payload)
+  - [交易体设置TxVersion](#交易体设置txversion)
+  - [交易体签名](#交易体签名)
+  - [创建请求](#创建请求)
+  - [发送交易体](#发送交易体)
+- [第四章. Transaction接口(TxService)](#第四章-transaction接口txservice)
+  - [4.1 查询指定区块区间的交易(getTxs)](#41-查询指定区块区间的交易gettxs)
+  - [4.2 查询所有非法交易(getDiscardTransactions)](#42-查询所有非法交易getdiscardtransactions)
+  - [4.3 查询交易by transaction hash(getTransactionByHash)](#43-查询交易by-transaction-hashgettransactionbyhash)
+  - [4.4 查询交易by block hash(getTxByBlockHashAndIndex)](#44-查询交易by-block-hashgettxbyblockhashandindex)
+  - [4.5 查询交易by block number(getTxByBlockNumAndIndex)](#45-查询交易by-block-numbergettxbyblocknumandindex)
+  - [4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#46-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
+  - [4.7 查询链上所有交易量(getTransactionsCount)](#47-查询链上所有交易量gettransactionscount)
+  - [4.8 查询交易回执信息by transaction hash(getTransactionReceipt)](#48-查询交易回执信息by-transaction-hashgettransactionreceipt)
+  - [4.9 查询区块交易数量by block hash(getBlockTxCountByHash)](#49-查询区块交易数量by-block-hashgetblocktxcountbyhash)
+  - [4.10 查询区块交易数量by block number(getBlockTxCountByNumber)](#410-查询区块交易数量by-block-numbergetblocktxcountbynumber)
+  - [4.11 获取交易签名哈希(getSignHash)](#411-获取交易签名哈希getsignhash)
+  - [4.12 查询指定时间区间内的交易(getTransactionsByTime)](#412-查询指定时间区间内的交易gettransactionsbytime)
+  - [4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)](#413-查询指定时间区间内的非法交易getdiscardtransactionsbytime)
+  - [4.14 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)](#414-查询区块区间交易数量by-contract-addressgettransactionscountbycontractaddr)
+  - [4.15 查询下一页交易(getNextPageTransactions)](#415-查询下一页交易getnextpagetransactions)
+  - [4.16 查询上一页交易(getPrevPageTransactions)](#416-查询上一页交易getprevpagetransactions)
+  - [4.17 查询批量交易by hash list(getBatchTxByHash)](#417-查询批量交易by-hash-listgetbatchtxbyhash)
+  - [4.18 查询批量回执by hash list(getBatchReceipt)](#418-查询批量回执by-hash-listgetbatchreceipt)
+  - [4.19 查询指定时间区间内的交易数量(getTxsCountByTime)](#419-查询指定时间区间内的交易数量gettxscountbytime)
+  - [4.20 查询指定extraID的交易by extraID(getTxsByExtraID)](#420-查询指定extraid的交易by-extraidgettxsbyextraid)
+  - [4.21 查询指定filter的交易by filter(getTxsByFilter)](#421-查询指定filter的交易by-filtergettxsbyfilter)
+  - [4.22 查询平台当前的交易版本号(getTxVersion)](#422-查询平台当前的交易版本号gettxversion)
+- [第五章. BlockService相关接口](#第五章-blockservice相关接口)
+  - [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
+  - [5.2 查询指定区间的区块by block number(getBlocks)](#52-查询指定区间的区块by-block-numbergetblocks)
+  - [5.3 查询区块by block hash(getBlockByHash)](#53-查询区块by-block-hashgetblockbyhash)
+  - [5.4 查询区块by block number(getBlockByNum)](#54-查询区块by-block-numbergetblockbynum)
+  - [5.5 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)](#55-查询区块平均生成时间getavggeneratetimebyblocknumber)
+  - [5.6 查询指定时间区间内的区块数量(getBlocksByTime)](#56-查询指定时间区间内的区块数量getblocksbytime)
+  - [5.7 查询最新区块号，即链高(getChainHeight)](#57-查询最新区块号即链高getchainheight)
+  - [5.8 查询创世区块号(getChainHeight)](#58-查询创世区块号getchainheight)
+  - [5.9 查询批量区块by block hash list(getBatchBlocksByHash)](#59-查询批量区块by-block-hash-listgetbatchblocksbyhash)
+  - [5.10 查询批量区块by block number list(getBatchBlocksByNum)](#510-查询批量区块by-block-number-listgetbatchblocksbynum)
+- [第六章. Node相关接口（NodeService）](#第六章-node相关接口nodeservice)
+  - [6.1 获取节点信息](#61-获取节点信息)
+- [第七章. MQ相关接口(MQService)](#第七章-mq相关接口mqservice)
+  - [7.1 通知MQ服务器正常工作](#71-通知mq服务器正常工作)
+  - [7.2 注册队列](#72-注册队列)
+  - [7.3 注册队列(with mqParam)](#73-注册队列with-mqparam)
+  - [7.4 注销队列](#74-注销队列)
+  - [7.5 获取所有队列名称](#75-获取所有队列名称)
+  - [7.6 获取所有exchanger名称](#76-获取所有exchanger名称)
+  - [7.7 删除exchanger](#77-删除exchanger)
+- [第八章. Radar相关接口（RadarService）](#第八章-radar相关接口radarservice)
+  - [8.1 监听合约](#81-监听合约)
+- [第九章. ArchiveService相关接口](#第九章-archiveservice相关接口)
+  - [9.1 Hyperchain1.x相关接口](#91-hyperchain1x相关接口)
+    - [9.1.1 制作快照](#911-制作快照)
+    - [9.1.2 查询快照是否存在](#912-查询快照是否存在)
+    - [9.1.3 检查快照是否正确](#913-检查快照是否正确)
+    - [9.1.4 删除快照](#914-删除快照)
+    - [9.1.5 列出所有快照](#915-列出所有快照)
+    - [9.1.6 查看快照](#916-查看快照)
+    - [9.1.7 数据归档（预约归档）](#917-数据归档预约归档)
+    - [9.1.8 数据归档（直接归档）](#918-数据归档直接归档)
+    - [9.1.9 恢复某归档数据](#919-恢复某归档数据)
+    - [9.1.10 恢复所有归档数据](#9110-恢复所有归档数据)
+    - [9.1.11 查询归档数据状态](#9111-查询归档数据状态)
+    - [9.1.12 查询所有待完成的快照请求](#9112-查询所有待完成的快照请求)
+    - [9.1.13 查询最近一次归档的进度](#9113-查询最近一次归档的进度)
+  - [9.2 Hyperchain2.x相关接口](#92-hyperchain2x相关接口)
+    - [9.2.1 列出所有快照](#921-列出所有快照)
+    - [9.2.2 数据归档（直接归档）](#922-数据归档直接归档)
+    - [9.2.3 查询归档数据状态](#923-查询归档数据状态)
+- [第十章. SqlService相关接口](#第十章-sqlservice相关接口)
+  - [10.1 创建SQL交易体](#101-创建sql交易体)
+  - [10.2 创建数据库](#102-创建数据库)
+  - [10.3 管理数据库生命周期](#103-管理数据库生命周期)
+  - [10.4 调用SQL](#104-调用sql)
+  - [10.5 SQL执行结果解码](#105-sql执行结果解码)
+  - [10.6 Chunk结构的使用](#106-chunk结构的使用)
+- [第十一章. 接口响应类型结构体介绍](#第十一章-接口响应类型结构体介绍)
+  - [11.1 TxService接口对应的响应类型](#111-txservice接口对应的响应类型)
+  - [11.2 BlockService接口对应的响应类型](#112-blockservice接口对应的响应类型)
+  - [11.3 ArchiveService接口对应的响应类型](#113-archiveservice接口对应的响应类型)
+- [附录](#附录)
+  - [附录 A Solidity与Java的编码解码](#附录-a-solidity与java的编码解码)
+    - [类型对应](#类型对应)
+    - [编码](#编码)
+      - [Abi对象](#abi对象)
+      - [调用方法名](#调用方法名)
+      - [封装的java参数](#封装的java参数)
+    - [解码](#解码)
+  - [附录B 直接调用HVM合约方法的参数封装](#附录b-直接调用hvm合约方法的参数封装)
+  - [附录C 平台错误码和对应原因](#附录c-平台错误码和对应原因)
 
 ## 第一章. 前言 
 
@@ -177,13 +202,14 @@ providerManager = new ProviderManager.Builder()
 
 方式1：
 
-​		只需要传`HttpProvider`对象，其他都使用`ProvideManager`的默认配置，如不启用证书、使用的**namespace**配置项为**global**。
+只需要传`HttpProvider`对象，其他都使用`ProvideManager`的默认配置，如不启用证书、使用的**namespace**配置项为**global**。
 
 方式2：
 * `namespace()`可以设置对应的**namespace名**;
 * `providers()`设置需要管理的`HttpProvider`对象们;
 * `enableTCert()`设置使用的证书(**需要传的参数类型为输入流)**。注：例子中未出现的方法还有一个`cfca(InputStream sdkCert, InputStream sdkCertPriv)`，功能与`enableTCert()`相同，两者的区别是证书校验是否通过**cfca机构**，且在创建`ProvideManager`对象过程中两个方法只能使用其中一个。
 
+注：enableTcert里面的sdkcert_cert，sdkcert_priv，unique_pub，unique_priv，分别对应证书目录下的sdkcert_cert，key_priv，unique_pub，unique_priv文件。
 
 ### 2.3 创建服务
 
@@ -318,6 +344,8 @@ public interface AccountService {
     Request<RolesResponse> getRoles(String address, int... nodeIds);
 
     Request<AccountsByRoleResponse> getAccountsByRole(String role, int... nodeIds);
+  
+    Request<StatusResponse> getStatus(String address, int... nodeIds);
 }
 ```
 
@@ -326,6 +354,7 @@ public interface AccountService {
 -  `getBalance `方法则可以查询该账户所有的余额，需要传一个**合约地址**为参数。
 -  `getRoles`方法则可以查询该账户所有的角色，需要传一个**合约地址**为参数。
 -  `getAccountsByRole `方法则可以查询具有改角色的账户列表，需要传一个**角色名称**为参数。
+-  `getStatus` 方法则可以查询普通账户的状态，需要穿一个普通**账户地址**为参数。
 
 目前Account服务支持的所有加密算法如下：
 
@@ -402,6 +431,7 @@ InputStream inputStream1 = FileUtil.readFileAsStream("solidity/sol2/TestContract
 InputStream inputStream2 = FileUtil.readFileAsStream("solidity/sol2/TestContract_sol_TypeTestContract.abi");
 String bin = FileUtil.readFile(inputStream1);
 String abiStr = FileUtil.readFile(inputStream2);
+Abi abi = Abi.fromJson(abiStr);
 
 FuncParams params = new FuncParams();
 params.addParams("contract01");
@@ -500,6 +530,19 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 ```
 
 创建交易体时需要指定**合约地址**。
+
+### simulate交易
+
+simulate交易执行不会更改区块链的账本状态，这是其和普通交易最大的不同。在使用方式上，两者没有什么区别，只需要在构建simulate交易时设置其`simulate`标志，即可如发送普通交易一样，发送simulate交易。
+
+构建simulate交易示例如下
+
+```java
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress())
+  .invoke(receiptResponse.getContractAddress(), invoke)
+  .simulate()
+  .build();
+```
 
 ### 交易体的payload
 
@@ -1371,8 +1414,6 @@ Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
 Request<RadarResponse> listenContract(String sourceCode, String contractAddress, int... nodeIds);
 ```
 
-
-
 ## 第九章. ArchiveService相关接口
 
 `ArchiveService`接口用于快照和归档相关工作，对应的响应类型如下：
@@ -1380,12 +1421,15 @@ Request<RadarResponse> listenContract(String sourceCode, String contractAddress,
 - ArchiveResponse
 - ArchiveFilterIdResponse
 - ArchiveBoolResponse
+- ArchiveStringResponse
 
 详细结构请参考第十章。
 
+### 9.1 Hyperchain1.x相关接口
 
+以下接口供hyperchain1.x使用，其中部分接口已经在hyperchain2.x中废弃。
 
-### 9.1 制作快照
+#### 9.1.1 制作快照
 
 参数：
 
@@ -1402,7 +1446,7 @@ Request<ArchiveFilterIdResponse> snapshot(BigInteger blockNumber, int... nodeIds
 Request<ArchiveFilterIdResponse> snapshot(String blockNumber, int... nodeIds);
 ```
 
-### 9.2 查询快照是否存在
+#### 9.1.2 查询快照是否存在
 
 参数：
 
@@ -1413,7 +1457,7 @@ Request<ArchiveFilterIdResponse> snapshot(String blockNumber, int... nodeIds);
 Request<ArchiveBoolResponse> querySnapshotExist(String filterId, int... nodeIds);
 ```
 
-### 9.3 检查快照是否正确
+#### 9.1.3 检查快照是否正确
 
 参数：
 
@@ -1424,7 +1468,7 @@ Request<ArchiveBoolResponse> querySnapshotExist(String filterId, int... nodeIds)
 Request<ArchiveBoolResponse> checkSnapshot(String filterId, int... nodeIds);
 ```
 
-### 9.4 删除快照
+#### 9.1.4 删除快照
 
 参数：
 
@@ -1435,7 +1479,7 @@ Request<ArchiveBoolResponse> checkSnapshot(String filterId, int... nodeIds);
 Request<ArchiveBoolResponse> deleteSnapshot(String filterId, int... nodeIds);
 ```
 
-### 9.5 列出所有快照
+#### 9.1.5 列出所有快照
 
 参数：
 
@@ -1445,7 +1489,7 @@ Request<ArchiveBoolResponse> deleteSnapshot(String filterId, int... nodeIds);
 Request<ArchiveResponse> listSnapshot(int... nodeIds);
 ```
 
-### 9.6 查看快照
+#### 9.1.6 查看快照
 
 参数：
 
@@ -1456,7 +1500,7 @@ Request<ArchiveResponse> listSnapshot(int... nodeIds);
 Request<ArchiveResponse> readSnapshot(String filterId, int... nodeIds);
 ```
 
-### 9.7 数据归档（预约归档）
+#### 9.1.7 数据归档（预约归档）
 
 参数：
 
@@ -1468,7 +1512,7 @@ Request<ArchiveResponse> readSnapshot(String filterId, int... nodeIds);
 Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeIds);
 ```
 
-### 9.8 数据归档（直接归档）
+#### 9.1.8 数据归档（直接归档）
 
 参数：
 
@@ -1476,10 +1520,10 @@ Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeI
 - nodeIds 说明请求向哪些节点发送
 
 ```java
-Request<ArchiveBoolResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
+Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
 ```
 
-### 9.9 恢复某归档数据
+#### 9.1.9 恢复某归档数据
 
 参数：
 
@@ -1490,7 +1534,7 @@ Request<ArchiveBoolResponse> archiveNoPredict(BigInteger blkNumber, int... nodeI
 Request<ArchiveBoolResponse> restore(String filterId, boolean sync, int... nodeIds);
 ```
 
-### 9.10 恢复所有归档数据
+#### 9.1.10 恢复所有归档数据
 
 参数：
 
@@ -1501,7 +1545,7 @@ Request<ArchiveBoolResponse> restore(String filterId, boolean sync, int... nodeI
 Request<ArchiveBoolResponse> restoreAll(boolean sync, int... nodeIds);
 ```
 
-### 9.11 查询归档数据状态
+#### 9.1.11 查询归档数据状态
 
 参数：
 
@@ -1509,10 +1553,10 @@ Request<ArchiveBoolResponse> restoreAll(boolean sync, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送
 
 ```java
-Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
+Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 ```
 
-### 9.12 查询所有待完成的快照请求
+#### 9.1.12 查询所有待完成的快照请求
 
 参数：
 
@@ -1522,11 +1566,201 @@ Request<ArchiveBoolResponse> queryArchive(String filterId, int... nodeIds);
 Request<ArchiveResponse> pending(int... nodeIds);
 ```
 
+#### 9.1.13 查询最近一次归档的进度
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds);
+```
+
+### 9.2 Hyperchain2.x相关接口
+
+以下接口供hyperchain2.x使用。
+
+#### 9.2.1 列出所有快照
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveResponse> listSnapshot(int... nodeIds);
+```
+
+#### 9.2.2 数据归档（直接归档）
+
+参数：
+
+- blkNumber 区块号
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
+```
+
+#### 9.2.3 查询归档数据状态
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
+```
+
+## 第十章. SqlService相关接口
+
+### 10.1 创建SQL交易体
+
+**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。SQL交易体由SQLBuilder负责创建，其提供了5种SQL交易体的封装，包括**创建数据库**、**冻结数据库**、**解冻数据库**、**删除数据库**、**调用SQL**。
+
+**创建数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  create().
+  build();
+```
+
+**冻结数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  freeze(databaseAddr).
+  build();
+```
+
+**解冻数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  unfreeze(databaseAddr).
+  build();
+```
+
+**删除数据库**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  destroy(databaseAddr).
+  build();
+```
+
+**调用SQL**
+
+```java
+Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
+  invoke(databaseAddr, SQLStr).
+  build();
+```
+
+### 10.2 创建数据库
+
+创建数据库交易成功后，可通过交易回执查询创建的数据库地址。
+
+参数：
+
+* transaction 创建数据库的交易体
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxHashResponse> create(Transaction transaction, int... nodeIds);
+```
+
+### 10.3 管理数据库生命周期
+
+参数：
+
+* transaction 管理数据库生命周期的交易体，即冻结数据库、解冻数据库或者删除数据库的交易体
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
+```
+
+### 10.4 调用SQL
+
+参数：
+
+* transaction 调用SQL的交易体
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+```
+
+### 10.5 SQL执行结果解码
+
+类似于HVM，SQL的执行结果解码方法在Decoder类中
+
+参数：
+
+- encode sql的执行结果，即sql交易的回执
+
+```java
+public static Chunk decodeKVSQL(String encode);
+```
+
+### 10.6 Chunk结构的使用
+
+chunk结构保存了sql的执行结果，使用方法类似于jdbc的ResultSet
+
+**10.6.1 DML语句**
+
+对于DML语句，通过getUpdateCount方法可以获得sql语句对应的修改行数
+
+```java
+public long getUpdateCount();
+```
+
+也可以通过getLastInsertID获得插入的自增键
+
+```java
+public long getLastInsertID();
+```
+
+**10.6.2 DQL语句**
+
+对于DQL语句，chunk的使用方法类似于jdbc的ResultSet
+
+调用next接口将游标移动到查询结果的下一行，游标初始位置为第一行之前。
+
+```java
+public boolean next();
+```
+
+如果返回结果为false表示游标已经移动到最后一行之后了。
 
 
-## 第十章. 接口响应类型结构体介绍
 
-### 10.1 TxService接口对应的响应类型
+调用getValue接口将获得游标指向的当前行以及参数对应列所指向的数据的值。返回结果的类型取决于该列在数据库表中的数据类型。
+
+参数
+
+- columnIdex 列坐标，范围为[0,n-1]，n为列的数量
+
+```java
+public Object getValue(int columnIndex);
+```
+
+
+
+chunk同时也提供指定类型的数据获取的方法，对应方法如下，XXX表示类型，如getFloat，getTime等。该类使用方法与getValue一致，不过需要注意的是，XXX类型必须和数据库表中该列的类型一致或者能过相互转换，否则无法获得正确的结果或者会抛出异常。
+
+```java
+public XXX getXXX(int columnIndex);
+```
+
+## 第十一章. 接口响应类型结构体介绍
+
+### 11.1 TxService接口对应的响应类型
 
 - TxResponse
 - TxCountWithTSResponse
@@ -1622,7 +1856,7 @@ public class Receipt {
 }
 ```
 
-### 10.2 BlockService接口对应的响应类型
+### 11.2 BlockService接口对应的响应类型
 
 - BlockResponse
 - BlockNumberResponse 
@@ -1687,11 +1921,12 @@ public class BlockCountResponse extends Response {
 }
 ```
 
-### 10.3 ArchiveService接口对应的响应类型
+### 11.3 ArchiveService接口对应的响应类型
 
 - ArchiveResponse
 - ArchiveFilterIdResponse
 - ArchiveBoolResponse
+- ArchiveStringResponse
 
 分别对应的结构如下：
 
@@ -1731,6 +1966,16 @@ public class ArchiveFilterIdResponse extends Response {
 ```java
 public class ArchiveBoolResponse extends Response {
     private Boolean result;
+}
+```
+
+**ArchiveStringResponse**
+
+通过`result`接收返回结果，`result`实际结构是`String`，可通过`getResult()`方法得到。
+
+```java
+public class ArchiveBoolResponse extends Response {
+    private String result;
 }
 ```
 

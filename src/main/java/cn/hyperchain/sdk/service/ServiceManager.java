@@ -3,15 +3,18 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.service.impl.AccountServiceImpl;
 import cn.hyperchain.sdk.service.impl.ArchiveServiceImpl;
+import cn.hyperchain.sdk.service.impl.AuthServiceImpl;
 import cn.hyperchain.sdk.service.impl.BlockServiceImpl;
 import cn.hyperchain.sdk.service.impl.CompileServiceImpl;
 import cn.hyperchain.sdk.service.impl.ContractServiceImpl;
+import cn.hyperchain.sdk.service.impl.DIDServiceImpl;
 import cn.hyperchain.sdk.service.impl.FileMgrServiceImpl;
 import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
 import cn.hyperchain.sdk.service.impl.RadarServiceImpl;
 import cn.hyperchain.sdk.service.impl.TxServiceImpl;
 import cn.hyperchain.sdk.service.impl.ConfigServiceImpl;
+import cn.hyperchain.sdk.service.impl.SqlServiceImpl;
 
 /**
  * service implements manager.
@@ -63,5 +66,17 @@ public class ServiceManager {
 
     public static ConfigService getConfigService(ProviderManager providerManager) {
         return new ConfigServiceImpl(providerManager);
+    }
+
+    public static AuthService getAuthService(ProviderManager providerManager) {
+        return new AuthServiceImpl(providerManager);
+    }
+
+    public static DIDService getDIDService(ProviderManager providerManager) {
+        return new DIDServiceImpl(providerManager);
+    }
+
+    public static SqlService getSqlService(ProviderManager providerManager) {
+        return new SqlServiceImpl(providerManager);
     }
 }

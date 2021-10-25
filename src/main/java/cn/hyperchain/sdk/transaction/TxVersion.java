@@ -11,7 +11,18 @@ public enum TxVersion {
     TxVersion26("2.6", 8),
     TxVersion27("2.7", 9),
     TxVersion28("2.8", 10),
-    TxVersion29("2.9", 11);
+    TxVersion29("2.9", 11),
+    TxVersion30("3.0", 12),
+    TxVersion31("3.1", 13),
+    TxVersion32("3.2", 14),
+    TxVersion33("3.3", 15),
+    TxVersion34("3.4", 16),
+    TxVersion35("3.5", 17),
+    TxVersion36("3.6", 18),
+    TxVersion37("3.7", 19),
+    TxVersion38("3.8", 20),
+    TxVersion39("3.9", 21),
+    TxVersion40("4.0", 22);
 
 
     private String strVersion;
@@ -30,7 +41,11 @@ public enum TxVersion {
         return this.intVersion >= txV.intVersion;
     }
 
-    public static volatile TxVersion GLOBAL_TX_VERSION = TxVersion10;
+    public boolean equal(TxVersion txV) {
+        return this.intVersion == txV.intVersion;
+    }
+
+    public static volatile TxVersion GLOBAL_TX_VERSION = TxVersion30;
 
     public static void setGlobalTxVersion(TxVersion txV) {
         TxVersion.GLOBAL_TX_VERSION = txV;
@@ -75,6 +90,39 @@ public enum TxVersion {
                 break;
             case "2.9":
                 GLOBAL_TX_VERSION = TxVersion29;
+                break;
+            case "3.0":
+                GLOBAL_TX_VERSION = TxVersion30;
+                break;
+            case "3.1":
+                GLOBAL_TX_VERSION = TxVersion31;
+                break;
+            case "3.2":
+                GLOBAL_TX_VERSION = TxVersion32;
+                break;
+            case "3.3":
+                GLOBAL_TX_VERSION = TxVersion33;
+                break;
+            case "3.4":
+                GLOBAL_TX_VERSION = TxVersion34;
+                break;
+            case "3.5":
+                GLOBAL_TX_VERSION = TxVersion35;
+                break;
+            case "3.6":
+                GLOBAL_TX_VERSION = TxVersion36;
+                break;
+            case "3.7":
+                GLOBAL_TX_VERSION = TxVersion37;
+                break;
+            case "3.8":
+                GLOBAL_TX_VERSION = TxVersion38;
+                break;
+            case "3.9":
+                GLOBAL_TX_VERSION = TxVersion39;
+                break;
+            case "4.0":
+                GLOBAL_TX_VERSION = TxVersion40;
                 break;
             default:
                 break;

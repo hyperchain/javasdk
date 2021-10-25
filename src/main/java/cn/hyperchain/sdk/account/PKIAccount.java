@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.account;
 
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
+import cn.hyperchain.sdk.crypto.ecdsa.R1Util;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import com.google.gson.annotations.Expose;
 import org.bouncycastle.util.encoders.Hex;
@@ -45,10 +46,18 @@ public class PKIAccount extends Account {
 
             SMAccount tmpSMAccount = new SMAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, SM2Util.genFromPrivKey(Hex.decode(this.raw)));
             return tmpSMAccount.sign(sourceData);
+        } else if (algo.isR1()) {
+            Account tmpECAccount = new R1Account(this.address, this.publicKey, this.privateKey, this.version, this.algo, R1Util.genFromPrivKey(Hex.decode(this.raw)));
+            return tmpECAccount.sign(sourceData);
         } else {
-            ECAccount tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.raw)));
+            Account tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.raw)));
             return tmpECAccount.sign(sourceData);
         }
+    }
+
+    @Override
+    protected byte[] sign(byte[] sourceData, boolean isDID) {
+        return new byte[0];
     }
 
     @Override
@@ -56,9 +65,17 @@ public class PKIAccount extends Account {
         if (!this.cert.getPublicKey().getAlgorithm().equals("EC")) {
             SMAccount tmpSMAccount = new SMAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, SM2Util.genFromPrivKey(Hex.decode(this.privateKey)));
             return tmpSMAccount.verify(sourceData, signature);
+        } else if (algo.isR1()) {
+            Account tmpECAccount = new R1Account(this.address, this.publicKey, this.privateKey, this.version, this.algo, R1Util.genFromPrivKey(Hex.decode(this.raw)));
+            return tmpECAccount.verify(sourceData, signature);
         } else {
-            ECAccount tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.privateKey)));
+            Account tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.raw)));
             return tmpECAccount.verify(sourceData, signature);
         }
+    }
+
+    @Override
+    protected boolean verify(byte[] sourceData, byte[] signature, boolean isDID) {
+        return false;
     }
 }

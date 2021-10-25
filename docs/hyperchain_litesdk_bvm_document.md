@@ -1,3 +1,47 @@
+- [litesdk bvm文档](#litesdk-bvm文档)
+  - [第一章. 前言](#第一章-前言)
+  - [第二章.执行BVM提供的合约](#第二章执行bvm提供的合约)
+    - [2.1 初始化](#21-初始化)
+    - [2.2 执行bvm合约](#22-执行bvm合约)
+      - [1. 合约接口](#1-合约接口)
+      - [2. bvm交易体](#2-bvm交易体)
+        - [HashContract](#hashcontract)
+        - [ProposalContract](#proposalcontract)
+          - [配置类](#配置类)
+          - [权限类](#权限类)
+          - [节点管理类](#节点管理类)
+          - [合约命名类](#合约命名类)
+          - [合约生命周期管理类](#合约生命周期管理类)
+        - [AccountContract](#accountcontract)
+      - [3. 创建请求](#3-创建请求)
+      - [4. 发送交易体](#4-发送交易体)
+      - [5. 解析回执](#5-解析回执)
+    - [2.3 使用示例](#23-使用示例)
+      - [HashContract使用示例](#hashcontract使用示例)
+      - [ProposalContract使用示例](#proposalcontract使用示例)
+        - [创建提案](#创建提案)
+          - [配置类](#配置类-1)
+          - [权限类](#权限类-1)
+          - [节点类](#节点类)
+          - [合约命名类](#合约命名类-1)
+          - [合约生命周期管理类](#合约生命周期管理类-1)
+        - [提案投票](#提案投票)
+        - [取消提案](#取消提案)
+        - [执行提案](#执行提案)
+      - [AccountContract使用示例](#accountcontract使用示例)
+  - [第三章. ConfigService相关接口](#第三章-configservice相关接口)
+    - [3.1 查询提案（getProposal）](#31-查询提案getproposal)
+    - [3.2 查询配置（getConfig）](#32-查询配置getconfig)
+    - [3.3 查询连接的节点信息（getHosts）](#33-查询连接的节点信息gethosts)
+    - [3.4 查询参与共识的节点信息（getVset）](#34-查询参与共识的节点信息getvset)
+    - [3.5 查询所以角色信息（getAllRoles）](#35-查询所以角色信息getallroles)
+    - [3.6 查询角色是否存在（isRoleExist）](#36-查询角色是否存在isroleexist)
+    - [3.7 根据合约地址查询合约命名（getNamebyAddress）](#37-根据合约地址查询合约命名getnamebyaddress)
+    - [3.8 根据合约命名查询合约地址（getAddressByName）](#38-根据合约命名查询合约地址getaddressbyname)
+    - [3.9 查询所有合约地址到合约命名的映射关系（getAllCNS）](#39-查询所有合约地址到合约命名的映射关系getallcns)
+  - [第四章 订阅提案信息](#第四章-订阅提案信息)
+    - [4.1 订阅提案信息使用示例](#41-订阅提案信息使用示例)
+
 # litesdk bvm文档
 
 ## 第一章. 前言
@@ -91,7 +135,7 @@ public abstract class BuiltinOperationBuilder {
 
 
 
-针对不同的合约地址中不同的合约方法调用有封装相应的实现类，目前bvm提供的合约有：`HashContract`、`ProposalContract`两种，分别有`BuiltinOperation`的实现类`HashOperation`和`ProposalOperation`，相应的也提供了`HashBuilder`和`ProposalBuilder`用于创建相应的操作。
+针对不同的合约地址中不同的合约方法调用有封装相应的实现类，目前bvm提供的合约有：`HashContract`、`ProposalContract`、`AccountContract`三种，分别有`BuiltinOperation`的实现类`HashOperation`、`ProposalOperation`和`AccountOperation`，相应的也提供了`HashBuilder`、`ProposalBuilder`和`AccountBuilder`用于创建相应的操作。
 
 ##### HashContract
 
@@ -558,7 +602,40 @@ public static class ContractBuilder {
 }
 ```
 
+##### AccountContract
+
+`AccountContract`中提供的合约方法如下：
+
+1. `Register` : Register方法接收两个参数，一个参数为注册的账户地址address，一个参数为账户对应的idcert，用于注册证书与账户的对应关系。
+2. `Abandon` : Abandon方法接收两个参数，一个参数为要注销的账户地址address，一个参数为注销账户时使用的sdkcert，用于注销账户地址。
+
+构造`AccountContract`操作的构造器`AccountBuilder`提供了`register`和`abandon`方法，分别用于构造`AccountContract`合约中的`Register`和`Abandon`方法，其定义如下：
+
+```java
+public static class AccountBuilder extends BuiltinOperationBuilder {
+         /**
+         * create AccountBuilder to register.
+         * @param address register address
+         * @param cert register cert
+         * @return {@link AccountBuilder}
+         */
+        public AccountBuilder register(String address, String cert);
+  
+         /**
+         * create AccountBuilder to abandon.
+         * @param address abandon address
+         * @param sdkCert the used sdkCert to logout
+         * @return {@link AccountBuilder}
+         */
+        public AccountBuilder abandon(String address, String sdkCert);
+}
+```
+
+
+
 bvm的合约操作创建好之后，使用`BVMBuilder` 提供的`invoke` 方法构造bvm的交易体，使用`build` 方法构造出交易`transaction` ，并为交易设置`txVersion` 并使用`sign` 方法签名，得到最终可以发送执行的交易体。
+
+
 
 #### 3. 创建请求
 
@@ -855,7 +932,81 @@ Account ac = accountService.fromAccountJson(accountJsons[5]);
         System.out.println(result);
 ```
 
+#### AccountContract使用示例
 
+AccountContract中有两个方法可供调用，Register和Abandon方法。
+
+- Register
+
+  Register方法接收两个参数，一个参数为注册的账户地址address，一个参数为账户对应的idcert，用于注册证书与账户的对应关系。。使用`HashBuilder` 提供的`set` 方法构造一个`BuiltinOperation` ，然后使用`BVMBuilder` 提供的`invoke` 方法设置参数，使用`build` 方法构造`Transaction` ，然后使用`ContractService` 提供的`invoke` 方法构造请求，最后将请求发出拿到响应结果，其示例如下：
+
+  ```java
+  public void testRegister() throws RequestException {
+          String address = "0xffffffffffbf7e0de2f5a0dc1917f0552aa43d87";
+          String cert = "-----BEGIN CERTIFICATE-----\n" +
+                  "MIICVjCCAgKgAwIBAgIIcy8/n1XOqQQwCgYIKoZIzj0EAwIwdDEJMAcGA1UECBMA\n" +
+                  "MQkwBwYDVQQHEwAxCTAHBgNVBAkTADEJMAcGA1UEERMAMQ4wDAYDVQQKEwVmbGF0\n" +
+                  "bzEJMAcGA1UECxMAMQ4wDAYDVQQDEwVub2RlMTELMAkGA1UEBhMCWkgxDjAMBgNV\n" +
+                  "BCoTBWVjZXJ0MB4XDTIwMTExMjAwMDAwMFoXDTIxMTAyMTAwMDAwMFowYTELMAkG\n" +
+                  "A1UEBhMCQ04xDjAMBgNVBAoTBWZsYXRvMTEwLwYDVQQDEyhmZmZmZmZmZmZmYmY3\n" +
+                  "ZTBkZTJmNWEwZGMxOTE3ZjA1NTJhYTQzZDg3MQ8wDQYDVQQqEwZpZGNlcnQwVjAQ\n" +
+                  "BgcqhkjOPQIBBgUrgQQACgNCAAQYF3xQqTY5Hr9f8I65BLCKOxuR9U+39HDqF6ba\n" +
+                  "/G2vTjGFDbOw/LXVIPk+GNrife1EDtvpBtQi2b9G0o+fxrzoo4GTMIGQMA4GA1Ud\n" +
+                  "DwEB/wQEAwIB7jAxBgNVHSUEKjAoBggrBgEFBQcDAgYIKwYBBQUHAwEGCCsGAQUF\n" +
+                  "BwMDBggrBgEFBQcDBDAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTzl9gKHb19nd5m\n" +
+                  "rRnyavoaiQQrJzAPBgNVHSMECDAGgAQBAgMEMA0GAypWAQQGaWRjZXJ0MAoGCCqG\n" +
+                  "SM49BAMCA0IAon0Hym4rdLsZQnioh38SPrpQV66c9aWoBN4T9eYH8Nlouxi9C6Od\n" +
+                  "OqdJnRWkgUVw/kA+egZTzx0Bm/yF/VNgYAE=\n" +
+                  "-----END CERTIFICATE-----\n";
+          Account ac = accountService.fromAccountJson(accountJsons[5]);
+          Transaction transaction = new Transaction.
+                  BVMBuilder(ac.getAddress()).
+                  invoke(new AccountOperation.AccountBuilder().register(address, cert).build()).
+                  build();
+          transaction.sign(ac);
+          ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+          Result result = Decoder.decodeBVM(receiptResponse.getRet());
+          System.out.println(result);
+          Assert.assertTrue(result.isSuccess());
+          Assert.assertEquals("", result.getErr());
+      }
+  ```
+
+- Abandon
+
+  Abandon方法接收两个参数，一个参数为要注销的账户地址address，一个参数为注销账户时使用的sdkcert，用于注销账户地址。其示例如下：
+
+  ```java
+  public void testAbandon() throws RequestException {
+      String address = "0xffffffffffbf7e0de2f5a0dc1917f0552aa43d87";
+      String sdkCert = "-----BEGIN CERTIFICATE-----\n" +
+              "MIICVjCCAgKgAwIBAgIIQjE4PWfTGPAwCgYIKoZIzj0EAwIwdDEJMAcGA1UECBMA\n" +
+              "MQkwBwYDVQQHEwAxCTAHBgNVBAkTADEJMAcGA1UEERMAMQ4wDAYDVQQKEwVmbGF0\n" +
+              "bzEJMAcGA1UECxMAMQ4wDAYDVQQDEwVub2RlMTELMAkGA1UEBhMCWkgxDjAMBgNV\n" +
+              "BCoTBWVjZXJ0MB4XDTIwMTAxNjAwMDAwMFoXDTIwMTAxNjAwMDAwMFowYjELMAkG\n" +
+              "A1UEBhMCQ04xDjAMBgNVBAoTBWZsYXRvMTMwMQYDVQQDEyoweDk2MzkxNTIxNTBk\n" +
+              "ZjkxMDVjMTRhZTM1M2M3YzdlNGQ1ZTU2YTAxYTMxDjAMBgNVBCoTBWVjZXJ0MFYw\n" +
+              "EAYHKoZIzj0CAQYFK4EEAAoDQgAEial3WRUmVgLeB+Oi8R/FQDtpp4egSGnQ007x\n" +
+              "M4uDHTIqlQmz6VAe4d2caMIXREecbYTkAK4HNR6y7A54ISc9pqOBkjCBjzAOBgNV\n" +
+              "HQ8BAf8EBAMCAe4wMQYDVR0lBCowKAYIKwYBBQUHAwIGCCsGAQUFBwMBBggrBgEF\n" +
+              "BQcDAwYIKwYBBQUHAwQwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQU+7HuCW+CEqcP\n" +
+              "UbcUJ2Ad5evjrIswDwYDVR0jBAgwBoAEAQIDBDAMBgMqVgEEBWVjZXJ0MAoGCCqG\n" +
+              "SM49BAMCA0IA7aV3A20YOObn+H72ksXcUHx8PdC0z/rULhes2uFiINsqEPkGkaH9\n" +
+              "HjBiP8uYn4YLtYVZ5pdmfoTHa7/CjVyOUwA=\n" +
+              "-----END CERTIFICATE-----";
+      Account ac = accountService.fromAccountJson(accountJsons[5]);
+      Transaction transaction = new Transaction.
+              BVMBuilder(ac.getAddress()).
+              invoke(new AccountOperation.AccountBuilder().abandon(address, sdkCert).build()).
+              build();
+      transaction.sign(ac);
+      ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+      Result result = Decoder.decodeBVM(receiptResponse.getRet());
+      System.out.println(result);
+      Assert.assertTrue(result.isSuccess());
+      Assert.assertEquals("", result.getErr());
+  }
+  ```
 
 ## 第三章. ConfigService相关接口
 
@@ -1000,3 +1151,84 @@ Request<AllCNSResponse> getAllCNS(int... nodeIds);
 ```
 
 拿到`AllCNSResponse` 后，通过`getAllCNS` 方法拿到所以的合约地址到合约命名的映射关系。`getAllCNS` 方法返回的是key为合约地址，value为合约命名的map。
+
+## 第四章 订阅提案信息
+由于通过提案合约创建完提案后，需要相关人员在一定时间内完成对提案的投票、执行等相关操作，因此当提案合约中有新的提案创建或提案状态发生变更时，提案合约会向外推送消息，客户端可通过MQ订阅提案信息，以便于及时获取到提案相应信息。
+
+在订阅时，传入的合约地址为提案合约地址0x0000000000000000000000000000000000ffff02 ，订阅的消息类型为MQLog ，订阅后有新的提案产生或提案状态发生变更时，会讲消息推送到对应的MQ中，另外，litesdk提供了decodeProposalLog 方法，用于讲MQLog 类型消息中的data 解析成提案类型。MQ订阅的使用参照[MQ使用手册](MQ使用手册.md)
+
+### 4.1 订阅提案信息使用示例
+```java
+	ProviderManager providerManager = Common.soloProviderManager;
+    MQService mqService = ServiceManager.getMQService(providerManager);
+    String exchanger = null;
+    String from = "0x2CC762775FC1AA7486AA2FCF0D7885D4EEE4DA2";
+
+    public void testRegisterProposalQueue() throws RequestException {
+        ArrayList<String> array = new ArrayList<String>();
+        String proposalAddr = "0x0000000000000000000000000000000000ffff02";
+        array.add("MQLog");
+        String queueName = "litesdk_bvmTest";
+        boolean isVerbose = false;
+
+        Request<MQResponse> registerQueue = mqService.registerQueue(from, queueName, array, isVerbose, 1);
+        MQResponse mqResponse = registerQueue.send();
+        System.out.println(mqResponse);
+    }
+```
+
+上述订阅成功后，在rabbitmq-broker中收到的事件内容为：
+```json
+{
+    "timestamp":1631167791152827000,
+    "type":"MQLog",
+    "body":{
+        "type":"MQLog",
+        "name":"Log",
+        "logs":[
+            {
+                "address":"0x0000000000000000000000000000000000ffff02",
+                "topics":[
+                    "0x00000000000000000000000000000070726f706f73616c20636f6e7472616374"
+                ],
+                "data":"08011284030000000a0000000f53657446696c746572456e61626c65000000010000000566616c73650000000e53657446696c74657252756c6573000000010000001f5b7b22616c6c6f775f616e796f6e65223a66616c73652c226964223a307d5d00000015536574436f6e73656e737573426174636853697a65000000010000000331303000000014536574436f6e73656e737573506f6f6c53697a65000000010000000332303000000013536574436f6e73656e73757353657453697a65000000010000000235300000001453657450726f706f73616c5468726573686f6c640000000100000001340000001253657450726f706f73616c54696d656f7574000000010000000c3438303030303030303030300000001253657450726f706f73616c54696d656f7574000000010000000c34383030303030303030303000000018536574436f6e7472616374566f74655468726573686f6c6400000001000000013300000015536574436f6e7472616374566f7465456e61626c6500000001000000047472756518d0bbb4bbebcec4d11620d0abc786c9d7c4d116280132720a2a3078303030663161376130386363633438653564333066383038353063663163663238336161336162641242307831366133313237363930393565323832633130323861376138376634336563623864623937653765643166386234663466626438393435356363353266386666180140064801522a3078303030663161376130386363633438653564333066383038353063663163663238336161336162645a05302e312e30",
+                "blockNumber":2,
+                "blockHash":"0x00000000000000029abce87c13b2566929d403f23557154fe1c2e4a8689cf924",
+                "txHash":"0x16a312769095e282c1028a7a87f43ecb8db97e7ed1f8b4f4fbd89455cc52f8ff",
+                "txIndex":0,
+                "index":0
+            }
+        ]
+    },
+    "signature":"",
+    "cert":""
+}
+```
+
+当type 为MQLog address 为订阅的提案合约地址0x0000000000000000000000000000000000ffff02 时，可使用litesdk提供的decodeProposalLog方法将data 解析成提案内容：
+```java
+
+    public void encodeProposal() throws InvalidProtocolBufferException {
+        String log = "08011284030000000a0000000f53657446696c746572456e61626c65000000010000000566616c73650000000e53657446696c74657252756c6573000000010000001f5b7b22616c6c6f775f616e796f6e65223a66616c73652c226964223a307d5d00000015536574436f6e73656e737573426174636853697a65000000010000000331303000000014536574436f6e73656e737573506f6f6c53697a65000000010000000332303000000013536574436f6e73656e73757353657453697a65000000010000000235300000001453657450726f706f73616c5468726573686f6c640000000100000001340000001253657450726f706f73616c54696d656f7574000000010000000c3438303030303030303030300000001253657450726f706f73616c54696d656f7574000000010000000c34383030303030303030303000000018536574436f6e7472616374566f74655468726573686f6c6400000001000000013300000015536574436f6e7472616374566f7465456e61626c6500000001000000047472756518d0bbb4bbebcec4d11620d0abc786c9d7c4d116280132720a2a3078303030663161376130386363633438653564333066383038353063663163663238336161336162641242307831366133313237363930393565323832633130323861376138376634336563623864623937653765643166386234663466626438393435356363353266386666180140064801522a3078303030663161376130386363633438653564333066383038353063663163663238336161336162645a05302e312e30";
+        ProposalOuterClass.Proposal proposal = Decoder.decodeProposalLog(log);
+        System.out.println(proposal.toString());
+    }
+```
+
+最后输出内容如下：
+```
+id: 1
+code: "[{\"Params\":[\"false\"],\"MethodName\":\"SetFilterEnable\"},{\"Params\":[\"[{\\\"allow_anyone\\\":false,\\\"id\\\":0}]\"],\"MethodName\":\"SetFilterRules\"},{\"Params\":[\"100\"],\"MethodName\":\"SetConsensusBatchSize\"},{\"Params\":[\"200\"],\"MethodName\":\"SetConsensusPoolSize\"},{\"Params\":[\"50\"],\"MethodName\":\"SetConsensusSetSize\"},{\"Params\":[\"4\"],\"MethodName\":\"SetProposalThreshold\"},{\"Params\":[\"480000000000\"],\"MethodName\":\"SetProposalTimeout\"},{\"Params\":[\"480000000000\"],\"MethodName\":\"SetProposalTimeout\"},{\"Params\":[\"3\"],\"MethodName\":\"SetContractVoteThreshold\"},{\"Params\":[\"true\"],\"MethodName\":\"SetContractVoteEnable\"}]"
+timestamp: 1631167791131074000
+timeout: 1631168091131074000
+status: VOTING
+assentor {
+  addr: "0x000f1a7a08ccc48e5d30f80850cf1cf283aa3abd"
+  txHash: "0x16a312769095e282c1028a7a87f43ecb8db97e7ed1f8b4f4fbd89455cc52f8ff"
+  weight: 1
+}
+threshold: 6
+score: 1
+creator: "0x000f1a7a08ccc48e5d30f80850cf1cf283aa3abd"
+version: "0.1.0"
+```

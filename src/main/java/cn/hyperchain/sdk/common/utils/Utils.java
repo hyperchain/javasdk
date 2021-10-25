@@ -1,14 +1,17 @@
 package cn.hyperchain.sdk.common.utils;
 
-import org.apache.log4j.Logger;
+import cn.hyperchain.sdk.crypto.HashUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Random;
 
 public class Utils {
-    private static final Logger logger = Logger.getLogger(Utils.class);
+    private static final Logger logger = LogManager.getLogger(Utils.class);
 
     private static Random random;
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -82,5 +85,42 @@ public class Utils {
      */
     public static boolean isAbsolutePath(String path) {
         return path.startsWith("/") || path.startsWith("file:/") || path.contains(":\\");
+    }
+
+    /**
+     * get timestamp.
+     *
+     * @return timestamp for unixNano
+     */
+    public static Long genTimestamp() {
+        return new Date().getTime() * 1000000 + Utils.randInt(1000, 1000000);
+    }
+
+    /**
+     * Checksum address encoding as per <a
+     * href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md">EIP-55</a>.
+     *
+     * @param address a valid hex encoded address
+     * @return hex encoded checksum address
+     */
+    public static String convertToCheckSumAddress(String address) {
+
+
+        String lowercaseAddress = deleteHexPre(address).toLowerCase();
+        String addressHash = deleteHexPre(ByteUtil.toHex(HashUtil.sha3(lowercaseAddress.getBytes(StandardCharsets.UTF_8))));
+
+        StringBuilder result = new StringBuilder(lowercaseAddress.length() + 2);
+
+        result.append("0x");
+
+        for (int i = 0; i < lowercaseAddress.length(); i++) {
+            if (Integer.parseInt(String.valueOf(addressHash.charAt(i)), 16) >= 8) {
+                result.append(String.valueOf(lowercaseAddress.charAt(i)).toUpperCase());
+            } else {
+                result.append(lowercaseAddress.charAt(i));
+            }
+        }
+
+        return result.toString();
     }
 }

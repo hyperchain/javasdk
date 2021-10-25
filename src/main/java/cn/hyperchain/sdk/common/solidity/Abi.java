@@ -17,6 +17,7 @@
  */
 package cn.hyperchain.sdk.common.solidity;
 
+import cn.hyperchain.sdk.common.utils.MethodNameUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class Abi {
 
     private ContractType.Constructor constructor;
+    private ContractType.Fallback fallback;
     private Map<String, ContractType.Function> functions;
     private Map<String, ContractType.Event> events;
 
@@ -65,6 +67,8 @@ public class Abi {
                     abi.constructor = new ContractType.Constructor(inputs, outputs);
                     break;
                 case fallback:
+                    abi.fallback = new ContractType.Fallback(payable);
+                    break;
                 case function:
                     ContractType.Function function = new ContractType.Function(constant, name, inputs, outputs, payable);
                     StringBuilder funcSB = new StringBuilder(name + "(");
@@ -131,6 +135,7 @@ public class Abi {
     }
 
     public ContractType.Function getFunction(String name) {
+        name = MethodNameUtil.getNormalizedMethodName(name);
         return functions.get(name);
     }
 

@@ -3,9 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
-import cn.hyperchain.sdk.response.archive.ArchiveBoolResponse;
-import cn.hyperchain.sdk.response.archive.ArchiveFilterIdResponse;
-import cn.hyperchain.sdk.response.archive.ArchiveResponse;
+import cn.hyperchain.sdk.response.archive.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,8 +46,8 @@ public class ArchiveServiceTest {
     @Test
     @Ignore
     public void testArchiveNoPredict() throws RequestException {
-        Request<ArchiveBoolResponse> request = archiveService.archiveNoPredict(BigInteger.valueOf(1));
-        ArchiveBoolResponse response = request.send();
+        Request<ArchiveStringResponse> request = archiveService.archiveNoPredict(BigInteger.valueOf(1));
+        ArchiveStringResponse response = request.send();
         System.out.println(response);
     }
 
@@ -112,8 +110,16 @@ public class ArchiveServiceTest {
     @Test
     @Ignore
     public void testQueryArchive() throws RequestException {
-        Request<ArchiveBoolResponse> request = archiveService.queryArchive(filterId);
-        ArchiveBoolResponse response = request.send();
+        Request<ArchiveStringResponse> request = archiveService.queryArchive(filterId);
+        ArchiveStringResponse response = request.send();
+        System.out.println(response);
+    }
+
+    @Test
+    @Ignore
+    public void testQueryLatestArchive() throws RequestException {
+        Request<ArchiveLatestResponse> request = archiveService.queryLatestArchive(1);
+        ArchiveLatestResponse response = request.send();
         System.out.println(response);
     }
 

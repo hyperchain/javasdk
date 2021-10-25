@@ -2,6 +2,7 @@
 target
 
 .idea
+.gradle
 *.iml
 
 #vscode
@@ -9,4 +10,5 @@ target
 .project
 .settings
 .vscode
+.factorypath
 lite-docs

@@ -16,6 +16,7 @@ public class RadarResponse extends Response {
                 ", id='" + id + '\'' +
                 ", code=" + code +
                 ", message='" + message + '\'' +
+                ", namespace='" + namespace + '\'' +
                 '}';
     }
 }

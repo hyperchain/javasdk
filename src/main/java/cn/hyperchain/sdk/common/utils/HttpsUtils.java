@@ -7,7 +7,8 @@ package cn.hyperchain.sdk.common.utils;
 
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.cert.SM2Priv;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
 
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class HttpsUtils {
 
-    private static Logger logger = Logger.getLogger(HttpsUtils.class);
+    private static Logger logger = LogManager.getLogger(HttpsUtils.class);
     public static final String DEFAULT_PASSWORD = "";
 
     public static class SSLParams {

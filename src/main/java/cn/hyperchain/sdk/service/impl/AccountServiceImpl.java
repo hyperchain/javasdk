@@ -1,16 +1,19 @@
 package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.account.Account;
+import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.account.Algo;
 import cn.hyperchain.sdk.account.ECAccount;
 import cn.hyperchain.sdk.account.ED25519Account;
 import cn.hyperchain.sdk.account.PKIAccount;
+import cn.hyperchain.sdk.account.R1Account;
 import cn.hyperchain.sdk.account.SMAccount;
 import cn.hyperchain.sdk.account.Version;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.cert.CertUtils;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
+import cn.hyperchain.sdk.crypto.ecdsa.R1Util;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.exception.AccountException;
 import cn.hyperchain.sdk.provider.ProviderManager;
@@ -46,12 +49,14 @@ public class AccountServiceImpl implements AccountService {
         this.providerManager = providerManager;
     }
 
+
     @Override
     public Account genAccount(Algo algo) {
         switch (algo) {
             case ECRAW:
             case SMRAW:
             case ED25519RAW:
+            case ECRAWR1:
                 return this.genAccount(algo, null);
             default:
                 throw new AccountException("illegal account type, you can only generate raw account type");
@@ -76,11 +81,24 @@ public class AccountServiceImpl implements AccountService {
             address = HashUtil.sha3omit12(publicKey);
             return new SMAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, keyPair);
         } else if (algo.isEC()) {
-            ecKey = new ECKey(new SecureRandom());
-            address = ecKey.getAddress();
-            publicKey = ecKey.getPubKey();
-            privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
-            return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, ecKey);
+            if (algo.isR1()) {
+                keyPair = R1Util.generateKeyPair();
+                ECPrivateKeyParameters ecPriv = (ECPrivateKeyParameters) keyPair.getPrivate();
+                ECPublicKeyParameters ecPub = (ECPublicKeyParameters) keyPair.getPublic();
+                BigInteger privateKeyBI = ecPriv.getD();
+
+                publicKey = ecPub.getQ().getEncoded(false);
+                privateKey = Account.encodePrivateKey(ByteUtil.biConvert32Bytes(privateKeyBI), algo, password);
+                address = HashUtil.sha3omit12(publicKey);
+
+                return new R1Account(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, keyPair);
+            } else {
+                ecKey = new ECKey(new SecureRandom());
+                address = ecKey.getAddress();
+                publicKey = ecKey.getPubKey();
+                privateKey = Account.encodePrivateKey(ecKey.getPrivKeyBytes(), algo, password);
+                return new ECAccount(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, ecKey);
+            }
         } else if (algo.isED()) {
             Ed25519KeyPairGenerator ed25519KeyPairGenerator = new Ed25519KeyPairGenerator();
             ed25519KeyPairGenerator.init(new Ed25519KeyGenerationParameters(new SecureRandom()));
@@ -110,7 +128,7 @@ public class AccountServiceImpl implements AccountService {
                 ByteArrayOutputStream tmp = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
                 int len;
-                while ((len = input.read(buffer)) > -1 ) {
+                while ((len = input.read(buffer)) > -1) {
                     tmp.write(buffer, 0, len);
                 }
                 tmp.flush();
@@ -122,7 +140,7 @@ public class AccountServiceImpl implements AccountService {
                 String address = CertUtils.getCNFromCert(cert);
                 // extract the primitive output of bytes of pfx file from input stream.
                 InputStream tmp2 = new ByteArrayInputStream(tmp.toByteArray());
-                String publicHex = CertUtils.getPubFromPFXFile(tmp2,password);
+                String publicHex = CertUtils.getPubFromPFXFile(tmp2, password);
                 Algo tmpAlgo;
                 if (cert.getPublicKey().getAlgorithm().equals("EC")) {
                     tmpAlgo = Algo.ECAES;
@@ -138,6 +156,26 @@ public class AccountServiceImpl implements AccountService {
             }
         }
         return null;
+    }
+
+    @Override
+    public Account genDIDAccount(Algo algo, String suffix) {
+        if (suffix.length() == 0) {
+            throw new AccountException("illegal suffix, the suffix can't be null");
+        }
+        Account account = genAccount(algo);
+        String didAddress = DIDAccount.DID_PREFIX + providerManager.getChainID() + ":" + suffix;
+        return new DIDAccount(account, didAddress);
+    }
+
+    @Override
+    public Account genDIDAccount(Algo algo, String password, String suffix) {
+        if (suffix.length() == 0) {
+            throw new AccountException("illegal suffix, the suffix can't be null");
+        }
+        Account account = genAccount(algo, password);
+        String didAddress = DIDAccount.DID_PREFIX + providerManager.getChainID() + ":" + suffix;
+        return new DIDAccount(account, didAddress);
     }
 
     // TODO: 非证书账户之间的类型转换。
@@ -170,6 +208,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account fromAccountJson(String accountJson, String password) {
         return Account.fromAccountJson(accountJson, password);
+    }
+
+    @Override
+    public Account genDIDAccountFromAccountJson(String accountJson, String password, String suffix) {
+        return Account.genDIDAccountFromAccountJson(accountJson, password, suffix, providerManager.getChainID());
     }
 
     @Override

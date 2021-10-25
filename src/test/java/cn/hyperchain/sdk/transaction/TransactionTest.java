@@ -37,7 +37,7 @@ public class TransactionTest {
     @Test
     public void serialize() throws Exception {
         {
-            InputStream inputStream = FileUtil.readFileAsStream("solidity/DSolc_sol_DSolc.bin");
+            InputStream inputStream = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
             Transaction transaction = new Transaction.HVMBuilder(from).deploy(inputStream).build();
             String originNeedHash = transaction.getNeedHashString();
             String txJson = Transaction.serialize(transaction);
