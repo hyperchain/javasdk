@@ -67,6 +67,7 @@ public interface TxService {
      * @param nodeIds specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getDiscardTx(int... nodeIds);
 
 
@@ -83,6 +84,7 @@ public interface TxService {
      * @param nodeIds     specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getTxByHash(String txHash, boolean isPrivateTx, int... nodeIds);
 
     /**
@@ -266,11 +268,13 @@ public interface TxService {
      * @param nodeIds   specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getDiscardTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
     /**
      * @see TxService#getDiscardTransactionsByTime(BigInteger, BigInteger, int...)
      */
+    @Deprecated
     Request<TxResponse> getDiscardTransactionsByTime(String startTime, String endTime, int... nodeIds);
 
     /**
@@ -283,11 +287,13 @@ public interface TxService {
      * @param nodeIds         specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getTransactionsCountByContractAddr(String from, String to, String contractAddress, boolean txExtra, int... nodeIds);
 
     /**
      * @see TxService#getTransactionsCountByContractAddr(String, String, String, boolean, int...)
      */
+    @Deprecated
     Request<TxResponse> getTransactionsCountByContractAddr(BigInteger from, BigInteger to, String contractAddress, boolean txExtra, int... nodeIds);
 
     /**
@@ -304,11 +310,13 @@ public interface TxService {
      * @param nodeIds        specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
 
     /**
      * @see TxService#getNextPageTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, int...)
      */
+    @Deprecated
     Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
 
     /**
@@ -325,11 +333,13 @@ public interface TxService {
      * @param nodeIds        specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
 
     /**
      * @see TxService#getPrevPageTransactions(String, String, String, String, String, String, boolean, String, int...)
      */
+    @Deprecated
     Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
 
     /**
@@ -339,8 +349,10 @@ public interface TxService {
      * @param nodeIds    specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeIds);
 
+    @Deprecated
     Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
 
     /**
@@ -351,6 +363,7 @@ public interface TxService {
      * @param nodeIds   specific ids
      * @return {@link Request} of {@link TxCountResponse}
      */
+    @Deprecated
     Request<TxCountResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
     /**
