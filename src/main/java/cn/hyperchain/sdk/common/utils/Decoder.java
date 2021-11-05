@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.LinkedHashSet;
 
 public class Decoder {
     private static final int KVSQL_DECODEVERSION1 = 0;
@@ -84,7 +85,7 @@ public class Decoder {
         byte[] name = ByteUtil.copy(payloadBytes, 6 + classLen, nameLen);
         byte[] bin = ByteUtil.copy(payloadBytes, 6 + classLen + nameLen, payloadBytes.length - 6 - classLen - nameLen);
 
-        Set<String> methodNames = new HashSet<>();
+        Set<String> methodNames = new LinkedHashSet<>();
         InputStream is = ByteSource.wrap(classBytes).openStream();
         ClassReader reader = new ClassReader(is);
         ClassNode classNode = new ClassNode();
