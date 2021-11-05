@@ -36,9 +36,10 @@ import java.util.Random;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Ignore
 public class DIDServiceTest {
     public static String DEFAULT_URL = "localhost:8081";
-    public static String genesis_accountJson = "{\"address\":\"0x856e2b9a5fa82fd1b031d1ff6863864dbac7995d\",\"version\":\"4.0\",\"algo\":\"0x13\",\"publicKey\":\"047ea464762c333762d3be8a04536b22955d97231062442f81a3cff46cb009bbdbb0f30e61ade5705254d4e4e0c0745fb3ba69006d4b377f82ecec05ed094dbe87\",\"privateKey\":\"71b9acc4ee2b32b3d2c79b5abe9e118e5f73765aee5e7755d6aa31f12945036d\"}";
+    public static String genesis_accountJson = "";
     public static final String chainID = "hyperchainID01";
     private ProviderManager providerManager;
     private DIDService didService;
@@ -471,8 +472,7 @@ public class DIDServiceTest {
 
     @Test
     public void testContract_bvm() throws RequestException {
-        String accountJson = "{\"address\":\"0x856e2b9a5fa82fd1b031d1ff6863864dbac7995d\",\"version\":\"4.0\",\"algo\":\"0x13\",\"publicKey\":\"047ea464762c333762d3be8a04536b22955d97231062442f81a3cff46cb009bbdbb0f30e61ade5705254d4e4e0c0745fb3ba69006d4b377f82ecec05ed094dbe87\",\"privateKey\":\"71b9acc4ee2b32b3d2c79b5abe9e118e5f73765aee5e7755d6aa31f12945036d\"}";
-        Account ac = accountService.genDIDAccountFromAccountJson(accountJson,null,getRandomString(10));
+        Account ac = accountService.genDIDAccountFromAccountJson(genesis_accountJson, null, getRandomString(10));
         DIDDocument didDocument = new DIDDocument(ac.getAddress(), DIDPublicKey.getPublicKeyFromAccount(ac), null);
         Transaction transaction = new Transaction.DIDBuilder(ac.getAddress()).create(didDocument).build();
         transaction.sign(ac);
