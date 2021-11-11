@@ -1064,6 +1064,10 @@ public class Transaction {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
         } else if (vmType == VMType.TRANSFER) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
+        } else if (vmType == VMType.KVSQL) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.KVSQL_VALUE);
+        } else if (vmType == VMType.BVM) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.BVM_VALUE);
         } else {
             throw new RuntimeException("unKnow vmType");
         }

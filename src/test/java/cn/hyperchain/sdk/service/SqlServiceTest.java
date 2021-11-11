@@ -75,6 +75,7 @@ public class SqlServiceTest {
         transaction.sign(account);
         receiptResponse = sqlService.invoke(transaction).send().polling();
         System.out.println(receiptResponse.getRet());
+        Assert.assertEquals(transaction.getTransactionHash(), receiptResponse.getTxHash());
     }
 
     @Test
