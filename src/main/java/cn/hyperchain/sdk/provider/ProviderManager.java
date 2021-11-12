@@ -49,6 +49,10 @@ public class ProviderManager {
 
     private static Logger logger =  LogManager.getLogger(ProviderManager.class);
 
+    public static ProviderManager emptyManager() {
+        return new ProviderManager();
+    }
+
     public static class Builder {
         private ProviderManager providerManager;
 
@@ -142,6 +146,7 @@ public class ProviderManager {
          */
         public ProviderManager build() {
             setTxVersion(providerManager);
+            providerManager.setLocalChainID();
             return providerManager;
         }
     }
@@ -377,6 +382,10 @@ public class ProviderManager {
             logger.info(e.toString());
         }
 
+    }
+
+    public void setChainID(String chainID) {
+        this.chainID = chainID;
     }
 
     public String getChainID() {

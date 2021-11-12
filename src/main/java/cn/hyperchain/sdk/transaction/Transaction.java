@@ -64,6 +64,8 @@ public class Transaction {
     private static final int DIDCREDENTIAL_UPLOAD = 206;
     private static final int DIDCREDENTIAL_DOWNLOAD = 207;
     private static final int DIDCREDENTIAL_ABANDON = 208;
+    private static final int DID_SETEXTRA = 209;
+    private static final int DID_GETEXTRA = 210;
 
     private Account account;
 
@@ -595,9 +597,6 @@ public class Transaction {
             return this;
         }
 
-        //todo 更新did extra
-//        public DIDBuilder updateExtra()
-
         /**
          * upload credential.
          * @param credential credential
@@ -632,6 +631,40 @@ public class Transaction {
             super.transaction.setTo(super.transaction.getFrom());
             super.transaction.setPayload(ByteUtil.toHex(credentialID.getBytes(Utils.DEFAULT_CHARSET)));
             super.transaction.setOpCode(DIDCREDENTIAL_ABANDON);
+            return this;
+        }
+
+        /**
+         * set did extra.
+         * @param to target
+         * @param key -
+         * @param value -
+         * @return {@link Builder}
+         */
+        public Builder setExtra(String to, String key, String value) {
+            super.transaction.setTo(to);
+            Map<String, String> map = new HashMap<String, String>(2);
+            map.put("key", key);
+            map.put("value", value);
+            String param = gson.toJson(map);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DID_SETEXTRA);
+            return this;
+        }
+
+        /**
+         * get did extra.
+         * @param to target
+         * @param key -
+         * @return {@link Builder}
+         */
+        public Builder getExtra(String to, String key) {
+            super.transaction.setTo(to);
+            Map<String, String> map = new HashMap<String, String>(1);
+            map.put("key", key);
+            String param = gson.toJson(map);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DID_GETEXTRA);
             return this;
         }
     }

@@ -29,7 +29,6 @@ public class DIDServiceImpl implements DIDService {
         return sendDIDTxRequest;
     }
 
-
     @Override
     public Request<DIDResponse> getChainID(int... nodeIds) {
         DIDRequest didRequest = new DIDRequest(DID_PREFIX + "getChainID", providerManager, DIDResponse.class, nodeIds);
@@ -75,6 +74,16 @@ public class DIDServiceImpl implements DIDService {
     @Override
     public void setLocalGlobalChainID(ProviderManager providerManager) {
         providerManager.setLocalChainID();
+    }
+
+    @Override
+    public Request<TxHashResponse> setExtra(Transaction transaction, int... nodeIds) {
+        return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
+    public Request<TxHashResponse> getExtra(Transaction transaction, int... nodeIds) {
+        return sendDIDTransaction(transaction, nodeIds);
     }
 
     @Override

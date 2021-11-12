@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.response.contract.DeployerListResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 
 /**
@@ -23,4 +24,6 @@ public interface ContractService {
     Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
 
     Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds);
+
+    Request<DeployerListResponse> getDeployedList(String address, int... nodeIds);
 }
