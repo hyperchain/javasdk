@@ -866,6 +866,49 @@ getTxVersion接口会在创建ProviderManager对象时调用，并设置全局�
 Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
 ```
 
+### 4.13 查询链上所有非法交易交易量(getInvalidTransactionsCount)
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds);
+```
+
+### 4.14 查询链上指定时间段内的非法交易交易量(getInvalidTransactionsCountByTime)
+
+参数：
+
+- startTime 开始时间
+- endTime 截止时间
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+### 4.15 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)
+
+参数：
+
+- blockNumber 区块号
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
+```
+
+### 4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)
+
+参数：
+
+- blockHash 区块哈希
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
+```
 
 ## 第五章. BlockService相关接口
 
