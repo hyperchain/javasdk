@@ -1,8 +1,12 @@
 package cn.hyperchain.sdk.account;
 
+import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.ECKey;
+import cn.hyperchain.sdk.crypto.ecdsa.ECUtil;
 import cn.hyperchain.sdk.crypto.ecdsa.R1Util;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
+import cn.hyperchain.sdk.exception.IllegalSignatureException;
 import com.google.gson.annotations.Expose;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -49,6 +53,11 @@ public class PKIAccount extends Account {
         } else if (algo.isR1()) {
             Account tmpECAccount = new R1Account(this.address, this.publicKey, this.privateKey, this.version, this.algo, R1Util.genFromPrivKey(Hex.decode(this.raw)));
             return tmpECAccount.sign(sourceData);
+        } else if (algo.isPKI()) {
+            ECKey ecKey = ECKey.fromPrivate(Hex.decode(this.raw));
+            byte[] hash = HashUtil.sha3(sourceData);
+            byte[] signature = ecKey.sign(hash).toByteArray();
+            return ByteUtil.merge(PKIFlag, signature);
         } else {
             Account tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.raw)));
             return tmpECAccount.sign(sourceData);
@@ -68,6 +77,8 @@ public class PKIAccount extends Account {
         } else if (algo.isR1()) {
             Account tmpECAccount = new R1Account(this.address, this.publicKey, this.privateKey, this.version, this.algo, R1Util.genFromPrivKey(Hex.decode(this.raw)));
             return tmpECAccount.verify(sourceData, signature);
+        } else if (algo.isPKI()) {
+            return verify(sourceData, signature, false);
         } else {
             Account tmpECAccount = new ECAccount(this.address, this.publicKey, this.privateKey, this.version, this.algo, ECKey.fromPrivate(Hex.decode(this.raw)));
             return tmpECAccount.verify(sourceData, signature);
@@ -76,6 +87,16 @@ public class PKIAccount extends Account {
 
     @Override
     protected boolean verify(byte[] sourceData, byte[] signature, boolean isDID) {
-        return false;
+        if (isDID) {
+            return false;
+        }
+        if (signature[0] != 4) {
+            throw new IllegalSignatureException();
+        }
+        ECKey ecKey = ECKey.fromPrivate(Hex.decode(this.raw));
+        int lenSig = signature.length;
+        byte[] realSig = new byte[lenSig - 1];
+        System.arraycopy(signature, 1, realSig, 0, lenSig - 1);
+        return ECUtil.verify(sourceData, realSig, ecKey);
     }
 }
