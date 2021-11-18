@@ -25,7 +25,7 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -291,7 +291,7 @@ public class Decoder {
                 index += paramLen;
                 params[j] = param;
             }
-            Map<String, Object> opt = new HashMap<>();
+            Map<String, Object> opt = new LinkedHashMap<>();
             opt.put("MethodName", methodName);
             opt.put("Params", params);
             content[i] = opt;
