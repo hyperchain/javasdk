@@ -94,6 +94,7 @@ public interface BlockService {
     /**
      * @see BlockService#getBatchBlocksByHash(ArrayList, boolean, int...)
      */
+    @Deprecated
     Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, int... nodeIds);
 
     /**
@@ -105,6 +106,7 @@ public interface BlockService {
      * @param nodeIds       specific ids
      * @return {@link Request} of {@link BlockResponse}
      */
+    @Deprecated
     Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, boolean isPlain, int... nodeIds);
 
     /**
@@ -130,16 +132,19 @@ public interface BlockService {
     /**
      * @see BlockService#getBatchBlocksByNum(ArrayList, boolean, int...)
      */
+    @Deprecated
     Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, int... nodeIds);
 
     /**
      * @see BlockService#getBatchBlocksByStrNum(ArrayList, boolean, int...)
      */
+    @Deprecated
     Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, boolean isPlain, int... nodeIds);
 
     /**
      * @see BlockService#getBatchBlocksByStrNum(ArrayList, boolean, int...)
      */
+    @Deprecated
     Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, int... nodeIds);
 
     /**
@@ -151,6 +156,7 @@ public interface BlockService {
      *                        If specified, the returned block does not include transactions within the block
      * @return {@link Request} of {@link BlockResponse}
      */
+    @Deprecated
     Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, boolean isPlain, int... nodeIds);
 
     /**
@@ -176,11 +182,13 @@ public interface BlockService {
      * @param nodeIds   specific ids
      * @return {@link Request} of {@link BlockResponse}
      */
+    @Deprecated
     Request<BlockCountResponse> getBlocksByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
     /**
      * @see BlockService#getBlocksByTime(BigInteger, BigInteger, int...)
      */
+    @Deprecated
     Request<BlockCountResponse> getBlocksByTime(String startTime, String endTime, int... nodeIds);
 
     /**
