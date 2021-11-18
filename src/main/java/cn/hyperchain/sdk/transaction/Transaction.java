@@ -6,12 +6,13 @@ import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.solidity.ContractType;
-import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
-import cn.hyperchain.sdk.common.utils.Utils;
+import cn.hyperchain.sdk.common.utils.InvokeHVMAbiParams;
+import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.MethodNameUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.did.DIDCredential;
 import cn.hyperchain.sdk.did.DIDDocument;
@@ -371,6 +372,20 @@ public class Transaction {
             return invokeContractAddr(contractAddress, isDID, chainID);
         }
 
+        /**
+         * create invoking transaction for {@link VMType} HVM.
+         *
+         * @param contractAddress contract address in chain
+         * @param hvmAbiParams    params of invoking contract by invoke bean
+         * @return {@link Builder}
+         */
+        public Builder invokeByBeanAbi(String contractAddress, InvokeHVMAbiParams hvmAbiParams) {
+            String payload = hvmAbiParams.getParams();
+            super.transaction.setPayload(payload);
+            return invokeContractAddr(contractAddress, false, null);
+        }
+
+
     }
 
     public static class EVMBuilder extends Builder {
@@ -723,6 +738,7 @@ public class Transaction {
 
     /**
      * set the transaction from address, hex coding.
+     *
      * @param from address
      */
     public void setFrom(String from) {
@@ -738,6 +754,7 @@ public class Transaction {
 
     /**
      * set the transaction to address, hex coding.
+     *
      * @param to address
      */
     public void setTo(String to) {

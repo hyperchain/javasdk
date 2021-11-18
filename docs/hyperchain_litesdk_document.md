@@ -446,10 +446,11 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deplo
 
 ##### HVM
 
-hvm调用合约有两种方式：
+hvm调用合约有三种方式：
 
 - **InvokeBean**调用
 - 直接调用合约方法（类似evm）
+- 通过hvm-abi文件调用
 
 1. InvokeBean调用如下：
 
@@ -467,6 +468,21 @@ Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invok
 
 params类型为`InvokeDirectlyParams`，具体的构造方式见附录。
 
+3. 通过hvm.abi文件调用合约
+
+```java
+InputStream inputStream = FileUtil.readFileAsStream("hvm-abi/hvm.abi");
+String abiJson = FileUtil.readFile(inputStream);
+//通过invokeBean调用
+InvokeHVMAbiParams.ParamBuilder params = new InvokeHVMAbiParams.ParamBuilder(abiJson,  HVMBeanAbi.BeanType.InvokeBean,"invoke.InvokeBid");
+params.addParam(100);
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invokeByBeanAbi(contractAddress, params.build()).build();
+
+// MethodBean 通过methodBean调用
+InvokeHVMAbiParams.ParamBuilder params = new InvokeHVMAbiParams.ParamBuilder(abiJson,  HVMBeanAbi.BeanType.MethodBean,"bid");
+params.addParam(100);
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invokeByBeanAbi(contractAddress, params.build()).build();
+```
 ##### EVM
 
 ```java
