@@ -1,0 +1,42 @@
+{
+  "contract": {
+    "name": "MyContract",
+    "constructor": {
+      "input": []
+    }
+  },
+  "methods": [
+    {
+      "name": "make_student",
+      "input": [
+        {
+          "type_id": 1
+        },
+        {
+          "type_id": 1
+        }
+      ],
+      "output": [
+        {
+          "type_id": 1
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "id": 0,
+      "type": "primitive",
+      "primitive": "u64"
+    },
+    {
+      "id": 1,
+      "type": "struct",
+      "fields": [
+        {
+          "type_id": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "contract": {
+    "name": "MyContract",
+    "constructor": {
+      "input": []
+    }
+  },
+  "methods": [
+    {
+      "name": "test-1",
+      "input": [
+        {
+          "type_id": 0
+        }
+      ],
+      "output": [
+        {
+          "type_id": 0
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "id": 0,
+      "type": "struct",
+      "fields": [
+        {
+          "type_id": 1
+        },
+        {
+          "type_id": 2
+        },
+        {
+          "type_id": 3
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "primitive",
+      "primitive": "u32"
+    },
+    {
+      "id": 2,
+      "type": "primitive",
+      "primitive": "str"
+    },
+    {
+      "id": 3,
+      "type": "vec",
+      "fields": [
+        {
+          "type_id": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "vec",
+      "fields": [
+        {
+          "type_id": 2
+        }
+      ]
+    }
+  ]
+}

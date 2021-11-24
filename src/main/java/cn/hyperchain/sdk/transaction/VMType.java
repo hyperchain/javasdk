@@ -5,7 +5,8 @@ public enum VMType {
     HVM("HVM"),
     BVM("BVM"),
     TRANSFER("TRANSFER"),
-    KVSQL("KVSQL");
+    KVSQL("KVSQL"),
+    FVM("FVM");
 
     private String type;
 
