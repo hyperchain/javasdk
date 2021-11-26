@@ -393,8 +393,14 @@ public class ECKey implements Serializable {
      * @return -
      * @deprecated per-point compression property will be removed in Bouncy Castle
      */
+
+    private static boolean isCompressed(ECPoint p){
+        //return p.isCompressed();
+        return false;
+    }
+
     public ECKey decompress() {
-        if (!pub.isCompressed())
+        if (!isCompressed(pub))
             return this;
         else
             return new ECKey(this.provider, this.privKey, decompressPoint(pub));
@@ -404,7 +410,7 @@ public class ECKey implements Serializable {
      * @deprecated per-point compression property will be removed in Bouncy Castle
      */
     public ECKey compress() {
-        if (pub.isCompressed())
+        if (isCompressed(pub))
             return this;
         else
             return new ECKey(this.provider, this.privKey, compressPoint(pub));
@@ -554,7 +560,7 @@ public class ECKey implements Serializable {
      * @return -
      */
     public boolean isCompressed() {
-        return pub.isCompressed();
+        return isCompressed(pub);
     }
 
     public String toString() {

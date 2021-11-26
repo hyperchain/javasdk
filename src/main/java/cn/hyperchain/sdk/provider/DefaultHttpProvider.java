@@ -4,21 +4,53 @@ import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.common.utils.HttpsUtils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
-import okhttp3.Headers;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.MediaType;
+import okhttp3.TlsVersion;
+import okhttp3.internal.Util;
+import okhttp3.Request;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import okhttp3.Headers;
 import okhttp3.Response;
-import okhttp3.Request;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class DefaultHttpProvider implements HttpProvider {
+    private static List<ConnectionSpec> GmTlsSpecs;
+
+    static {
+        final ConnectionSpec tls = ConnectionSpec.COMPATIBLE_TLS;
+        List<CipherSuite> cs = tls.cipherSuites();
+        List<TlsVersion> versions = tls.tlsVersions();
+        TlsVersion[] vers = new TlsVersion[versions.size() + 1];
+        try {
+            Constructor[] ccs = CipherSuite.class.getConstructors();
+            Constructor cc = CipherSuite.class.getDeclaredConstructors()[0];
+            cc.setAccessible(true);
+            CipherSuite suite = (CipherSuite)cc.newInstance("TLS_ECC_SM4_SM3");
+            cs = new ArrayList<>(cs);
+            cs.add(suite /*new CipherSuite("TLS_ECC_SM4_SM3")*/);
+
+            versions.toArray(vers);
+            vers[vers.length - 1] = TlsVersion.GMTLS;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionSpec gmtls = (new ConnectionSpec.Builder(tls)).cipherSuites(cs.toArray(new CipherSuite[cs.size()])).tlsVersions(vers).build();
+        GmTlsSpecs = Util.immutableList(new ConnectionSpec[]{gmtls, ConnectionSpec.CLEARTEXT});
+    }
+    
     protected static final String HTTP = "http://";
     protected static final String HTTPS = "https://";
 
@@ -26,7 +58,7 @@ public class DefaultHttpProvider implements HttpProvider {
     protected volatile PStatus status;
     protected String httpPrefix;
     protected Account account;
-
+    
     protected DefaultHttpProvider() {
     }
 
@@ -105,6 +137,9 @@ public class DefaultHttpProvider implements HttpProvider {
          */
         public Builder https(InputStream tlsCa, InputStream tlsPeerCert, InputStream tlsPeerPriv) {
             HttpsUtils.SSLParams sslSocketFactory = HttpsUtils.getSslSocketFactory(tlsCa, tlsPeerCert, tlsPeerPriv, HttpsUtils.DEFAULT_PASSWORD);
+            if (sslSocketFactory.isGm()) {
+                builder.connectionSpecs(GmTlsSpecs);
+            }
             builder.sslSocketFactory(sslSocketFactory.getsSLSocketFactory(), sslSocketFactory.getTrustManager())
                     .hostnameVerifier(HttpsUtils.hyperchainVerifier());
             defaultHttpProvider.httpPrefix = HTTPS;
@@ -138,7 +173,6 @@ public class DefaultHttpProvider implements HttpProvider {
 
     @Override
     public String post(cn.hyperchain.sdk.request.Request rawRequest) throws RequestException {
-
         Map<String, String> headers = rawRequest.getHeaders();
         String body = rawRequest.requestBody();
         RequestBody requestBody = RequestBody.create(JSON, body);
