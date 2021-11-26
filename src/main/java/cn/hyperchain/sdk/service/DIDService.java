@@ -41,4 +41,7 @@ public interface DIDService {
 
     void setLocalGlobalChainID(ProviderManager providerManager);
 
+    Request<TxHashResponse> setExtra(Transaction transaction, int... nodeIds);
+
+    Request<TxHashResponse> getExtra(Transaction transaction, int... nodeIds);
 }

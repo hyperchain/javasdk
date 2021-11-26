@@ -179,6 +179,15 @@ public interface TxService {
     Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds);
 
     /**
+     * get receipt information of the transaction by querying transaction hash after seqNo has been confirmed.
+     *
+     * @param txHash  transaction hash
+     * @param nodeIds specific ids
+     * @return {@link Request} of {@link TxResponse}
+     */
+    Request<ReceiptResponse> getConfirmedTransactionReceipt(String txHash, int... nodeIds);
+
+    /**
      * get receipt information of the transaction by querying transaction hash.
      *
      * @param txHash  transaction hash

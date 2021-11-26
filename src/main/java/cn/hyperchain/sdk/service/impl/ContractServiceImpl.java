@@ -4,8 +4,10 @@ import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.ContractRequest;
 import cn.hyperchain.sdk.request.PollingRequest;
 import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.request.StringRequest;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.response.contract.DeployerListResponse;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 
@@ -108,6 +110,17 @@ public class ContractServiceImpl implements ContractService {
         txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
+    }
+
+    @Override
+    public Request<DeployerListResponse> getDeployedList(String address, int... nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getDeployedList", providerManager, DeployerListResponse.class, nodeIds);
+
+        stringRequest.addParams(address);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+
+        return stringRequest;
     }
 
     private String methodName(String method, Transaction transaction) {
