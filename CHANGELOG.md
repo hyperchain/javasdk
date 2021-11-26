@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-1](https://git.hyperchain.cn///compare/v1.0.8...v1.1.0-1) (2021-11-26)
+
+
+### Features
+
+* add a new bean-abi invoke type to invoke hvm contract ([f73dc23](https://git.hyperchain.cn///commit/f73dc2371574d9faad669deef6474e5ad9ecc495))
+* **decode:** decode proposal ([d1380d3](https://git.hyperchain.cn///commit/d1380d374f1128d0ebc625a2198d25b918c7a049))
+* **doc:** update deprecated interface ([357b315](https://git.hyperchain.cn///commit/357b315ecf9cd3b30f6205f8d9fd950b0b41eb68))
+* **receipt:** add get confirmed receipt interface ([291028c](https://git.hyperchain.cn///commit/291028c0908117cf8873ac6dec7bed0819c8b162))
+* **set:** sort set ([37e253c](https://git.hyperchain.cn///commit/37e253c4d093a4d906196fdf8f50e12e41cf96f1))
+
+
+### Bug Fixes
+
+* **resendTx:** fix resend deploy or update hvm contract tx ([e0156c9](https://git.hyperchain.cn///commit/e0156c967d9ade68ddf954ba050f8e4eb5b04b26))
+* **transaction:** fix getTransactionHash when vmtype is kvsql or bvm ([65a8595](https://git.hyperchain.cn///commit/65a85951961aca03ef2b5f0b71c5470f6a838d3c))
+* **Transaction:** set transfer vm type for transfer transaction ([f65d35a](https://git.hyperchain.cn///commit/f65d35a4c1cc49968558d96283f1338041dac66b))
+
 ### [1.0.8](https://git.hyperchain.cn///compare/v1.0.8-5...v1.0.8) (2021-09-24)
 
 ### [1.0.8-5](https://git.hyperchain.cn///compare/v1.0.8-4...v1.0.8-5) (2021-09-23)
