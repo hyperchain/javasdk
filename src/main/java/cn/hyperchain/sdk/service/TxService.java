@@ -6,6 +6,7 @@ import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.TxHashesResponse;
+import cn.hyperchain.sdk.response.block.BlockResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
@@ -60,6 +61,33 @@ public interface TxService {
      * @return {@link Request} of {@link TxLimitResponse}
      */
     Request<TxLimitResponse> getTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds);
+
+
+    /**
+     * get invalid transactions by a given block number range with limit.
+     *
+     * @param from     from block number
+     * @param to       to block number
+     * @param nodeIds  specific ids
+     * @return {@link Request} of {@link TxLimitResponse}
+     */
+    Request<TxLimitResponse> getInvalidTxsWithLimit(Integer from, Integer to, int... nodeIds);
+
+    /**
+     * @see TxService#getInvalidTxsWithLimit(String, String, int...)
+     */
+    Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, int... nodeIds);
+
+    /**
+     * get invalid transactions by a given block number range with limit.
+     *
+     * @param from     from block number
+     * @param to       to block number
+     * @param metaData meta data
+     * @param nodeIds  specific ids
+     * @return {@link Request} of {@link TxLimitResponse}
+     */
+    Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds);
 
     /**
      * get all discard transactions.
@@ -134,6 +162,14 @@ public interface TxService {
     Request<TxCountWithTSResponse> getTransactionsCount(int... nodeIds);
 
     /**
+     * query all invalid transactions on the chain.
+     *
+     * @param nodeIds specific ids
+     * @return {@link Request} of {@link TxCountWithTSResponse}
+     */
+    Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds);
+
+    /**
      * get receipt information of the transaction by querying transaction hash.
      *
      * @param txHash  transaction hash
@@ -168,6 +204,33 @@ public interface TxService {
      * @return {@link Request} of {@link TxCountResponse}
      */
     Request<TxCountResponse> getBlockTxCountByNumber(String blockNumber, int... nodeIds);
+
+    /**
+     * query the invalid transactions in the block with a given block hash.
+     *
+     * @param blockHash block hash
+     * @param nodeIds   specific ids
+     * @return {@link Request} of {@link TxLimitResponse}
+     */
+    Request<TxLimitResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
+
+    /**
+     * query the invalid transactions in the block with a given block number.
+     *
+     * @param blockNumber block number
+     * @param nodeIds     specific ids
+     * @return {@link Request} of {@link TxLimitResponse}
+     */
+    Request<TxLimitResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
+
+    /**
+     * query the invalid transactions in the block with a given block number.
+     *
+     * @param blockNumber block number
+     * @param nodeIds     specific ids
+     * @return {@link Request} of {@link TxLimitResponse}
+     */
+    Request<TxLimitResponse> getInvalidTxsByBlockNumber(String blockNumber, int... nodeIds);
 
     /**
      * get signature hash for the transaction.
@@ -320,6 +383,27 @@ public interface TxService {
     Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
 
     /**
+     * get next page invalid transactions.
+     *
+     * @param blkNumber      block number
+     * @param txIndex        transaction index in the block
+     * @param minBlkNumber   minimum block number
+     * @param maxBlkNumber   maximum block number
+     * @param separated      the number of transactions to skip
+     * @param pageSize       the number of transactions to return
+     * @param containCurrent true ndicates that the returned result includes the transaction with the position txIndex in the blkNumber block. If the transaction is not a transaction with the contract address of the address contract, it is not counted
+     * @param nodeIds        specific ids
+     * @return {@link Request} of {@link TxResponse}
+     */
+    Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
+
+    /**
+     * @see TxService#getNextPageTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, int...)
+     */
+    Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+
+
+    /**
      * get previous page transactions.
      *
      * @param blkNumber      block number
@@ -341,6 +425,27 @@ public interface TxService {
      */
     @Deprecated
     Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
+
+    /**
+     * get previous page transactions.
+     *
+     * @param blkNumber      block number
+     * @param txIndex        transaction index in the block
+     * @param minBlkNumber   minimum block number
+     * @param maxBlkNumber   maximum block number
+     * @param separated      the number of transactions to skip
+     * @param pageSize       the number of transactions to return
+     * @param containCurrent true ndicates that the returned result includes the transaction with the position txIndex in the blkNumber block. If the transaction is not a transaction with the contract address of the address contract, it is not counted
+     * @param nodeIds        specific ids
+     * @return {@link Request} of {@link TxResponse}
+     */
+    Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
+
+    /**
+     * @see TxService#getPrevPageTransactions(String, String, String, String, String, String, boolean, String, int...)
+     */
+    Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+
 
     /**
      * Get batch transactions.
@@ -365,6 +470,16 @@ public interface TxService {
      */
     @Deprecated
     Request<TxCountResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+
+    /**
+     * query the count of invalid transactions with a given period.
+     *
+     * @param startTime start time
+     * @param endTime   end time
+     * @param nodeIds   specific ids
+     * @return {@link Request} of {@link TxCountResponse}
+     */
+    Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
     /**
      * get transactions by extraID.
