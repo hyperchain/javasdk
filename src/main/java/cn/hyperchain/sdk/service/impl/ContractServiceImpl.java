@@ -3,6 +3,7 @@ package cn.hyperchain.sdk.service.impl;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.ContractRequest;
 import cn.hyperchain.sdk.request.PollingRequest;
+import cn.hyperchain.sdk.request.ReceiptRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.StringRequest;
 import cn.hyperchain.sdk.response.ReceiptResponse;
@@ -50,6 +51,19 @@ public class ContractServiceImpl implements ContractService {
         return txHashResponseContractRequest;
     }
 
+    @Override
+    public Request<ReceiptResponse> grpcDeployReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("deployContractReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+
+        Map<String, Object> txParamMap = transaction.commonParamMap();
+        txParamMap.remove("to");
+        receiptRequest.addParams(txParamMap);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
+    }
+
+
     /**
      * invoke a contract.
      *
@@ -68,6 +82,18 @@ public class ContractServiceImpl implements ContractService {
         txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("invokeContractReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+
+        Map<String, Object> txParamMap = transaction.commonParamMap();
+
+        receiptRequest.addParams(txParamMap);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
     }
 
     /**
@@ -101,6 +127,18 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("maintainContractReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+        Map<String, Object> params = transaction.commonParamMap();
+
+        receiptRequest.addParams(params);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
+    }
+
+
+    @Override
     public Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds) {
         ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("manageContractByVote", transaction), providerManager, TxHashResponse.class, transaction, nodeIds);
         Map<String, Object> params = transaction.commonParamMap();
@@ -110,6 +148,17 @@ public class ContractServiceImpl implements ContractService {
         txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcManageContractByVoteReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("manageContractByVoteReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+        Map<String, Object> params = transaction.commonParamMap();
+
+        receiptRequest.addParams(params);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
     }
 
     @Override

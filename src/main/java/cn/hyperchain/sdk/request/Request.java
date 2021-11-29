@@ -3,16 +3,21 @@ package cn.hyperchain.sdk.request;
 import cn.hyperchain.sdk.common.utils.Async;
 import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.exception.RequestException;
+import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import cn.hyperchain.sdk.grpc.Transaction.CommonRes;
 import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.response.PollingResponse;
 import cn.hyperchain.sdk.response.Response;
 import cn.hyperchain.sdk.transaction.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -29,6 +34,7 @@ public abstract class Request<K extends Response> {
     protected int[] nodeIds;
     protected HashMap<String, String> headers;
     protected Transaction transaction;
+    protected boolean isGRPC;
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     // rpc request
     @Expose
@@ -65,6 +71,18 @@ public abstract class Request<K extends Response> {
             return "address=" + Utils.addHexPre(this.address) +
                     "&timestamp=0x" + Long.toHexString(this.timestamp);
         }
+
+        public String getSignature() {
+            return signature;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+        public String getAddress() {
+            return address;
+        }
     }
 
 
@@ -95,9 +113,27 @@ public abstract class Request<K extends Response> {
      * @throws RequestException -
      */
     public K send() throws RequestException {
-        String res = providerManager.send(this, nodeIds);
+        String res = null;
+        try {
+            res = providerManager.send(this, nodeIds);
+        } catch (RequestException e) {
+            if (e.getCode().equals(RequestExceptionCode.GRPC_STREAM_FAILED.getCode())) {
+                return (K)reSendTransaction(this, transaction, false);
+            }
+        }
+        K response;
+        if (isGRPC) {
+            try {
+                CommonRes commonRes = CommonRes.parseFrom(Hex.decode(res));
+                response = clazz.newInstance();
+                response.fromGRPCCommonRes(commonRes);
+            } catch (Exception e) {
+                throw new RequestException(RequestExceptionCode.GRPC_RESPONSE_FAILED);
+            }
 
-        K response = gson.fromJson(res, clazz);
+        } else {
+            response = gson.fromJson(res, clazz);
+        }
         if (response.getCode() != 0) {
             throw new RequestException(response.getCode(), response.getMessage());
         }
@@ -191,8 +227,35 @@ public abstract class Request<K extends Response> {
         return transaction;
     }
 
+    public boolean isGRPC() {
+        return isGRPC;
+    }
+
+    public void setGRPC(boolean grpc) {
+        isGRPC = grpc;
+    }
+
     public void clearParams() {
         this.params.clear();
     }
 
+    protected Response reSendTransaction(Request request, Transaction transaction, boolean needPolling) throws RequestException {
+        Map<String, Object> txParamMap = transaction.commonParamMap();
+        if (request.getMethod().contains("contract_deployContract")) {
+            txParamMap.remove("to");
+        } else if (request.getMethod().contains("fm_upload") || request.getMethod().contains("fm_push")) {
+            List params = request.getListParams();
+            Map param = (Map) params.get(0);
+            if (params.get(0) != null && ((Map) params.get(0)).get("optionExtra") != null) {
+                txParamMap.put("optionExtra", ((Map) params.get(0)).get("optionExtra"));
+            }
+        }
+        request.clearParams();
+        request.addParams(txParamMap);
+        if (needPolling) {
+            PollingResponse pollingResponse = (PollingResponse) request.send();
+            return pollingResponse.polling();
+        }
+        return request.send();
+    }
 }

@@ -20,6 +20,8 @@ import cn.hyperchain.sdk.common.utils.*;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.provider.GrpcProvider;
+import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.config.ProposalResponse;
@@ -29,18 +31,14 @@ import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
 import cn.hyperchain.sdk.transaction.VMType;
-import org.bouncycastle.asn1.*;
-import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static cn.hyperchain.sdk.bvm.OperationResultCode.SuccessCode;
@@ -559,6 +557,68 @@ public class BVMTest {
         System.out.println(result);
         Assert.assertTrue(result.isSuccess());
         Assert.assertEquals("", result.getErr());
+    }
+
+    @Test
+    @Ignore
+    public void testGRPC_ManageContractByVote() throws IOException, RequestException, InterruptedException {
+        String sdkcert_cert = "certs/sdk1.cert";
+        String sdkcert_priv = "certs/sdk1.priv";
+        String unique_pub = "certs/guomi/unique_guomi.pub";
+        String unique_priv = "certs/guomi/unique_guomi.priv";
+        InputStream sdkcert_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_cert);
+        InputStream sdkcert_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_priv);
+        InputStream unique_pub_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(unique_pub);
+        InputStream unique_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(unique_priv);
+
+        GrpcProvider grpcProvider = new GrpcProvider.Builder().setUrl("localhost:11001").build();
+        HttpProvider httpProvider = new DefaultHttpProvider.Builder().setUrl("localhost:8081").build();
+        ProviderManager providerManager1 = new ProviderManager.Builder()
+                .providers(httpProvider)
+                .grpcProviders(grpcProvider)
+                .enableTCert(sdkcert_cert_is, sdkcert_priv_is, unique_pub_is, unique_priv_is)
+                .build();
+        ContractService contractService = ServiceManager.getContractService(providerManager1);
+
+        /***************setContractVoteEnable***********/
+
+        BuiltinOperation builtinOperation = new ProposalOperation.ProposalBuilder().createForConfig( new ConfigOperation.ConfigBuilder().setContractVoteEnable(true).build()).build();
+        Account genesisAccount = accountService.fromAccountJson(accountJsons[0]);
+        Transaction transaction = new Transaction.
+                BVMBuilder(genesisAccount.getAddress()).
+                invoke(builtinOperation).
+                build();
+        transaction.sign(genesisAccount);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        Assert.assertTrue(result.isSuccess());
+        voteAndExecute();
+        /***************contract_ManageContractByVote***********/
+        InputStream payload1 = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
+        String bin1 = Encoder.encodeDeployJar(payload1);
+        BuiltinOperation builtinOperation1 = new ProposalOperation.ProposalBuilder().createForContract(
+                new ContractOperation.ContractBuilder().deploy("source", bin1, VMType.HVM, null).build()
+        ).build();
+        Transaction transaction1 = new Transaction.BVMBuilder(genesisAccount.getAddress()).invoke(builtinOperation1).build();
+        transaction1.sign(genesisAccount);
+        ReceiptResponse receiptResponse1 = contractService.manageContractByVote(transaction1).send().polling();
+        Result result1 = Decoder.decodeBVM(receiptResponse1.getRet());
+        System.out.println(result1);
+        Assert.assertTrue(result1.isSuccess());
+        voteAndExecute();
+
+        /***************contract_ManageContractByVoteReturnReceipt***********/
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("solidity/sol2/TestContract_sol_TypeTestContract.bin");
+        String bin2 = FileUtil.readFile(inputStream);
+        BuiltinOperation builtinOperation2 = new ProposalOperation.ProposalBuilder().createForContract(new ContractOperation.ContractBuilder().deploy("ssource", bin2, VMType.EVM, null).build()).build();
+        Transaction transaction2 = new Transaction.BVMBuilder(genesisAccount.getAddress()).invoke(builtinOperation2).build();
+        transaction2.sign(genesisAccount);
+        ReceiptResponse receiptResponse2 = contractService.grpcManageContractByVoteReturnReceipt(transaction2).send();
+        Result result2 = Decoder.decodeBVM(receiptResponse2.getRet());
+        System.out.println(result2);
+        Assert.assertTrue(result2.isSuccess());
+        voteAndExecute();
     }
 }
 

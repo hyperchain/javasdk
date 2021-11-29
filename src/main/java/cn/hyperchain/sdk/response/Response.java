@@ -1,5 +1,7 @@
 package cn.hyperchain.sdk.response;
 
+import cn.hyperchain.sdk.exception.RequestException;
+import cn.hyperchain.sdk.grpc.Transaction.CommonRes;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -10,6 +12,7 @@ import com.google.gson.annotations.Expose;
  */
 
 public abstract class Response {
+    protected boolean isGRPC;
     @Expose
     protected String jsonrpc;
     @Expose
@@ -55,5 +58,21 @@ public abstract class Response {
 
     public String getNamespace() {
         return namespace;
+    }
+
+    /**
+     * used by grpc convert commonRes to response.
+     * @param commonRes -
+     * @throws RequestException -
+     */
+    public void fromGRPCCommonRes(CommonRes commonRes) throws RequestException {
+        this.code = (int)commonRes.getCode();
+        this.message = commonRes.getCodeDesc();
+        this.namespace = commonRes.getNamespace();
+        this.isGRPC = true;
+    }
+
+    public void setGRPC(boolean grpc) {
+        isGRPC = grpc;
     }
 }

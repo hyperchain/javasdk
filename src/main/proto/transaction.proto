@@ -1,0 +1,104 @@
+syntax = "proto3";
+package protos;
+
+option java_package = "cn.hyperchain.sdk.grpc";
+option java_outer_classname = "Transaction";
+option objc_class_prefix = "RTG";
+
+message CommonReq {
+  string namespace = 1;
+  Auth auth = 2;
+  bytes params = 3;
+  string tCert = 4;
+  string signature = 5;
+}
+
+message CommonRes {
+  string namespace = 1;
+  int64 code = 2;
+  string codeDesc = 3;
+  bytes result = 4;
+}
+
+message Auth {
+  string address = 1;
+  int64 timestamp = 2;
+  string signature = 3;
+}
+
+message SendTxArgs {
+  string from = 1;
+  string to = 2;
+  int64 value = 3;
+  string payload = 4;
+  string signature = 5;
+  int64 timestamp = 6;
+  bool simulate = 7;
+  int64 nonce = 8;
+  string extra = 9;
+  string vmType = 10;
+  int32 opcode = 11;
+  string snapshotID = 12;
+  repeated int64 extraIDInt64Array = 13;
+  repeated string extraIDStringArray = 14;
+  string cName = 15;
+}
+
+message ReceiptResult {
+  string Version = 1;
+  string TxHash = 2;
+  string VMType = 3;
+  string ContractAddress = 4;
+  string ContractName = 5;
+  int64 GasUsed = 6;
+  string Ret = 7;
+  repeated LogTrans Log = 8;
+  bool Valid = 9;
+  string ErrorMsg = 10;
+  repeated OracleTrans Oracles = 11;
+}
+
+message LogTrans {
+  string Address = 1;
+  repeated string Topics = 2;
+  string Data = 3;
+  uint64 BlockNumber = 4;
+  string BlockHash = 5;
+  string TxHash = 6;
+  uint64 TxIndex = 7;
+  uint64 Index = 8;
+}
+
+message OracleTrans {
+  string URL = 1;
+  string Method = 2;
+  map<string, string> Header = 3;
+  string Body = 4;
+  string TxHash = 5;
+  string BizID = 6;
+  string CallBackAddress = 7;
+  string CallBackMethod = 8;
+  string UUID = 9;
+  string ContractAddress = 10;
+}
+
+service GrpcApiTransaction {
+  rpc SendTransaction(stream CommonReq) returns (stream CommonRes);
+  rpc SendTransactionReturnReceipt(stream CommonReq) returns (stream CommonRes);
+}
+
+service GrpcApiContract {
+  rpc DeployContract(stream CommonReq) returns (stream CommonRes);
+  rpc DeployContractReturnReceipt(stream CommonReq) returns (stream CommonRes);
+  rpc InvokeContract(stream CommonReq) returns (stream CommonRes);
+  rpc InvokeContractReturnReceipt(stream CommonReq) returns (stream CommonRes);
+  rpc MaintainContract(stream CommonReq) returns (stream CommonRes);
+  rpc MaintainContractReturnReceipt(stream CommonReq) returns (stream CommonRes);
+  rpc ManageContractByVote(stream CommonReq) returns (stream CommonRes);
+  rpc ManageContractByVoteReturnReceipt(stream CommonReq) returns (stream CommonRes);
+}
+
+service GrpcApiDid {
+  rpc SendDIDTransaction(stream CommonReq) returns (stream CommonRes);
+  rpc SendDIDTransactionReturnReceipt(stream CommonReq) returns (stream CommonRes);
+}

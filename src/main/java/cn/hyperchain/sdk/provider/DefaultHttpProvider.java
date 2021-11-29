@@ -232,6 +232,11 @@ public class DefaultHttpProvider implements HttpProvider {
         return url;
     }
 
+    @Override
+    public Account getAccount() {
+        return account;
+    }
+
     public void setUrl(String url) {
         this.url = url;
     }

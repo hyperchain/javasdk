@@ -69,7 +69,7 @@ public class PollingRequest extends Request {
                         transaction.setTxVersion(TxVersion.GLOBAL_TX_VERSION);
                         transaction.updatePayload();
                         transaction.sign(transaction.getAccount());
-                        return reSendTransaction(tranRequest, transaction);
+                        return reSendTransaction(tranRequest, transaction, true);
                     }
                 }
                 if (e.getCode().equals(RequestExceptionCode.RECEIPT_NOT_FOUND.getCode()) ||
@@ -90,22 +90,5 @@ public class PollingRequest extends Request {
             }
         }
         throw new RequestException(RequestExceptionCode.POLLING_TIME_OUT, "can't get receipt from server after " + attempt + " times attempt");
-    }
-
-    private Response reSendTransaction(Request request, Transaction transaction) throws RequestException {
-        Map<String, Object> txParamMap = transaction.commonParamMap();
-        if (request.getMethod().contains("contract_deployContract")) {
-            txParamMap.remove("to");
-        } else if (request.getMethod().contains("fm_upload") || request.getMethod().contains("fm_push")) {
-            List params = request.getListParams();
-            Map param = (Map) params.get(0);
-            if (params.get(0) != null && ((Map) params.get(0)).get("optionExtra") != null) {
-                txParamMap.put("optionExtra", ((Map) params.get(0)).get("optionExtra"));
-            }
-        }
-        request.clearParams();
-        request.addParams(txParamMap);
-        PollingResponse pollingResponse = (PollingResponse) request.send();
-        return pollingResponse.polling();
     }
 }
