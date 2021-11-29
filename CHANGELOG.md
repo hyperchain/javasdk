@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-2](https://git.hyperchain.cn///compare/v1.1.0-1...v1.1.0-2) (2021-11-29)
+
+
+### Features
+
+* support grpc service ([c296ca9](https://git.hyperchain.cn///commit/c296ca9e1293c2f2103a99c15e684485fcbec590))
+
 ## [1.1.0-1](https://git.hyperchain.cn///compare/v1.0.8...v1.1.0-1) (2021-11-26)
 
 
