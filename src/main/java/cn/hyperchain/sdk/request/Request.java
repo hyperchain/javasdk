@@ -120,6 +120,7 @@ public abstract class Request<K extends Response> {
             if (e.getCode().equals(RequestExceptionCode.GRPC_STREAM_FAILED.getCode())) {
                 return (K)reSendTransaction(this, transaction, false);
             }
+            throw e;
         }
         K response;
         if (isGRPC) {
