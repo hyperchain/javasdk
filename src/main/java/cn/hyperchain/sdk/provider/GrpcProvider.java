@@ -66,6 +66,11 @@ public class GrpcProvider implements HttpProvider {
             return this;
         }
 
+        public Builder setConnectTimeout(long connectTimeout) {
+            this.setConnectTimeout(connectTimeout);
+            return this;
+        }
+
         /**
          * get grpc provider instance.
          * @return {@link GrpcProvider}
