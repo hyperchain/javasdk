@@ -38,6 +38,12 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
+    public Request<ConfigResponse> getGenesisInfo(int... nodeIds) {
+        ConfigRequest configRequest = new ConfigRequest(CONF_PREFIX + "getGenesisInfo", providerManager, ConfigResponse.class, nodeIds);
+        return configRequest;
+    }
+
+    @Override
     public Request<HostsResponse> getHosts(String role, int... nodeIds) {
         ConfigRequest configRequest = new ConfigRequest(CONF_PREFIX + "getHosts", providerManager, HostsResponse.class, nodeIds);
         configRequest.addParams(role);
