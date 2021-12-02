@@ -66,12 +66,17 @@ public class StreamManager {
             @Override
             public void onNext(CommonRes commonRes) {
                 response = commonRes;
+                error = null;
                 finishLatch.countDown();
             }
 
             @Override
             public void onError(Throwable throwable) {
-                logger.error("GRPC Stream with the node " + provider.getUrl() + " failed. The reason is " + throwable.getMessage());
+                if (throwable.getMessage().equals("ABORTED: stream idle timeout")) {
+                    logger.warn("GRPC Stream with the node " + provider.getUrl() + " failed. The reason is " + throwable.getMessage());
+                } else {
+                    logger.error("GRPC Stream with the node " + provider.getUrl() + " failed. The reason is " + throwable.getMessage());
+                }
                 finishLatch.countDown();
                 setNormal(false);
                 error = throwable;
@@ -81,6 +86,7 @@ public class StreamManager {
             public void onCompleted() {
                 logger.debug("GRPC Stream with the node " + provider.getUrl() + " closed.");
                 finishLatch.countDown();
+                error = null;
                 setNormal(false);
             }
         };
