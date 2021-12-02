@@ -708,7 +708,10 @@ public class Transaction {
         }
     }
 
-    private void setNeedHashString() {
+    /**
+     * setNeedHashString.
+     */
+    public void setNeedHashString() {
         // flato
         if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
             String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
