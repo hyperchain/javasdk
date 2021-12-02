@@ -390,4 +390,8 @@ public abstract class Account {
     public String toJson() {
         return gson.toJson(this);
     }
+
+    public boolean isDID() {
+        return this.getAddress().startsWith("did");
+    }
 }
