@@ -280,7 +280,7 @@ public ReceiptResponse polling() throws RequestException;
 public String getTxHash();
 ```
 
-LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约、通过投票管理合约**四种接口。其中以grpc开头的接口表示该接口只有在创建`ProviderManager`对象时，设置了`GrpcProvider`与节点通信才可使用，且绑定了`ReceiptResponse`。
+LiteSDK的合约接口较特殊，交易相关的接口目前提供了**部署合约、调用合约、管理合约、通过投票管理合约**四种接口。其中以grpc开头的接口表示该接口只有在创建`ProviderManager`对象时，设置了`GrpcProvider`与节点通信才可使用，且绑定了`ReceiptResponse`。
 
 ```java
 public interface ContractService {
@@ -641,7 +641,191 @@ ReceiptResponse receiptResponse = contractRequest.send().polling();
 ReceiptResponse receiptResponse2 = contractGrpcRequest.send();
 ```
 
+### 合约辅助接口
 
+LiteSDK除了提供上述与合约交易相关的接口，还提供了以下编译合约、获取合约状态等查询接口，其响应类型如下：
+
+* CompileContractResponse
+* StringResponse
+* DeployerListResponse
+
+**CompileContractResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`CompileCode`，可通过`getResult()`方法得到。
+
+```java
+public class CompileContractResponse extends Response {
+  	private CompileCode result;
+		public class CompileCode {
+      
+        private List<String> abi;
+
+        private List<String> bin;
+
+        private List<String> types;
+    }
+}
+```
+
+**StringResponse**
+
+通过`result`接收返回结果，`result`实际类型是String，可通过`getResult()`方法得到。
+
+```java
+public class StringResponse extends Response {
+
+    private String result;
+}
+```
+
+**DeployerListResponse**
+
+通过`result`接收返回结果，`result`实际类型是List，可通过`getResult()`方法得到。
+
+```java
+public class DeployerListResponse extends Response {
+
+    private List<String> result;
+}
+```
+
+以下为合约的相关查询接口
+
+```java
+public interface ContractService {
+
+    Request<CompileContractResponse> compileContract(String code, int... nodeIds);
+
+    Request<StringResponse> getCode(String addr, int... nodeIds);
+
+    Request<StringResponse> getContractCountByAddr(String addr, int...nodeIds);
+
+    Request<DeployerListResponse> getDeployedList(String address, int... nodeIds);  
+  
+    Request<StringResponse> getStatus(String addr, int...nodeIds);
+
+    Request<StringResponse> getCreator(String addr, int...nodeIds);
+
+    Request<StringResponse> getCreateTime(String addr, int...nodeIds);
+
+    Request<StringResponse> getStatusByCName(String cname, int...nodeIds);
+
+    Request<StringResponse> getCreatorByCName(String cname, int...nodeIds);
+
+    Request<StringResponse> getCreateTimeByCName(String cname, int...nodeIds);
+
+}
+```
+
+#### 编译Solidity合约
+
+参数：
+
+* code solidity合约源码
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<CompileContractResponse> compileContract(String code, int... nodeIds);
+```
+
+#### 获取合约源码
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCode(String addr, int... nodeIds);
+```
+
+#### 获取账户部署的合约数量
+
+参数：
+
+* addr 账户地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getContractCountByAddr(String addr, int...nodeIds);
+```
+
+#### 获取账户部署的合约地址列表
+
+参数：
+
+* address 账户地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<DeployerListResponse> getDeployedList(String address, int... nodeIds);
+```
+
+#### 获取合约状态
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getStatus(String addr, int...nodeIds);
+```
+
+#### 获取合约的部署账户
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreator(String addr, int...nodeIds);
+```
+
+#### 获取合约的部署时间
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreateTime(String addr, int...nodeIds);
+```
+
+#### 获取合约状态by cname
+
+参数：
+
+* cname 合约名
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getStatusByCName(String cname, int...nodeIds);
+```
+
+#### 获取合约的部署账户by cname
+
+参数：
+
+* cname 合约名
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreatorByCName(String cname, int...nodeIds);
+```
+
+#### 获取合约的部署时间by cname
+
+参数：
+
+* cname 合约名
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreateTimeByCName(String cname, int...nodeIds);
+```
 
 ## 第四章. Transaction接口(TxService)
 
@@ -1426,6 +1610,17 @@ Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nod
 
 ```java
 Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
+```
+
+#### 9.2.4 查询归档数据是否存在
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> queryArchiveExist(String filterId, int... nodeIds);
 ```
 
 ## 第十章. SqlService相关接口

@@ -25,6 +25,7 @@ import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.config.ProposalResponse;
+import cn.hyperchain.sdk.response.contract.StringResponse;
 import cn.hyperchain.sdk.service.AccountService;
 import cn.hyperchain.sdk.service.ConfigService;
 import cn.hyperchain.sdk.service.ContractService;
@@ -338,6 +339,22 @@ public class BVMTest {
         transaction1.sign(account);
         ReceiptResponse receiptResponse1 = contractService.invoke(transaction1).send().polling();
         System.out.println(receiptResponse1.getRet());
+
+        StringResponse stringResponse = contractService.getStatusByCName(contractName).send();
+        Assert.assertTrue(stringResponse.getMessage().toLowerCase().equals("success"));
+        System.out.println(stringResponse.getResult());
+
+        stringResponse = contractService.getCreatorByCName(contractName).send();
+        Assert.assertTrue(stringResponse.getMessage().toLowerCase().equals("success"));
+        String t = account.getAddress().startsWith("0x") ? account.getAddress() : "0x" + account.getAddress();
+        Assert.assertEquals(stringResponse.getResult(),t);
+        System.out.println(stringResponse.getResult());
+
+        stringResponse = contractService.getCreateTimeByCName(contractName).send();
+        Assert.assertTrue(stringResponse.getMessage().toLowerCase().equals("success"));
+        System.out.println(stringResponse.getResult());
+
+
     }
 
     @Test
