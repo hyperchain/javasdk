@@ -40,6 +40,8 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
+import static java.util.Arrays.copyOfRange;
+
 public class AccountServiceImpl implements AccountService {
 
     private ProviderManager providerManager;
@@ -89,7 +91,8 @@ public class AccountServiceImpl implements AccountService {
 
                 publicKey = ecPub.getQ().getEncoded(false);
                 privateKey = Account.encodePrivateKey(ByteUtil.biConvert32Bytes(privateKeyBI), algo, password);
-                address = HashUtil.sha3omit12(publicKey);
+                byte[] temp = copyOfRange(publicKey, 1, publicKey.length);
+                address = HashUtil.sha3omit12(temp);
 
                 return new R1Account(ByteUtil.toHex(address), ByteUtil.toHex(publicKey), ByteUtil.toHex(privateKey), Version.V4, algo, keyPair);
             } else {
