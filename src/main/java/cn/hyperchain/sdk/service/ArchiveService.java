@@ -141,4 +141,12 @@ public interface ArchiveService {
      */
     @Deprecated
     Request<ArchiveResponse> pending(int... nodeIds);
+
+    /**
+     * query archive exist.
+     * @param filterId filter id
+     * @param nodeIds specific ids
+     * @return {@link Request} of {@link ArchiveBoolResponse}
+     */
+    Request<ArchiveBoolResponse> queryArchiveExist(String filterId, int... nodeIds);
 }

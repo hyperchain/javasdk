@@ -114,4 +114,12 @@ public class ArchiveServiceImpl implements ArchiveService {
         ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "pending", providerManager, ArchiveResponse.class, nodeIds);
         return archiveRequest;
     }
+
+    @Override
+    public Request<ArchiveBoolResponse> queryArchiveExist(String filterId, int... nodeIds) {
+        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "queryArchiveExist", providerManager, ArchiveBoolResponse.class, nodeIds);
+        archiveRequest.addParams(filterId);
+        return archiveRequest;
+    }
+
 }

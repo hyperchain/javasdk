@@ -130,4 +130,12 @@ public class ArchiveServiceTest {
         ArchiveResponse response = request.send();
         System.out.println(response);
     }
+
+    @Test
+    @Ignore
+    public void testQueryArchiveExist() throws RequestException {
+        Request<ArchiveBoolResponse> request = archiveService.queryArchiveExist(filterId);
+        ArchiveBoolResponse response = request.send();
+        System.out.println(response);
+    }
 }

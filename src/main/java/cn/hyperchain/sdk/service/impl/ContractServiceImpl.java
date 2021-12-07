@@ -8,7 +8,9 @@ import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.StringRequest;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.response.contract.CompileContractResponse;
 import cn.hyperchain.sdk.response.contract.DeployerListResponse;
+import cn.hyperchain.sdk.response.contract.StringResponse;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 
@@ -169,6 +171,97 @@ public class ContractServiceImpl implements ContractService {
         stringRequest.setJsonrpc(jsonrpc);
         stringRequest.setNamespace(namespace);
 
+        return stringRequest;
+    }
+
+    @Override
+    public Request<CompileContractResponse> compileContract(String code, int... nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "compileContract", providerManager, CompileContractResponse.class, nodeIds);
+
+        stringRequest.addParams(code);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCode(String addr, int... nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCode", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getContractCountByAddr(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getContractCountByAddr", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getStatus(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getStatus", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreator(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreator", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreateTime(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreateTime", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getStatusByCName(String cname, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getStatusByCName", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(cname);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreatorByCName(String cname, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreatorByCName", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(cname);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreateTimeByCName(String cname, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreateTimeByCName", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(cname);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
