@@ -6,13 +6,13 @@ import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.TxHashesResponse;
-import cn.hyperchain.sdk.response.block.BlockResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
 import cn.hyperchain.sdk.response.tx.TxLimitResponse;
 import cn.hyperchain.sdk.response.tx.TxResponse;
 import cn.hyperchain.sdk.response.tx.TxVersionResponse;
+
 import cn.hyperchain.sdk.service.params.FilterParam;
 import cn.hyperchain.sdk.service.params.MetaDataParam;
 import cn.hyperchain.sdk.transaction.Transaction;
@@ -219,27 +219,27 @@ public interface TxService {
      *
      * @param blockHash block hash
      * @param nodeIds   specific ids
-     * @return {@link Request} of {@link TxLimitResponse}
+     * @return {@link Request} of {@link TxResponse}
      */
-    Request<TxLimitResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
+    Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
 
     /**
      * query the invalid transactions in the block with a given block number.
      *
      * @param blockNumber block number
      * @param nodeIds     specific ids
-     * @return {@link Request} of {@link TxLimitResponse}
+     * @return {@link Request} of {@link TxResponse}
      */
-    Request<TxLimitResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
+    Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
 
     /**
      * query the invalid transactions in the block with a given block number.
      *
      * @param blockNumber block number
      * @param nodeIds     specific ids
-     * @return {@link Request} of {@link TxLimitResponse}
+     * @return {@link Request} of {@link TxResponse}
      */
-    Request<TxLimitResponse> getInvalidTxsByBlockNumber(String blockNumber, int... nodeIds);
+    Request<TxResponse> getInvalidTxsByBlockNumber(String blockNumber, int... nodeIds);
 
     /**
      * get signature hash for the transaction.

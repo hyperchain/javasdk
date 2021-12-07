@@ -416,8 +416,8 @@ public class TxServiceTest {
     @Ignore
     public void testGetInvalidTxsByBlockNumber() throws RequestException {
         BigInteger blockNum = BigInteger.valueOf(1);
-        Request<TxLimitResponse> txRequest = txService.getInvalidTxsByBlockNumber(blockNum);
-        TxLimitResponse txResponse = txRequest.send();
+        Request<TxResponse> txRequest = txService.getInvalidTxsByBlockNumber(blockNum);
+        TxResponse txResponse = txRequest.send();
 
         System.out.println(txResponse.getResult());
     }
