@@ -1125,7 +1125,7 @@ Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteg
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-Request<BlockResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
+Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
 ```
 
 ### 4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)
@@ -1136,7 +1136,7 @@ Request<BlockResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int...
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-Request<BlockResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
+Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
 ```
 
 ## 第五章. BlockService相关接口
