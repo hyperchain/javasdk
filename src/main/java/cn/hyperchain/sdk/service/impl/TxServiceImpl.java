@@ -12,7 +12,6 @@ import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.TxHashesResponse;
-import cn.hyperchain.sdk.response.block.BlockResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
@@ -242,8 +241,8 @@ public class TxServiceImpl implements TxService {
     }
 
     @Override
-    public Request<TxLimitResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds) {
-        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsByBlockHash", providerManager, TxCountResponse.class, nodeIds);
+    public Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsByBlockHash", providerManager, TxResponse.class, nodeIds);
 
         txRequest.addParams(blockHash);
 
@@ -251,13 +250,13 @@ public class TxServiceImpl implements TxService {
     }
 
     @Override
-    public Request<TxLimitResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds) {
+    public Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds) {
         return getInvalidTxsByBlockNumber(blockNumber.toString());
     }
 
     @Override
-    public Request<TxLimitResponse> getInvalidTxsByBlockNumber(String blockNumber, int... nodeIds) {
-        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsByBlockNumber", providerManager, TxCountResponse.class, nodeIds);
+    public Request<TxResponse> getInvalidTxsByBlockNumber(String blockNumber, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsByBlockNumber", providerManager, TxResponse.class, nodeIds);
 
         txRequest.addParams(blockNumber);
 
