@@ -7,21 +7,27 @@ import cn.hyperchain.sdk.bvm.Result;
 import cn.hyperchain.sdk.bvm.operate.AccountOperation;
 import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.bvm.operate.CNSOperation;
+import cn.hyperchain.sdk.bvm.operate.CertOperation;
 import cn.hyperchain.sdk.bvm.operate.ConfigOperation;
 import cn.hyperchain.sdk.bvm.operate.ContractOperation;
 import cn.hyperchain.sdk.bvm.operate.HashOperation;
 import cn.hyperchain.sdk.bvm.operate.NodeOperation;
 import cn.hyperchain.sdk.bvm.operate.PermissionOperation;
 import cn.hyperchain.sdk.bvm.operate.ProposalOperation;
-import cn.hyperchain.sdk.bvm.operate.CertOperation;
+import cn.hyperchain.sdk.bvm.operate.params.GenesisInfo;
+import cn.hyperchain.sdk.bvm.operate.params.GenesisNode;
 import cn.hyperchain.sdk.bvm.operate.params.NsFilterRule;
 import cn.hyperchain.sdk.common.solidity.Abi;
-import cn.hyperchain.sdk.common.utils.*;
+import cn.hyperchain.sdk.common.utils.ByteUtil;
+import cn.hyperchain.sdk.common.utils.Decoder;
+import cn.hyperchain.sdk.common.utils.Encoder;
+import cn.hyperchain.sdk.common.utils.FileUtil;
+import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.DefaultHttpProvider;
-import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.provider.GrpcProvider;
 import cn.hyperchain.sdk.provider.HttpProvider;
+import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.config.ProposalResponse;
@@ -31,7 +37,9 @@ import cn.hyperchain.sdk.service.ConfigService;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.transaction.Transaction;
+import cn.hyperchain.sdk.transaction.TxVersion;
 import cn.hyperchain.sdk.transaction.VMType;
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,7 +48,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static cn.hyperchain.sdk.bvm.OperationResultCode.SuccessCode;
 
@@ -164,6 +174,61 @@ public class BVMTest {
         Assert.assertTrue(result.isSuccess());
         Assert.assertEquals("", result.getErr());
         Assert.assertEquals(value, result.getRet());
+    }
+
+    @Test
+    public void testDe(){
+        Result result = Decoder.decodeBVM("0x7b2253756363657373223a747275652c22526574223a6e756c6c7d");
+        System.out.println(result);
+
+        Result result1 = Decoder.decodeBVM("0x7b2253756363657373223a747275652c22526574223a2265794a6e5a57356c63326c7a51574e6a623356756443493665794977654441774d475978595464684d44686a59324d304f4755315a444d775a6a67774f44557759325978593259794f444e6859544e68596d51694f6949784d4441774d4441774d444177496977695a546b7a596a6b795a6a466b595441345a6a6b794e574a6b5a5755304e4755354d5755334e7a59344d7a6777595755344d7a4d774e794936496a45774d4441774d4441774d444169665377695a3256755a584e70633035765a47567a496a706265794a6e5a57356c63326c7a546d396b5a534936496d35765a475578496977695932567964454e76626e526c626e51694f694a756232526c4d53426a5a584a3049474e76626e526c626e516966563139227d");
+        System.out.println(result1);
+        System.out.println(result1.getRet());
+//        byte[] decode = Base64.decode(result.getRet());
+//        System.out.println(new String(decode));
+    }
+
+    @Test
+    @Ignore
+    public void testSetGenesisInfo() throws Exception {
+        // 准备创世账户、创世节点信息
+        // 需要按照实际情况准备创世账户、创世节点以及节点证书
+        Map<String, String> genesisAccount= new HashMap<>();
+        genesisAccount.put("0x000f1a7a08ccc48e5d30f80850cf1cf283aa3abd", "1000000000");
+        genesisAccount.put("e93b92f1da08f925bdee44e91e7768380ae83307", "1000000000");
+        List<GenesisNode> genesisNodes = new ArrayList<>();
+        String node1Cert = "node1 cert content";
+        genesisNodes.add(new GenesisNode("node1", node1Cert));
+        GenesisInfo genesisInfo = new GenesisInfo(genesisAccount, genesisNodes);
+        // 发送交易将创世信息上链
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new HashOperation.HashBuilder().setGenesisInfoForHpc(genesisInfo).build()).
+                // 注意，向hyperchain发交易，txVersion需要设置成1.0
+                txVersion(TxVersion.TxVersion10).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        System.out.println(receiptResponse.getRet());
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        Assert.assertTrue(result.isSuccess());
+
+        // 查询上链的创世信息
+        transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new HashOperation.HashBuilder().getGenesisInfoForHpc().build()).
+                // 注意，向hyperchain发交易，txVersion需要设置成1.0
+                txVersion(TxVersion.TxVersion10).
+                build();
+        transaction.sign(ac);
+        receiptResponse = contractService.invoke(transaction).send().polling();
+        System.out.println(receiptResponse.getRet());
+
+        result = Decoder.decodeBVM(receiptResponse.getRet());
+        Assert.assertTrue(result.isSuccess());
+        Gson gson = new Gson();
+        Assert.assertEquals(gson.toJson(genesisInfo), result.getRet());
     }
 
     @Test
