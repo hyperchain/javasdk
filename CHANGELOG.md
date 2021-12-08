@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-3](https://git.hyperchain.cn///compare/v1.1.0-2...v1.1.0-3) (2021-12-08)
+
+
+### Features
+
+* update test ([34f1299](https://git.hyperchain.cn///commit/34f12994405318a0cabe7887338975552d20f060))
+* **bvm:** add setGenesisInfo and getGenesisInfo operation for hpc ([f00e9de](https://git.hyperchain.cn///commit/f00e9de1a83bd17fef6836c02d2a16a1cf35e928))
+* **service:** add missing interface ([4d8ba4e](https://git.hyperchain.cn///commit/4d8ba4e70deec447dbfeced31bdfb1ab40824bfc))
+
+
+### Bug Fixes
+
+* **AccountService:** fix R1 account ([7a5d926](https://git.hyperchain.cn///commit/7a5d92644ee40acf3bb80f7add9a4d4f78a6d311))
+* **invalidtx:** fix #QAGC-158, fix wrong txResponse of getInvalidTransactionsByBlockNumber ([b904a69](https://git.hyperchain.cn///commit/b904a69ab0c3ffcafafaffab5ba58d8cf5f89735)), closes [#QAGC-158](https://git.hyperchain.cn///issues/QAGC-158) [#QAGC-158](https://git.hyperchain.cn///issues/QAGC-158)
+* **provider:** fix log level of grpc stream and add setconnectime for grpc provider ([2d67b65](https://git.hyperchain.cn///commit/2d67b651273989d6d0e681972d959558ed4a5337))
+* **request:** fix throw exception while send request ([9b00188](https://git.hyperchain.cn///commit/9b00188f7cb4307d6e4fddd65cf2251c33b55c61))
+
 ## [1.1.0-2](https://git.hyperchain.cn///compare/v1.1.0-1...v1.1.0-2) (2021-11-29)
 
 
