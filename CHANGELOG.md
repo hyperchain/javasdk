@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-4](https://git.hyperchain.cn///compare/v1.1.0-3...v1.1.0-4) (2021-12-08)
+
+
+### Bug Fixes
+
+* **R1:** fix error when use fromAccountJson and verifySign methon for R1 account ([b38543f](https://git.hyperchain.cn///commit/b38543ff594f812f667dd1ed6667a7f65b0e47a0))
+
 ## [1.1.0-3](https://git.hyperchain.cn///compare/v1.1.0-2...v1.1.0-3) (2021-12-08)
 
 
