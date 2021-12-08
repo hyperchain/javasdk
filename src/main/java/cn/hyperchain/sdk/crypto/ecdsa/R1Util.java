@@ -31,6 +31,8 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+import static java.util.Arrays.copyOfRange;
+
 public class R1Util {
     public static final ECDomainParameters CURVE;
     public static final ECParameterSpec CURVE_SPEC;
@@ -69,7 +71,9 @@ public class R1Util {
         FixedPointCombMultiplier fixedPointCombMultiplier = new FixedPointCombMultiplier();
         ECPoint ecPointPublicKeyFromPrivateKey = fixedPointCombMultiplier.multiply(privateKeyParameters.getParameters().getG(), privateKeyParameters.getD());
         ECPublicKeyParameters publicKeyParametersFromPrivateKey = new ECPublicKeyParameters(ecPointPublicKeyFromPrivateKey, privateKeyParameters.getParameters());
-        return HashUtil.sha3omit12(publicKeyParametersFromPrivateKey.getQ().getEncoded(false));
+        byte[] publicKey = publicKeyParametersFromPrivateKey.getQ().getEncoded(false);
+        byte[] temp = copyOfRange(publicKey, 1, publicKey.length);
+        return HashUtil.sha3omit12(temp);
     }
 
     /**

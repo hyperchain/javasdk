@@ -23,15 +23,24 @@ public class ArchiveResponse extends Response {
         @Expose
         private String height;
         @Expose
+        private String genesis;
+        @Expose
         private String hash;
         @Expose
         private String filterId;
         @Expose
         private String merkleRoot;
         @Expose
-        private String date;
+        private String status;
         @Expose
         private String namespace;
+        @Expose
+        private String txcount;
+        @Expose
+        private String invalidTxCount;
+        @Expose
+        private String dbVersion;
+
 
         public String getHeight() {
             return height;
@@ -49,8 +58,24 @@ public class ArchiveResponse extends Response {
             return merkleRoot;
         }
 
-        public String getDate() {
-            return date;
+        public String getGenesis() {
+            return genesis;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getTxcount() {
+            return txcount;
+        }
+
+        public String getInvalidTxCount() {
+            return invalidTxCount;
+        }
+
+        public String getDbVersion() {
+            return dbVersion;
         }
 
         public String getNamespace() {
@@ -64,8 +89,13 @@ public class ArchiveResponse extends Response {
                     ", hash='" + hash + '\'' +
                     ", filterId='" + filterId + '\'' +
                     ", merkleRoot='" + merkleRoot + '\'' +
-                    ", date='" + date + '\'' +
+                    ", genesis='" + genesis + '\'' +
                     ", namespace='" + namespace + '\'' +
+                    ", status='" + status + '\'' +
+                    ", namespace='" + namespace + '\'' +
+                    ", txcount='" + txcount + '\'' +
+                    ", invalidTxCount='" + invalidTxCount + '\'' +
+                    ", dbversion='" + dbVersion + '\'' +
                     '}';
         }
     }

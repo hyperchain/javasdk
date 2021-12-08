@@ -96,25 +96,7 @@ public abstract class Account {
         Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
         // When Algo indicates the input is PKI type, start if condition to generate PKI Account.
         if (algo == Algo.PKI) {
-            try {
-                InputStream tmp1 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
-                // Extract the X509Certificate type from input stream, to do this password is necessary(if have).
-                X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
-                String encodedCert = Base64.toBase64String(cert.getEncoded());
-                ECPublicKey tmpKey = (ECPublicKey) cert.getPublicKey();
-                String publicHex = ByteUtil.toHex(tmpKey.getEncoded());
-                InputStream tmp2 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
-                Algo tmpAlgo;
-                if (cert.getPublicKey().getAlgorithm().equals("EC")) {
-                    tmpAlgo = Algo.ECAES;
-                } else {
-                    tmpAlgo = Algo.SMSM4;
-                }
-                String raw = CertUtils.getPrivFromPFXFile(tmp2, password);
-                return new PKIAccount(CertUtils.getCNFromCert(cert), publicHex, ByteUtil.toHex(Account.encodePrivateKey(raw.getBytes(), tmpAlgo, password)), Version.V4, algo, encodedCert, cert, raw);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            throw new AccountException("PKI account can not generate by account json");
         }
         String addressHex = jsonObject.get("address").getAsString();
         String publicKeyHex = jsonObject.get("publicKey").getAsString();

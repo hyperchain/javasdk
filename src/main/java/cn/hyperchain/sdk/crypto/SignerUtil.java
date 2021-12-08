@@ -46,7 +46,8 @@ public class SignerUtil {
         } else {
             byte[] realSig = new byte[lenSig - 66];
             System.arraycopy(signature, 66, realSig, 0, lenSig - 66);
-            return R1Util.verify(sourceData, realSig, publicKey);
+            byte[] hash = HashUtil.sha3(sourceData);
+            return R1Util.verify(hash, realSig, publicKey);
         }
     }
 }
