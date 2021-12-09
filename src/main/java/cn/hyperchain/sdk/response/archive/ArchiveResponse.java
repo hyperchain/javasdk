@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,10 @@ public class ArchiveResponse extends Response {
         @Expose
         private String status;
         @Expose
+        @SerializedName("Namespace")
         private String namespace;
         @Expose
-        private String txcount;
+        private String txCount;
         @Expose
         private String invalidTxCount;
         @Expose
@@ -67,7 +69,7 @@ public class ArchiveResponse extends Response {
         }
 
         public String getTxcount() {
-            return txcount;
+            return txCount;
         }
 
         public String getInvalidTxCount() {
@@ -92,8 +94,7 @@ public class ArchiveResponse extends Response {
                     ", genesis='" + genesis + '\'' +
                     ", namespace='" + namespace + '\'' +
                     ", status='" + status + '\'' +
-                    ", namespace='" + namespace + '\'' +
-                    ", txcount='" + txcount + '\'' +
+                    ", txCount='" + txCount + '\'' +
                     ", invalidTxCount='" + invalidTxCount + '\'' +
                     ", dbversion='" + dbVersion + '\'' +
                     '}';
