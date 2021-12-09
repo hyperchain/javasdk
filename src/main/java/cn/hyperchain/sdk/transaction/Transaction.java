@@ -993,7 +993,6 @@ public class Transaction {
         }
         map.put("simulate", simulate);
         map.put("signature", signature);
-        map.put("txVersion", txVersion.getVersion());
         return map;
     }
 
@@ -1068,11 +1067,6 @@ public class Transaction {
             transaction.setSimulate(jsonObject.get("simulate").getAsBoolean());
             transaction.setSignature(jsonObject.get("signature").getAsString());
             transaction.setVmType(VMType.valueOf(jsonObject.get("type").getAsString()));
-            if (jsonObject.has("txVersion")) {
-                String txVS = jsonObject.get("txVersion").getAsString();
-                TxVersion txV = TxVersion.convertTxVersion(txVS);
-                transaction.txVersion = txV;
-            }
             return transaction;
         }
     }
