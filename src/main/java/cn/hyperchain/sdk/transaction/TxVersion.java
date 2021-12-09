@@ -57,75 +57,63 @@ public enum TxVersion {
      * @param txVersion the Txversion of nodes
      */
     public static void setGlobalTxVersion(String txVersion) {
-        switch (txVersion) {
+        GLOBAL_TX_VERSION = convertTxVersion(txVersion);
+    }
+
+    /**
+     * convert string to TxVersion struct.
+     * 
+     * @param txVerString -
+     * @return -
+     */
+    public static TxVersion convertTxVersion(String txVerString) {
+        switch (txVerString) {
             case "1.0":
-                GLOBAL_TX_VERSION = TxVersion10;
-                break;
+                return TxVersion10;
             case "2.0":
-                GLOBAL_TX_VERSION = TxVersion20;
-                break;
+                return TxVersion20;
             case "2.1":
-                GLOBAL_TX_VERSION = TxVersion21;
-                break;
+                return TxVersion21;
             case "2.2":
-                GLOBAL_TX_VERSION = TxVersion22;
-                break;
+                return TxVersion22;
             case "2.3":
-                GLOBAL_TX_VERSION = TxVersion23;
-                break;
+                return TxVersion23;
             case "2.4":
-                GLOBAL_TX_VERSION = TxVersion24;
-                break;
+                return TxVersion24;
             case "2.5":
-                GLOBAL_TX_VERSION = TxVersion25;
-                break;
+                return TxVersion25;
             case "2.6":
-                GLOBAL_TX_VERSION = TxVersion26;
-                break;
+                return TxVersion26;
             case "2.7":
-                GLOBAL_TX_VERSION = TxVersion27;
-                break;
+                return TxVersion27;
             case "2.8":
-                GLOBAL_TX_VERSION = TxVersion28;
-                break;
+                return TxVersion28;
             case "2.9":
-                GLOBAL_TX_VERSION = TxVersion29;
-                break;
+                return TxVersion29;
             case "3.0":
-                GLOBAL_TX_VERSION = TxVersion30;
-                break;
+                return TxVersion30;
             case "3.1":
-                GLOBAL_TX_VERSION = TxVersion31;
-                break;
+                return TxVersion31;
             case "3.2":
-                GLOBAL_TX_VERSION = TxVersion32;
-                break;
+                return TxVersion32;
             case "3.3":
-                GLOBAL_TX_VERSION = TxVersion33;
-                break;
+                return TxVersion33;
             case "3.4":
-                GLOBAL_TX_VERSION = TxVersion34;
-                break;
+                return TxVersion34;
             case "3.5":
-                GLOBAL_TX_VERSION = TxVersion35;
-                break;
+                return TxVersion35;
             case "3.6":
-                GLOBAL_TX_VERSION = TxVersion36;
-                break;
+                return TxVersion36;
             case "3.7":
-                GLOBAL_TX_VERSION = TxVersion37;
-                break;
+                return TxVersion37;
             case "3.8":
-                GLOBAL_TX_VERSION = TxVersion38;
-                break;
+                return TxVersion38;
             case "3.9":
-                GLOBAL_TX_VERSION = TxVersion39;
-                break;
+                return TxVersion39;
             case "4.0":
-                GLOBAL_TX_VERSION = TxVersion40;
-                break;
+                return TxVersion40;
             default:
-                break;
+                return GLOBAL_TX_VERSION;
         }
     }
 }
