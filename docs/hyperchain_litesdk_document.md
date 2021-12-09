@@ -31,41 +31,29 @@
   - [创建请求](#创建请求)
   - [发送交易体](#发送交易体)
 - [第四章. Transaction接口(TxService)](#第四章-transaction接口txservice)
-  - [4.1 查询指定区块区间的交易(getTxs)](#41-查询指定区块区间的交易gettxs)
-  - [4.2 查询所有非法交易(getDiscardTransactions)](#42-查询所有非法交易getdiscardtransactions)
-  - [4.3 查询交易by transaction hash(getTransactionByHash)](#43-查询交易by-transaction-hashgettransactionbyhash)
-  - [4.4 查询交易by block hash(getTxByBlockHashAndIndex)](#44-查询交易by-block-hashgettxbyblockhashandindex)
-  - [4.5 查询交易by block number(getTxByBlockNumAndIndex)](#45-查询交易by-block-numbergettxbyblocknumandindex)
-  - [4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#46-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
-  - [4.7 查询链上所有交易量(getTransactionsCount)](#47-查询链上所有交易量gettransactionscount)
-  - [4.8 查询交易回执信息by transaction hash(getTransactionReceipt)](#48-查询交易回执信息by-transaction-hashgettransactionreceipt)
-  - [4.9 查询区块交易数量by block hash(getBlockTxCountByHash)](#49-查询区块交易数量by-block-hashgetblocktxcountbyhash)
-  - [4.10 查询区块交易数量by block number(getBlockTxCountByNumber)](#410-查询区块交易数量by-block-numbergetblocktxcountbynumber)
-  - [4.11 获取交易签名哈希(getSignHash)](#411-获取交易签名哈希getsignhash)
-  - [4.12 查询指定时间区间内的交易(getTransactionsByTime)](#412-查询指定时间区间内的交易gettransactionsbytime)
-  - [4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)](#413-查询指定时间区间内的非法交易getdiscardtransactionsbytime)
-  - [4.14 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)](#414-查询区块区间交易数量by-contract-addressgettransactionscountbycontractaddr)
-  - [4.15 查询下一页交易(getNextPageTransactions)](#415-查询下一页交易getnextpagetransactions)
-  - [4.16 查询上一页交易(getPrevPageTransactions)](#416-查询上一页交易getprevpagetransactions)
-  - [4.17 查询批量交易by hash list(getBatchTxByHash)](#417-查询批量交易by-hash-listgetbatchtxbyhash)
-  - [4.18 查询批量回执by hash list(getBatchReceipt)](#418-查询批量回执by-hash-listgetbatchreceipt)
-  - [4.19 查询指定时间区间内的交易数量(getTxsCountByTime)](#419-查询指定时间区间内的交易数量gettxscountbytime)
-  - [4.20 查询指定extraID的交易by extraID(getTxsByExtraID)](#420-查询指定extraid的交易by-extraidgettxsbyextraid)
-  - [4.21 查询指定filter的交易by filter(getTxsByFilter)](#421-查询指定filter的交易by-filtergettxsbyfilter)
-  - [4.22 查询平台当前的交易版本号(getTxVersion)](#422-查询平台当前的交易版本号gettxversion)
+  - [4.1 查询交易by transaction hash(getTransactionByHash)](#41-查询交易by-transaction-hashgettransactionbyhash)
+  - [4.2 查询交易by block hash(getTxByBlockHashAndIndex)](#42-查询交易by-block-hashgettxbyblockhashandindex)
+  - [4.3 查询交易by block number(getTxByBlockNumAndIndex)](#43-查询交易by-block-numbergettxbyblocknumandindex)
+  - [4.4 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#44-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
+  - [4.5 查询链上所有交易量(getTransactionsCount)](#45-查询链上所有交易量gettransactionscount)
+  - [4.6 查询交易回执信息by transaction hash(getTransactionReceipt)](#46-查询交易回执信息by-transaction-hashgettransactionreceipt)
+  - [4.7 查询区块交易数量by block hash(getBlockTxCountByHash)](#47-查询区块交易数量by-block-hashgetblocktxcountbyhash)
+  - [4.8 查询区块交易数量by block number(getBlockTxCountByNumber)](#48-查询区块交易数量by-block-numbergetblocktxcountbynumber)
+  - [4.9 获取交易签名哈希(getSignHash)](#49-获取交易签名哈希getsignhash)
+  - [4.10 查询指定extraID的交易by extraID(getTxsByExtraID)](#410-查询指定extraid的交易by-extraidgettxsbyextraid)
+  - [4.11 查询指定filter的交易by filter(getTxsByFilter)](#411-查询指定filter的交易by-filtergettxsbyfilter)
+  - [4.12 查询平台当前的交易版本号(getTxVersion)](#412-查询平台当前的交易版本号gettxversion)
 - [第五章. BlockService相关接口](#第五章-blockservice相关接口)
   - [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
-  - [5.2 查询指定区间的区块by block number(getBlocks)](#52-查询指定区间的区块by-block-numbergetblocks)
-  - [5.3 查询区块by block hash(getBlockByHash)](#53-查询区块by-block-hashgetblockbyhash)
-  - [5.4 查询区块by block number(getBlockByNum)](#54-查询区块by-block-numbergetblockbynum)
-  - [5.5 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)](#55-查询区块平均生成时间getavggeneratetimebyblocknumber)
-  - [5.6 查询指定时间区间内的区块数量(getBlocksByTime)](#56-查询指定时间区间内的区块数量getblocksbytime)
-  - [5.7 查询最新区块号，即链高(getChainHeight)](#57-查询最新区块号即链高getchainheight)
-  - [5.8 查询创世区块号(getChainHeight)](#58-查询创世区块号getchainheight)
-  - [5.9 查询批量区块by block hash list(getBatchBlocksByHash)](#59-查询批量区块by-block-hash-listgetbatchblocksbyhash)
-  - [5.10 查询批量区块by block number list(getBatchBlocksByNum)](#510-查询批量区块by-block-number-listgetbatchblocksbynum)
+  - [5.2 查询区块by block hash(getBlockByHash)](#52-查询区块by-block-hashgetblockbyhash)
+  - [5.3 查询区块by block number(getBlockByNum)](#53-查询区块by-block-numbergetblockbynum)
+  - [5.4 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)](#54-查询区块平均生成时间getavggeneratetimebyblocknumber)
+  - [5.5 查询最新区块号，即链高(getChainHeight)](#55-查询最新区块号即链高getchainheight)
+  - [5.6 查询创世区块号(getChainHeight)](#56-查询创世区块号getchainheight)
 - [第六章. Node相关接口（NodeService）](#第六章-node相关接口nodeservice)
   - [6.1 获取节点信息](#61-获取节点信息)
+  - [6.2 获取节点哈希](#62-获取节点哈希)
+  - [6.3 获取节点状态信息](#63-获取节点状态信息)
 - [第七章. MQ相关接口(MQService)](#第七章-mq相关接口mqservice)
   - [7.1 通知MQ服务器正常工作](#71-通知mq服务器正常工作)
   - [7.2 注册队列](#72-注册队列)
@@ -74,8 +62,6 @@
   - [7.5 获取所有队列名称](#75-获取所有队列名称)
   - [7.6 获取所有exchanger名称](#76-获取所有exchanger名称)
   - [7.7 删除exchanger](#77-删除exchanger)
-- [第八章. Radar相关接口（RadarService）](#第八章-radar相关接口radarservice)
-  - [8.1 监听合约](#81-监听合约)
 - [第九章. ArchiveService相关接口](#第九章-archiveservice相关接口)
   - [9.1 Hyperchain1.x相关接口](#91-hyperchain1x相关接口)
     - [9.1.1 制作快照](#911-制作快照)
@@ -86,11 +72,9 @@
     - [9.1.6 查看快照](#916-查看快照)
     - [9.1.7 数据归档（预约归档）](#917-数据归档预约归档)
     - [9.1.8 数据归档（直接归档）](#918-数据归档直接归档)
-    - [9.1.9 恢复某归档数据](#919-恢复某归档数据)
-    - [9.1.10 恢复所有归档数据](#9110-恢复所有归档数据)
-    - [9.1.11 查询归档数据状态](#9111-查询归档数据状态)
-    - [9.1.12 查询所有待完成的快照请求](#9112-查询所有待完成的快照请求)
-    - [9.1.13 查询最近一次归档的进度](#9113-查询最近一次归档的进度)
+    - [9.1.9 查询归档数据状态](#919-查询归档数据状态)
+    - [9.1.10 查询所有待完成的快照请求](#9110-查询所有待完成的快照请求)
+    - [9.1.11 查询最近一次归档的进度](#9111-查询最近一次归档的进度)
   - [9.2 Hyperchain2.x相关接口](#92-hyperchain2x相关接口)
     - [9.2.1 列出所有快照](#921-列出所有快照)
     - [9.2.2 数据归档（直接归档）](#922-数据归档直接归档)
@@ -116,7 +100,6 @@
     - [解码](#解码)
   - [附录B 直接调用HVM合约方法的参数封装](#附录b-直接调用hvm合约方法的参数封装)
   - [附录C 平台错误码和对应原因](#附录c-平台错误码和对应原因)
-
 ## 第一章. 前言 
 
 **LiteSDK**是一个**轻量JavaSDK工具**，提供与Hyperchain区块链平台交互的接口以及一些处理工具。该文档⾯向Hyperchain区块链平台的应⽤开发者，提供hyperchain Java SDK的 使⽤指南。
@@ -158,8 +141,30 @@ HttpProvider httpProvider = new DefaultHttpProvider.Builder(10, 10, 10)
 * `setUrl()`可以设置连接的节点**URL**（格式为**ip+jsonRPC端口**）;
 * `https()`设置启动**https协议**连接并设置使用的证书(需要传的参数类型为输入流)。
 
+### 2.2 创建GrpcProvider对象
 
-### 2.2 创建ProviderManager对象
+`GrpcProvider`是接口`HttpProvider`的一个实现类，`DefaultHttpProvider`通过jsonrpc与节点进行通信，而`GrpcProvider`通过grpc双向流与节点进行通信，创建`GrpcProvider`需要通过Builder模式创建，示例如下：
+
+```java
+public static final String node1 = "localhost:11001";
+
+// 方式一
+GrpcProvider grpcProvider = new GrpcProvider.Builder()
+  							.setUrl("localhost:11001")
+  							.build();
+
+// 方式二
+GrpcProvider grpcProvider = new GrpcProvider.Builder(3000)
+  							.setUrl("localhost:11001")
+  							.setStreamNum(3)
+  							.build();
+```
+
+* `Builder(long time)`自定义grpc向节点请求的超时时间，单位为ms。
+* `setUrl`可以设置连接的节点**URL**（格式为**ip+grpc**端口）
+* `setStreamNum`设置本连接与节点之间同一种类型的grpc双向流的最大数量，默认值为1，通常来说其值可设置为使用该`GrpcProvider`的线程数量。
+
+### 2.3 创建ProviderManager对象
 
 每个节点的连接都需要一个`HttpProvider`，而`ProviderManager`负责集成、管理这些`HttpProvider`，创建`ProviderManager`有两种方式，一种是通过`createManager()`创建，另一种是和`HttpProvider`一样通过**Builder**模式创建。使用前者创建会使用`ProvideManager`的默认配置参数，而如果想定制更多的属性则需要通过后者的方式创建，示例如下：
 
@@ -196,6 +201,7 @@ ProviderManager providerManager = ProviderManager.createManager(HttpProvider);
 providerManager = new ProviderManager.Builder()
                 .namespace("global")
                 .providers(httpProvider1, httpProvider2, httpProvider3, httpProvider4)
+  							.grpcProviders(grpcProvider1, grpcProvider2, grpcProvider3, grpcProvider4)
                 .enableTCert(sdkcert_cert, sdkcert_priv, unique_pub, unique_priv)
                 .build();
 ```
@@ -207,11 +213,12 @@ providerManager = new ProviderManager.Builder()
 方式2：
 * `namespace()`可以设置对应的**namespace名**;
 * `providers()`设置需要管理的`HttpProvider`对象们;
+* `grpcProviders`设置需要管理的`GrpcProvider`对象；
 * `enableTCert()`设置使用的证书(**需要传的参数类型为输入流)**。注：例子中未出现的方法还有一个`cfca(InputStream sdkCert, InputStream sdkCertPriv)`，功能与`enableTCert()`相同，两者的区别是证书校验是否通过**cfca机构**，且在创建`ProvideManager`对象过程中两个方法只能使用其中一个。
 
 注：enableTcert里面的sdkcert_cert，sdkcert_priv，unique_pub，unique_priv，分别对应证书目录下的sdkcert_cert，key_priv，unique_pub，unique_priv文件。
 
-### 2.3 创建服务
+### 2.4 创建服务
 
 相关的一类服务集合由一个专门的`Service`接口管理，并通过对应的实现类实现具体的创建过程（如封装发送请求需要附带的参数）。**LiteSDK**通过`ServiceManager`类负责管理创建所有的`Service`对象，以下是一个创建获取节点信息的服务的例子：
 
@@ -231,7 +238,7 @@ NodeRequest nodeRequest = nodeService.getNodes();
 - `send()`: 同步发送返回`Request`根据不同接口绑定的`Response`
 - `sendAsync()`: 异步发送返回`Request`根据不同接口绑定了`Response`的`Future`接口
 
-### 2.4 获取结果
+### 2.5 获取结果
 
 同样地，响应也都继承了共同的父类——`Response`，通过调用`Request`的`send()`方法得到，**LitesSDK**会将不同的返回结果`result`根据接口封装成不同的`Response`子类，如 **2.3** 所说`Response`类型在生成`Request`时绑定。`Response`可以获取状态码、状态消息等，而不同的`Response`可以获取到不同的结果，有时也需要进一步获取到更具体的信息。示例如下：
 
@@ -252,7 +259,7 @@ System.out.println(nodeResponse.getResult());
 
 以交易体结构为核心的交易主要应用在合约交易上，即将想要执行的操作和数据封装成一笔交易体，再调用合约服务(`ContractService`)的接口去执行。
 
-绑定合约接口的`Response`子类只有`TxHashResponse`，里面封装了`ReceiptResponse`类型的参数，实际是**tx hash**，拿到`TxHashResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执。
+绑定合约接口的`Response`子类只有`TxHashResponse`和`ReceiptResponse`，前者封装了`ReceiptResponse`类型的参数，实际是**tx hash**，拿到`TxHashResponse`后调用**polling**方法可通过**tx hash**去查找获取真正的交易回执；后者`ReceiptResponse`即为交易回执，无需再调用**polling**查询。
 
 `TxHashResponse`的主要方法如下：
 
@@ -273,7 +280,7 @@ public ReceiptResponse polling() throws RequestException;
 public String getTxHash();
 ```
 
-LiteSDK的合约接口较特殊，目前提供了**部署合约、调用合约、管理合约、通过投票管理合约**四种接口。
+LiteSDK的合约接口较特殊，交易相关的接口目前提供了**部署合约、调用合约、管理合约、通过投票管理合约**四种接口。其中以grpc开头的接口表示该接口只有在创建`ProviderManager`对象时，设置了`GrpcProvider`与节点通信才可使用，且绑定了`ReceiptResponse`。
 
 ```java
 public interface ContractService {
@@ -284,6 +291,15 @@ public interface ContractService {
     Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
   
     Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds);
+  
+  	Request<ReceiptResponse> grpcDeployReturnReceipt(Transaction transaction, int... nodeIds);
+    
+  	Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
+  
+    Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds);
+
+	  Request<ReceiptResponse> grpcManageContractByVoteReturnReceipt(Transaction transaction, int... nodeIds);
+
 }
 ```
 
@@ -291,15 +307,18 @@ public interface ContractService {
 
 ### 转账交易
 
-转账交易的实现主要是TxService提供，主要有两个接口。
+转账交易的实现主要是TxService提供，主要有三个接口。
 
 ```java
 Request<TxHashResponse> sendTx(Transaction transaction, int... nodeIds);
 
 Request<TxHashesResponse> sendBatchTxs(ArrayList<Transaction> transactions, ArrayList<String> methods, int... nodeIds);
+
+Request<ReceiptResponse> grpcSendTxReturnReceipt(Transaction transaction, int... nodeIds);
+
 ```
 
-分别绑定了`TxHashResponse`和`TxHashesResponse`，当拿到这两个响应时调用`polling()`方法就可以获取真正的交易回执，前者返回`ReceiptResponse`，后者返回`ArrayList<ReceiptResponse>`。转账交易和合约接口类似，主要的不同在于交易体的创建，转账交易通过内部类`Builder`调用`transfer()`方法创建。
+前两个接口分别绑定了`TxHashResponse`和`TxHashesResponse`，当拿到这两个响应时调用`polling()`方法就可以获取真正的交易回执，前者返回`ReceiptResponse`，后者返回`ArrayList<ReceiptResponse>`。第三个接口`grpcSendTxReturnReceipt`绑定了`ReceiptResponse`，即可以直接获得交易回执。转账交易和合约接口类似，主要的不同在于交易体的创建，转账交易通过内部类`Builder`调用`transfer()`方法创建。
 
 ```java
 class Builder {
@@ -446,10 +465,11 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deplo
 
 ##### HVM
 
-hvm调用合约有两种方式：
+hvm调用合约有三种方式：
 
 - **InvokeBean**调用
 - 直接调用合约方法（类似evm）
+- 通过hvm-abi文件调用
 
 1. InvokeBean调用如下：
 
@@ -467,6 +487,21 @@ Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invok
 
 params类型为`InvokeDirectlyParams`，具体的构造方式见附录。
 
+3. 通过hvm.abi文件调用合约
+
+```java
+InputStream inputStream = FileUtil.readFileAsStream("hvm-abi/hvm.abi");
+String abiJson = FileUtil.readFile(inputStream);
+//通过invokeBean调用
+InvokeHVMAbiParams.ParamBuilder params = new InvokeHVMAbiParams.ParamBuilder(abiJson,  HVMBeanAbi.BeanType.InvokeBean,"invoke.InvokeBid");
+params.addParam(100);
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invokeByBeanAbi(contractAddress, params.build()).build();
+
+// MethodBean 通过methodBean调用
+InvokeHVMAbiParams.ParamBuilder params = new InvokeHVMAbiParams.ParamBuilder(abiJson,  HVMBeanAbi.BeanType.MethodBean,"bid");
+params.addParam(100);
+Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).invokeByBeanAbi(contractAddress, params.build()).build();
+```
 ##### EVM
 
 ```java
@@ -586,18 +621,211 @@ transaction.sign(account);
 
 ```java
 ContractService contractService = ServiceManager.getContractService(providerManager);
+
+//方式一
 Request<TxHashResponse> contractRequest = contractService.deploy(transaction);
+
+//方式二
+Request<ReceiptResponse> contractGrpcRequest = contractService.grpcDeployReturnReceipt(transaction);
 ```
 
 ### 发送交易体
 
-这个过程实际分为两步，调用`send()`部署合约拿到响应，再对响应解析拿到`ReceiptResponse`（执行结果），这是合约相关接口独有的，其他接口一般只需要调用`send()`方法拿到响应就结束了。
+如果创建请求调用的是普通接口，不是**grpc**的服务接口，那么这个过程实际分为两步，调用`send()`部署合约拿到响应，再对响应解析拿到`ReceiptResponse`（执行结果）。如果创建请求调用的是**grpc**服务接口，只需要调用`send()`方法拿到`ReceiptResponse`响应就结束了。
 
 ```java
+//方式一
 ReceiptResponse receiptResponse = contractRequest.send().polling();
+
+//方式二
+ReceiptResponse receiptResponse2 = contractGrpcRequest.send();
 ```
 
+### 合约辅助接口
 
+LiteSDK除了提供上述与合约交易相关的接口，还提供了以下编译合约、获取合约状态等查询接口，其响应类型如下：
+
+* CompileContractResponse
+* StringResponse
+* DeployerListResponse
+
+**CompileContractResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`CompileCode`，可通过`getResult()`方法得到。
+
+```java
+public class CompileContractResponse extends Response {
+  	private CompileCode result;
+		public class CompileCode {
+      
+        private List<String> abi;
+
+        private List<String> bin;
+
+        private List<String> types;
+    }
+}
+```
+
+**StringResponse**
+
+通过`result`接收返回结果，`result`实际类型是String，可通过`getResult()`方法得到。
+
+```java
+public class StringResponse extends Response {
+
+    private String result;
+}
+```
+
+**DeployerListResponse**
+
+通过`result`接收返回结果，`result`实际类型是List，可通过`getResult()`方法得到。
+
+```java
+public class DeployerListResponse extends Response {
+
+    private List<String> result;
+}
+```
+
+以下为合约的相关查询接口
+
+```java
+public interface ContractService {
+
+    Request<CompileContractResponse> compileContract(String code, int... nodeIds);
+
+    Request<StringResponse> getCode(String addr, int... nodeIds);
+
+    Request<StringResponse> getContractCountByAddr(String addr, int...nodeIds);
+
+    Request<DeployerListResponse> getDeployedList(String address, int... nodeIds);  
+  
+    Request<StringResponse> getStatus(String addr, int...nodeIds);
+
+    Request<StringResponse> getCreator(String addr, int...nodeIds);
+
+    Request<StringResponse> getCreateTime(String addr, int...nodeIds);
+
+    Request<StringResponse> getStatusByCName(String cname, int...nodeIds);
+
+    Request<StringResponse> getCreatorByCName(String cname, int...nodeIds);
+
+    Request<StringResponse> getCreateTimeByCName(String cname, int...nodeIds);
+
+}
+```
+
+#### 编译Solidity合约
+
+参数：
+
+* code solidity合约源码
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<CompileContractResponse> compileContract(String code, int... nodeIds);
+```
+
+#### 获取合约源码
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCode(String addr, int... nodeIds);
+```
+
+#### 获取账户部署的合约数量
+
+参数：
+
+* addr 账户地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getContractCountByAddr(String addr, int...nodeIds);
+```
+
+#### 获取账户部署的合约地址列表
+
+参数：
+
+* address 账户地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<DeployerListResponse> getDeployedList(String address, int... nodeIds);
+```
+
+#### 获取合约状态
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getStatus(String addr, int...nodeIds);
+```
+
+#### 获取合约的部署账户
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreator(String addr, int...nodeIds);
+```
+
+#### 获取合约的部署时间
+
+参数：
+
+* addr 合约地址
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreateTime(String addr, int...nodeIds);
+```
+
+#### 获取合约状态by cname
+
+参数：
+
+* cname 合约名
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getStatusByCName(String cname, int...nodeIds);
+```
+
+#### 获取合约的部署账户by cname
+
+参数：
+
+* cname 合约名
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreatorByCName(String cname, int...nodeIds);
+```
+
+#### 获取合约的部署时间by cname
+
+参数：
+
+* cname 合约名
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<StringResponse> getCreateTimeByCName(String cname, int...nodeIds);
+```
 
 ## 第四章. Transaction接口(TxService)
 
@@ -613,40 +841,7 @@ TxService接口繁多，返回的执行结果根据情况封装共对应五种�
 
 详细结构请参考第十章
 
-
-
-### 4.1 查询指定区块区间的交易(getTxs)
-
-参数：
-
- * from 区块区间起点
- * to 区块区间终点
- * nodeIds 说明请求向哪些节点发送
-
-```java
-Request<TxResponse> getTx(BigInteger from, BigInteger to, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<TxResponse> getTx(String from, String to, int... nodeIds);
-```
-
-
-### 4.2 查询所有非法交易(getDiscardTransactions)
-
-参数：
-
- * nodeIds 说明请求向哪些节点发送
-
-```java
-Request<TxResponse> getDiscardTx(int... nodeIds);
-```
-
-
-
-### 4.3 查询交易by transaction hash(getTransactionByHash)
+### 4.1 查询交易by transaction hash(getTransactionByHash)
 
 参数：
  * txHash 交易hash
@@ -656,19 +851,7 @@ Request<TxResponse> getDiscardTx(int... nodeIds);
 Request<TxResponse> getTxByHash(String txHash, int... nodeIds);
 ```
 
-参数：
-
- * txHash 交易hash
- * isprivateTx 是否获取隐私交易，若设false，则该方法和上一个方法作用一样
- * nodeIds 请求向哪些节点发送
-
-```java
-Request<TxResponse> getTxByHash(String txHash, boolean isPrivateTx, int... nodeIds);
-```
-
-
-
-### 4.4 查询交易by block hash(getTxByBlockHashAndIndex)
+### 4.2 查询交易by block hash(getTxByBlockHashAndIndex)
 
 参数：
 
@@ -682,7 +865,7 @@ Request<TxResponse> getTxByBlockHashAndIndex(String blockHash, int index, int...
 
 
 
-### 4.5 查询交易by block number(getTxByBlockNumAndIndex)
+### 4.3 查询交易by block number(getTxByBlockNumAndIndex)
 
 参数：
 
@@ -702,7 +885,7 @@ Request<TxResponse> getTxByBlockNumAndIndex(String blockNumber, String idx, int.
 
 
 
-### 4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)
+### 4.4 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)
 
 参数：
 
@@ -722,7 +905,7 @@ Request<TxAvgTimeResponse> getTxAvgTimeByBlockNumber(String from, String to, int
 
 
 
-### 4.7 查询链上所有交易量(getTransactionsCount)
+### 4.5 查询链上所有交易量(getTransactionsCount)
 
 参数：
 
@@ -734,7 +917,7 @@ Request<TxCountWithTSResponse> getTransactionsCount(int... nodeIds);
 
 
 
-### 4.8 查询交易回执信息by transaction hash(getTransactionReceipt)
+### 4.6 查询交易回执信息by transaction hash(getTransactionReceipt)
 
 参数：
 
@@ -747,7 +930,7 @@ Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds);
 
 
 
-### 4.9 查询区块交易数量by block hash(getBlockTxCountByHash)
+### 4.7 查询区块交易数量by block hash(getBlockTxCountByHash)
 
 参数：
 
@@ -760,7 +943,7 @@ Request<TxCountWithTSResponse> getBlockTxCountByHash(String blockHash, int... no
 
 
 
-### 4.10 查询区块交易数量by block number(getBlockTxCountByNumber)
+### 4.8 查询区块交易数量by block number(getBlockTxCountByNumber)
 
 参数：
 
@@ -773,7 +956,7 @@ Request<TxCountWithTSResponse> getBlockTxCountByNumber(String blockNumber, int..
 
 
 
-### 4.11 获取交易签名哈希(getSignHash)
+### 4.9 获取交易签名哈希(getSignHash)
 
 **部署合约时**
 
@@ -809,159 +992,7 @@ Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String
 Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String value, BigInteger timestamp, int... nodeIds);
 ```
 
-
-
-### 4.12 查询指定时间区间内的交易(getTransactionsByTime)
-
-参数：
-
-- startTime 起起始时间戳(单位ns)。
-- endTime 结束时间戳(单位ns)。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<TxResponse> getTransactionsByTime(String startTime, String endTime, int... nodeIds);
-```
-
-
-### 4.13 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)
-
-参数：
-
-- startTime 起起始时间戳(单位ns)。
-- endTime 结束时间戳(单位ns)。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getDiscardTransactionsByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<TxResponse> getDiscardTransactionsByTime(String startTime, String endTime, int... nodeIds);
-```
-
-
-
-### 4.14 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)
-
-参数：
-
-- from 起始区块号。
-- to 终止区块号。
-- address 合约地址。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getTransactionsCountByContractAddr(String from, String to, String address, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<TxResponse> getTransactionsCountByContractAddr(BigInteger from, BigInteger to, String address, int... nodeIds);
-```
-
-
-
-### 4.15 查询下一页交易(getNextPageTransactions)
-
-参数：
-
-- blkNumber 从该区块开始计数。
-- txIndex 起始交易在blkNumber号区块的位置偏移量。
-- minBlkNumber 截止计数的最小区块号。
-- maxBlkNumber 截止计数的最大区块号。
-- separated 表示要跳过的交易条数（一般用于跳页查询）。
-- pageSize 表示要返回的交易条数。
-- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
-- address 合约地址。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
-```
-
-
-
-### 4.16 查询上一页交易(getPrevPageTransactions)
-
-参数：
-
-- blkNumber 从该区块开始计数。
-- txIndex 起始交易在blkNumber号区块的位置偏移量。
-- minBlkNumber 截止计数的最小区块号。
-- maxBlkNumber 截止计数的最大区块号。
-- separated 表示要跳过的交易条数（一般用于跳页查询）。
-- pageSize 表示要返回的交易条数。
-- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
-- address 合约地址。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
-```
-
-
-
-### 4.17 查询批量交易by hash list(getBatchTxByHash)
-
-参数：
-
-- txHashList 交易的哈希数组, 哈希值为32字节的十六进制字符串。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeIds);
-```
-
-
-
-### 4.18 查询批量回执by hash list(getBatchReceipt)
-
-参数：
-
-- txHashList  交易的哈希数组, 哈希值为32字节的十六进制字符串。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
-```
-
-
-
-### 4.19 查询指定时间区间内的交易数量(getTxsCountByTime)
-
-参数：
-
-- startTime 起起始时间戳(单位ns)。
-- endTime 结束时间戳(单位ns)。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
-```
-
-### 4.20 查询指定extraID的交易by extraID(getTxsByExtraID)
+### 4.10 查询指定extraID的交易by extraID(getTxsByExtraID)
 
 该接口只要在访问的节点开启数据索引功能时才可用。
 
@@ -1003,7 +1034,7 @@ FilterParam 结构如下：
 Request<TxLimitResponse> getTxsByExtraID(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
 ```
 
-### 4.21 查询指定filter的交易by filter(getTxsByFilter)
+### 4.11 查询指定filter的交易by filter(getTxsByFilter)
 
 该接口只要在访问的节点开启数据索引功能时才可用。
 
@@ -1052,7 +1083,7 @@ Request<TxLimitResponse> getTxsByFilter(int mode, boolean detail, MetaDataParam 
 
 
 
-### 4.22 查询平台当前的交易版本号(getTxVersion)
+### 4.12 查询平台当前的交易版本号(getTxVersion)
 
 getTxVersion接口会在创建ProviderManager对象时调用，并设置全局的TxVersion。
 
@@ -1064,6 +1095,49 @@ getTxVersion接口会在创建ProviderManager对象时调用，并设置全局�
 Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
 ```
 
+### 4.13 查询链上所有非法交易交易量(getInvalidTransactionsCount)
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds);
+```
+
+### 4.14 查询链上指定时间段内的非法交易交易量(getInvalidTransactionsCountByTime)
+
+参数：
+
+- startTime 开始时间
+- endTime 截止时间
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+### 4.15 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)
+
+参数：
+
+- blockNumber 区块号
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
+```
+
+### 4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)
+
+参数：
+
+- blockHash 区块哈希
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
+```
 
 ## 第五章. BlockService相关接口
 
@@ -1087,32 +1161,7 @@ BlockService接口与TxService相似，只是获取的对象是区块信息。�
 Request<BlockResponse> getLastestBlock(int... nodeIds);
 ```
 
-### 5.2 查询指定区间的区块by block number(getBlocks)
-
-参数：
-
-- from 起始区块号。
-- to 终止区块号。
-- isPlain  (可选)，默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, int... nodeIds);
-
-Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, boolean isPlain, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<BlockResponse> getBlocks(String from, String to, int... nodeIds);
-
-Request<BlockResponse> getBlocks(String from, String to, boolean isPlain, int... nodeIds);
-```
-
-
-
-### 5.3 查询区块by block hash(getBlockByHash)
+### 5.2 查询区块by block hash(getBlockByHash)
 
 参数：
 
@@ -1128,7 +1177,7 @@ Request<BlockResponse> getBlockByHash(String blockHash, boolean isPlain, int... 
 
 
 
-### 5.4 查询区块by block number(getBlockByNum)
+### 5.3 查询区块by block number(getBlockByNum)
 
 参数：
 
@@ -1152,7 +1201,7 @@ Request<BlockResponse> getBlockByNum(String blockNumber, boolean isPlain, int...
 
 
 
-### 5.5 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)
+### 5.4 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)
 
 参数：
 
@@ -1170,29 +1219,7 @@ Request<BlockAvgTimeResponse> getAvgGenerateTimeByBlockNumber(BigInteger from, B
 Request<BlockAvgTimeResponse> getAvgGenerateTimeByBlockNumber(String from, String to, int... nodeIds);
 ```
 
-
-
-### 5.6 查询指定时间区间内的区块数量(getBlocksByTime)
-
-参数：
-
-- startTime 起始时间戳(单位ns)。
-- endTime 结束时间戳(单位ns)。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<BlockCountResponse> getBlocksByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<BlockCountResponse> getBlocksByTime(String startTime, String endTime, int... nodeIds);
-```
-
-
-
-### 5.7 查询最新区块号，即链高(getChainHeight)
+### 5.5 查询最新区块号，即链高(getChainHeight)
 
 参数：
 
@@ -1204,7 +1231,7 @@ Request<BlockNumberResponse> getChainHeight(int... nodeIds);
 
 
 
-### 5.8 查询创世区块号(getChainHeight)
+### 5.6 查询创世区块号(getChainHeight)
 
 参数：
 
@@ -1214,55 +1241,13 @@ Request<BlockNumberResponse> getChainHeight(int... nodeIds);
 Request<BlockNumberResponse> getGenesisBlock(int... nodeIds);
 ```
 
-
-
-### 5.9 查询批量区块by block hash list(getBatchBlocksByHash)
-
-参数：
-
-- blockHashList 要查询的区块哈希数组，哈希值为32字节的十六进制字符串。
-- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, int... nodeIds);
-
-Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, boolean isPlain, int... nodeIds);
-```
-
-
-
-### 5.10 查询批量区块by block number list(getBatchBlocksByNum)
-
-参数：
-
-- blockNumberList 要查询的区块号数组。
-- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, int... nodeIds);
-
-Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, boolean isPlain, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, int... nodeIds);
-
-Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, boolean isPlain, int... nodeIds);
-```
-
-
-
-
-
 ## 第六章. Node相关接口（NodeService）
 
 NodeService接口用于获取节点信息。NodeService对象对应的响应类型如下：
 
 - NodeResponse
+- NodeHashResponse
+- NodeStateResponse
 
 分别对应的结构如下。
 
@@ -1288,9 +1273,42 @@ public class NodeResponse extends Response {
 }
 ```
 
-TODO
+**NodeHashResponse**
 
-目前NodeService只支持一个服务，之后会增加更多类型的服务接口。
+通过`result`接收返回结果，`result`实际类型是`String`
+
+```java
+public class NodeHashResponse extends Response {
+    @Expose
+    private String result;
+}
+```
+
+**NodeStateResponse**
+
+通过`result`接收返回结果，`result`实际类型是内部类`NodeState`，可通过`getResult()`方法得到。
+
+```java
+public class NodeStateResponse extends Response {
+    public class NodeState {
+        @Expose
+        private int id;
+        @Expose
+        private String hash;
+        @Expose
+        private String status;
+        @Expose
+        private int view;
+        @Expose
+        private String blockHeight;
+        @Expose
+        private String blockHash;
+    }
+    private JsonElement result;
+}
+```
+
+
 
 ### 6.1 获取节点信息
 
@@ -1302,7 +1320,27 @@ TODO
 Request<NodeResponse> getNodes(int... ids);
 ```
 
+### 6.2 获取节点哈希
 
+参数：
+
+* nodeIds 节点ID
+
+```java
+Request<NodeHashResponse> getNodeHash(int... nodeIds);
+
+Request<NodeHashResponse> getNodeHashByID(int nodeId);
+```
+
+### 6.3 获取节点状态信息
+
+参数：
+
+* nodeIds 说明请求向哪些节点发送
+
+```java
+Request<NodeStateResponse> getNodeStates(int... nodeIds);
+```
 
 ## 第七章. MQ相关接口(MQService)
 
@@ -1397,22 +1435,6 @@ Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
 ```
 
 
-
-## 第八章. Radar相关接口（RadarService）
-
-`RadarService`接口用于可视化监控合约，目前只有一个接口，对应的响应也只有`RadarResponse`。
-
-### 8.1 监听合约
-
-参数：
-
-+ sourceCode 要监听的合约的源代码
-+ contractAddress 要监听的合约的部署地址
-+ nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<RadarResponse> listenContract(String sourceCode, String contractAddress, int... nodeIds);
-```
 
 ## 第九章. ArchiveService相关接口
 
@@ -1523,29 +1545,7 @@ Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeI
 Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
 ```
 
-#### 9.1.9 恢复某归档数据
-
-参数：
-
-- filterId 快照id
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveBoolResponse> restore(String filterId, boolean sync, int... nodeIds);
-```
-
-#### 9.1.10 恢复所有归档数据
-
-参数：
-
-- sync 是否同步
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveBoolResponse> restoreAll(boolean sync, int... nodeIds);
-```
-
-#### 9.1.11 查询归档数据状态
+#### 9.1.9 查询归档数据状态
 
 参数：
 
@@ -1556,7 +1556,7 @@ Request<ArchiveBoolResponse> restoreAll(boolean sync, int... nodeIds);
 Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 ```
 
-#### 9.1.12 查询所有待完成的快照请求
+#### 9.1.10 查询所有待完成的快照请求
 
 参数：
 
@@ -1566,7 +1566,7 @@ Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 Request<ArchiveResponse> pending(int... nodeIds);
 ```
 
-#### 9.1.13 查询最近一次归档的进度
+#### 9.1.11 查询最近一次归档的进度
 
 参数：
 
@@ -1610,6 +1610,17 @@ Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nod
 
 ```java
 Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
+```
+
+#### 9.2.4 查询归档数据是否存在
+
+参数：
+
+- filterId 快照id
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveBoolResponse> queryArchiveExist(String filterId, int... nodeIds);
 ```
 
 ## 第十章. SqlService相关接口
@@ -1669,7 +1680,11 @@ Transaction transaction = new Transaction.SQLBuilder(account.getAddress()).
 - nodeIds 说明请求向哪些节点发送
 
 ```java
+//方式一
 Request<TxHashResponse> create(Transaction transaction, int... nodeIds);
+
+//方式二（设置GrpcProvider方可使用）
+Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 ### 10.3 管理数据库生命周期
@@ -1681,7 +1696,11 @@ Request<TxHashResponse> create(Transaction transaction, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送
 
 ```java
+//方式一
 Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
+
+//方式二（设置GrpcProvider方可使用）
+Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 ### 10.4 调用SQL
@@ -1693,7 +1712,11 @@ Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
 - nodeIds 说明请求向哪些节点发送
 
 ```java
+//方式一
 Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+
+//方式二（设置GrpcProvider方可使用）
+Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 ### 10.5 SQL执行结果解码

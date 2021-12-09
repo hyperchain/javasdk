@@ -4,6 +4,7 @@ import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.FileUtil;
 import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 
@@ -24,10 +25,10 @@ public class CertKeyPair {
      * @throws Exception -
      */
     public CertKeyPair(InputStream pubFile, InputStream privFile) throws Exception {
-        PEMKeyPair pem = CertUtils.getPEM(privFile);
-        this.isGM = pem.getPrivateKeyInfo().getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
+        PrivateKeyInfo[] pem = CertUtils.getPEM(privFile);
+        this.isGM = pem[0].getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
         String pubPem = FileUtil.readFile(pubFile);
-        this.privateKey = CertUtils.getPrivateKeyFromPEM(pem, isGM);
+        this.privateKey = CertUtils.getPrivateKeyFromPEM(pem, isGM)[0];
         this.publicKey = ByteUtil.toHex(pubPem.getBytes(Utils.DEFAULT_CHARSET));
     }
 

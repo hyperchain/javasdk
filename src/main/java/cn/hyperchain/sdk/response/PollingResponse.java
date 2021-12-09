@@ -71,6 +71,41 @@ public abstract class PollingResponse extends Response {
      * @return {@link ReceiptResponse}
      * @throws RequestException -
      */
+    public ReceiptResponse pollingConfirmed() throws RequestException {
+        return pollingConfirmed(10, 50, 50);
+    }
+
+    /**
+     * polling to get receipt by txHash with self-defined parameter.
+     *
+     * @param attempt   request times
+     * @param sleepTime unit ms, the time interval between two adjacent requests
+     * @param stepSize  unit ms, the value of an increase in sleepTime after get receipt failed
+     * @return ReceiptResponse
+     * @throws RequestException -
+     */
+    public ReceiptResponse pollingConfirmed(int attempt, long sleepTime, long stepSize) throws RequestException {
+        // simulate
+        if (!result.isJsonPrimitive()) {
+            ReceiptResponse.Receipt receipt = gson.fromJson(result, ReceiptResponse.Receipt.class);
+            return new ReceiptResponse(this, receipt);
+        }
+
+        PollingRequest pollingRequest = new PollingRequest("tx_getConfirmedTransactionReceipt", providerManager, ReceiptResponse.class, tranRequest.getTransaction(), nodeIds);
+        pollingRequest.setTranRequest(tranRequest);
+        pollingRequest.setAttempt(attempt);
+        pollingRequest.setSleepTime(sleepTime);
+        pollingRequest.setStepSize(stepSize);
+        pollingRequest.addParams(getTxHash());
+        return (ReceiptResponse) pollingRequest.send();
+    }
+
+    /**
+     * polling to get receipt by txHash.
+     *
+     * @return {@link ReceiptResponse}
+     * @throws RequestException -
+     */
     public ReceiptResponse pollingWithGas() throws RequestException {
         return pollingWithGas(10, 50, 50);
     }

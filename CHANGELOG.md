@@ -2,6 +2,69 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-6](https://git.hyperchain.cn///compare/v1.1.0-5...v1.1.0-6) (2021-12-09)
+
+## [1.1.0-5](https://git.hyperchain.cn///compare/v1.1.0-4...v1.1.0-5) (2021-12-09)
+
+
+### Features
+
+* **txVersion:** add txVersin convert ([ae0c8d3](https://git.hyperchain.cn///commit/ae0c8d38282d1285d1c72bf91039fd206554f5c3))
+
+
+### Bug Fixes
+
+* **ArchiveResponse:** fix result of archiveResponse ([5f322f6](https://git.hyperchain.cn///commit/5f322f68952220681d2841f39cf5dfe3506bb4b5))
+
+## [1.1.0-4](https://git.hyperchain.cn///compare/v1.1.0-3...v1.1.0-4) (2021-12-08)
+
+
+### Bug Fixes
+
+* **R1:** fix error when use fromAccountJson and verifySign methon for R1 account ([b38543f](https://git.hyperchain.cn///commit/b38543ff594f812f667dd1ed6667a7f65b0e47a0))
+
+## [1.1.0-3](https://git.hyperchain.cn///compare/v1.1.0-2...v1.1.0-3) (2021-12-08)
+
+
+### Features
+
+* update test ([34f1299](https://git.hyperchain.cn///commit/34f12994405318a0cabe7887338975552d20f060))
+* **bvm:** add setGenesisInfo and getGenesisInfo operation for hpc ([f00e9de](https://git.hyperchain.cn///commit/f00e9de1a83bd17fef6836c02d2a16a1cf35e928))
+* **service:** add missing interface ([4d8ba4e](https://git.hyperchain.cn///commit/4d8ba4e70deec447dbfeced31bdfb1ab40824bfc))
+
+
+### Bug Fixes
+
+* **AccountService:** fix R1 account ([7a5d926](https://git.hyperchain.cn///commit/7a5d92644ee40acf3bb80f7add9a4d4f78a6d311))
+* **invalidtx:** fix #QAGC-158, fix wrong txResponse of getInvalidTransactionsByBlockNumber ([b904a69](https://git.hyperchain.cn///commit/b904a69ab0c3ffcafafaffab5ba58d8cf5f89735)), closes [#QAGC-158](https://git.hyperchain.cn///issues/QAGC-158) [#QAGC-158](https://git.hyperchain.cn///issues/QAGC-158)
+* **provider:** fix log level of grpc stream and add setconnectime for grpc provider ([2d67b65](https://git.hyperchain.cn///commit/2d67b651273989d6d0e681972d959558ed4a5337))
+* **request:** fix throw exception while send request ([9b00188](https://git.hyperchain.cn///commit/9b00188f7cb4307d6e4fddd65cf2251c33b55c61))
+
+## [1.1.0-2](https://git.hyperchain.cn///compare/v1.1.0-1...v1.1.0-2) (2021-11-29)
+
+
+### Features
+
+* support grpc service ([c296ca9](https://git.hyperchain.cn///commit/c296ca9e1293c2f2103a99c15e684485fcbec590))
+
+## [1.1.0-1](https://git.hyperchain.cn///compare/v1.0.8...v1.1.0-1) (2021-11-26)
+
+
+### Features
+
+* add a new bean-abi invoke type to invoke hvm contract ([f73dc23](https://git.hyperchain.cn///commit/f73dc2371574d9faad669deef6474e5ad9ecc495))
+* **decode:** decode proposal ([d1380d3](https://git.hyperchain.cn///commit/d1380d374f1128d0ebc625a2198d25b918c7a049))
+* **doc:** update deprecated interface ([357b315](https://git.hyperchain.cn///commit/357b315ecf9cd3b30f6205f8d9fd950b0b41eb68))
+* **receipt:** add get confirmed receipt interface ([291028c](https://git.hyperchain.cn///commit/291028c0908117cf8873ac6dec7bed0819c8b162))
+* **set:** sort set ([37e253c](https://git.hyperchain.cn///commit/37e253c4d093a4d906196fdf8f50e12e41cf96f1))
+
+
+### Bug Fixes
+
+* **resendTx:** fix resend deploy or update hvm contract tx ([e0156c9](https://git.hyperchain.cn///commit/e0156c967d9ade68ddf954ba050f8e4eb5b04b26))
+* **transaction:** fix getTransactionHash when vmtype is kvsql or bvm ([65a8595](https://git.hyperchain.cn///commit/65a85951961aca03ef2b5f0b71c5470f6a838d3c))
+* **Transaction:** set transfer vm type for transfer transaction ([f65d35a](https://git.hyperchain.cn///commit/f65d35a4c1cc49968558d96283f1338041dac66b))
+
 ### [1.0.8](https://git.hyperchain.cn///compare/v1.0.8-5...v1.0.8) (2021-09-24)
 
 ### [1.0.8-5](https://git.hyperchain.cn///compare/v1.0.8-4...v1.0.8-5) (2021-09-23)

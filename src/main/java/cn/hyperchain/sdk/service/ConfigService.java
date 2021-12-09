@@ -17,6 +17,8 @@ public interface ConfigService {
 
     Request<ConfigResponse> getConfig(int... nodeIds);
 
+    Request<ConfigResponse> getGenesisInfo(int... nodeIds);
+
     Request<HostsResponse> getHosts(String role, int... nodeIds);
 
     Request<VSetResponse> getVSet(int... nodeIds);

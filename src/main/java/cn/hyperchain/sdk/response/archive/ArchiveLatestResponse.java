@@ -33,7 +33,7 @@ public class ArchiveLatestResponse extends Response {
         @Override
         public String toString() {
             return "LatestArchive{" +
-                    ", filterId='" + filterId + '\'' +
+                    "filterId='" + filterId + '\'' +
                     ", status='" + status + '\'' +
                     ", reason='" + reason + '\'' +
                     '}';

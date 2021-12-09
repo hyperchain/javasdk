@@ -54,6 +54,14 @@ public class ConfigServiceTest {
 
     @Test
     @Ignore
+    public void testGetGenesisInfo() throws RequestException {
+        Request<ConfigResponse> request = configService.getGenesisInfo();
+        ConfigResponse response = request.send();
+        System.out.println(response.getConfig());
+    }
+
+    @Test
+    @Ignore
     public void testGetHosts() throws RequestException {
         Request<HostsResponse> request = configService.getHosts("vp");
         HostsResponse response = request.send();

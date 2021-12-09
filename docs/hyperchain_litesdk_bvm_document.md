@@ -39,6 +39,7 @@
     - [3.7 根据合约地址查询合约命名（getNamebyAddress）](#37-根据合约地址查询合约命名getnamebyaddress)
     - [3.8 根据合约命名查询合约地址（getAddressByName）](#38-根据合约命名查询合约地址getaddressbyname)
     - [3.9 查询所有合约地址到合约命名的映射关系（getAllCNS）](#39-查询所有合约地址到合约命名的映射关系getallcns)
+    - [3.10 查询创世配置信息（getGenesisInfo）](#310-查询创世信息getGenesisInfo)
   - [第四章 订阅提案信息](#第四章-订阅提案信息)
     - [4.1 订阅提案信息使用示例](#41-订阅提案信息使用示例)
 
@@ -144,7 +145,7 @@ public abstract class BuiltinOperationBuilder {
 1. `Set` : Set方法接收两个参数，一个参数为key，一个参数为value，用于存储键值对。
 2. `Get` : Get方法接收一个参数key，用于取出HashContract中与之对应的value值。
 
-构造`HashContract`操作的构造器`HashBuilder`提供了`set`和`get`方法，分别用于构造`HashContract`合约中的`Set`和`Get`方法，其定义如下：
+构造`HashContract`操作的构造器`HashBuilder`提供了`set`、`get`、`setGenesisInfoForHpc`和`getGenesisInfoForHpc` 方法，其中`set` 和`get` 分别用于构造`HashContract`合约中的`Set`和`Get`方法，`setGenesisInfoForHpc`和`getGenesisInfoForHpc` 则用于hyperchain 1.8升级到flato版本之前设置和获取genesis信息，其定义如下：
 
 ```java
 public static class HashBuilder extends BuiltinOperationBuilder {
@@ -164,6 +165,27 @@ public static class HashBuilder extends BuiltinOperationBuilder {
          * @return {@link HashBuilder}
          */
         public HashBuilder get(String key);
+  
+  			 /**
+         * create set HashOperation to set GenesisInfo.
+         *
+         * @param genesisInfo genesis info value
+         * @return {@link HashBuilder}
+         */
+        public HashBuilder setGenesisInfoForHpc(GenesisInfo genesisInfo) {
+            this.set("the_key_for_genesis_info", gson.toJson(genesisInfo));
+            return this;
+        }
+
+        /**
+         * create get HashOperation to get GenesisInfo.
+         *
+         * @return {@link HashBuilder}
+         */
+        public HashBuilder getGenesisInfoForHpc() {
+            this.get("the_key_for_genesis_info");
+            return this;
+        }
 }
 ```
 
@@ -735,6 +757,58 @@ HashContract中有两个方法可供调用，Set和Get方法。
           System.out.println(result);
   ```
 
+
+另外，对于**从hyperchain 1.8升级到flato1.2.0+，停节点之前**，需要设置创世信息，后续用dbcli清洗数据时会根据设置的创世信息进行相应的操作，使用HashBuilder的setGenesisInfoForHpc创建设置创世信息的operation，使用HashBuilder的getGenesisInfoForHpc创建查询创世信息的operation。
+
+- setGenesisInfoForHpc
+
+  setGenesisInfoForHpc将创世信息作为入参，其示例如下：
+
+  ```go
+          // 准备创世账户、创世节点信息
+          // 需要按照实际情况准备创世账户、创世节点以及节点证书
+          Map<String, String> genesisAccount= new HashMap<>();
+          genesisAccount.put("0x000f1a7a08ccc48e5d30f80850cf1cf283aa3abd", "1000000000");
+          genesisAccount.put("e93b92f1da08f925bdee44e91e7768380ae83307", "1000000000");
+          List<GenesisNode> genesisNodes = new ArrayList<>();
+          String node1Cert = "node1 cert content";
+          genesisNodes.add(new GenesisNode("node1", node1Cert));
+          GenesisInfo genesisInfo = new GenesisInfo(genesisAccount, genesisNodes);
+          // 发送交易将创世信息上链
+          Account ac = accountService.fromAccountJson(accountJson);
+          Transaction transaction = new Transaction.
+                  BVMBuilder(ac.getAddress()).
+                  invoke(new HashOperation.HashBuilder().setGenesisInfoForHpc(genesisInfo).build()).
+                  // 注意，向hyperchain发交易，txVersion需要设置成1.0
+                  txVersion(TxVersion.TxVersion10).
+                  build();
+          transaction.sign(ac);
+          ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+          System.out.println(receiptResponse.getRet());
+          Result result = Decoder.decodeBVM(receiptResponse.getRet());
+          Assert.assertTrue(result.isSuccess());
+  ```
+
+- getGenesisInfoForHpc
+
+  getGenesisInfoForHpc用于查询设置的创世信息，其示例如下：
+
+  ```go
+          // 查询上链的创世信息
+          transaction = new Transaction.
+                  BVMBuilder(ac.getAddress()).
+                  invoke(new HashOperation.HashBuilder().getGenesisInfoForHpc().build()).
+                  // 注意，向hyperchain发交易，txVersion需要设置成1.0
+                  txVersion(TxVersion.TxVersion10).
+                  build();
+          transaction.sign(ac);
+          receiptResponse = contractService.invoke(transaction).send().polling();
+          System.out.println(receiptResponse.getRet());
+  
+          result = Decoder.decodeBVM(receiptResponse.getRet());
+          Assert.assertTrue(result.isSuccess());
+  ```
+
   
 
 #### ProposalContract使用示例
@@ -1151,6 +1225,18 @@ Request<AllCNSResponse> getAllCNS(int... nodeIds);
 ```
 
 拿到`AllCNSResponse` 后，通过`getAllCNS` 方法拿到所以的合约地址到合约命名的映射关系。`getAllCNS` 方法返回的是key为合约地址，value为合约命名的map。
+
+### 3.10 查询创世信息（getGenesisInfo）
+
+参数：
+
+- nodeIds 请求向哪些节点发送
+
+```java
+Request<ConfigResponse> getGenesisInfo(int... nodeIds);
+```
+
+拿到`ConfigResponse` 后，通过`getConfig` 方法拿到创世配置信息。配置信息是`toml` 格式的字符串。
 
 ## 第四章 订阅提案信息
 由于通过提案合约创建完提案后，需要相关人员在一定时间内完成对提案的投票、执行等相关操作，因此当提案合约中有新的提案创建或提案状态发生变更时，提案合约会向外推送消息，客户端可通过MQ订阅提案信息，以便于及时获取到提案相应信息。

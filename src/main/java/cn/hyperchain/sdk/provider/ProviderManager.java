@@ -1,6 +1,5 @@
 package cn.hyperchain.sdk.provider;
 
-import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.common.utils.Async;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Utils;
@@ -8,17 +7,19 @@ import cn.hyperchain.sdk.crypto.cert.CertKeyPair;
 import cn.hyperchain.sdk.exception.AllNodesBadException;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import cn.hyperchain.sdk.grpc.Transaction.CommonReq;
+import cn.hyperchain.sdk.grpc.GrpcUtil;
 import cn.hyperchain.sdk.request.FileTransferRequest;
 import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
+import cn.hyperchain.sdk.request.SendBatchTxsRequest;
 import cn.hyperchain.sdk.response.TCertResponse;
 import cn.hyperchain.sdk.response.did.DIDResponse;
 import cn.hyperchain.sdk.response.tx.TxVersionResponse;
 import cn.hyperchain.sdk.service.DIDService;
 import cn.hyperchain.sdk.service.ServiceManager;
 import cn.hyperchain.sdk.service.TxService;
-import cn.hyperchain.sdk.service.impl.DIDServiceImpl;
 import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,17 +38,23 @@ import java.util.Map;
  */
 public class ProviderManager {
     private String namespace = "global";
-    public  String chainID = "";
+    public String chainID = "";
     private TCertPool tCertPool;
     private List<HttpProvider> httpProviders;
+    private List<HttpProvider> grpcProviders;
     private List<HttpProvider> fileMgrHttpProviders;
     private boolean isCFCA;
+    private boolean enableGRPC;
     private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     private ProviderManager() {
     }
 
-    private static Logger logger =  LogManager.getLogger(ProviderManager.class);
+    private static Logger logger = LogManager.getLogger(ProviderManager.class);
+
+    public static ProviderManager emptyManager() {
+        return new ProviderManager();
+    }
 
     public static class Builder {
         private ProviderManager providerManager;
@@ -67,6 +74,22 @@ public class ProviderManager {
             }
             providerManager.httpProviders = new ArrayList<>(httpProviders.length);
             providerManager.httpProviders.addAll(Arrays.asList(httpProviders));
+            return this;
+        }
+
+        /**
+         * set provider manager grpc providers.
+         *
+         * @param grpcProviders grpc providers
+         * @return {@link Builder}
+         */
+        public Builder grpcProviders(GrpcProvider... grpcProviders) {
+            if (grpcProviders == null || grpcProviders.length == 0) {
+                throw new IllegalStateException("can't initialize a ProviderManager instance with empty HttpProviders");
+            }
+            providerManager.enableGRPC = true;
+            providerManager.grpcProviders = new ArrayList<>(grpcProviders.length);
+            providerManager.grpcProviders.addAll(Arrays.asList(grpcProviders));
             return this;
         }
 
@@ -142,6 +165,7 @@ public class ProviderManager {
          */
         public ProviderManager build() {
             setTxVersion(providerManager);
+            providerManager.setLocalChainID();
             return providerManager;
         }
     }
@@ -156,8 +180,13 @@ public class ProviderManager {
             throw new IllegalStateException("can't initialize a ProviderManager instance with empty HttpProviders");
         }
         ProviderManager providerManager = new ProviderManager();
-        providerManager.httpProviders = new ArrayList<>();
-        providerManager.httpProviders.addAll(Arrays.asList(httpProviders));
+        if (httpProviders[0] instanceof GrpcProvider) {
+            providerManager.grpcProviders = new ArrayList<>();
+            providerManager.grpcProviders.addAll(Arrays.asList(httpProviders));
+        } else {
+            providerManager.httpProviders = new ArrayList<>();
+            providerManager.httpProviders.addAll(Arrays.asList(httpProviders));
+        }
         setTxVersion(providerManager);
         return providerManager;
     }
@@ -190,28 +219,42 @@ public class ProviderManager {
         List<HttpProvider> hProviders;
         if (request instanceof FileTransferRequest) {
             hProviders = checkIds(fileMgrHttpProviders, ids);
+        } else if (enableGRPC && GrpcUtil.isGRPCMethod(request.getMethod()) && !(request instanceof SendBatchTxsRequest)) {
+            request.setGRPC(true);
+            hProviders = checkIds(grpcProviders, ids);
         } else {
+            if (GrpcUtil.isOnlyGRPCMethod(request.getMethod())) {
+                throw new RequestException(RequestExceptionCode.GRPC_SERVICE_WRONG);
+            }
+            request.setGRPC(false);
             hProviders = checkIds(httpProviders, ids);
         }
         int providerSize = hProviders.size();
         int startIndex = Utils.randInt(1, providerSize);
+        boolean flag = true;
         for (int i = 0; i < providerSize; i++) {
             HttpProvider hProvider = hProviders.get((startIndex + i) % providerSize);
-            if (hProvider.getStatus() == PStatus.NORMAL) {
+            if (i == providerSize - 1 && hProvider instanceof GrpcProvider && hProvider.getStatus() != PStatus.NORMAL && flag) {
+                i = -1;
+                flag = false;
+                continue;
+            }
+            if (flag ? hProvider.getStatus() == PStatus.NORMAL : hProvider.getStatus() != PStatus.ABNORMAL) {
                 logger.debug("[REQUEST] request node id: " + ((startIndex + i) % providerSize + 1));
                 try {
                     request.setNamespace(this.namespace);
-                    DefaultHttpProvider dProvider = (DefaultHttpProvider) hProvider;
-                    if (dProvider.account != null) {
+//                    DefaultHttpProvider dProvider = (DefaultHttpProvider) hProvider;
+                    if (hProvider.getAccount() != null) {
                         // use dProvider sign
-                        Request.Authentication auth = new Request.Authentication(Utils.genTimestamp(), dProvider.account.getAddress());
+                        Request.Authentication auth = new Request.Authentication(Utils.genTimestamp(), hProvider.getAccount().getAddress());
                         String needHashString = auth.getNeedHashString();
                         byte[] sourceData = needHashString.getBytes(Utils.DEFAULT_CHARSET);
-                        auth.setSignature(ByteUtil.toHex(dProvider.account.sign(sourceData)));
+                        auth.setSignature(ByteUtil.toHex(hProvider.getAccount().sign(sourceData)));
                         request.setAuth(auth);
                     }
                     return sendTo(request, hProvider);
                 } catch (RequestException e) {
+                    //todo grpc在某些情况下也需要重连（等其他接口服务恢复之后添加）
                     if (e.getCode().equals(RequestExceptionCode.NETWORK_GETBODY_FAILED.getCode())) {
                         logger.debug("send to provider: " + hProvider.getUrl() + " failed");
                         reconnect(hProvider);
@@ -228,8 +271,14 @@ public class ProviderManager {
 
     private String sendTo(Request request, HttpProvider provider) throws RequestException {
         requestCheck(request, provider);
-        String body = request.requestBody();
-        byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
+        byte[] bodyBytes;
+        if (request.isGRPC()) {
+            CommonReq commonReq = GrpcUtil.convertRequestToCommonReq(request);
+            bodyBytes = commonReq.toByteArray();
+        } else {
+            String body = request.requestBody();
+            bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
+        }
         if (this.tCertPool != null) {
             boolean f = this.isCFCA;
             // todo may different txs have different version
@@ -377,6 +426,10 @@ public class ProviderManager {
             logger.info(e.toString());
         }
 
+    }
+
+    public void setChainID(String chainID) {
+        this.chainID = chainID;
     }
 
     public String getChainID() {

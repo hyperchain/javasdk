@@ -25,12 +25,13 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.LinkedHashSet;
 
 public class Decoder {
     private static final int KVSQL_DECODEVERSION1 = 0;
@@ -84,7 +85,7 @@ public class Decoder {
         byte[] name = ByteUtil.copy(payloadBytes, 6 + classLen, nameLen);
         byte[] bin = ByteUtil.copy(payloadBytes, 6 + classLen + nameLen, payloadBytes.length - 6 - classLen - nameLen);
 
-        Set<String> methodNames = new HashSet<>();
+        Set<String> methodNames = new LinkedHashSet<>();
         InputStream is = ByteSource.wrap(classBytes).openStream();
         ClassReader reader = new ClassReader(is);
         ClassNode classNode = new ClassNode();
@@ -290,7 +291,7 @@ public class Decoder {
                 index += paramLen;
                 params[j] = param;
             }
-            Map<String, Object> opt = new HashMap<>();
+            Map<String, Object> opt = new LinkedHashMap<>();
             opt.put("MethodName", methodName);
             opt.put("Params", params);
             content[i] = opt;

@@ -12,5 +12,6 @@ public interface RadarService {
      * @param nodeIds         specific ids
      * @return {@link Request} of {@link RadarResponse}
      */
+    @Deprecated
     Request<RadarResponse> listenContract(String sourceCode, String contractAddress, int... nodeIds);
 }

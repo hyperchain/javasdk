@@ -6,12 +6,13 @@ import cn.hyperchain.sdk.account.DIDAccount;
 import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.solidity.ContractType;
-import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Encoder;
 import cn.hyperchain.sdk.common.utils.FuncParams;
 import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
-import cn.hyperchain.sdk.common.utils.Utils;
+import cn.hyperchain.sdk.common.utils.InvokeHVMAbiParams;
+import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.MethodNameUtil;
+import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.did.DIDCredential;
 import cn.hyperchain.sdk.did.DIDDocument;
@@ -63,6 +64,8 @@ public class Transaction {
     private static final int DIDCREDENTIAL_UPLOAD = 206;
     private static final int DIDCREDENTIAL_DOWNLOAD = 207;
     private static final int DIDCREDENTIAL_ABANDON = 208;
+    private static final int DID_SETEXTRA = 209;
+    private static final int DID_GETEXTRA = 210;
 
     private Account account;
 
@@ -371,6 +374,20 @@ public class Transaction {
             return invokeContractAddr(contractAddress, isDID, chainID);
         }
 
+        /**
+         * create invoking transaction for {@link VMType} HVM.
+         *
+         * @param contractAddress contract address in chain
+         * @param hvmAbiParams    params of invoking contract by invoke bean
+         * @return {@link Builder}
+         */
+        public Builder invokeByBeanAbi(String contractAddress, InvokeHVMAbiParams hvmAbiParams) {
+            String payload = hvmAbiParams.getParams();
+            super.transaction.setPayload(payload);
+            return invokeContractAddr(contractAddress, false, null);
+        }
+
+
     }
 
     public static class EVMBuilder extends Builder {
@@ -580,9 +597,6 @@ public class Transaction {
             return this;
         }
 
-        //todo 更新did extra
-//        public DIDBuilder updateExtra()
-
         /**
          * upload credential.
          * @param credential credential
@@ -617,6 +631,40 @@ public class Transaction {
             super.transaction.setTo(super.transaction.getFrom());
             super.transaction.setPayload(ByteUtil.toHex(credentialID.getBytes(Utils.DEFAULT_CHARSET)));
             super.transaction.setOpCode(DIDCREDENTIAL_ABANDON);
+            return this;
+        }
+
+        /**
+         * set did extra.
+         * @param to target
+         * @param key -
+         * @param value -
+         * @return {@link Builder}
+         */
+        public Builder setExtra(String to, String key, String value) {
+            super.transaction.setTo(to);
+            Map<String, String> map = new HashMap<String, String>(2);
+            map.put("key", key);
+            map.put("value", value);
+            String param = gson.toJson(map);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DID_SETEXTRA);
+            return this;
+        }
+
+        /**
+         * get did extra.
+         * @param to target
+         * @param key -
+         * @return {@link Builder}
+         */
+        public Builder getExtra(String to, String key) {
+            super.transaction.setTo(to);
+            Map<String, String> map = new HashMap<String, String>(1);
+            map.put("key", key);
+            String param = gson.toJson(map);
+            super.transaction.setPayload(ByteUtil.toHex(param.getBytes(Utils.DEFAULT_CHARSET)));
+            super.transaction.setOpCode(DID_GETEXTRA);
             return this;
         }
     }
@@ -660,7 +708,10 @@ public class Transaction {
         }
     }
 
-    private void setNeedHashString() {
+    /**
+     * setNeedHashString.
+     */
+    public void setNeedHashString() {
         // flato
         if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
             String payload = Utils.isBlank(this.payload) ? "0x0" : chPrefix(this.payload.toLowerCase());
@@ -723,6 +774,7 @@ public class Transaction {
 
     /**
      * set the transaction from address, hex coding.
+     *
      * @param from address
      */
     public void setFrom(String from) {
@@ -738,6 +790,7 @@ public class Transaction {
 
     /**
      * set the transaction to address, hex coding.
+     *
      * @param to address
      */
     public void setTo(String to) {
@@ -1064,6 +1117,10 @@ public class Transaction {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
         } else if (vmType == VMType.TRANSFER) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
+        } else if (vmType == VMType.KVSQL) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.KVSQL_VALUE);
+        } else if (vmType == VMType.BVM) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.BVM_VALUE);
         } else {
             throw new RuntimeException("unKnow vmType");
         }

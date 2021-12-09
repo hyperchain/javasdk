@@ -1,5 +1,6 @@
 package cn.hyperchain.sdk.provider;
 
+import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.request.Request;
 
@@ -18,4 +19,6 @@ public interface HttpProvider {
     void setStatus(PStatus status);
 
     String getUrl();
+
+    Account getAccount();
 }

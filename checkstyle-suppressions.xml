@@ -17,4 +17,12 @@
               files="cn.hyperchain.sdk.transaction.proto.TransactionValueProto"/>
     <suppress checks="Check"
               files="cn.hyperchain.sdk.common.protos.ProposalOuterClass"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.grpc.Transaction"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.grpc.GrpcApiDidGrpc"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.grpc.GrpcApiContractGrpc"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.grpc.GrpcApiTransactionGrpc"/>
 </suppressions>
