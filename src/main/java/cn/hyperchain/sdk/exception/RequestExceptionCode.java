@@ -10,7 +10,13 @@ public enum RequestExceptionCode {
     RECEIPT_NOT_FOUND(-32001, "can not find receipt"),
     SYSTEM_BUSY(-32006, "system is busy"),
     HTTP_TIME_OUT(-32096, "request time out"),
-    METHOD_NOT_FOUND(-32601, "method not found");
+    METHOD_NOT_FOUND(-32601, "method not found"),
+
+    GRPC_RESPONSE_FAILED(-5000, "create reponse failed"),
+    GRPC_SERVICE_WRONG(-5001, "this service must use grpc"),
+    GRPC_SERVICE_NOT_FOUND(-5002, "grpc service not found"),
+    GRPC_REQUEST_FAILED(-5003, "grpc request error"),
+    GRPC_STREAM_FAILED(-5004, "grpc stream failed");
 
     private Integer code;
     private String msg;

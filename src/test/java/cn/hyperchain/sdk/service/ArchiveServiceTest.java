@@ -3,10 +3,7 @@ package cn.hyperchain.sdk.service;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
-import cn.hyperchain.sdk.response.archive.ArchiveBoolResponse;
-import cn.hyperchain.sdk.response.archive.ArchiveFilterIdResponse;
-import cn.hyperchain.sdk.response.archive.ArchiveResponse;
-import cn.hyperchain.sdk.response.archive.ArchiveStringResponse;
+import cn.hyperchain.sdk.response.archive.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -120,9 +117,25 @@ public class ArchiveServiceTest {
 
     @Test
     @Ignore
+    public void testQueryLatestArchive() throws RequestException {
+        Request<ArchiveLatestResponse> request = archiveService.queryLatestArchive(1);
+        ArchiveLatestResponse response = request.send();
+        System.out.println(response);
+    }
+
+    @Test
+    @Ignore
     public void testPending() throws RequestException {
         Request<ArchiveResponse> request = archiveService.pending();
         ArchiveResponse response = request.send();
+        System.out.println(response);
+    }
+
+    @Test
+    @Ignore
+    public void testQueryArchiveExist() throws RequestException {
+        Request<ArchiveBoolResponse> request = archiveService.queryArchiveExist(filterId);
+        ArchiveBoolResponse response = request.send();
         System.out.println(response);
     }
 }

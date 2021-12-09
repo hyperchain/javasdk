@@ -32,7 +32,6 @@ public class DIDAccount extends Account {
         this.didAddress = address;
     }
 
-
     @Override
     public String getAddress() {
         return didAddress;
@@ -114,6 +113,10 @@ public class DIDAccount extends Account {
 
     public Account getAccount() {
         return account;
+    }
+
+    public String getInnerAddress() {
+        return this.account.getAddress();
     }
 
     @Override

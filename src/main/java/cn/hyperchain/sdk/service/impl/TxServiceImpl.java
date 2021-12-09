@@ -6,8 +6,8 @@ import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.ReceiptRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.SendBatchTxsRequest;
-import cn.hyperchain.sdk.request.SendTxRequest;
 import cn.hyperchain.sdk.request.TxRequest;
+import cn.hyperchain.sdk.request.SendTxRequest;
 import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
@@ -77,6 +77,36 @@ public class TxServiceImpl implements TxService {
     @Override
     public Request<TxLimitResponse> getTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds) {
         TxRequest txRequest = new TxRequest(TX_PREFIX + "getTransactionsWithLimit", providerManager, TxLimitResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
+        params.put("metadata", metaData);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    @Override
+    public Request<TxLimitResponse> getInvalidTxsWithLimit(Integer from, Integer to, int... nodeIds) {
+        return getInvalidTxsWithLimit(from.toString(),to.toString(),nodeIds);
+    }
+
+    @Override
+    public Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsWithLimit", providerManager, TxLimitResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    @Override
+    public Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsWithLimit", providerManager, TxLimitResponse.class, nodeIds);
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("from", from);
@@ -163,12 +193,24 @@ public class TxServiceImpl implements TxService {
         return txRequest;
     }
 
+    @Override
+    public Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsCount", providerManager, TxCountWithTSResponse.class, nodeIds);
+        return txRequest;
+    }
 
     @Override
     public Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds) {
-        ReceiptRequest pollingRequest = new ReceiptRequest(TX_PREFIX + "getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
-        pollingRequest.addParams(txHash);
-        return pollingRequest;
+        ReceiptRequest receiptRequest = new ReceiptRequest(TX_PREFIX + "getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        receiptRequest.addParams(txHash);
+        return receiptRequest;
+    }
+
+    @Override
+    public Request<ReceiptResponse> getConfirmedTransactionReceipt(String txHash, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(TX_PREFIX + "getConfirmedTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        receiptRequest.addParams(txHash);
+        return receiptRequest;
     }
 
     @Override
@@ -198,6 +240,28 @@ public class TxServiceImpl implements TxService {
         return txRequest;
     }
 
+    @Override
+    public Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsByBlockHash", providerManager, TxResponse.class, nodeIds);
+
+        txRequest.addParams(blockHash);
+
+        return txRequest;
+    }
+
+    @Override
+    public Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds) {
+        return getInvalidTxsByBlockNumber(blockNumber.toString());
+    }
+
+    @Override
+    public Request<TxResponse> getInvalidTxsByBlockNumber(String blockNumber, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsByBlockNumber", providerManager, TxResponse.class, nodeIds);
+
+        txRequest.addParams(blockNumber);
+
+        return txRequest;
+    }
 
     @Override
     public Request<TxResponse> getSignHash(String from, BigInteger nonce, String payload, BigInteger timestamp, int... nodeIds) {
@@ -381,8 +445,30 @@ public class TxServiceImpl implements TxService {
     }
 
     @Override
+    public Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds) {
+        return getNextPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getNextPageTransactions", providerManager, TxResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("blkNumber", blkNumber);
+        params.put("txIndex", txIndex);
+        params.put("minBlkNumber", minBlkNumber);
+        params.put("maxBlkNumber", maxBlkNumber);
+        params.put("separated", separated);
+        params.put("pageSize", pageSize);
+        params.put("containCurrent", containCurrent);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    @Override
     public Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds) {
-        return getPrevPageTransactions(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, nodeIds);
+        return getPrevPageTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, nodeIds);
     }
 
 
@@ -399,6 +485,28 @@ public class TxServiceImpl implements TxService {
         params.put("pageSize", pageSize);
         params.put("containCurrent", containCurrent);
         params.put("address", address);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    @Override
+    public Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds) {
+        return getPrevPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent,nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds) {
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getPrevPageInvalidTransactions", providerManager, TxResponse.class, nodeIds);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("blkNumber", blkNumber);
+        params.put("txIndex", txIndex);
+        params.put("minBlkNumber", minBlkNumber);
+        params.put("maxBlkNumber", maxBlkNumber);
+        params.put("separated", separated);
+        params.put("pageSize", pageSize);
+        params.put("containCurrent", containCurrent);
         txRequest.addParams(params);
 
         return txRequest;
@@ -440,6 +548,18 @@ public class TxServiceImpl implements TxService {
     }
 
     @Override
+    public Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getInvalidTransactionsCountByTime", providerManager, TxCountResponse.class, nodeIds);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    @Override
     public Request<TxLimitResponse> getTxsByExtraID(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds) {
         TxRequest txRequest = new TxRequest(TX_PREFIX + "getTransactionsByExtraID", providerManager, TxLimitResponse.class, nodeIds);
 
@@ -472,6 +592,13 @@ public class TxServiceImpl implements TxService {
         SendTxRequest sendTxRequest = new SendTxRequest(TX_PREFIX + "sendTransaction", providerManager, TxHashResponse.class, transaction, nodeIds);
         sendTxRequest.addParams(transaction.commonParamMap());
         return sendTxRequest;
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcSendTxReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(TX_PREFIX + "sendTransactionReturnReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        receiptRequest.addParams(transaction.commonParamMap());
+        return receiptRequest;
     }
 
     @Override

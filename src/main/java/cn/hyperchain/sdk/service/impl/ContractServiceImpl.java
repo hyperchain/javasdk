@@ -3,9 +3,14 @@ package cn.hyperchain.sdk.service.impl;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.ContractRequest;
 import cn.hyperchain.sdk.request.PollingRequest;
+import cn.hyperchain.sdk.request.ReceiptRequest;
 import cn.hyperchain.sdk.request.Request;
+import cn.hyperchain.sdk.request.StringRequest;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
+import cn.hyperchain.sdk.response.contract.CompileContractResponse;
+import cn.hyperchain.sdk.response.contract.DeployerListResponse;
+import cn.hyperchain.sdk.response.contract.StringResponse;
 import cn.hyperchain.sdk.service.ContractService;
 import cn.hyperchain.sdk.transaction.Transaction;
 
@@ -48,6 +53,19 @@ public class ContractServiceImpl implements ContractService {
         return txHashResponseContractRequest;
     }
 
+    @Override
+    public Request<ReceiptResponse> grpcDeployReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("deployContractReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+
+        Map<String, Object> txParamMap = transaction.commonParamMap();
+        txParamMap.remove("to");
+        receiptRequest.addParams(txParamMap);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
+    }
+
+
     /**
      * invoke a contract.
      *
@@ -66,6 +84,18 @@ public class ContractServiceImpl implements ContractService {
         txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("invokeContractReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+
+        Map<String, Object> txParamMap = transaction.commonParamMap();
+
+        receiptRequest.addParams(txParamMap);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
     }
 
     /**
@@ -99,6 +129,18 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("maintainContractReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+        Map<String, Object> params = transaction.commonParamMap();
+
+        receiptRequest.addParams(params);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
+    }
+
+
+    @Override
     public Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds) {
         ContractRequest txHashResponseContractRequest = new ContractRequest(methodName("manageContractByVote", transaction), providerManager, TxHashResponse.class, transaction, nodeIds);
         Map<String, Object> params = transaction.commonParamMap();
@@ -108,6 +150,119 @@ public class ContractServiceImpl implements ContractService {
         txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcManageContractByVoteReturnReceipt(Transaction transaction, int... nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(methodName("manageContractByVoteReturnReceipt", transaction), providerManager, ReceiptResponse.class, nodeIds);
+        Map<String, Object> params = transaction.commonParamMap();
+
+        receiptRequest.addParams(params);
+        receiptRequest.setNamespace(namespace);
+
+        return receiptRequest;
+    }
+
+    @Override
+    public Request<DeployerListResponse> getDeployedList(String address, int... nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getDeployedList", providerManager, DeployerListResponse.class, nodeIds);
+
+        stringRequest.addParams(address);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+
+        return stringRequest;
+    }
+
+    @Override
+    public Request<CompileContractResponse> compileContract(String code, int... nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "compileContract", providerManager, CompileContractResponse.class, nodeIds);
+
+        stringRequest.addParams(code);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCode(String addr, int... nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCode", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getContractCountByAddr(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getContractCountByAddr", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getStatus(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getStatus", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreator(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreator", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreateTime(String addr, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreateTime", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(addr);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getStatusByCName(String cname, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getStatusByCName", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(cname);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreatorByCName(String cname, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreatorByCName", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(cname);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
+    }
+
+    @Override
+    public Request<StringResponse> getCreateTimeByCName(String cname, int...nodeIds) {
+        StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreateTimeByCName", providerManager, StringResponse.class, nodeIds);
+
+        stringRequest.addParams(cname);
+        stringRequest.setJsonrpc(jsonrpc);
+        stringRequest.setNamespace(namespace);
+        return stringRequest;
     }
 
     private String methodName(String method, Transaction transaction) {

@@ -2,8 +2,10 @@ package cn.hyperchain.sdk.service.impl;
 
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.DIDRequest;
+import cn.hyperchain.sdk.request.ReceiptRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.SendDIDTxRequest;
+import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.response.TxHashResponse;
 import cn.hyperchain.sdk.response.did.DIDCredentialResponse;
 import cn.hyperchain.sdk.response.did.DIDDocumentResponose;
@@ -29,6 +31,11 @@ public class DIDServiceImpl implements DIDService {
         return sendDIDTxRequest;
     }
 
+    private Request<ReceiptResponse> grpcSendDIDTransactionReturnReceipt(Transaction transaction, int...nodeIds) {
+        ReceiptRequest receiptRequest = new ReceiptRequest(DID_PREFIX + "sendDIDTransactionReturnReceipt", providerManager, ReceiptResponse.class, nodeIds);
+        receiptRequest.addParams(transaction.commonParamMap());
+        return receiptRequest;
+    }
 
     @Override
     public Request<DIDResponse> getChainID(int... nodeIds) {
@@ -78,8 +85,23 @@ public class DIDServiceImpl implements DIDService {
     }
 
     @Override
+    public Request<TxHashResponse> setExtra(Transaction transaction, int... nodeIds) {
+        return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
+    public Request<TxHashResponse> getExtra(Transaction transaction, int... nodeIds) {
+        return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
     public Request<TxHashResponse> register(Transaction transaction, int... nodeIds) {
         return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcRegisterReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
     }
 
     @Override
@@ -88,8 +110,18 @@ public class DIDServiceImpl implements DIDService {
     }
 
     @Override
+    public Request<ReceiptResponse> grpcFreezeReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
+    }
+
+    @Override
     public Request<TxHashResponse> unFreeze(Transaction transaction, int... nodeIds) {
         return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcUnFreezeReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
     }
 
 
@@ -99,8 +131,18 @@ public class DIDServiceImpl implements DIDService {
     }
 
     @Override
+    public Request<ReceiptResponse> grpcUpdatePublicKeyReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
+    }
+
+    @Override
     public Request<TxHashResponse> updateAdmins(Transaction transaction, int... nodeIds) {
         return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcUpdateAdminsReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
     }
 
     @Override
@@ -109,8 +151,18 @@ public class DIDServiceImpl implements DIDService {
     }
 
     @Override
+    public Request<ReceiptResponse> grpcDestroyReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
+    }
+
+    @Override
     public Request<TxHashResponse> uploadCredential(Transaction transaction, int... nodeIds) {
         return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcUploadCredentialReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
     }
 
     @Override
@@ -119,7 +171,17 @@ public class DIDServiceImpl implements DIDService {
     }
 
     @Override
+    public Request<ReceiptResponse> grpcDownloadCredentialReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
+    }
+
+    @Override
     public Request<TxHashResponse> destroyCredential(Transaction transaction, int... nodeIds) {
         return sendDIDTransaction(transaction, nodeIds);
+    }
+
+    @Override
+    public Request<ReceiptResponse> grpcDestroyCredentialReturnReceipt(Transaction transaction, int... nodeIds) {
+        return grpcSendDIDTransactionReturnReceipt(transaction, nodeIds);
     }
 }

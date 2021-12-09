@@ -7,6 +7,7 @@ import cn.hyperchain.sdk.response.archive.ArchiveBoolResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveFilterIdResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveResponse;
 import cn.hyperchain.sdk.response.archive.ArchiveStringResponse;
+import cn.hyperchain.sdk.response.archive.ArchiveLatestResponse;
 import cn.hyperchain.sdk.service.ArchiveService;
 
 import java.math.BigInteger;
@@ -104,8 +105,21 @@ public class ArchiveServiceImpl implements ArchiveService {
     }
 
     @Override
+    public Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds) {
+        return new ArchiveRequest(ARCHIVE_PRE + "queryLatestArchive", providerManager, ArchiveLatestResponse.class, nodeIds);
+    }
+
+    @Override
     public Request<ArchiveResponse> pending(int... nodeIds) {
         ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "pending", providerManager, ArchiveResponse.class, nodeIds);
         return archiveRequest;
     }
+
+    @Override
+    public Request<ArchiveBoolResponse> queryArchiveExist(String filterId, int... nodeIds) {
+        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "queryArchiveExist", providerManager, ArchiveBoolResponse.class, nodeIds);
+        archiveRequest.addParams(filterId);
+        return archiveRequest;
+    }
+
 }

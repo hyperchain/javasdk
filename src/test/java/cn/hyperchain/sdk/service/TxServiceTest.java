@@ -10,6 +10,7 @@ import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.ReceiptListResponse;
 import cn.hyperchain.sdk.response.ReceiptResponse;
+import cn.hyperchain.sdk.response.block.BlockResponse;
 import cn.hyperchain.sdk.response.tx.TxAvgTimeResponse;
 import cn.hyperchain.sdk.response.tx.TxCountResponse;
 import cn.hyperchain.sdk.response.tx.TxCountWithTSResponse;
@@ -372,10 +373,53 @@ public class TxServiceTest {
     }
 
     @Test
+    @Ignore
     public void testGetTxVersion() throws RequestException {
         Request<TxVersionResponse> txVersionResponseRequest = txService.getTxVersion(1);
         TxVersionResponse txVersionResponse = txVersionResponseRequest.send();
         System.out.println(txVersionResponse.getTxVersionResult());
+    }
+
+    @Test
+    @Ignore
+    public void testGetInvalidTxsWithLimit() throws RequestException {
+        String from = String.valueOf(1);
+        String to = String.valueOf(2);
+        TxLimitResponse txLimitResponse = txService.getInvalidTxsWithLimit(from, to).send();
+        List<TxResponse.Transaction> result = txLimitResponse.getResult();
+        System.out.println("***************************************");
+        System.out.println(result.size());
+        System.out.println(result);
+
+        MetaDataParam meta = new MetaDataParam.Builder().blkNumber(1).txIndex(0).backward(true).limit(3).build();
+        TxLimitResponse txLimitResponse1 = txService.getInvalidTxsWithLimit(from, to, meta).send();
+        List<TxResponse.Transaction> result1 = txLimitResponse1.getResult();
+        System.out.println("******************************");
+        System.out.println(result1.size());
+        System.out.println(result1);
+
+    }
+
+    @Test
+    @Ignore
+    public void testGetInvalidTxsCountByTime() throws RequestException {
+        BigInteger startTime = BigInteger.valueOf(1559193987434588840L);
+        BigInteger endTime = BigInteger.valueOf(1559193987434588900L);
+
+        Request<TxCountResponse> txRequest = txService.getInvalidTxsCountByTime(startTime, endTime);
+        TxCountResponse txCountResponse = txRequest.send();
+
+        System.out.println(txCountResponse.getResult());
+    }
+
+    @Test
+    @Ignore
+    public void testGetInvalidTxsByBlockNumber() throws RequestException {
+        BigInteger blockNum = BigInteger.valueOf(1);
+        Request<TxResponse> txRequest = txService.getInvalidTxsByBlockNumber(blockNum);
+        TxResponse txResponse = txRequest.send();
+
+        System.out.println(txResponse.getResult());
     }
 
 }

@@ -40,6 +40,7 @@ public abstract class Account {
     protected static final byte[] SMFlag = new byte[]{1};
     protected static final byte[] ED25519Flag = new byte[]{2};
     protected static final byte[] R1Flag = new byte[]{5};
+    protected static final byte[] PKIFlag = new byte[]{4};
 
     private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -95,30 +96,14 @@ public abstract class Account {
         Algo algo = Algo.getAlog(jsonObject.get("algo").getAsString());
         // When Algo indicates the input is PKI type, start if condition to generate PKI Account.
         if (algo == Algo.PKI) {
-            try {
-                InputStream tmp1 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
-                // Extract the X509Certificate type from input stream, to do this password is necessary(if have).
-                X509Certificate cert = CertUtils.getCertFromPFXFile(tmp1, password);
-                String encodedCert = Base64.toBase64String(cert.getEncoded());
-                ECPublicKey tmpKey = (ECPublicKey) cert.getPublicKey();
-                String publicHex = ByteUtil.toHex(tmpKey.getEncoded());
-                InputStream tmp2 = new ByteArrayInputStream(jsonObject.get("certificate").getAsString().getBytes());
-                Algo tmpAlgo;
-                if (cert.getPublicKey().getAlgorithm().equals("EC")) {
-                    tmpAlgo = Algo.ECAES;
-                } else {
-                    tmpAlgo = Algo.SMSM4;
-                }
-                String raw = CertUtils.getPrivFromPFXFile(tmp2, password);
-                return new PKIAccount(CertUtils.getCNFromCert(cert), publicHex, ByteUtil.toHex(Account.encodePrivateKey(raw.getBytes(), tmpAlgo, password)), Version.V4, algo, encodedCert, cert, raw);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            throw new AccountException("PKI account can not generate by account json");
         }
         String addressHex = jsonObject.get("address").getAsString();
         String publicKeyHex = jsonObject.get("publicKey").getAsString();
         String privateKeyHex = jsonObject.get("privateKey").getAsString();
         Version version = Version.getVersion(jsonObject.get("version").getAsString());
+        // Error password may decrypt garbage result with little probability,
+        // cause privateKey.length != 0
         byte[] privateKey = decodePrivateKey(ByteUtil.fromHex(privateKeyHex), algo, password);
         if (privateKey.length == 0) {
             throw new AccountException("password error");
@@ -128,28 +113,41 @@ public abstract class Account {
             ECPoint ecPoint = SM2Util.CURVE.decodePoint(ByteUtil.fromHex(publicKeyHex));
             ECPublicKeyParameters publicKeyParameters = new ECPublicKeyParameters(ecPoint, SM2Util.DOMAIN_PARAMS);
             ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(new BigInteger(1, privateKey), SM2Util.DOMAIN_PARAMS);
-
-            FixedPointCombMultiplier fixedPointCombMultiplier = new FixedPointCombMultiplier();
-            ECPoint ecPointPublicKeyFromPrivateKey = fixedPointCombMultiplier.multiply(privateKeyParameters.getParameters().getG(), privateKeyParameters.getD());
-            ECPublicKeyParameters publicKeyParametersFromPrivateKey = new ECPublicKeyParameters(ecPointPublicKeyFromPrivateKey, privateKeyParameters.getParameters());
-            AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(publicKeyParameters, privateKeyParameters);
-            if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParametersFromPrivateKey.getQ().getEncoded(false))))) {
-                throw new AccountException("account address is not matching with private key");
+            // Garbage privateKey will cause exception:
+            //     fixed-point comb doesn't support scalars larger than the curve order
+            try {
+                FixedPointCombMultiplier fixedPointCombMultiplier = new FixedPointCombMultiplier();
+                ECPoint ecPointPublicKeyFromPrivateKey = fixedPointCombMultiplier.multiply(privateKeyParameters.getParameters().getG(), privateKeyParameters.getD());
+                ECPublicKeyParameters publicKeyParametersFromPrivateKey = new ECPublicKeyParameters(ecPointPublicKeyFromPrivateKey, privateKeyParameters.getParameters());
+                AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(publicKeyParameters, privateKeyParameters);
+                if (!addressHex.equals(ByteUtil.toHex(HashUtil.sha3omit12(publicKeyParametersFromPrivateKey.getQ().getEncoded(false))))) {
+                    throw new AccountException("account address is not matching with private key");
+                }
+                return new SMAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new AccountException("password error");
             }
-            return new SMAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
         } else if (algo.isEC()) {
             if (!algo.isR1()) {
                 ECKey ecKey = ECKey.fromPrivate(privateKey);
                 if (!addressHex.equals(ByteUtil.toHex(ecKey.getAddress()))) {
-                    throw new AccountException("account address is not matching with private key");
+                    throw new AccountException("password error");
                 }
                 return new ECAccount(addressHex, publicKeyHex, privateKeyHex, version, algo, ecKey);
             } else {
-                AsymmetricCipherKeyPair asymmetricCipherKeyPair = R1Util.genFromPrivKey(privateKey);
-                if (!addressHex.equals(ByteUtil.toHex(R1Util.getAddress(asymmetricCipherKeyPair)))) {
-                    throw new AccountException("account address is not matching with private key");
+                // Garbage privateKey will cause exception:
+                //     fixed-point comb doesn't support scalars larger than the curve order
+                try {
+                    AsymmetricCipherKeyPair asymmetricCipherKeyPair = R1Util.genFromPrivKey(privateKey);
+                    if (!addressHex.equals(ByteUtil.toHex(R1Util.getAddress(asymmetricCipherKeyPair)))) {
+                        throw new AccountException("account address is not matching with private key");
+                    }
+                    return new R1Account(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new AccountException("password error");
                 }
-                return new R1Account(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
             }
         } else {
             byte[] realPrivateKey = new byte[32];
@@ -161,7 +159,7 @@ public abstract class Account {
             AsymmetricCipherKeyPair asymmetricCipherKeyPair = new AsymmetricCipherKeyPair(ed25519PublicKeyParameters, ed25519PrivateKeyParameters);
 
             if (!addressHex.equals(ByteUtil.toHex((HashUtil.sha2_256omit12(ed25519PublicKeyParameters.getEncoded()))))) {
-                throw new AccountException("account address is not matching with private key");
+                throw new AccountException("password error");
             }
             return new ED25519Account(addressHex, publicKeyHex, privateKeyHex, version, algo, asymmetricCipherKeyPair);
         }
@@ -373,5 +371,9 @@ public abstract class Account {
 
     public String toJson() {
         return gson.toJson(this);
+    }
+
+    public boolean isDID() {
+        return this.getAddress().startsWith("did");
     }
 }

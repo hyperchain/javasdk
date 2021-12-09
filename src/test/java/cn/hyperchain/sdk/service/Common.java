@@ -11,11 +11,14 @@ import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.ReceiptResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Security;
 
 public class Common {
 
@@ -47,7 +50,10 @@ public class Common {
     private static Logger logger = LogManager.getLogger(Common.class);
 
     static {
-
+//        Security.addProvider(new BouncyCastleProvider());
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+        Security.insertProviderAt(new BouncyCastleProvider(), 1);
+        Security.addProvider(new BouncyCastleJsseProvider());
         try {
             sdkcert_cert_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_cert);
             sdkcert_priv_is = Thread.currentThread().getContextClassLoader().getResourceAsStream(sdkcert_priv);

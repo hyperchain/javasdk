@@ -19,6 +19,8 @@
       - [凭证上传](#凭证上传)
       - [凭证下载](#凭证下载)
       - [凭证吊销](#凭证吊销)
+      - [设置did extra信息](#设置did-extra信息)
+      - [查询did extra信息](#查询did-extra信息)
   - [第四章 DID服务接口](#第四章-did服务接口)
       - [设置chainID](#设置chainid-1)
       - [注册DID账户](#注册did账户)
@@ -36,6 +38,8 @@
       - [检查凭证是否有效](#检查凭证是否有效)
       - [检查凭证是否吊销](#检查凭证是否吊销)
       - [设置本地客户端chainID](#设置本地客户端chainid)
+      - [设置did账户extra信息](#设置did账户extra信息)
+      - [查询did账户extra信息](#查询did账户extra信息)
   - [第五章 注意事项](#第五章-注意事项)
     - [使用demo](#使用demo)
 
@@ -336,13 +340,33 @@ Transaction transaction = new Transaction.DIDBuilder(account.getAddress()).
   build();
 ```
 
+#### 设置did extra信息
 
+构建设置extra交易，将附加信息存入到did账户的Document中，需要有该did账户的管理员权限，存储信息为key-value对，示例如下：
+
+```java
+Transaction transaction = new Transaction.DIDBuilder(didAccount.getAddress()).
+  setExtra(didAccount.getAddress(), "key", "value").
+  build();
+```
+
+#### 查询did extra信息
+
+构建查询extra交易，从did账户的Document中通过key获取到附加信息，需要有该did账户的管理员权限，示例如下：
+
+```java
+Transaction transaction = new Transaction.DIDBuilder(didAccount.getAddress()).
+  getExtra(didAccount.getAddress(), "key").
+  build();
+```
 
 ## 第四章 DID服务接口
 
+注意：以下交易相关的服务接口中，以**grpcxxxReturnReceipt**格式命名的接口，绑定了`ReceiptResponse`对象，是grpc相关的服务接口，当且仅当创建的`ProviderManager`对象设置了`GrpcProvider`与节点进行通信时才可使用。
+
 #### 设置chainID
 
-通过`ContractService`接口的`invoke`方法调用bvm合约来设置chainID。
+通过`ContractService`接口的`invoke`或者`grpcInvokeReturnReceipt`方法调用bvm合约来设置chainID。
 
 参数：
 
@@ -351,6 +375,9 @@ Transaction transaction = new Transaction.DIDBuilder(account.getAddress()).
 
 ```java
 Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcInvokeReturnReceipt(Transaction transaction, int... nodeIds);
+
 ```
 
 在`Decoder` 类中，提供了`decodeBVM` 的方法用于解析bvm交易回执，其定义如下：
@@ -369,7 +396,10 @@ Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
 * nodeIds 请求向这些节点发送
 
 ```java
+
 Request<TxHashResponse> register(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcRegisterReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### DID账户冻结
@@ -381,6 +411,8 @@ Request<TxHashResponse> register(Transaction transaction, int... nodeIds);
 
 ```java
 Request<TxHashResponse> freeze(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcFreezeReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### DID账户解冻
@@ -392,6 +424,8 @@ Request<TxHashResponse> freeze(Transaction transaction, int... nodeIds);
 
 ```java
 Request<TxHashResponse> unFreeze(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcUnFreezeReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### DID账户吊销
@@ -403,6 +437,8 @@ Request<TxHashResponse> unFreeze(Transaction transaction, int... nodeIds);
 
 ```java
 Request<TxHashResponse> destroy(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcDestroyReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### DID账户公钥更新
@@ -414,6 +450,8 @@ Request<TxHashResponse> destroy(Transaction transaction, int... nodeIds);
 
 ```java
 Request<TxHashResponse> updatePublicKey(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcUpdatePublicKeyReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### DID账户管理员更新
@@ -425,6 +463,8 @@ Request<TxHashResponse> updatePublicKey(Transaction transaction, int... nodeIds)
 
 ```java
 Request<TxHashResponse> updateAdmins(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcUpdateAdminsReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### 凭证上传
@@ -436,6 +476,8 @@ Request<TxHashResponse> updateAdmins(Transaction transaction, int... nodeIds);
 
 ```java
 Request<TxHashResponse> uploadCredential(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcUploadCredentialReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### 凭证下载
@@ -447,6 +489,8 @@ Request<TxHashResponse> uploadCredential(Transaction transaction, int... nodeIds
 
 ```java
 Request<TxHashResponse> downloadCredential(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcDownloadCredentialReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### 凭证吊销
@@ -458,6 +502,8 @@ Request<TxHashResponse> downloadCredential(Transaction transaction, int... nodeI
 
 ```java
 Request<TxHashResponse> destroyCredential(Transaction transaction, int... nodeIds);
+
+Request<ReceiptResponse> grpcDestroyCredentialReturnReceipt(Transaction transaction, int... nodeIds);
 ```
 
 #### 查询chainID
@@ -528,7 +574,31 @@ Request<DIDResponse> checkCredentialAbandoned(String id, int... nodeIds);
 void setLocalGlobalChainID(ProviderManager providerManager);
 ```
 
+#### 设置did账户extra信息
 
+发送设置did账户extra信息的交易到链上，通过TxHashResponse来获取回执。
+
+参数：
+
+* transaction 设置did账户extra信息的交易
+* nodeIds 请求向这些节点发送
+
+```java
+Request<TxHashResponse> setExtra(Transaction transaction, int... nodeIds);
+```
+
+#### 查询did账户extra信息
+
+发送查询did账户extra信息的交易到链上，通过TxHashResponse来获取回执。
+
+参数：
+
+* transaction 查询did账户extra信息的交易
+* nodeIds 请求向这些节点发送
+
+```java
+Request<TxHashResponse> getExtra(Transaction transaction, int... nodeIds);
+```
 
 ## 第五章 注意事项
 

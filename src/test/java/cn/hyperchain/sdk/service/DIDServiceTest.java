@@ -32,6 +32,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,8 +43,8 @@ import java.io.InputStream;
 @Ignore
 public class DIDServiceTest {
     public static String DEFAULT_URL = "localhost:8081";
-    public static String genesis_accountJson = "";
-    public static final String chainID = "hyperchainID01";
+    public static String genesis_accountJson = "{\"address\":\"37a1100567bf7e0de2f5a0dc1917f0552aa43d88\",\"publicKey\":\"0428481b62885a16f9ae501a7228c4b4066a9daf9a72d96e76668447b0fc4e8abf52c4d4ab221d703edb64636cb3be8da1c6dcb639cd9c711ddc71711234d270f7\",\"privateKey\":\"d55b385403423667d6bf7054d43ba238f6e6b3edce98d74d80de2b7ceff2fae2\",\"version\":\"4.0\",\"algo\":\"0x03\"}";;
+    public static final String chainID = "hpc";
     private ProviderManager providerManager;
     private DIDService didService;
     private AccountService accountService;
@@ -187,6 +191,30 @@ public class DIDServiceTest {
 
     private Account RegisterNewDidAccount(String[] admins) throws RequestException {
         Account didAccount = accountService.genDIDAccount(Algo.ED25519RAW, getRandomString(20));
+        DIDDocument didDocument = new DIDDocument(didAccount.getAddress(), DIDPublicKey.getPublicKeyFromAccount(didAccount), admins);
+        Transaction transaction = new Transaction.DIDBuilder(didAccount.getAddress()).create(didDocument).build();
+        transaction.sign(didAccount);
+        Assert.assertTrue(didAccount.verify(transaction.getNeedHashString().getBytes(), ByteUtil.fromHex(transaction.getSignature())));
+        // get request
+        TxHashResponse response = didService.register(transaction).send();
+        ReceiptResponse receiptResponse = response.polling();
+        boolean res = gson.fromJson(ByteUtil.decodeHex(receiptResponse.getRet()), Boolean.class);
+        Assert.assertTrue(res);
+        return didAccount;
+    }
+
+    private Account RegisterNewDidAccount(String[] admins, boolean addSelf) throws RequestException {
+        Account didAccount = accountService.genDIDAccount(Algo.ED25519RAW, getRandomString(20));
+        if (addSelf) {
+            List<String> list = new ArrayList<>();
+            if (admins != null) {
+                list.addAll(Arrays.asList(admins));
+            }
+            list.add(didAccount.getAddress());
+            String[] ss = new String[list.size()];
+            list.toArray(ss);
+            admins = ss;
+        }
         DIDDocument didDocument = new DIDDocument(didAccount.getAddress(), DIDPublicKey.getPublicKeyFromAccount(didAccount), admins);
         Transaction transaction = new Transaction.DIDBuilder(didAccount.getAddress()).create(didDocument).build();
         transaction.sign(didAccount);
@@ -611,6 +639,24 @@ public class DIDServiceTest {
         DIDCredential didCredential = new DIDCredential("type", didAccount.getAddress(), didAccount.getAddress(), (long) (System.currentTimeMillis() - 1e11), "null");
         didCredential.sign(didAccount);
         Assert.assertTrue(didCredential.verify(didAccount));
+    }
+
+    @Test
+    public void didExtra() throws Exception {
+        Account didAccount = RegisterNewDidAccount(null, true);
+        {
+            Transaction transaction = new Transaction.DIDBuilder(didAccount.getAddress()).setExtra(didAccount.getAddress(), "key", "value").build();
+            transaction.sign(didAccount);
+            String ret = didService.setExtra(transaction).send().polling().getRet();
+            Assert.assertEquals("true", ByteUtil.decodeHex(ret));
+        }
+
+        {
+            Transaction transaction = new Transaction.DIDBuilder(didAccount.getAddress()).getExtra(didAccount.getAddress(), "key").build();
+            transaction.sign(didAccount);
+            String ret = didService.getExtra(transaction).send().polling().getRet();
+            Assert.assertEquals("value", ByteUtil.decodeHex(ret));
+        }
     }
 
 
