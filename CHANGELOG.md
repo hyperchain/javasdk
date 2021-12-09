@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-5](https://git.hyperchain.cn///compare/v1.1.0-4...v1.1.0-5) (2021-12-09)
+
+
+### Features
+
+* **txVersion:** add txVersin convert ([ae0c8d3](https://git.hyperchain.cn///commit/ae0c8d38282d1285d1c72bf91039fd206554f5c3))
+
+
+### Bug Fixes
+
+* **ArchiveResponse:** fix result of archiveResponse ([5f322f6](https://git.hyperchain.cn///commit/5f322f68952220681d2841f39cf5dfe3506bb4b5))
+
 ## [1.1.0-4](https://git.hyperchain.cn///compare/v1.1.0-3...v1.1.0-4) (2021-12-08)
 
 
