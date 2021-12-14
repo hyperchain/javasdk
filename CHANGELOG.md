@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://git.hyperchain.cn///compare/v1.1.0...v1.1.1) (2021-12-14)
+
+
+### Bug Fixes
+
+* **log&gmtls:** fix log4j-core version to 2.15.0 and remove gmtls ([f0dc987](https://git.hyperchain.cn///commit/f0dc987e1307c467d7c1d0684f92993778a7699e))
+
 ## [1.1.0](https://git.hyperchain.cn///compare/v1.1.0-6...v1.1.0) (2021-12-09)
 
 ## [1.1.0-6](https://git.hyperchain.cn///compare/v1.1.0-5...v1.1.0-6) (2021-12-09)
