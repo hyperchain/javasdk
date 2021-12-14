@@ -27,30 +27,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class DefaultHttpProvider implements HttpProvider {
-    private static List<ConnectionSpec> GmTlsSpecs;
 
-    static {
-        final ConnectionSpec tls = ConnectionSpec.COMPATIBLE_TLS;
-        List<CipherSuite> cs = tls.cipherSuites();
-        List<TlsVersion> versions = tls.tlsVersions();
-        TlsVersion[] vers = new TlsVersion[versions.size() + 1];
-        try {
-            Constructor[] ccs = CipherSuite.class.getConstructors();
-            Constructor cc = CipherSuite.class.getDeclaredConstructors()[0];
-            cc.setAccessible(true);
-            CipherSuite suite = (CipherSuite)cc.newInstance("TLS_ECC_SM4_SM3");
-            cs = new ArrayList<>(cs);
-            cs.add(suite /*new CipherSuite("TLS_ECC_SM4_SM3")*/);
 
-            versions.toArray(vers);
-            vers[vers.length - 1] = TlsVersion.GMTLS;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        ConnectionSpec gmtls = (new ConnectionSpec.Builder(tls)).cipherSuites(cs.toArray(new CipherSuite[cs.size()])).tlsVersions(vers).build();
-        GmTlsSpecs = Util.immutableList(new ConnectionSpec[]{gmtls, ConnectionSpec.CLEARTEXT});
-    }
-    
     protected static final String HTTP = "http://";
     protected static final String HTTPS = "https://";
 
@@ -137,9 +115,6 @@ public class DefaultHttpProvider implements HttpProvider {
          */
         public Builder https(InputStream tlsCa, InputStream tlsPeerCert, InputStream tlsPeerPriv) {
             HttpsUtils.SSLParams sslSocketFactory = HttpsUtils.getSslSocketFactory(tlsCa, tlsPeerCert, tlsPeerPriv, HttpsUtils.DEFAULT_PASSWORD);
-            if (sslSocketFactory.isGm()) {
-                builder.connectionSpecs(GmTlsSpecs);
-            }
             builder.sslSocketFactory(sslSocketFactory.getsSLSocketFactory(), sslSocketFactory.getTrustManager())
                     .hostnameVerifier(HttpsUtils.hyperchainVerifier());
             defaultHttpProvider.httpPrefix = HTTPS;
