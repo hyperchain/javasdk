@@ -81,11 +81,8 @@ public class HttpsUtils {
             sslParams.trustManager = trustManager;
             sslParams.isgm = keyStore.size() > 1;
             SSLContext sslContext = null;
-            if (sslParams.isgm) {
-                sslContext = SSLContext.getInstance("GMTLS");
-            } else {
-                sslContext = SSLContext.getInstance("TLSv1.2");
-            }
+
+            sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(keyManagerFactory.getKeyManagers(), new TrustManager[]{trustManager}, null);
             sslParams.sSLSocketFactory = sslContext.getSocketFactory();
 
