@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0-1](https://git.hyperchain.cn///compare/v1.1.1...v1.2.0-1) (2021-12-15)
+
+
+### Features
+
+* **mpc:** add mpc bvm interface ([fd37dc9](https://git.hyperchain.cn///commit/fd37dc914336ff65b95a671c55be276e9d1db2cf))
+
+
+### Bug Fixes
+
+* **pom.xml:** update bouncycastle to 1.67 ([e7e2ccb](https://git.hyperchain.cn///commit/e7e2ccbb1c12233f7d35b69b33bdc58f9736b054))
+
 ### [1.1.1](https://git.hyperchain.cn///compare/v1.1.0...v1.1.1) (2021-12-14)
 
 
