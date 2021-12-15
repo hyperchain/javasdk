@@ -216,6 +216,15 @@ public class ByteUtil {
     }
 
     /**
+     * decode base64 string to bytes.
+     * @param base64 string
+     * @return data bytes
+     */
+    public static byte[] fromBase64(String base64) {
+        return Base64.decode(base64);
+    }
+
+    /**
      * copy some bytes array from offset.
      *
      * @param origin origin bytes

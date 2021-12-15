@@ -6,6 +6,7 @@
       - [1. 合约接口](#1-合约接口)
       - [2. bvm交易体](#2-bvm交易体)
         - [HashContract](#hashcontract)
+        - [MPCContract](#mpccontract)
         - [ProposalContract](#proposalcontract)
           - [配置类](#配置类)
           - [权限类](#权限类)
@@ -18,6 +19,7 @@
       - [5. 解析回执](#5-解析回执)
     - [2.3 使用示例](#23-使用示例)
       - [HashContract使用示例](#hashcontract使用示例)
+      - [MPCContract使用示例](#mpccontract使用示例)
       - [ProposalContract使用示例](#proposalcontract使用示例)
         - [创建提案](#创建提案)
           - [配置类](#配置类-1)
@@ -136,7 +138,7 @@ public abstract class BuiltinOperationBuilder {
 
 
 
-针对不同的合约地址中不同的合约方法调用有封装相应的实现类，目前bvm提供的合约有：`HashContract`、`ProposalContract`、`AccountContract`三种，分别有`BuiltinOperation`的实现类`HashOperation`、`ProposalOperation`和`AccountOperation`，相应的也提供了`HashBuilder`、`ProposalBuilder`和`AccountBuilder`用于创建相应的操作。
+针对不同的合约地址中不同的合约方法调用有封装相应的实现类，目前bvm提供的合约有：`HashContract`、`ProposalContract`、`AccountContract`、`MPCContract`四种，分别有`BuiltinOperation`的实现类`HashOperation`、`ProposalOperation`、`AccountOperation`和`MPCOperation`，相应的也提供了`HashBuilder`、`ProposalBuilder`、`AccountBuilder`和`MPCBuilder`用于创建相应的操作。
 
 ##### HashContract
 
@@ -186,6 +188,68 @@ public static class HashBuilder extends BuiltinOperationBuilder {
             this.get("the_key_for_genesis_info");
             return this;
         }
+}
+```
+
+##### MPCContract
+
+`MPCContract`中提供的合约方法如下：
+
+1. `GetSRSInfo` : GetSRSInfo方法用于取出指定srs的详细信息，接收两个参数，一个参数为srsTag，指定需要查询的srs，一个参数为curveType，给出所查srs的曲线类型。
+2. `GetHistory` : GetHistory方法接收一个参数curveType，用于取出指定曲线类型记录上链的所有srs版本。
+3. `Beacon` : Beacon方法用于将用户提交的contributions整合为可用于plonk算法的srs，接收一个参数，即srs_contribution内容
+
+构造`MPCContract`操作的构造器`MPCBuilder`提供了`getInfo`、`beacon`和`getHis` 方法，分别用于构造`MPCContract`合约中的`GetSRSInfo`、`Beacon`和`GetHistory`方法，其定义如下：
+
+```java
+public class MPCOperation extends BuiltinOperation {
+  private MPCOperation() {
+  }
+
+  public static class MPCBuilder extends BuiltinOperationBuilder {
+    public MPCBuilder() {
+      super(new MPCOperation());
+      opt.setAddress("0x0000000000000000000000000000000000ffff09");
+    }
+
+    /**
+     * create getInfo MPCOperation to get srs info.
+     *
+     * @param tag the srs tag
+     * @param ct the srs curve type
+     * @return {@link MPCOperation.MPCBuilder}
+     */
+    public MPCOperation.MPCBuilder getInfo(String tag, String ct) {
+      opt.setMethod(SRSInfo);
+      opt.setArgs(tag, ct);
+      return this;
+    }
+
+    /**
+     * create beacon MPCOperation to update srs.
+     *
+     * @param ptau the srs content
+     * @return {@link MPCOperation.MPCBuilder}
+     */
+    public MPCOperation.MPCBuilder beacon(byte[] ptau) {
+      opt.setMethod(SRSBeacon);
+      opt.setArgs(ByteUtil.toHex(ptau));
+      return this;
+    }
+
+    /**
+     * create getHis MPCOperation to get srs history list.
+     *
+     * @param ct the srs curve type
+     * @return {@link MPCOperation.MPCBuilder}
+     */
+    public MPCOperation.MPCBuilder getHis(String ct) {
+      opt.setMethod(SRSHistory);
+      opt.setArgs(ct);
+      return this;
+    }
+
+  }
 }
 ```
 
@@ -809,7 +873,62 @@ HashContract中有两个方法可供调用，Set和Get方法。
           Assert.assertTrue(result.isSuccess());
   ```
 
+
+#### MPCContract使用示例
+
+MPCContract中有三个方法可供调用，GetSRSInfo、GetHistory和Beacon方法。
+
+- GetSRSInfo
   
+  GetSRSInfo方法用于取出指定srs的详细信息，接收两个参数，一个参数为srsTag，指定需要查询的srs，一个参数为curveType，给出所查srs的曲线类型, 示例如下：
+
+  ```java
+  String key = "0x123";
+  String value = "0x456";
+  Account ac = accountService.fromAccountJson(accountJsons[5]);
+  MPCOperation.MPCBuilder op = new MPCOperation.MPCBuilder();
+  Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(op.getInfo("", MPCCurveType.CurveBN254.getCurve()).build()).
+                build();
+  transaction.sign(ac);
+  ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+  ```
+
+- GetHistory
+  
+  GetHistory方法接收一个参数curveType，用于取出指定曲线类型记录上链的所有srs版本, 示例如下：
+  ```java
+  String key = "0x123";
+  String value = "0x456";
+  Account ac = accountService.fromAccountJson(accountJsons[5]);
+  MPCOperation.MPCBuilder op = new MPCOperation.MPCBuilder();
+  Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(op.getHis(MPCCurveType.CurveBN254.getCurve()).build()).
+                build();
+  transaction.sign(ac);
+  ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+  ```
+
+- Beacon
+  
+  Beacon方法用于将用户提交的contributions整合为可用于plonk算法的srs，接收一个参数，即srs_contribution内容, 示例如下：
+
+  ```java
+  String key = "0x123";
+  String value = "0x456";
+  Account ac = accountService.fromAccountJson(accountJsons[5]);
+  MPCOperation.MPCBuilder op = new MPCOperation.MPCBuilder();
+  Transaction transaction = new Transaction.
+               BVMBuilder(ac.getAddress()).
+               invoke(op.beacon(ByteUtil.fromBase64(srsCon1Base)).build()).
+               build();
+  transaction.sign(ac);
+  ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+  ```
+  
+
 
 #### ProposalContract使用示例
 
