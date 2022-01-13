@@ -319,22 +319,22 @@ public class FileMgrServiceImpl implements FileMgrService {
                 }
             }
             return new FileDownloadResponse(e.getCode(), e.getMsg());
-        }
-
-        try {
-            fileLock.release();
-        } catch (IOException e) {
-            logger.warn("release fileLock failed");
-        }
-        try {
-            channel.close();
-        } catch (IOException e) {
-            logger.warn("close file channel failed");
-        }
-        try {
-            randomAccessFile.close();
-        } catch (IOException e) {
-            logger.warn("close randomAccessFile failed");
+        } finally {
+            try {
+                fileLock.release();
+            } catch (IOException e) {
+                logger.warn("release fileLock failed");
+            }
+            try {
+                channel.close();
+            } catch (IOException e) {
+                logger.warn("close file channel failed");
+            }
+            try {
+                randomAccessFile.close();
+            } catch (IOException e) {
+                logger.warn("close randomAccessFile failed");
+            }
         }
         return fileDownloadResponse;
     }
