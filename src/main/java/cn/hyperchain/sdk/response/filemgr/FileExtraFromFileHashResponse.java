@@ -26,6 +26,19 @@ public class FileExtraFromFileHashResponse extends Response {
         return FileExtra.fromJson(extra);
     }
 
+    /**
+     * parse transaction from result.
+     *
+     * @return transaction
+     */
+    public TxResponse.Transaction getTransaction() {
+        List<TxResponse.Transaction> transactions = result.parseResult(TxResponse.Transaction.class);
+        if (transactions.size() == 0) {
+            throw new RuntimeException("can't get any transaction");
+        }
+        return transactions.get(0);
+    }
+
     @Override
     public String toString() {
         return "FileExtraFromFileHashResponse{" +
