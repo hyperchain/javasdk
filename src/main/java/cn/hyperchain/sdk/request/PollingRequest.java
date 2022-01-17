@@ -63,7 +63,7 @@ public class PollingRequest extends Request {
             try {
                 return super.send();
             } catch (RequestException e) {
-                if (e.getMsg().contains("Invalid signature")) {
+                if (e.getCode().equals(-32003)) {
                     ProviderManager.setTxVersion(providerManager);
                     if (transaction != null && !transaction.getTxVersion().equal(TxVersion.GLOBAL_TX_VERSION)) {
                         transaction.setTxVersion(TxVersion.GLOBAL_TX_VERSION);

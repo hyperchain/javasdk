@@ -9,6 +9,7 @@ import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.PollingResponse;
 import cn.hyperchain.sdk.response.Response;
 import cn.hyperchain.sdk.transaction.Transaction;
+import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -136,7 +137,17 @@ public abstract class Request<K extends Response> {
             response = gson.fromJson(res, clazz);
         }
         if (response.getCode() != 0) {
-            throw new RequestException(response.getCode(), response.getMessage());
+            RequestException requestException = new RequestException(response.getCode(), response.getMessage());
+            if (requestException.getCode().equals(-32003)) {
+                ProviderManager.setTxVersion(providerManager);
+                if (TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion34) && transaction != null && !transaction.getTxVersion().equal(TxVersion.GLOBAL_TX_VERSION)) {
+                    transaction.setTxVersion(TxVersion.GLOBAL_TX_VERSION);
+                    transaction.updatePayload();
+                    transaction.sign(transaction.getAccount());
+                    return (K) reSendTransaction(this, transaction, false);
+                }
+            }
+            throw requestException;
         }
 
         return response;
@@ -246,8 +257,7 @@ public abstract class Request<K extends Response> {
             txParamMap.remove("to");
         } else if (request.getMethod().contains("fm_upload") || request.getMethod().contains("fm_push")) {
             List params = request.getListParams();
-            Map param = (Map) params.get(0);
-            if (params.get(0) != null && ((Map) params.get(0)).get("optionExtra") != null) {
+            if (params.size() > 0 && params.get(0) != null && ((Map) params.get(0)).get("optionExtra") != null) {
                 txParamMap.put("optionExtra", ((Map) params.get(0)).get("optionExtra"));
             }
         }
