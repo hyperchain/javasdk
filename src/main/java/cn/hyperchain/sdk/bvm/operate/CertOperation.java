@@ -44,6 +44,21 @@ public class CertOperation extends BuiltinOperation {
             return this;
         }
 
+
+        /**
+         * create revoke CertOperation to revoke cert.
+         * when ca mode is center, admin can revoke cert directly;
+         * when ca mode is none, no one can revoke any cert;
+         *
+         * @param cert the der cert wait to revoke
+         * @return {@link CertOperation.CertBuilder}
+         */
+        public CertOperation.CertBuilder revoke(String cert) {
+            opt.setMethod(CertRevoke);
+            opt.setArgs(cert, "", "");
+            return this;
+        }
+
         /**
          * create check CertOperation to check cert.
          *
