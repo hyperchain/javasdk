@@ -37,6 +37,10 @@ public class MQResponse extends Response {
         return result.getAsString();
     }
 
+    public String getResult() {
+        return result.toString();
+    }
+
     @Override
     public String toString() {
         return "MQResponse{" +
@@ -45,7 +49,7 @@ public class MQResponse extends Response {
                 ", code=" + code +
                 ", message='" + message + '\'' +
                 ", namespace='" + namespace + '\'' +
-                ", result" + result + '\'' +
+                ", result='" + result + '\'' +
                 '}';
     }
 }

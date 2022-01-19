@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class StreamManager {
+public class StreamManager extends Manager {
     private static Logger logger = LogManager.getLogger(StreamManager.class);
 
     private StreamObserver<CommonReq> reqStreamObserver;
@@ -22,7 +22,6 @@ public class StreamManager {
     private Throwable error;
     private boolean isNormal;
     private boolean isUsed;
-    private GrpcProvider grpcProvider;
 
     public void setUsed(boolean used) {
         isUsed = used;
@@ -33,7 +32,8 @@ public class StreamManager {
     }
 
     public StreamManager(String method, GrpcProvider provider) throws RequestException {
-        this.generateFromMethod(method, provider);
+        super(method, provider);
+        this.generateFromMethod();
     }
 
     public StreamObserver<CommonReq> getReqStreamObserver() {
@@ -60,7 +60,7 @@ public class StreamManager {
         this.grpcProvider = grpcProvider;
     }
 
-    private void generateFromMethod(String method, GrpcProvider provider) throws RequestException {
+    private void generateFromMethod() throws RequestException {
         finishLatch = new CountDownLatch(1);
         StreamObserver<CommonRes> resStreamObserver = new StreamObserver<CommonRes>() {
             @Override
@@ -73,9 +73,9 @@ public class StreamManager {
             @Override
             public void onError(Throwable throwable) {
                 if (throwable.getMessage().equals("ABORTED: stream idle timeout")) {
-                    logger.warn("GRPC Stream with the node " + provider.getUrl() + " failed. The reason is " + throwable.getMessage());
+                    logger.warn("GRPC Stream with the node " + grpcProvider.getUrl() + " failed. The reason is " + throwable.getMessage());
                 } else {
-                    logger.error("GRPC Stream with the node " + provider.getUrl() + " failed. The reason is " + throwable.getMessage());
+                    logger.error("GRPC Stream with the node " + grpcProvider.getUrl() + " failed. The reason is " + throwable.getMessage());
                 }
                 finishLatch.countDown();
                 setNormal(false);
@@ -84,17 +84,17 @@ public class StreamManager {
 
             @Override
             public void onCompleted() {
-                logger.debug("GRPC Stream with the node " + provider.getUrl() + " closed.");
+                logger.debug("GRPC Stream with the node " + grpcProvider.getUrl() + " closed.");
                 finishLatch.countDown();
                 error = null;
                 setNormal(false);
             }
         };
-        StreamObserver<CommonReq> reqStreamObserver = GrpcUtil.getReqByMethod(method, provider.getChannel(), resStreamObserver);
+        StreamObserver<CommonReq> reqStreamObserver = GrpcUtil.getReqByMethod(method, grpcProvider.getChannel(), resStreamObserver);
         this.setReqStreamObserver(reqStreamObserver);
         this.setResStreamObserver(resStreamObserver);
         this.setNormal(true);
-        this.setGrpcProvider(provider);
+        this.setGrpcProvider(grpcProvider);
     }
 
 
@@ -108,6 +108,7 @@ public class StreamManager {
      * @return Commonres
      * @throws RequestException -
      */
+    @Override
     public CommonRes onNext(CommonReq commonReq) throws RequestException {
         if (reqStreamObserver != null) {
             reqStreamObserver.onNext(commonReq);

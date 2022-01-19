@@ -41,7 +41,7 @@ public class SendBatchTxsRequest extends Request {
 
     @Override
     public Response send() throws RequestException {
-        String result = this.providerManager.send(this, this.nodeIds);
+        String result = (String) this.providerManager.send(this, this.nodeIds);
 
         Type responsesType = new TypeToken<ArrayList<TxHashResponse>>() {
         }.getType();

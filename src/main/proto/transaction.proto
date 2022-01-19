@@ -102,3 +102,11 @@ service GrpcApiDid {
   rpc SendDIDTransaction(stream CommonReq) returns (stream CommonRes);
   rpc SendDIDTransactionReturnReceipt(stream CommonReq) returns (stream CommonRes);
 }
+
+service GrpcApiMQ {
+  rpc Register(CommonReq) returns (CommonRes);
+  rpc UnRegister(CommonReq) returns (CommonRes);
+  rpc GetAllQueueNames(CommonReq) returns (CommonRes);
+  rpc Consume(CommonReq) returns (stream CommonRes);
+  rpc StopConsume(CommonReq) returns (CommonRes);
+}

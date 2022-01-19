@@ -8,6 +8,7 @@ import cn.hyperchain.sdk.kvsqlutil.Chunk;
 import cn.hyperchain.sdk.kvsqlutil.Column;
 import cn.hyperchain.sdk.kvsqlutil.IntegerDataType;
 import cn.hyperchain.sdk.kvsqlutil.KVSQLField;
+import cn.hyperchain.sdk.response.mq.MQMessage;
 import com.google.common.io.ByteSource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -300,4 +301,12 @@ public class Decoder {
         return ByteString.copyFromUtf8(gson.toJson(content));
     }
 
+    /**
+     * decode mq message.
+     * @param jsonMessage -
+     * @return MQMessage
+     */
+    public static MQMessage decodeMQMessage(String jsonMessage) {
+        return gson.fromJson(jsonMessage, MQMessage.class);
+    }
 }
