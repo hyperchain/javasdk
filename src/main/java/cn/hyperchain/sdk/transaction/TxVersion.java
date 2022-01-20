@@ -8,6 +8,7 @@ public class   TxVersion {
     public static TxVersion TxVersion25 = new TxVersion("2.5");
     public static TxVersion TxVersion26 = new TxVersion("2.6");
     public static TxVersion TxVersion30 = new TxVersion("3.0");
+    public static TxVersion TxVersion34 = new TxVersion("3.4");
 
     private String strVersion;
 
