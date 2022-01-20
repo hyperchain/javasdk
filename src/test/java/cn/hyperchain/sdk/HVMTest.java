@@ -231,10 +231,6 @@ public class HVMTest {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
         ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
-        BlockService blockService = ServiceManager.getBlockService(providerManager);
-        Request<BlockResponse> blockResponseBlockRequest = blockService.getLatestBlock();
-        BlockResponse blockResponse = blockResponseBlockRequest.send();
-        System.out.println("lastBlock"+blockResponse.getResult());
 
         // 2. build service
         ContractService contractService = ServiceManager.getContractService(providerManager);

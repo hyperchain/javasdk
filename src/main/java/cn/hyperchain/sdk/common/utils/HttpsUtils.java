@@ -215,14 +215,11 @@ public class HttpsUtils {
         final KeyStore keystore = KeyStore.getInstance("JKS");
         keystore.load(null);
         // Import private key
-        PrivateKeyInfo[] pem = CertUtils.getPEM(privateKeyPem);
-        boolean isGM = pem[0].getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
+        PEMKeyPair pem = CertUtils.getPEM(privateKeyPem);
+        boolean isGM = pem.getPrivateKeyInfo().getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
 
-        final PrivateKey[] key = CertUtils.getPrivateKeyFromPEM(pem, isGM);
-        for (int i = 0; i < key.length; i++) {
-            String keyAlias = Integer.toString(i);
-            keystore.setKeyEntry(keyAlias, key[i], password.toCharArray(), cert/*new X509Certificate[]{cert[i]}*/);
-        }
+        final PrivateKey key = CertUtils.getPrivateKeyFromPEM(pem, isGM);
+        keystore.setKeyEntry("tlsCertPriv", key, password.toCharArray(), cert);
         return keystore;
     }
 

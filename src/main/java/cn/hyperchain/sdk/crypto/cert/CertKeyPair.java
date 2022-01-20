@@ -25,10 +25,10 @@ public class CertKeyPair {
      * @throws Exception -
      */
     public CertKeyPair(InputStream pubFile, InputStream privFile) throws Exception {
-        PrivateKeyInfo[] pem = CertUtils.getPEM(privFile);
-        this.isGM = pem[0].getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
+        PEMKeyPair pem = CertUtils.getPEM(privFile);
+        this.isGM = pem.getPrivateKeyInfo().getPrivateKeyAlgorithm().getParameters().toString().equals(SM2Priv.SM2OID);
         String pubPem = FileUtil.readFile(pubFile);
-        this.privateKey = CertUtils.getPrivateKeyFromPEM(pem, isGM)[0];
+        this.privateKey = CertUtils.getPrivateKeyFromPEM(pem, isGM);
         this.publicKey = ByteUtil.toHex(pubPem.getBytes(Utils.DEFAULT_CHARSET));
     }
 
