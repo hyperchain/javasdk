@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0-2](https://git.hyperchain.cn///compare/v1.2.0-1...v1.2.0-2) (2022-01-20)
+
+
+### Features
+
+* update dependency version, rollback gm tcert logic ([d077994](https://git.hyperchain.cn///commit/d0779940d5838dedf47474597ad267b8e82d4589))
+* **request:** resend tx if txversion is not equal with platform's ([251a829](https://git.hyperchain.cn///commit/251a829ef6bc8e2f9ff4dae2c26b70ba92f5ba24))
+* **txverison:** refactor TxVersion to adapt the change of platform ([6993083](https://git.hyperchain.cn///commit/6993083934a71643dddfdf7b9666c70867f6f0da))
+
 ## [1.2.0-1](https://git.hyperchain.cn///compare/v1.1.1...v1.2.0-1) (2021-12-15)
 
 
