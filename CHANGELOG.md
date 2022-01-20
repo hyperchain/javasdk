@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0-3](https://git.hyperchain.cn///compare/v1.2.0-2...v1.2.0-3) (2022-01-20)
+
+
+### Bug Fixes
+
+* **TxVersion:** add txVersion 3.4 ([bf6a635](https://git.hyperchain.cn///commit/bf6a635ca38596044b97b14cf4a9e3ad5e3176a2))
+
 ## [1.2.0-2](https://git.hyperchain.cn///compare/v1.2.0-1...v1.2.0-2) (2022-01-20)
 
 
