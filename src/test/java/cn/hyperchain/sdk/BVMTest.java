@@ -102,54 +102,41 @@ public class BVMTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     public void testHashOperationR1() throws Exception {
         String key = "0x123";
         String value = "0x456";
         byte[] source = {'h', 'h', 'h'};
-        Account ac1 = accountService.genAccount(Algo.ECRAW);
-        Account ac = accountService.fromAccountJson(accountR1);
+        Account ac1 = accountService.genAccount(Algo.ECRAWR1);
         byte[] signature = ac1.sign(source);
         Assert.assertTrue(ac1.verify(source, signature));
 
         Transaction transaction = new Transaction.
-                BVMBuilder(ac.getAddress()).
+                BVMBuilder(ac1.getAddress()).
                 invoke(new HashOperation.HashBuilder().set(key, value).build()).
                 build();
-        transaction.sign(ac);
+        transaction.sign(ac1);
         ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
         Result result = Decoder.decodeBVM(receiptResponse.getRet());
         Assert.assertTrue(result.isSuccess());
         Assert.assertEquals("", result.getErr());
 
         transaction = new Transaction.
-                BVMBuilder(ac.getAddress()).
+                BVMBuilder(ac1.getAddress()).
                 invoke(new HashOperation.HashBuilder().get(key).build()).
                 build();
-        transaction.sign(ac);
+        transaction.sign(ac1);
         receiptResponse = contractService.invoke(transaction).send().polling();
         result = Decoder.decodeBVM(receiptResponse.getRet());
         System.out.println(result);
         Assert.assertTrue(result.isSuccess());
         Assert.assertEquals("", result.getErr());
         Assert.assertEquals(value, result.getRet());
-
-        Transaction transaction1 = new Transaction.
-                BVMBuilder(ac1.getAddress()).
-                invoke(new HashOperation.HashBuilder().set(key, value).build()).
-                build();
-        transaction1.sign(ac1);
-        ReceiptResponse receiptResponse1 = contractService.invoke(transaction1).send().polling();
-        Result result1 = Decoder.decodeBVM(receiptResponse1.getRet());
-        Assert.assertTrue(result1.isSuccess());
-        Assert.assertEquals("", result1.getErr());
     }
-//05042c2b1ad78d64f7cf60ae86e1e82ad46427a1faf9740b15d817ca320d43ac220309d7dac9a60ed013968bc523516102ae94defd0d1c15bb4538575b92c5135809 30450221008af530cfccc2d5a702a76cbdedddcb8248d848fe41eab41d27b1748813227eb202201bf8b18f487c39fe0b31815eeb0acd29371b8a5d169cfdd260654488d995fae0
-//0504183125ce9ddcee9c2b190dd2fff4257b042c3c09a5cb6613a936d4aec6e880bfe8a94f11a4efdbc62c5cbe25d3acc3287b1c63215e113108d0d7e2dd8f0b4f3c 304502210092a7965ba0a60ac9ebe5118b5ed4dbbff9c4003bf7506ea229a39a12869cdf32022049a4e6b297822124be67b799fb31f4297b8c94ec578b4d5a8c48d5277026af1e
+
     @Test
     //@Ignore
     public void testHashOperation() throws Exception {
-
         String key = "0x123";
         String value = "0x456";
         Account ac = accountService.fromAccountJson(accountJsons[5]);

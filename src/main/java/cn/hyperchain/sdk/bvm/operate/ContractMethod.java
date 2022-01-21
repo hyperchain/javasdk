@@ -44,6 +44,10 @@ public enum ContractMethod {
     CertCheck("CertCheck"),
     CertFreeze("CertFreeze"),
     CertUnfreeze("CertUnfreeze"),
+
+    SRSInfo("GetSRSInfo"),
+    SRSHistory("GetHistory"),
+    SRSBeacon("Beacon"),
     ;
     private String methodName;
 

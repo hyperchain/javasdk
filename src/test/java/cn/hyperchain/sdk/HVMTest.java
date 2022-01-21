@@ -5,6 +5,7 @@ import cn.hyperchain.sdk.common.utils.*;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.response.block.BlockResponse;
 import cn.hyperchain.sdk.service.BlockService;
+import cn.hyperchain.sdk.transaction.TxVersion;
 import cn.test.logic.entity.Person;
 import cn.hyperchain.sdk.account.Account;
 import cn.hyperchain.sdk.account.Algo;
@@ -99,6 +100,30 @@ public class HVMTest {
         ReceiptResponse receiptResponse4 = contractService.invoke(transaction4).send().polling();
         System.out.println("调用返回(未解码): " + receiptResponse4.getRet());
         System.out.println("调用返回(解码)：" + Decoder.decodeHVM(receiptResponse4.getRet(), Void.class));
+    }
+
+    @Test
+    public void testResendTx() throws IOException, RequestException {
+        // 1. build provider manager
+        DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
+        ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
+
+        // 2. build service
+        ContractService contractService = ServiceManager.getContractService(providerManager);
+        AccountService accountService = ServiceManager.getAccountService(providerManager);
+        // 3. build transaction
+        Account account = accountService.genAccount(Algo.SMRAW);
+        InputStream payload = FileUtil.readFileAsStream("hvm-jar/contractcollection-2.0-SNAPSHOT.jar");
+        Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).deploy(payload).build();
+        transaction.setTxVersion(TxVersion.TxVersion21);
+        transaction.sign(account);
+        // 4. get request
+        ReceiptResponse receiptResponse = contractService.deploy(transaction).send().polling();
+        // 5. polling && get result && decode result
+        String contractAddress = receiptResponse.getContractAddress();
+        System.out.println("合约地址: " + contractAddress);
+        System.out.println("部署返回(未解码): " + receiptResponse.getRet());
+        System.out.println("部署返回(解码)：" + Decoder.decodeHVM(receiptResponse.getRet(), String.class));
     }
 
     @Test
@@ -223,6 +248,11 @@ public class HVMTest {
         HVMPayload hvmPayload = Decoder.decodeHVMPayload(transaction.getPayload());
         Gson gson = new Gson();
         System.out.println(gson.toJson(hvmPayload));
+
+        invokeDirectlyParams = new InvokeDirectlyParams.ParamBuilder("test").addString("WWW").addString("").build();
+        transaction = new Transaction.HVMBuilder(account.getAddress()).invokeDirectly("0x12", invokeDirectlyParams).build();
+        hvmPayload = Decoder.decodeHVMPayload(transaction.getPayload());
+        System.out.println(gson.toJson(hvmPayload));
     }
 
 
@@ -231,10 +261,6 @@ public class HVMTest {
         // 1. build provider manager
         DefaultHttpProvider defaultHttpProvider = new DefaultHttpProvider.Builder().setUrl(DEFAULT_URL).build();
         ProviderManager providerManager = ProviderManager.createManager(defaultHttpProvider);
-        BlockService blockService = ServiceManager.getBlockService(providerManager);
-        Request<BlockResponse> blockResponseBlockRequest = blockService.getLatestBlock();
-        BlockResponse blockResponse = blockResponseBlockRequest.send();
-        System.out.println("lastBlock"+blockResponse.getResult());
 
         // 2. build service
         ContractService contractService = ServiceManager.getContractService(providerManager);
