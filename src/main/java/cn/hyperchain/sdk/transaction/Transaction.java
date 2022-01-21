@@ -812,7 +812,14 @@ public class Transaction {
         return payload;
     }
 
+    /**
+     * set tx payload.
+     * @param payload -
+     */
     public void setPayload(String payload) {
+        if (payload.length() % 2 != 0) {
+            throw new IllegalArgumentException("payload is not a valid Hex String.");
+        }
         this.payload = chPrefix(payload);
     }
 
