@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0-4](https://git.hyperchain.cn///compare/v1.2.0-3...v1.2.0-4) (2022-01-21)
+
+
+### Features
+
+* **transaction:** add check payload length ([946734d](https://git.hyperchain.cn///commit/946734d7d9a5c5a0a98826e57fe0d85032251264))
+
+
+### Bug Fixes
+
+* **TxVersion:** fix compare method for txversion ([2dc24ef](https://git.hyperchain.cn///commit/2dc24ef686f2192c1723c64106a2b849278fc7a1))
+* **utils:** fix decode hvm payload, add check null for invoke directly params ([dfe49bf](https://git.hyperchain.cn///commit/dfe49bfe7631ca7daff74dd8062aa4958987f8ee))
+
 ## [1.2.0-3](https://git.hyperchain.cn///compare/v1.2.0-2...v1.2.0-3) (2022-01-20)
 
 
