@@ -233,7 +233,7 @@ public class ByteUtil {
      * @return result
      */
     public static byte[] copy(byte[] origin, int offset, int length) {
-        if (origin.length <= offset || origin.length < offset + length) {
+        if (origin.length < offset || origin.length < offset + length) {
             throw new IndexOutOfBoundsException("the origin array length is " + origin.length);
         }
         byte[] newArray = new byte[length];

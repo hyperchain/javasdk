@@ -248,6 +248,11 @@ public class HVMTest {
         HVMPayload hvmPayload = Decoder.decodeHVMPayload(transaction.getPayload());
         Gson gson = new Gson();
         System.out.println(gson.toJson(hvmPayload));
+
+        invokeDirectlyParams = new InvokeDirectlyParams.ParamBuilder("test").addString("WWW").addString("").build();
+        transaction = new Transaction.HVMBuilder(account.getAddress()).invokeDirectly("0x12", invokeDirectlyParams).build();
+        hvmPayload = Decoder.decodeHVMPayload(transaction.getPayload());
+        System.out.println(gson.toJson(hvmPayload));
     }
 
 
