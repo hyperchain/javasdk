@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.common.utils;
 
 import cn.hyperchain.sdk.crypto.HashUtil;
+import org.bouncycastle.asn1.ASN1BitString;
 import org.bouncycastle.asn1.DERBitString;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -22,7 +23,7 @@ public class CertUtil {
         PemObject pemObject = pemReader.readPemObject();
         X509CertificateHolder cert = new X509CertificateHolder(pemObject.getContent());
         SubjectPublicKeyInfo pkInfo = cert.getSubjectPublicKeyInfo();
-        DERBitString pk = pkInfo.getPublicKeyData();
+        ASN1BitString pk = pkInfo.getPublicKeyData();
         byte[] pk64 = ByteUtils.subArray(pk.getBytes(),1);
         return ByteUtils.toHexString(HashUtil.sha3omit12(pk64));
     }

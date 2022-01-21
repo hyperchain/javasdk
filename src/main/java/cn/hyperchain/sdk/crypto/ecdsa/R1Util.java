@@ -6,8 +6,8 @@ import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.crypto.sm.sm2.SM2Util;
 import cn.hyperchain.sdk.exception.AccountException;
 import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.DERInteger;
-import org.bouncycastle.asn1.DEROutputStream;
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.ASN1OutputStream;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;
@@ -28,6 +28,7 @@ import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
@@ -105,12 +106,12 @@ public class R1Util {
         BigInteger[] components = signer.generateSignature(srcData);
         try {
             ASN1EncodableVector encodableVector = new ASN1EncodableVector();
-            encodableVector.add(new DERInteger(components[0].toByteArray()));
-            encodableVector.add(new DERInteger(components[1].toByteArray()));
+            encodableVector.add(new ASN1Integer(components[0].toByteArray()));
+            encodableVector.add(new ASN1Integer(components[1].toByteArray()));
             DERSequence derSequence = new DERSequence(encodableVector);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            DEROutputStream derOutputStream = new DEROutputStream(outputStream);
+            ASN1OutputStream derOutputStream = ASN1OutputStream.create(outputStream);
             derOutputStream.writeObject(derSequence);
             derOutputStream.flush();
 

@@ -44,7 +44,7 @@ fi
 echo "BRANCH :" $BRANCH
 
 
-tag="v1.0.8"
+tag="v1.3.0"
 version="latest"
 if [[ $tag =~ "release" ]]; then
   version=${tag#release-}
@@ -165,6 +165,7 @@ function prepare_flato() {
     sed -ig "s/= 50081/= 5008$i/" dynamic.toml
     sed -ig "s/= 50051/= 5005$i/" dynamic.toml
     sed -ig "s/= 50011/= 5001$i/" dynamic.toml
+    sed -ig "s/= 11001/= 1100$i/" dynamic.toml
     # modify addrs on dynamic.toml
     sed -ig "/self/s/node1/node$i/g" dynamic.toml
     sed -ig "s/domain=\"domain1\"/domain=\"domain$i\"/" dynamic.toml

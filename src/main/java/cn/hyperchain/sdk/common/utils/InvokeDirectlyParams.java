@@ -56,6 +56,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addInteger(Integer arg) {
+            checkParam(arg);
             String clazzName = Integer.class.getName();
             String param = String.valueOf(arg);
             writePayload(clazzName, param);
@@ -82,6 +83,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addShort(Short arg) {
+            checkParam(arg);
             String clazzName = Short.class.getName();
             String param = String.valueOf(arg);
             writePayload(clazzName, param);
@@ -108,6 +110,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addLong(Long arg) {
+            checkParam(arg);
             String clazzName = Long.class.getName();
             String param = String.valueOf(arg);
             writePayload(clazzName, param);
@@ -134,6 +137,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addByte(Byte arg) {
+            checkParam(arg);
             String clazzName = Byte.class.getName();
             String param = String.valueOf(arg);
             writePayload(clazzName, param);
@@ -160,6 +164,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addFloat(Float arg) {
+            checkParam(arg);
             String clazzName = Float.class.getName();
             String param = String.valueOf(arg);
             writePayload(clazzName, param);
@@ -186,6 +191,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addDouble(Double arg) {
+            checkParam(arg);
             String clazzName = Double.class.getName();
             String param = String.valueOf(arg);
             writePayload(clazzName, param);
@@ -212,6 +218,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addCharacter(Character arg) {
+            checkParam(arg);
             String clazzName = Character.class.getName();
             String param = String.valueOf(arg);
             writePayload(clazzName, param);
@@ -264,6 +271,7 @@ public class InvokeDirectlyParams {
          * @return {@link ParamBuilder}
          */
         public ParamBuilder addString(String arg) {
+            checkParam(arg);
             String clazzName = String.class.getName();
             String param = arg;
             writePayload(clazzName, param);
@@ -354,6 +362,12 @@ public class InvokeDirectlyParams {
 
         private byte[] get4Length(int length) {
             return ByteBuffer.allocate(4).putInt(length).array();
+        }
+
+        private void checkParam(Object param) {
+            if (param == null) {
+                throw new IllegalArgumentException("the param can not be null");
+            }
         }
     }
 

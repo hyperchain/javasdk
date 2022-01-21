@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0-4](https://git.hyperchain.cn///compare/v1.2.0-3...v1.2.0-4) (2022-01-21)
+
+
+### Features
+
+* **transaction:** add check payload length ([946734d](https://git.hyperchain.cn///commit/946734d7d9a5c5a0a98826e57fe0d85032251264))
+
+
+### Bug Fixes
+
+* **TxVersion:** fix compare method for txversion ([2dc24ef](https://git.hyperchain.cn///commit/2dc24ef686f2192c1723c64106a2b849278fc7a1))
+* **utils:** fix decode hvm payload, add check null for invoke directly params ([dfe49bf](https://git.hyperchain.cn///commit/dfe49bfe7631ca7daff74dd8062aa4958987f8ee))
+
+## [1.2.0-3](https://git.hyperchain.cn///compare/v1.2.0-2...v1.2.0-3) (2022-01-20)
+
+
+### Bug Fixes
+
+* **TxVersion:** add txVersion 3.4 ([bf6a635](https://git.hyperchain.cn///commit/bf6a635ca38596044b97b14cf4a9e3ad5e3176a2))
+
+## [1.2.0-2](https://git.hyperchain.cn///compare/v1.2.0-1...v1.2.0-2) (2022-01-20)
+
+
+### Features
+
+* update dependency version, rollback gm tcert logic ([d077994](https://git.hyperchain.cn///commit/d0779940d5838dedf47474597ad267b8e82d4589))
+* **request:** resend tx if txversion is not equal with platform's ([251a829](https://git.hyperchain.cn///commit/251a829ef6bc8e2f9ff4dae2c26b70ba92f5ba24))
+* **txverison:** refactor TxVersion to adapt the change of platform ([6993083](https://git.hyperchain.cn///commit/6993083934a71643dddfdf7b9666c70867f6f0da))
+
+## [1.2.0-1](https://git.hyperchain.cn///compare/v1.1.1...v1.2.0-1) (2021-12-15)
+
+
+### Features
+
+* **mpc:** add mpc bvm interface ([fd37dc9](https://git.hyperchain.cn///commit/fd37dc914336ff65b95a671c55be276e9d1db2cf))
+
+
+### Bug Fixes
+
+* **pom.xml:** update bouncycastle to 1.67 ([e7e2ccb](https://git.hyperchain.cn///commit/e7e2ccbb1c12233f7d35b69b33bdc58f9736b054))
+
+### [1.1.1](https://git.hyperchain.cn///compare/v1.1.0...v1.1.1) (2021-12-14)
+
+
+### Bug Fixes
+
+* **log&gmtls:** fix log4j-core version to 2.15.0 and remove gmtls ([f0dc987](https://git.hyperchain.cn///commit/f0dc987e1307c467d7c1d0684f92993778a7699e))
+
 ## [1.1.0](https://git.hyperchain.cn///compare/v1.1.0-6...v1.1.0) (2021-12-09)
 
 ## [1.1.0-6](https://git.hyperchain.cn///compare/v1.1.0-5...v1.1.0-6) (2021-12-09)
