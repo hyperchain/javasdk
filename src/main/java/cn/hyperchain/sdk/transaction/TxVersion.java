@@ -45,8 +45,8 @@ public class   TxVersion {
     }
 
     private int compare(TxVersion txV) {
-        String[] res1 = this.strVersion.split(".");
-        String[] res2 = txV.strVersion.split(".");
+        String[] res1 = this.strVersion.split("\\.");
+        String[] res2 = txV.strVersion.split("\\.");
         int i1 = 0;
         int i2 = 0;
         while (i1 < res1.length || i2 < res2.length) {
