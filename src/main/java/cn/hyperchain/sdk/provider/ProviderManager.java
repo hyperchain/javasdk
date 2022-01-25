@@ -381,15 +381,15 @@ public class ProviderManager {
             String txVersionResult = "";
             int count = 0;
             for (int i = 1; i <= nodeNum; i++) {
-                if (providerManager.tCertPool != null && !TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion20) && !providerManager.isCFCA) {
+                if (providerManager.tCertPool != null && !providerManager.isCFCA) {
                     try {
                         String tCert = providerManager.getTCert(providerManager.tCertPool.getUniquePubKey(), providerManager.tCertPool.getSdkCertKeyPair(), providerManager.httpProviders.get(i - 1));
                         providerManager.tCertPool.setTCert(providerManager.httpProviders.get(i - 1).getUrl(), tCert);
                     } catch (RequestException e) {
                         if (e.getCode().equals(RequestExceptionCode.METHOD_NOT_FOUND.getCode())) {
-                            logger.info(e.getMessage() + ". set txVersion to 2.0.");
-                            TxVersion.setGlobalTxVersion("2.0");
+                            logger.info(e.getMessage());
                         }
+                        throw e;
                     }
                 }
                 TxVersionResponse txVersionResponse = txService.getTxVersion(i).send();
