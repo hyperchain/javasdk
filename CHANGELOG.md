@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file. See [standa
 
 * **providerManager:** fix logic of getTcert when set txversion ([58f9427](https://git.hyperchain.cn///commit/58f94278d15fad1c222c948430ae36ce37a6c895))
 
+## [1.2.0](https://git.hyperchain.cn///compare/v1.2.0-4...v1.2.0) (2022-01-21)
+
 ## [1.2.0-4](https://git.hyperchain.cn///compare/v1.2.0-3...v1.2.0-4) (2022-01-21)
 
 
