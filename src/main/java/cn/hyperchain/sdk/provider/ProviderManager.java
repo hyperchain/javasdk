@@ -216,11 +216,12 @@ public class ProviderManager {
      * @return response string
      * @throws RequestException -
      */
-    public String send(Request request, int... ids) throws RequestException {
+    public Object send(Request request, int... ids) throws RequestException {
         List<HttpProvider> hProviders;
         if (request instanceof FileTransferRequest) {
             hProviders = checkIds(fileMgrHttpProviders, ids);
         } else if (enableGRPC && GrpcUtil.isGRPCMethod(request.getMethod()) && !(request instanceof SendBatchTxsRequest)) {
+            GrpcUtil.handMethodPrefix(request);
             request.setGRPC(true);
             hProviders = checkIds(grpcProviders, ids);
         } else {
@@ -272,7 +273,7 @@ public class ProviderManager {
         throw new AllNodesBadException("No node to connect!");
     }
 
-    private String sendTo(Request request, HttpProvider provider) throws RequestException {
+    private Object sendTo(Request request, HttpProvider provider) throws RequestException {
         requestCheck(request, provider);
         byte[] bodyBytes;
         if (request.isGRPC()) {
@@ -315,7 +316,7 @@ public class ProviderManager {
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         tCertRequest.addHeader("tcert", sdkCertKeyPair.getPublicKey());
         tCertRequest.addHeader("signature", sdkCertKeyPair.signData(bodyBytes));
-        String response = provider.post(tCertRequest);
+        String response = (String) provider.post(tCertRequest);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
         if (tCertResponse.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
             throw new RequestException(tCertResponse.getCode(), tCertResponse.getMessage());

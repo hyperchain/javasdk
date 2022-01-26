@@ -15,6 +15,7 @@ import cn.hyperchain.sdk.service.impl.RadarServiceImpl;
 import cn.hyperchain.sdk.service.impl.TxServiceImpl;
 import cn.hyperchain.sdk.service.impl.ConfigServiceImpl;
 import cn.hyperchain.sdk.service.impl.SqlServiceImpl;
+import cn.hyperchain.sdk.service.impl.MQGrpcServiceImpl;
 
 /**
  * service implements manager.
@@ -78,5 +79,9 @@ public class ServiceManager {
 
     public static SqlService getSqlService(ProviderManager providerManager) {
         return new SqlServiceImpl(providerManager);
+    }
+
+    public static MQGrpcService getMQGrpcService(ProviderManager providerManager) {
+        return new MQGrpcServiceImpl(providerManager);
     }
 }

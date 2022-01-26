@@ -4,11 +4,14 @@ import cn.hyperchain.sdk.common.utils.Async;
 import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
+import cn.hyperchain.sdk.grpc.GrpcUtil;
 import cn.hyperchain.sdk.grpc.Transaction.CommonRes;
 import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
+import cn.hyperchain.sdk.provider.ServerStreamManager;
 import cn.hyperchain.sdk.response.PollingResponse;
 import cn.hyperchain.sdk.response.Response;
+import cn.hyperchain.sdk.response.mq.MQGrpcConsumeResponse;
 import cn.hyperchain.sdk.transaction.Transaction;
 import cn.hyperchain.sdk.transaction.TxVersion;
 import com.google.gson.Gson;
@@ -37,6 +40,7 @@ public abstract class Request<K extends Response> {
     protected HashMap<String, String> headers;
     protected Transaction transaction;
     protected boolean isGRPC;
+    protected boolean isJson;
     private HashMap<HttpProvider, Boolean> usedProviders;
     private boolean usedAllProviders;
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -119,7 +123,15 @@ public abstract class Request<K extends Response> {
     public K send() throws RequestException {
         String res = null;
         try {
-            res = providerManager.send(this, nodeIds);
+            Object object = providerManager.send(this, nodeIds);
+            if (object instanceof String) {
+                res = (String)object;
+            } else {
+                if (object instanceof ServerStreamManager && clazz.equals(MQGrpcConsumeResponse.class)) {
+                    return (K) new MQGrpcConsumeResponse((ServerStreamManager)object);
+                }
+                throw new RequestException(RequestExceptionCode.GRPC_RESPONSE_FAILED);
+            }
         } catch (RequestException e) {
             if (e.getCode().equals(RequestExceptionCode.GRPC_STREAM_FAILED.getCode())) {
                 return (K)reSendTransaction(this, transaction, false);
@@ -130,8 +142,13 @@ public abstract class Request<K extends Response> {
         if (isGRPC) {
             try {
                 CommonRes commonRes = CommonRes.parseFrom(Hex.decode(res));
-                response = clazz.newInstance();
-                response.fromGRPCCommonRes(commonRes);
+                if (isJson) {
+                    String json = GrpcUtil.generateResponseJson(commonRes);
+                    response = gson.fromJson(json, clazz);
+                } else {
+                    response = clazz.newInstance();
+                    response.fromGRPCCommonRes(commonRes);
+                }
             } catch (Exception e) {
                 throw new RequestException(RequestExceptionCode.GRPC_RESPONSE_FAILED);
             }
@@ -254,6 +271,10 @@ public abstract class Request<K extends Response> {
 
     public void setGRPC(boolean grpc) {
         isGRPC = grpc;
+    }
+
+    public void setJson(boolean isJson) {
+        this.isJson = isJson;
     }
 
     public void clearParams() {

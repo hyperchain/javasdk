@@ -1,9 +1,10 @@
 - [第一章. 前言](#第一章-前言)
 - [第二章. 初始化](#第二章-初始化)
   - [2.1 创建HttpProvider对象](#21-创建httpprovider对象)
-  - [2.2 创建ProviderManager对象](#22-创建providermanager对象)
-  - [2.3 创建服务](#23-创建服务)
-  - [2.4 获取结果](#24-获取结果)
+  - [2.2 创建GrpcProvider对象](#22-创建grpcprovider对象)
+  - [2.3 创建ProviderManager对象](#23-创建providermanager对象)
+  - [2.4 创建服务](#24-创建服务)
+  - [2.5 获取结果](#25-获取结果)
 - [第三章. 交易](#第三章-交易)
   - [合约接口](#合约接口)
   - [转账交易](#转账交易)
@@ -30,6 +31,17 @@
   - [交易体签名](#交易体签名)
   - [创建请求](#创建请求)
   - [发送交易体](#发送交易体)
+  - [合约辅助接口](#合约辅助接口)
+    - [编译Solidity合约](#编译solidity合约)
+    - [获取合约源码](#获取合约源码)
+    - [获取账户部署的合约数量](#获取账户部署的合约数量)
+    - [获取账户部署的合约地址列表](#获取账户部署的合约地址列表)
+    - [获取合约状态](#获取合约状态)
+    - [获取合约的部署账户](#获取合约的部署账户)
+    - [获取合约的部署时间](#获取合约的部署时间)
+    - [获取合约状态by cname](#获取合约状态by-cname)
+    - [获取合约的部署账户by cname](#获取合约的部署账户by-cname)
+    - [获取合约的部署时间by cname](#获取合约的部署时间by-cname)
 - [第四章. Transaction接口(TxService)](#第四章-transaction接口txservice)
   - [4.1 查询交易by transaction hash(getTransactionByHash)](#41-查询交易by-transaction-hashgettransactionbyhash)
   - [4.2 查询交易by block hash(getTxByBlockHashAndIndex)](#42-查询交易by-block-hashgettxbyblockhashandindex)
@@ -43,6 +55,10 @@
   - [4.10 查询指定extraID的交易by extraID(getTxsByExtraID)](#410-查询指定extraid的交易by-extraidgettxsbyextraid)
   - [4.11 查询指定filter的交易by filter(getTxsByFilter)](#411-查询指定filter的交易by-filtergettxsbyfilter)
   - [4.12 查询平台当前的交易版本号(getTxVersion)](#412-查询平台当前的交易版本号gettxversion)
+  - [4.13 查询链上所有非法交易交易量(getInvalidTransactionsCount)](#413-查询链上所有非法交易交易量getinvalidtransactionscount)
+  - [4.14 查询链上指定时间段内的非法交易交易量(getInvalidTransactionsCountByTime)](#414-查询链上指定时间段内的非法交易交易量getinvalidtransactionscountbytime)
+  - [4.15 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)](#415-查询一个区块中的所有非法交易-by-block-numbergetinvalidtxsbyblocknumber)
+  - [4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)](#416-查询一个区块中的所有非法交易-by-block-hashgetinvalidtxsbyblockhash)
 - [第五章. BlockService相关接口](#第五章-blockservice相关接口)
   - [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
   - [5.2 查询区块by block hash(getBlockByHash)](#52-查询区块by-block-hashgetblockbyhash)
@@ -62,6 +78,12 @@
   - [7.5 获取所有队列名称](#75-获取所有队列名称)
   - [7.6 获取所有exchanger名称](#76-获取所有exchanger名称)
   - [7.7 删除exchanger](#77-删除exchanger)
+- [第八章. MQGrpcService相关接口](#第八章-mqgrpcservice相关接口)
+  - [8.1 注册队列](#81-注册队列)
+  - [8.2 注销队列](#82-注销队列)
+  - [8.3 获取所有队列名称](#83-获取所有队列名称)
+  - [8.4 消费MQ信息](#84-消费mq信息)
+  - [8.5 停止消费MQ信息](#85-停止消费mq信息)
 - [第九章. ArchiveService相关接口](#第九章-archiveservice相关接口)
   - [9.1 Hyperchain1.x相关接口](#91-hyperchain1x相关接口)
     - [9.1.1 制作快照](#911-制作快照)
@@ -79,6 +101,7 @@
     - [9.2.1 列出所有快照](#921-列出所有快照)
     - [9.2.2 数据归档（直接归档）](#922-数据归档直接归档)
     - [9.2.3 查询归档数据状态](#923-查询归档数据状态)
+    - [9.2.4 查询归档数据是否存在](#924-查询归档数据是否存在)
 - [第十章. SqlService相关接口](#第十章-sqlservice相关接口)
   - [10.1 创建SQL交易体](#101-创建sql交易体)
   - [10.2 创建数据库](#102-创建数据库)
@@ -1432,6 +1455,132 @@ Request<MQResponse> getExchangerName(int... nodeIds);
 
 ```java
 Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
+```
+
+
+
+## 第八章. MQGrpcService相关接口
+
+MQGrpcService依赖grpc服务提供MQ相关功能，无需依赖第三方软件进行消息推送。MQGrpcService的响应类型沿用了MQService的`MQResponse`，同时新增了`MQGrpcConsumeResponse`作为消费接口的响应类型。
+
+注意：在使用此服务时，创建ProviderManager对象时，必须提供grpcProvider。
+
+MQResponse为注册队列、注销队列、获取队列名称、停止消费接口的响应类型
+
+```java
+public class MQResponse extends Response {
+    @Expose
+    private JsonElement result;
+}
+```
+
+`MQGrpcConsumeResponse`为消费MQ信息接口的响应类型，仅提供一个`getResult`方法，返回值为实现了Iterator接口的`ServerStreamManager`对象。用户可以通过`next`方法不停的获取来自平台的MQ消息，如果平台没有新的消息产生，则next方法会阻塞。MQ消息可通过`Decoder.decodeMQMessage`方法进行解析。
+
+注意：队列A，在同一时刻，只能被一个客户端消费。即对于在一号节点注册的队列A，如果客户端甲已经调用consume接口消费了该队列，那么在这个时刻，客户端乙将无法同时消费队列A。只有当客户端甲调用stopConsume接口，停止消费队列A之后，客户端乙才可以消费队列A。
+
+```java
+public class MQGrpcConsumeResponse extends Response {
+    private ServerStreamManager manager;
+    public ServerStreamManager getResult();
+}
+
+public class ServerStreamManager extends Manager implements Iterator {
+    private Iterator<Transaction.CommonRes> commonResIterator;
+  	@Override
+    public boolean hasNext();
+
+    @Override
+    public Object next();
+
+    @Override
+    public void remove();
+}
+
+// mq消费示例
+@Test
+public void testMQ_GRPC_Consume() throws RequestException {
+		Request<MQGrpcConsumeResponse> request = mqGrpcService.consume("queueName", nodeId);
+    MQGrpcConsumeResponse response = request.send();
+    ServerStreamManager manager = response.getResult();
+    while (manager.hasNext()) {
+    	String res = (String) manager.next();
+      System.out.println(Decoder.decodeMQMessage(res));
+      System.out.println(Decoder.decodeMQMessage(res).getBody());
+    }
+}
+```
+
+
+
+### 8.1 注册队列
+
+参数：
+
++ from 调用该接口的账户地址
++ queueName 队列名称
++ routingkeys 想要订阅的消息类型
++ isVerbose 推送区块时是否推送交易列表，true表示是
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> registerQueue(String from, String queueName, List<String> routingkeys, Boolean isVerbose, int... nodeIds);
+```
+
+参数：
+
++ mqParam 注册队列所需参数，除了上述方法中的参数外，新增了合约event事件的相关过滤参数
+
+```java
+Request<MQResponse> registerQueue(MQParam mqParam, int... nodeIds);
+```
+
+### 8.2 注销队列
+
+参数：
+
++ from 调用该接口的账户地址
++ queueName 队列名称
++ exchangerName exchanger 名称
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> unRegisterQueue(String queueName, int... nodeIds);
+```
+
+### 8.3 获取所有队列名称
+
+参数
+
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> getAllQueueNames(int... nodeIds);
+```
+
+### 8.4 消费MQ信息
+
+注意：本消费接口使用完之后，应及时调用停止消费MQ信息接口，不然该队列无法被再次消费。
+
+参数
+
+* queueName 队列名称
+
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQGrpcConsumeResponse> consume(String queueName, int... nodeIds);
+```
+
+### 8.5 停止消费MQ信息
+
+参数
+
+* queueName 队列名称
+
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> stopConsume(String queueName, int... nodeIds);
 ```
 
 

@@ -12,7 +12,7 @@ import java.util.Map;
  * @version 0.0.1
  */
 public interface HttpProvider {
-    String post(Request request) throws RequestException;
+    Object post(Request request) throws RequestException;
 
     PStatus getStatus();
 

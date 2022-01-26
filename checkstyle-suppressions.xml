@@ -25,4 +25,6 @@
               files="cn.hyperchain.sdk.grpc.GrpcApiContractGrpc"/>
     <suppress checks="Check"
               files="cn.hyperchain.sdk.grpc.GrpcApiTransactionGrpc"/>
+    <suppress checks="Check"
+              files="cn.hyperchain.sdk.grpc.GrpcApiMQGrpc"/>
 </suppressions>

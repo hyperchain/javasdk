@@ -11194,9 +11194,16 @@ public final class Transaction {
       "GrpcApiDid\022>\n\022SendDIDTransaction\022\021.proto" +
       "s.CommonReq\032\021.protos.CommonRes(\0010\001\022K\n\037Se" +
       "ndDIDTransactionReturnReceipt\022\021.protos.C" +
-      "ommonReq\032\021.protos.CommonRes(\0010\001B+\n\026cn.hy" +
-      "perchain.sdk.grpcB\013Transaction\242\002\003RTGb\006pr" +
-      "oto3"
+      "ommonReq\032\021.protos.CommonRes(\0010\0012\223\002\n\tGrpc" +
+      "ApiMQ\0220\n\010Register\022\021.protos.CommonReq\032\021.p" +
+      "rotos.CommonRes\0222\n\nUnRegister\022\021.protos.C" +
+      "ommonReq\032\021.protos.CommonRes\0228\n\020GetAllQue" +
+      "ueNames\022\021.protos.CommonReq\032\021.protos.Comm" +
+      "onRes\0221\n\007Consume\022\021.protos.CommonReq\032\021.pr" +
+      "otos.CommonRes0\001\0223\n\013StopConsume\022\021.protos" +
+      ".CommonReq\032\021.protos.CommonResB+\n\026cn.hype" +
+      "rchain.sdk.grpcB\013Transaction\242\002\003RTGb\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
