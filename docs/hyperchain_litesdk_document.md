@@ -13,18 +13,23 @@
     - [部署合约](#部署合约)
       - [HVM](#hvm)
       - [EVM](#evm)
+      - [FVM](#fvm)
     - [调用合约](#调用合约)
       - [HVM](#hvm-1)
       - [EVM](#evm-1)
+      - [FVM](#fvm-1)
     - [升级合约](#升级合约)
       - [HVM](#hvm-2)
       - [EVM](#evm-2)
+      - [FVM](#fvm-2)
     - [冻结合约](#冻结合约)
       - [HVM](#hvm-3)
       - [EVM](#evm-3)
+      - [FVM](#fvm-3)
     - [解冻合约](#解冻合约)
       - [HVM](#hvm-4)
       - [EVM](#evm-4)
+      - [FVM](#fvm-4)
   - [simulate交易](#simulate交易)
   - [交易体的payload](#交易体的payload)
   - [交易体设置TxVersion](#交易体设置txversion)
@@ -326,7 +331,7 @@ public interface ContractService {
 }
 ```
 
-根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM、BVM三种形式的合约**，这几种也会影响到交易体的创建。
+根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM、BVM、FVM三种形式的合约**，这几种也会影响到交易体的创建。
 
 ### 转账交易
 
@@ -424,7 +429,7 @@ public enum Algo {
 
 #### 交易体创建
 
-**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。HVM、EVM和BVM分别有各自的**Builder**：`HVMBuilder`、`EVMBuilder、BVMBuilder`，继承同一个父类`Builer`。目前**Builder**模式提供了五种交易体的封装，分别对应**部署合约、调用合约、升级合约、冻结合约、解冻合约**，其中前两个服务的交易体分别定义在HVM、EVM、BVM各自的`Builder`子类中，后三者都是**管理合约**这一服务的子服务，定义在父类`Builder`中。
+**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。HVM、EVM、BVM和FVM分别有各自的**Builder**：`HVMBuilder`、`EVMBuilder、BVMBuilder`、`FVMBuilder`，继承同一个父类`Builer`。目前**Builder**模式提供了五种交易体的封装，分别对应**部署合约、调用合约、升级合约、冻结合约、解冻合约**，其中前两个服务的交易体分别定义在HVM、EVM、BVM、FVM各自的`Builder`子类中，后三者都是**管理合约**这一服务的子服务，定义在父类`Builder`中。
 
 ```java
 class Builder {
@@ -484,6 +489,13 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deplo
 
 创建交易体时需要指定要**部署的合约的bin、abi文件的字符串内容以及合约名**。
 
+##### FVM
+```java
+InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("fvm-contract/set_hash/SetHash-gc.wasm");
+Transaction transaction = new Transaction.FVMBuilder(account.getAddress()).deploy(inputStream1).build();
+```
+创建交易体时需要指定要**部署的合约的wasm文件**
+
 #### 调用合约
 
 ##### HVM
@@ -535,6 +547,19 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invok
 
 创建交易体时需要指定**调用方法**、**abi文件**和**方法参数**。
 
+##### FVM
+```java
+InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("fvm-contract/set_hash/contract.json");
+String abiStr = FileUtil.readFile(inputStream2);
+FVMAbi abi = FVMAbi.fromJson(abiStr);
+FuncParams params = new FuncParams();
+params.addParams("key001");
+params.addParams("this is the value of 0001");
+Transaction transaction1 = new Transaction.FVMBuilder(account.getAddress()).invoke(contractAddress, "set_hash", abi, params).build();
+```
+创建交易体时需要指定**调用方法，abi以及参数**
+
+
 #### 升级合约
 
 ##### HVM
@@ -553,6 +578,13 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgra
 
 创建交易体时需要指定**合约地址**和**升级的新合约的bin文件字符串**。
 
+##### FVM
+```java
+Transaction transaction3 = new Transaction.FVMBuilder(account.getAddress()).upgrade(contractAddress, Encoder.encodeDeployWasm(inputStream3)).build();
+```
+
+创建交易体时需要指定**合约地址**和**升级的新合约的wasm文件**。
+
 #### 冻结合约
 
 ##### HVM
@@ -567,6 +599,13 @@ Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).freez
 
 ```java
 Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).freeze(contractAddress).build();
+```
+
+创建交易体时需要指定**合约地址**。
+
+##### FVM
+```java
+Transaction transaction = new Transaction.FVMBuilder(account.getAddress()).freeze(contractAddress).build();
 ```
 
 创建交易体时需要指定**合约地址**。
@@ -588,6 +627,15 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 ```
 
 创建交易体时需要指定**合约地址**。
+
+##### FVM
+
+```java
+Transaction transaction = new Transaction.FVMBuilder(account.getAddress()).unfreeze(contractAddress).build();
+```
+
+创建交易体时需要指定**合约地址**。
+
 
 ### simulate交易
 

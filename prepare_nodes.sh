@@ -44,7 +44,7 @@ fi
 echo "BRANCH :" $BRANCH
 
 
-tag="v1.3.0"
+tag="v1.4.0-1"
 version="latest"
 if [[ $tag =~ "release" ]]; then
   version=${tag#release-}

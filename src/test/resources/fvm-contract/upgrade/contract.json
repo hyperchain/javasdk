@@ -1,0 +1,35 @@
+{
+  "contract": {
+    "name": "MyContract",
+    "constructor": {
+      "input": []
+    }
+  },
+  "methods": [
+    {
+      "name": "set",
+      "input": [
+        {
+          "type_id": 0
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "get",
+      "input": [],
+      "output": [
+        {
+          "type_id": 0
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "id": 0,
+      "type": "primitive",
+      "primitive": "u64"
+    }
+  ]
+}
