@@ -11,6 +11,10 @@ public enum RequestExceptionCode {
     SYSTEM_BUSY(-32006, "system is busy"),
     HTTP_TIME_OUT(-32096, "request time out"),
     METHOD_NOT_FOUND(-32601, "method not found"),
+    CONSENSUS_STATUS_ABNORMAL(-32024, "consensus status abnormal"),
+    DISPATCHER_FULL(-32025, "dispatcher full"),
+    QPS_LIMIT(-32026, "QPS limit"),
+    SIMULATE_LIMIT(-32027, "simulate limit"),
 
     GRPC_RESPONSE_FAILED(-5000, "create reponse failed"),
     GRPC_SERVICE_WRONG(-5001, "this service must use grpc"),
