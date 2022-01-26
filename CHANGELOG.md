@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0-1](https://git.hyperchain.cn///compare/v1.2.0-4...v1.3.0-1) (2022-01-26)
+
+
+### Features
+
+* support grpc mq ([3d58682](https://git.hyperchain.cn///commit/3d58682dba517de062e52db29f28d888f3d5a05e))
+* **fvm:** after rebase ([19d786d](https://git.hyperchain.cn///commit/19d786d017c9f9189d39dce2056fe28aa5e2f396))
+* **providerManager:** resend tx request to other node when the node can't handle tx ([8198fb5](https://git.hyperchain.cn///commit/8198fb5d2dfcdb86a852f03a1f20d357a261b867))
+
+
+### Bug Fixes
+
+* **providerManager:** fix logic of getTcert when set txversion ([58f9427](https://git.hyperchain.cn///commit/58f94278d15fad1c222c948430ae36ce37a6c895))
+
 ## [1.2.0-4](https://git.hyperchain.cn///compare/v1.2.0-3...v1.2.0-4) (2022-01-21)
 
 
