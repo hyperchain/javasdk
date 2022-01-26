@@ -5,6 +5,7 @@ import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
 import cn.hyperchain.sdk.grpc.Transaction.CommonRes;
+import cn.hyperchain.sdk.provider.HttpProvider;
 import cn.hyperchain.sdk.provider.ProviderManager;
 import cn.hyperchain.sdk.response.PollingResponse;
 import cn.hyperchain.sdk.response.Response;
@@ -36,6 +37,8 @@ public abstract class Request<K extends Response> {
     protected HashMap<String, String> headers;
     protected Transaction transaction;
     protected boolean isGRPC;
+    private HashMap<HttpProvider, Boolean> usedProviders;
+    private boolean usedAllProviders;
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     // rpc request
     @Expose
@@ -147,6 +150,12 @@ public abstract class Request<K extends Response> {
                     return (K) reSendTransaction(this, transaction, false);
                 }
             }
+            if (!usedAllProviders && (requestException.getCode().equals(RequestExceptionCode.CONSENSUS_STATUS_ABNORMAL.getCode()) ||
+                    requestException.getCode().equals(RequestExceptionCode.DISPATCHER_FULL.getCode()) ||
+                    requestException.getCode().equals(RequestExceptionCode.QPS_LIMIT.getCode()) ||
+                    requestException.getCode().equals(RequestExceptionCode.SIMULATE_LIMIT.getCode()))) {
+                return send();
+            }
             throw requestException;
         }
 
@@ -251,7 +260,51 @@ public abstract class Request<K extends Response> {
         this.params.clear();
     }
 
+    private void clearUsedProviders() {
+        usedProviders = null;
+        usedAllProviders = false;
+    }
+
+    /**
+     * add provider which the request had send to.
+     * @param httpProvider -
+     */
+    public void addProvider(HttpProvider httpProvider) {
+        if (usedProviders == null) {
+            usedProviders = new HashMap<>();
+        }
+        usedProviders.put(httpProvider, true);
+    }
+
+    /**
+     * return true if request had send to the provider.
+     * @param httpProvider -
+     * @return -
+     */
+    public boolean isUsedProvider(HttpProvider httpProvider) {
+        if (usedProviders == null) {
+            return false;
+        }
+        if (usedProviders.get(httpProvider)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * set usedAllProviders true if request had send to all providers.
+     * @param size -
+     */
+    public void setUsedAllProviders(int size) {
+        if (usedProviders == null || usedProviders.size() < size) {
+            usedAllProviders = false;
+        } else {
+            usedAllProviders = true;
+        }
+    }
+
     protected Response reSendTransaction(Request request, Transaction transaction, boolean needPolling) throws RequestException {
+        request.clearUsedProviders();
         Map<String, Object> txParamMap = transaction.commonParamMap();
         if (request.getMethod().contains("contract_deployContract")) {
             txParamMap.remove("to");

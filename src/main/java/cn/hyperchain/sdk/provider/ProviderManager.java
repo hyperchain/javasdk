@@ -14,6 +14,7 @@ import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
 import cn.hyperchain.sdk.request.SendBatchTxsRequest;
+import cn.hyperchain.sdk.request.PollingRequest;
 import cn.hyperchain.sdk.response.TCertResponse;
 import cn.hyperchain.sdk.response.did.DIDResponse;
 import cn.hyperchain.sdk.response.tx.TxVersionResponse;
@@ -239,7 +240,7 @@ public class ProviderManager {
                 flag = false;
                 continue;
             }
-            if (flag ? hProvider.getStatus() == PStatus.NORMAL : hProvider.getStatus() != PStatus.ABNORMAL) {
+            if ((flag ? hProvider.getStatus() == PStatus.NORMAL : hProvider.getStatus() != PStatus.ABNORMAL) && (request instanceof PollingRequest || !request.isUsedProvider(hProvider))) {
                 logger.debug("[REQUEST] request node id: " + ((startIndex + i) % providerSize + 1));
                 try {
                     request.setNamespace(this.namespace);
@@ -252,6 +253,8 @@ public class ProviderManager {
                         auth.setSignature(ByteUtil.toHex(hProvider.getAccount().sign(sourceData)));
                         request.setAuth(auth);
                     }
+                    request.addProvider(hProvider);
+                    request.setUsedAllProviders(providerSize);
                     return sendTo(request, hProvider);
                 } catch (RequestException e) {
                     //todo grpc在某些情况下也需要重连（等其他接口服务恢复之后添加）
