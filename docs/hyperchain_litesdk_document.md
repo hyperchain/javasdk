@@ -51,19 +51,24 @@
   - [4.1 查询交易by transaction hash(getTransactionByHash)](#41-查询交易by-transaction-hashgettransactionbyhash)
   - [4.2 查询交易by block hash(getTxByBlockHashAndIndex)](#42-查询交易by-block-hashgettxbyblockhashandindex)
   - [4.3 查询交易by block number(getTxByBlockNumAndIndex)](#43-查询交易by-block-numbergettxbyblocknumandindex)
-  - [4.4 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#44-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
-  - [4.5 查询链上所有交易量(getTransactionsCount)](#45-查询链上所有交易量gettransactionscount)
-  - [4.6 查询交易回执信息by transaction hash(getTransactionReceipt)](#46-查询交易回执信息by-transaction-hashgettransactionreceipt)
-  - [4.7 查询区块交易数量by block hash(getBlockTxCountByHash)](#47-查询区块交易数量by-block-hashgetblocktxcountbyhash)
-  - [4.8 查询区块交易数量by block number(getBlockTxCountByNumber)](#48-查询区块交易数量by-block-numbergetblocktxcountbynumber)
-  - [4.9 获取交易签名哈希(getSignHash)](#49-获取交易签名哈希getsignhash)
-  - [4.10 查询指定extraID的交易by extraID(getTxsByExtraID)](#410-查询指定extraid的交易by-extraidgettxsbyextraid)
-  - [4.11 查询指定filter的交易by filter(getTxsByFilter)](#411-查询指定filter的交易by-filtergettxsbyfilter)
-  - [4.12 查询平台当前的交易版本号(getTxVersion)](#412-查询平台当前的交易版本号gettxversion)
-  - [4.13 查询链上所有非法交易交易量(getInvalidTransactionsCount)](#413-查询链上所有非法交易交易量getinvalidtransactionscount)
-  - [4.14 查询链上指定时间段内的非法交易交易量(getInvalidTransactionsCountByTime)](#414-查询链上指定时间段内的非法交易交易量getinvalidtransactionscountbytime)
-  - [4.15 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)](#415-查询一个区块中的所有非法交易-by-block-numbergetinvalidtxsbyblocknumber)
-  - [4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)](#416-查询一个区块中的所有非法交易-by-block-hashgetinvalidtxsbyblockhash)
+  - [4.4 查询交易by time with limit(getTransactionsByTimeWithLimit)](#44-查询交易by-time-with-limitgettransactionsbytimewithlimit)
+  - [4.5 查询交易 with limit(getTxsWithLimit)](#45-查询交易-with-limitgettxswithlimit)
+  - [4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#46-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
+  - [4.7 查询链上所有交易量(getTransactionsCount)](#47-查询链上所有交易量gettransactionscount)
+  - [4.8 查询交易回执信息by transaction hash(getTransactionReceipt)](#48-查询交易回执信息by-transaction-hashgettransactionreceipt)
+  - [4.9 查询交易回执信息 with gas(getTransactionReceiptWithGas)](#49-查询交易回执信息-with-gasgettransactionreceiptwithgas)
+  - [4.10 查询上链的交易回执信息(getConfirmedTransactionReceipt)](#410-查询上链的交易回执信息getconfirmedtransactionreceipt)
+  - [4.11 查询区块交易数量by block hash(getBlockTxCountByHash)](#411-查询区块交易数量by-block-hashgetblocktxcountbyhash)
+  - [4.12 查询区块交易数量by block number(getBlockTxCountByNumber)](#412-查询区块交易数量by-block-numbergetblocktxcountbynumber)
+  - [4.13 获取交易签名哈希(getSignHash)](#413-获取交易签名哈希getsignhash)
+  - [4.14 查询指定extraID的交易by extraID(getTxsByExtraID)](#414-查询指定extraid的交易by-extraidgettxsbyextraid)
+  - [4.15 查询指定filter的交易by filter(getTxsByFilter)](#415-查询指定filter的交易by-filtergettxsbyfilter)
+  - [4.16 查询平台当前的交易版本号(getTxVersion)](#416-查询平台当前的交易版本号gettxversion)
+  - [4.17 查询链上所有非法交易交易量(getInvalidTransactionsCount)](#417-查询链上所有非法交易交易量getinvalidtransactionscount)
+  - [4.18 查询链上指定时间段内的非法交易交易量(getInvalidTxsCountByTime)](#418-查询链上指定时间段内的非法交易交易量getinvalidtxscountbytime)
+  - [4.19 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)](#419-查询一个区块中的所有非法交易-by-block-numbergetinvalidtxsbyblocknumber)
+  - [4.20 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)](#420-查询一个区块中的所有非法交易-by-block-hashgetinvalidtxsbyblockhash)
+  - [4.21查询非法交易 with limit(getInvalidTxsWithLimit)](#421查询非法交易-with-limitgetinvalidtxswithlimit)
 - [第五章. BlockService相关接口](#第五章-blockservice相关接口)
   - [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
   - [5.2 查询区块by block hash(getBlockByHash)](#52-查询区块by-block-hashgetblockbyhash)
@@ -956,7 +961,61 @@ Request<TxResponse> getTxByBlockNumAndIndex(String blockNumber, String idx, int.
 
 
 
-### 4.4 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)
+### 4.4 查询交易by time with limit(getTransactionsByTimeWithLimit)
+
+参数：
+
+* startTime 起始时间戳
+* endTime 结束时间戳
+* metaData 分页相关参数
+* filter 交易过滤条件
+* nodeIds 请求向哪些节点发送
+
+```java
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, MetaDataParam metaData, FilterParam filter, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, MetaDataParam metaData, int... nodeIds);
+
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, MetaDataParam metaData, FilterParam filter, int... nodeIds);
+
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, MetaDataParam metaData, int... nodeIds);
+
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(BigInteger startTime, BigInteger endTime, int... nodeIds);
+
+Request<TxLimitResponse> getTransactionsByTimeWithLimit(String startTime, String endTime, int... nodeIds);
+
+```
+
+
+
+### 4.5 查询交易 with limit(getTxsWithLimit)
+
+参数：
+
+* from 区块区间起点
+* to 区块区间终点
+* metaData 分页相关参数
+* nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxLimitResponse> getTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxLimitResponse> getTxsWithLimit(String from, String to, int... nodeIds);
+```
+
+
+
+
+
+### 4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)
 
 参数：
 
@@ -976,7 +1035,7 @@ Request<TxAvgTimeResponse> getTxAvgTimeByBlockNumber(String from, String to, int
 
 
 
-### 4.5 查询链上所有交易量(getTransactionsCount)
+### 4.7 查询链上所有交易量(getTransactionsCount)
 
 参数：
 
@@ -988,7 +1047,7 @@ Request<TxCountWithTSResponse> getTransactionsCount(int... nodeIds);
 
 
 
-### 4.6 查询交易回执信息by transaction hash(getTransactionReceipt)
+### 4.8 查询交易回执信息by transaction hash(getTransactionReceipt)
 
 参数：
 
@@ -1001,7 +1060,33 @@ Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds);
 
 
 
-### 4.7 查询区块交易数量by block hash(getBlockTxCountByHash)
+### 4.9 查询交易回执信息 with gas(getTransactionReceiptWithGas)
+
+参数：
+
+- txHash 交易hash。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<ReceiptResponse> getTransactionReceiptWithGas(String txHash, int... nodeIds);
+```
+
+
+
+### 4.10 查询上链的交易回执信息(getConfirmedTransactionReceipt)
+
+参数：
+
+- txHash 交易hash。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<ReceiptResponse> getConfirmedTransactionReceipt(String txHash, int... nodeIds);
+```
+
+
+
+### 4.11 查询区块交易数量by block hash(getBlockTxCountByHash)
 
 参数：
 
@@ -1014,7 +1099,7 @@ Request<TxCountWithTSResponse> getBlockTxCountByHash(String blockHash, int... no
 
 
 
-### 4.8 查询区块交易数量by block number(getBlockTxCountByNumber)
+### 4.12 查询区块交易数量by block number(getBlockTxCountByNumber)
 
 参数：
 
@@ -1027,7 +1112,7 @@ Request<TxCountWithTSResponse> getBlockTxCountByNumber(String blockNumber, int..
 
 
 
-### 4.9 获取交易签名哈希(getSignHash)
+### 4.13 获取交易签名哈希(getSignHash)
 
 **部署合约时**
 
@@ -1063,7 +1148,7 @@ Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String
 Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String value, BigInteger timestamp, int... nodeIds);
 ```
 
-### 4.10 查询指定extraID的交易by extraID(getTxsByExtraID)
+### 4.14 查询指定extraID的交易by extraID(getTxsByExtraID)
 
 该接口只要在访问的节点开启数据索引功能时才可用。
 
@@ -1105,7 +1190,7 @@ FilterParam 结构如下：
 Request<TxLimitResponse> getTxsByExtraID(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
 ```
 
-### 4.11 查询指定filter的交易by filter(getTxsByFilter)
+### 4.15 查询指定filter的交易by filter(getTxsByFilter)
 
 该接口只要在访问的节点开启数据索引功能时才可用。
 
@@ -1154,7 +1239,7 @@ Request<TxLimitResponse> getTxsByFilter(int mode, boolean detail, MetaDataParam 
 
 
 
-### 4.12 查询平台当前的交易版本号(getTxVersion)
+### 4.16 查询平台当前的交易版本号(getTxVersion)
 
 getTxVersion接口会在创建ProviderManager对象时调用，并设置全局的TxVersion。
 
@@ -1166,7 +1251,7 @@ getTxVersion接口会在创建ProviderManager对象时调用，并设置全局�
 Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
 ```
 
-### 4.13 查询链上所有非法交易交易量(getInvalidTransactionsCount)
+### 4.17 查询链上所有非法交易交易量(getInvalidTransactionsCount)
 
 参数：
 
@@ -1176,7 +1261,7 @@ Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
 Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds);
 ```
 
-### 4.14 查询链上指定时间段内的非法交易交易量(getInvalidTransactionsCountByTime)
+### 4.18 查询链上指定时间段内的非法交易交易量(getInvalidTxsCountByTime)
 
 参数：
 
@@ -1188,7 +1273,7 @@ Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds);
 Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 ```
 
-### 4.15 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)
+### 4.19 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)
 
 参数：
 
@@ -1199,7 +1284,7 @@ Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteg
 Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
 ```
 
-### 4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)
+### 4.20 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)
 
 参数：
 
@@ -1209,6 +1294,32 @@ Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... no
 ```java
 Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
 ```
+
+
+
+### 4.21查询非法交易 with limit(getInvalidTxsWithLimit)
+
+参数：
+
+* from 区块区间起点
+* to 区块区间终点
+* metaData 分页相关参数
+* nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, int... nodeIds);
+
+Request<TxLimitResponse> getInvalidTxsWithLimit(Integer from, Integer to, int... nodeIds);
+
+```
+
+
 
 ## 第五章. BlockService相关接口
 

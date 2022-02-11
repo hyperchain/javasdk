@@ -448,11 +448,13 @@ public interface TxService {
      * @param nodeIds        specific ids
      * @return {@link Request} of {@link TxResponse}
      */
+    @Deprecated
     Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
 
     /**
      * @see TxService#getPrevPageTransactions(String, String, String, String, String, String, boolean, String, int...)
      */
+    @Deprecated
     Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
 
 
