@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0-2](https://git.hyperchain.cn///compare/v1.3.0-1...v1.3.0-2) (2022-02-15)
+
+
+### Features
+
+* **bvm:** add cert and ca mode operation ([dc3adea](https://git.hyperchain.cn///commit/dc3adea9e8a08edab2a320b36306331de5f79d78))
+* **docs:** add some missing interface doc ([f74c80c](https://git.hyperchain.cn///commit/f74c80c65e4e4051a5aab93aac4f7fc392ac7952))
+
+
+### Bug Fixes
+
+* **providerManager:** fix hand the exception of getTcert ([3d6f181](https://git.hyperchain.cn///commit/3d6f18101c81847ec8e4c9f1fcfb23ae6e3ad1d0))
+
+## [1.2.0](https://git.hyperchain.cn///compare/v1.2.0-4...v1.2.0) (2022-01-21)
+
 ## [1.3.0-1](https://git.hyperchain.cn///compare/v1.2.0-4...v1.3.0-1) (2022-01-26)
 
 
