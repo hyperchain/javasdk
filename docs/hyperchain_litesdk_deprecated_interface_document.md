@@ -8,9 +8,11 @@
     - [2.5 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)](#25-查询区块区间交易数量by-contract-addressgettransactionscountbycontractaddr)
     - [2.6 查询下一页交易(getNextPageTransactions)](#26-查询下一页交易getnextpagetransactions)
     - [2.7 查询上一页交易(getPrevPageTransactions)](#27-查询上一页交易getprevpagetransactions)
-    - [2.8 查询批量交易by hash list(getBatchTxByHash)](#28-查询批量交易by-hash-listgetbatchtxbyhash)
-    - [2.9 查询批量回执by hash list(getBatchReceipt)](#29-查询批量回执by-hash-listgetbatchreceipt)
-    - [2.10 查询指定时间区间内的交易数量(getTxsCountByTime)](#210-查询指定时间区间内的交易数量gettxscountbytime)
+    - [2.8 查询下一页非法交易(getNextPageInvalidTransactions)](#28-查询下一页非法交易getnextpageinvalidtransactions)
+    - [2.9 查询上一页非法交易(getPrevPageInvalidTransactions)](#29-查询上一页非法交易getprevpageinvalidtransactions)
+    - [2.10 查询批量交易by hash list(getBatchTxByHash)](#210-查询批量交易by-hash-listgetbatchtxbyhash)
+    - [2.11 查询批量回执by hash list(getBatchReceipt)](#211-查询批量回执by-hash-listgetbatchreceipt)
+    - [2.12 查询指定时间区间内的交易数量(getTxsCountByTime)](#212-查询指定时间区间内的交易数量gettxscountbytime)
     - [## 第三章. BlockService相关接口](#-第三章-blockservice相关接口)
     - [3.1 查询指定区间的区块by block number(getBlocks)](#31-查询指定区间的区块by-block-numbergetblocks)
     - [3.2 查询指定时间区间内的区块数量(getBlocksByTime)](#32-查询指定时间区间内的区块数量getblocksbytime)
@@ -162,7 +164,61 @@ Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txI
 Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
 ```
 
-### 2.8 查询批量交易by hash list(getBatchTxByHash)
+
+
+### 2.8 查询下一页非法交易(getNextPageInvalidTransactions)
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
+```
+
+
+
+### 2.9 查询上一页非法交易(getPrevPageInvalidTransactions)
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
+```
+
+
+
+### 2.10 查询批量交易by hash list(getBatchTxByHash)
 
 参数：
 
@@ -173,7 +229,7 @@ Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, St
 Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeIds);
 ```
 
-### 2.9 查询批量回执by hash list(getBatchReceipt)
+### 2.11 查询批量回执by hash list(getBatchReceipt)
 
 参数：
 
@@ -184,7 +240,7 @@ Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeId
 Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
 ```
 
-### 2.10 查询指定时间区间内的交易数量(getTxsCountByTime)
+### 2.12 查询指定时间区间内的交易数量(getTxsCountByTime)
 
 参数：
 
