@@ -318,7 +318,7 @@ public class ProviderManager {
         tCertRequest.addHeader("signature", sdkCertKeyPair.signData(bodyBytes));
         String response = (String) provider.post(tCertRequest);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
-        if (tCertResponse.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
+        if (tCertResponse.getCode() != 0) {
             throw new RequestException(tCertResponse.getCode(), tCertResponse.getMessage());
         }
         return tCertResponse.getTCert();
@@ -390,10 +390,7 @@ public class ProviderManager {
                         String tCert = providerManager.getTCert(providerManager.tCertPool.getUniquePubKey(), providerManager.tCertPool.getSdkCertKeyPair(), providerManager.httpProviders.get(i - 1));
                         providerManager.tCertPool.setTCert(providerManager.httpProviders.get(i - 1).getUrl(), tCert);
                     } catch (RequestException e) {
-                        if (e.getCode().equals(RequestExceptionCode.METHOD_NOT_FOUND.getCode())) {
-                            logger.info(e.getMessage());
-                        }
-                        throw e;
+                        logger.info(e.getMessage());
                     }
                 }
                 TxVersionResponse txVersionResponse = txService.getTxVersion(i).send();
