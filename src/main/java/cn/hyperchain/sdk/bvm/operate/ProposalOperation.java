@@ -19,6 +19,7 @@ public class ProposalOperation extends BuiltinOperation {
 
         /**
          * create creat ProposalOperation for node to create node proposal.
+         * when ca mode is distributed, admin can create node proposal.
          *
          * @param opts node operations
          * @return {@link ProposalBuilder}
@@ -39,6 +40,46 @@ public class ProposalOperation extends BuiltinOperation {
         public ProposalBuilder createForCNS(CNSOperation... opts) {
             opt.setMethod(ContractMethod.ProposalCreate);
             opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.CNS.getTyp());
+            opt.setBase64Index(0);
+            return this;
+        }
+
+        /**
+         * create creat ProposalOperation for ca to create ca mode proposal.
+         *
+         * @param opts ca_mode operations, i.e. setCAMode
+         * @return {@link ProposalBuilder}
+         */
+        public ProposalBuilder createForCAMode(CAModeOperation... opts) {
+            opt.setMethod(ContractMethod.ProposalCreate);
+            opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.CA.getTyp());
+            opt.setBase64Index(0);
+            return this;
+        }
+
+        /**
+         * create direct ProposalOperation for ca to execute ca mode operation directly.
+         *
+         * @param opts ca_mode operations, i.e. getCAMode
+         * @return {@link ProposalBuilder}
+         */
+        public ProposalBuilder directForCAMode(CAModeOperation... opts) {
+            opt.setMethod(ContractMethod.ProposalDirect);
+            opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.CA.getTyp());
+            opt.setBase64Index(0);
+            return this;
+        }
+
+        /**
+         * create direct ProposalOperation for node to execute node operation directly.
+         * when ca mode is center or none, admin can execute node operation directly.
+         *
+         * @param opts node operations
+         * @return {@link ProposalBuilder}
+         */
+        public ProposalBuilder directForNode(NodeOperation... opts) {
+            opt.setMethod(ContractMethod.ProposalDirect);
+            opt.setArgs(Base64.getEncoder().encodeToString(Encoder.encodeProposalContents(opts)), ProposalType.Node.getTyp());
             opt.setBase64Index(0);
             return this;
         }

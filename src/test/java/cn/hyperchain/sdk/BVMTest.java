@@ -6,6 +6,8 @@ import cn.hyperchain.sdk.bvm.OperationResult;
 import cn.hyperchain.sdk.bvm.Result;
 import cn.hyperchain.sdk.bvm.operate.AccountOperation;
 import cn.hyperchain.sdk.bvm.operate.BuiltinOperation;
+import cn.hyperchain.sdk.bvm.operate.CAMode;
+import cn.hyperchain.sdk.bvm.operate.CAModeOperation;
 import cn.hyperchain.sdk.bvm.operate.CNSOperation;
 import cn.hyperchain.sdk.bvm.operate.CertOperation;
 import cn.hyperchain.sdk.bvm.operate.ConfigOperation;
@@ -14,6 +16,7 @@ import cn.hyperchain.sdk.bvm.operate.HashOperation;
 import cn.hyperchain.sdk.bvm.operate.NodeOperation;
 import cn.hyperchain.sdk.bvm.operate.PermissionOperation;
 import cn.hyperchain.sdk.bvm.operate.ProposalOperation;
+import cn.hyperchain.sdk.bvm.operate.RootCAOperation;
 import cn.hyperchain.sdk.bvm.operate.params.GenesisInfo;
 import cn.hyperchain.sdk.bvm.operate.params.GenesisNode;
 import cn.hyperchain.sdk.bvm.operate.params.NsFilterRule;
@@ -688,6 +691,136 @@ public class BVMTest {
         System.out.println(result2);
         Assert.assertTrue(result2.isSuccess());
         voteAndExecute();
+    }
+
+    @Test
+    @Ignore
+    public void setCAMode() throws RequestException {
+        String adminAccount = "";
+        Account ac = accountService.fromAccountJson(adminAccount);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new ProposalOperation.ProposalBuilder().createForCAMode(new CAModeOperation.CAModeBuilder().setCAMode(CAMode.None).builder()).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+
+    @Test
+    @Ignore
+    public void getCAMode() throws RequestException {
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new ProposalOperation.ProposalBuilder().directForCAMode(new CAModeOperation.CAModeBuilder().getCAMode().builder()).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+
+    @Test
+    @Ignore
+    public void setRootCA() throws RequestException {
+        String rootCA = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICSTCCAfWgAwIBAgIBATAKBggqhkjOPQQDAjB0MQkwBwYDVQQIEwAxCTAHBgNV\n" +
+                "BAcTADEJMAcGA1UECRMAMQkwBwYDVQQREwAxDjAMBgNVBAoTBWZsYXRvMQkwBwYD\n" +
+                "VQQLEwAxDjAMBgNVBAMTBW5vZGUyMQswCQYDVQQGEwJaSDEOMAwGA1UEKhMFZWNl\n" +
+                "cnQwIBcNMjAwNTIxMDU1ODU2WhgPMjEyMDA0MjcwNjU4NTZaMHQxCTAHBgNVBAgT\n" +
+                "ADEJMAcGA1UEBxMAMQkwBwYDVQQJEwAxCTAHBgNVBBETADEOMAwGA1UEChMFZmxh\n" +
+                "dG8xCTAHBgNVBAsTADEOMAwGA1UEAxMFbm9kZTQxCzAJBgNVBAYTAlpIMQ4wDAYD\n" +
+                "VQQqEwVlY2VydDBWMBAGByqGSM49AgEGBSuBBAAKA0IABBI3ewNK21vHNOPG6U3X\n" +
+                "mKJohSNNz72QKDxUpRt0fCJHwaGYfSvY4cnqkbliclfckUTpCkFSRr4cqN6PURCF\n" +
+                "zkWjeTB3MA4GA1UdDwEB/wQEAwIChDAmBgNVHSUEHzAdBggrBgEFBQcDAgYIKwYB\n" +
+                "BQUHAwEGAioDBgOBCwEwDwYDVR0TAQH/BAUwAwEB/zANBgNVHQ4EBgQEAQIDBDAP\n" +
+                "BgNVHSMECDAGgAQBAgMEMAwGAypWAQQFZWNlcnQwCgYIKoZIzj0EAwIDQgDJibFh\n" +
+                "a1tZ3VhL3WIs36DqOS22aetvcn2dXHH9Pw5/s2XI70Mr3ow3RKqJmdmi0PsmLr+K\n" +
+                "pCFkuMv2bHnkWuiZAQ==\n" +
+                "-----END CERTIFICATE-----";
+        String adminAccount = "";
+        Account ac = accountService.fromAccountJson(adminAccount);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new RootCAOperation.RootCABuilder().addRootCA(rootCA).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+
+    @Test
+    @Ignore
+    public void getRootCA() throws RequestException {
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+        invoke(new RootCAOperation.RootCABuilder().getRootCAs().build()).
+                        build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+
+
+
+    @Test
+    @Ignore
+    public void removeVPDirect() throws RequestException {
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new ProposalOperation.ProposalBuilder().directForNode(new NodeOperation.NodeBuilder().removeVP("node5", "global").build()).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+
+    @Test
+    @Ignore
+    public void revokeCert() throws RequestException {
+        String ecert = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICSTCCAfWgAwIBAgIBATAKBggqhkjOPQQDAjB0MQkwBwYDVQQIEwAxCTAHBgNV\n" +
+                "BAcTADEJMAcGA1UECRMAMQkwBwYDVQQREwAxDjAMBgNVBAoTBWZsYXRvMQkwBwYD\n" +
+                "VQQLEwAxDjAMBgNVBAMTBW5vZGUxMQswCQYDVQQGEwJaSDEOMAwGA1UEKhMFZWNl\n" +
+                "cnQwIBcNMjAwNTIyMDUyOTMzWhgPMjEyMDA0MjgwNjI5MzNaMHQxCTAHBgNVBAgT\n" +
+                "ADEJMAcGA1UEBxMAMQkwBwYDVQQJEwAxCTAHBgNVBBETADEOMAwGA1UEChMFZmxh\n" +
+                "dG8xCTAHBgNVBAsTADEOMAwGA1UEAxMFbm9kZTUxCzAJBgNVBAYTAlpIMQ4wDAYD\n" +
+                "VQQqEwVlY2VydDBWMBAGByqGSM49AgEGBSuBBAAKA0IABBI3ewNK21vHNOPG6U3X\n" +
+                "mKJohSNNz72QKDxUpRt0fCJHwaGYfSvY4cnqkbliclfckUTpCkFSRr4cqN6PURCF\n" +
+                "zkWjeTB3MA4GA1UdDwEB/wQEAwIChDAmBgNVHSUEHzAdBggrBgEFBQcDAgYIKwYB\n" +
+                "BQUHAwEGAioDBgOBCwEwDwYDVR0TAQH/BAUwAwEB/zANBgNVHQ4EBgQEAQIDBDAP\n" +
+                "BgNVHSMECDAGgAQBAgMEMAwGAypWAQQFZWNlcnQwCgYIKoZIzj0EAwIDQgB6oSjJ\n" +
+                "ZOANUWYZoGMuJi0qhx7LHOE4aWSvcRtE/8N0R2LC0MSPwVWnoyq1ppcVdoTpHYlh\n" +
+                "UxvXCUo+cOU3lSnRAA==\n" +
+                "-----END CERTIFICATE-----\n";
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().revoke(ecert).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
     }
 }
 

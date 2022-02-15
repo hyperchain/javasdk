@@ -18,6 +18,9 @@ public enum ContractMethod {
 
     CNSSetCName("SetCName"),
 
+    CASetCAMode("SetCAMode"),
+    CAGetCAMode("GetCAMode"),
+
     NodeAddNode("AddNode"),
     NodeAddVP("AddVP"),
     NodeRemoveVP("RemoveVP"),
@@ -31,6 +34,7 @@ public enum ContractMethod {
     ProposalVote("Vote"),
     ProposalCancel("Cancel"),
     ProposalExecute("Execute"),
+    ProposalDirect("Direct"),
 
     HashSet("Set"),
     HashGet("Get"),
@@ -48,6 +52,9 @@ public enum ContractMethod {
     SRSInfo("GetSRSInfo"),
     SRSHistory("GetHistory"),
     SRSBeacon("Beacon"),
+
+    RootCAAdd("AddRootCA"),
+    RootCAGet("GetRootCAs"),
     ;
     private String methodName;
 

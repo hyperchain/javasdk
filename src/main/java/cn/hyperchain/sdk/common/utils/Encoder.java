@@ -355,14 +355,20 @@ public class Encoder {
             bos.write(ByteUtil.intToBytes(b.length));
 
             bos.write(b);
-            bos.write(ByteUtil.intToBytes(opt.getArgs().length));
+            int argLen;
+            if (opt.getArgs() == null) {
+                argLen = 0;
+            } else {
+                argLen = opt.getArgs().length;
+            }
+            bos.write(ByteUtil.intToBytes(argLen));
 
             boolean[] base64Index = null;
             if (opt instanceof BuiltinOperation) {
                 BuiltinOperation bo = (BuiltinOperation) opt;
                 base64Index = bo.getBase64Index();
             }
-            for (int i = 0; i < opt.getArgs().length; i++) {
+            for (int i = 0; i < argLen; i++) {
                 byte[] bytes = base64Index != null && base64Index[i] ? Base64.getDecoder().decode(opt.getArgs()[i]) : opt.getArgs()[i].getBytes();
                 byte[] intToBytes = ByteUtil.intToBytes(bytes.length);
                 bos.write(intToBytes);
