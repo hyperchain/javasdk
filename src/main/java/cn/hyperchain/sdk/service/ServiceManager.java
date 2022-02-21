@@ -11,6 +11,7 @@ import cn.hyperchain.sdk.service.impl.DIDServiceImpl;
 import cn.hyperchain.sdk.service.impl.FileMgrServiceImpl;
 import cn.hyperchain.sdk.service.impl.MQServiceImpl;
 import cn.hyperchain.sdk.service.impl.NodeServiceImpl;
+import cn.hyperchain.sdk.service.impl.ProofServiceImpl;
 import cn.hyperchain.sdk.service.impl.RadarServiceImpl;
 import cn.hyperchain.sdk.service.impl.TxServiceImpl;
 import cn.hyperchain.sdk.service.impl.ConfigServiceImpl;
@@ -83,5 +84,9 @@ public class ServiceManager {
 
     public static MQGrpcService getMQGrpcService(ProviderManager providerManager) {
         return new MQGrpcServiceImpl(providerManager);
+    }
+
+    public static ProofService getProofService(ProviderManager providerManager) {
+        return new ProofServiceImpl(providerManager);
     }
 }

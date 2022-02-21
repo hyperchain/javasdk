@@ -35,6 +35,8 @@ public class BlockResponse extends Response {
         private String merkleRoot;
         @Expose
         private List<TxResponse.Transaction> transactions;
+        @Expose
+        private String txRoot;
 
         public String getNumber() {
             return number;
@@ -72,6 +74,10 @@ public class BlockResponse extends Response {
             return merkleRoot;
         }
 
+        public String getTxRoot() {
+            return txRoot;
+        }
+
         @Override
         public String toString() {
             return "Block{" +
@@ -84,6 +90,7 @@ public class BlockResponse extends Response {
                     ", txcounts='" + txcounts + '\'' +
                     ", merkleRoot='" + merkleRoot + '\'' +
                     ", transactions=" + transactions +
+                    ", txRoot='" + txRoot + '\'' +
                     '}';
         }
     }

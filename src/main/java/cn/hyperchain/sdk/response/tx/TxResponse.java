@@ -48,6 +48,10 @@ public class TxResponse extends Response {
         @Expose
         private String blockWriteTime;
         @Expose
+        private int op;
+        @Expose
+        private String vmType;
+        @Expose
         private ArrayList<Object> extraId;
 
         public String getBlockNumber() {
@@ -118,6 +122,14 @@ public class TxResponse extends Response {
             return extraId;
         }
 
+        public int getOp() {
+            return op;
+        }
+
+        public String getVmType() {
+            return vmType;
+        }
+
         @Override
         public String toString() {
             return "Transaction{" +
@@ -137,7 +149,9 @@ public class TxResponse extends Response {
                     ", signature='" + signature + '\'' +
                     ", blockTimestamp='" + blockTimestamp + '\'' +
                     ", blockWriteTime='" + blockWriteTime + '\'' +
-                    ", extraId='" + gson.toJson(extraId) + '\'' +
+                    ", op=" + op +
+                    ", vmType='" + vmType + '\'' +
+                    ", extraId=" + extraId +
                     '}';
         }
     }

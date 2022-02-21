@@ -26,8 +26,6 @@ public class ContractServiceImpl implements ContractService {
     private ProviderManager providerManager;
     private static final String CONTRACT_PREFIX = "contract_";
     private static final String SIMULATE_PREFIX = "simulate_";
-    private String namespace = "global";
-    private String jsonrpc = "2.0";
 
     public ContractServiceImpl(ProviderManager providerManager) {
         this.providerManager = providerManager;
@@ -47,8 +45,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> txParamMap = transaction.commonParamMap();
         txParamMap.remove("to");
         txHashResponseContractRequest.addParams(txParamMap);
-        txHashResponseContractRequest.setJsonrpc(jsonrpc);
-        txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
     }
@@ -60,7 +56,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> txParamMap = transaction.commonParamMap();
         txParamMap.remove("to");
         receiptRequest.addParams(txParamMap);
-        receiptRequest.setNamespace(namespace);
 
         return receiptRequest;
     }
@@ -80,8 +75,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> txParamMap = transaction.commonParamMap();
 
         txHashResponseContractRequest.addParams(txParamMap);
-        txHashResponseContractRequest.setJsonrpc(jsonrpc);
-        txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
     }
@@ -93,7 +86,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> txParamMap = transaction.commonParamMap();
 
         receiptRequest.addParams(txParamMap);
-        receiptRequest.setNamespace(namespace);
 
         return receiptRequest;
     }
@@ -110,8 +102,6 @@ public class ContractServiceImpl implements ContractService {
         PollingRequest receiptResponsePollingRequest = new PollingRequest("tx_getTransactionReceipt", providerManager, ReceiptResponse.class, nodeIds);
 
         receiptResponsePollingRequest.addParams(txHash);
-        receiptResponsePollingRequest.setJsonrpc(jsonrpc);
-        receiptResponsePollingRequest.setNamespace(namespace);
 
         return receiptResponsePollingRequest;
     }
@@ -122,8 +112,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> params = transaction.commonParamMap();
 
         txHashResponseContractRequest.addParams(params);
-        txHashResponseContractRequest.setJsonrpc(jsonrpc);
-        txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
     }
@@ -134,7 +122,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> params = transaction.commonParamMap();
 
         receiptRequest.addParams(params);
-        receiptRequest.setNamespace(namespace);
 
         return receiptRequest;
     }
@@ -146,8 +133,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> params = transaction.commonParamMap();
 
         txHashResponseContractRequest.addParams(params);
-        txHashResponseContractRequest.setJsonrpc(jsonrpc);
-        txHashResponseContractRequest.setNamespace(namespace);
 
         return txHashResponseContractRequest;
     }
@@ -158,7 +143,6 @@ public class ContractServiceImpl implements ContractService {
         Map<String, Object> params = transaction.commonParamMap();
 
         receiptRequest.addParams(params);
-        receiptRequest.setNamespace(namespace);
 
         return receiptRequest;
     }
@@ -168,8 +152,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getDeployedList", providerManager, DeployerListResponse.class, nodeIds);
 
         stringRequest.addParams(address);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
 
         return stringRequest;
     }
@@ -179,8 +161,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "compileContract", providerManager, CompileContractResponse.class, nodeIds);
 
         stringRequest.addParams(code);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
 
         return stringRequest;
     }
@@ -190,8 +170,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCode", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(addr);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
@@ -200,8 +178,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getContractCountByAddr", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(addr);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
@@ -210,8 +186,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getStatus", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(addr);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
@@ -220,8 +194,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreator", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(addr);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
@@ -230,8 +202,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreateTime", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(addr);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
@@ -240,8 +210,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getStatusByCName", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(cname);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
@@ -250,8 +218,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreatorByCName", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(cname);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
@@ -260,8 +226,6 @@ public class ContractServiceImpl implements ContractService {
         StringRequest stringRequest = new StringRequest(CONTRACT_PREFIX + "getCreateTimeByCName", providerManager, StringResponse.class, nodeIds);
 
         stringRequest.addParams(cname);
-        stringRequest.setJsonrpc(jsonrpc);
-        stringRequest.setNamespace(namespace);
         return stringRequest;
     }
 
