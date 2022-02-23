@@ -451,7 +451,7 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds) {
-        TxRequest txRequest = new TxRequest(TX_PREFIX + "getNextPageTransactions", providerManager, TxResponse.class, nodeIds);
+        TxRequest txRequest = new TxRequest(TX_PREFIX + "getNextPageInvalidTransactions", providerManager, TxResponse.class, nodeIds);
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("blkNumber", blkNumber);

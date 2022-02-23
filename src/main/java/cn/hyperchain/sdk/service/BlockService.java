@@ -182,13 +182,11 @@ public interface BlockService {
      * @param nodeIds   specific ids
      * @return {@link Request} of {@link BlockResponse}
      */
-    @Deprecated
     Request<BlockCountResponse> getBlocksByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 
     /**
      * @see BlockService#getBlocksByTime(BigInteger, BigInteger, int...)
      */
-    @Deprecated
     Request<BlockCountResponse> getBlocksByTime(String startTime, String endTime, int... nodeIds);
 
     /**
