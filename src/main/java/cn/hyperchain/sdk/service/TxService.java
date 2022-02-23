@@ -497,7 +497,6 @@ public interface TxService {
      * @param nodeIds  specific ids
      * @return {@link Request} of {@link TxLimitResponse}
      */
-    @Deprecated
     Request<TxLimitResponse> getTxsByExtraID(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
 
     /**
@@ -510,7 +509,6 @@ public interface TxService {
      * @param nodeIds  specific ids
      * @return {@link Request} of {@link TxLimitResponse}
      */
-    @Deprecated
     Request<TxLimitResponse> getTxsByFilter(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
 
     /**
