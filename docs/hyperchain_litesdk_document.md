@@ -56,19 +56,23 @@
   - [4.6 查询指定区块区间交易平均处理时间(getTxAvgTimeByBlockNumber)](#46-查询指定区块区间交易平均处理时间gettxavgtimebyblocknumber)
   - [4.7 查询链上所有交易量(getTransactionsCount)](#47-查询链上所有交易量gettransactionscount)
   - [4.8 查询交易回执信息by transaction hash(getTransactionReceipt)](#48-查询交易回执信息by-transaction-hashgettransactionreceipt)
-  - [4.9 查询交易回执信息 with gas(getTransactionReceiptWithGas)](#49-查询交易回执信息-with-gasgettransactionreceiptwithgas)
-  - [4.10 查询上链的交易回执信息(getConfirmedTransactionReceipt)](#410-查询上链的交易回执信息getconfirmedtransactionreceipt)
-  - [4.11 查询区块交易数量by block hash(getBlockTxCountByHash)](#411-查询区块交易数量by-block-hashgetblocktxcountbyhash)
-  - [4.12 查询区块交易数量by block number(getBlockTxCountByNumber)](#412-查询区块交易数量by-block-numbergetblocktxcountbynumber)
-  - [4.13 获取交易签名哈希(getSignHash)](#413-获取交易签名哈希getsignhash)
-  - [4.14 查询指定extraID的交易by extraID(getTxsByExtraID)](#414-查询指定extraid的交易by-extraidgettxsbyextraid)
-  - [4.15 查询指定filter的交易by filter(getTxsByFilter)](#415-查询指定filter的交易by-filtergettxsbyfilter)
-  - [4.16 查询平台当前的交易版本号(getTxVersion)](#416-查询平台当前的交易版本号gettxversion)
-  - [4.17 查询链上所有非法交易交易量(getInvalidTransactionsCount)](#417-查询链上所有非法交易交易量getinvalidtransactionscount)
-  - [4.18 查询链上指定时间段内的非法交易交易量(getInvalidTxsCountByTime)](#418-查询链上指定时间段内的非法交易交易量getinvalidtxscountbytime)
-  - [4.19 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)](#419-查询一个区块中的所有非法交易-by-block-numbergetinvalidtxsbyblocknumber)
-  - [4.20 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)](#420-查询一个区块中的所有非法交易-by-block-hashgetinvalidtxsbyblockhash)
-  - [4.21查询非法交易 with limit(getInvalidTxsWithLimit)](#421查询非法交易-with-limitgetinvalidtxswithlimit)
+  - [4.9 查询上链的交易回执信息(getConfirmedTransactionReceipt)](#49-查询上链的交易回执信息getconfirmedtransactionreceipt)
+  - [4.10 查询区块交易数量by block hash(getBlockTxCountByHash)](#410-查询区块交易数量by-block-hashgetblocktxcountbyhash)
+  - [4.11 查询区块交易数量by block number(getBlockTxCountByNumber)](#411-查询区块交易数量by-block-numbergetblocktxcountbynumber)
+  - [4.12 查询平台当前的交易版本号(getTxVersion)](#412-查询平台当前的交易版本号gettxversion)
+  - [4.13 查询链上所有非法交易交易量(getInvalidTransactionsCount)](#413-查询链上所有非法交易交易量getinvalidtransactionscount)
+  - [4.14 查询链上指定时间段内的非法交易交易量(getInvalidTxsCountByTime)](#414-查询链上指定时间段内的非法交易交易量getinvalidtxscountbytime)
+  - [4.15 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)](#415-查询一个区块中的所有非法交易-by-block-numbergetinvalidtxsbyblocknumber)
+  - [4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)](#416-查询一个区块中的所有非法交易-by-block-hashgetinvalidtxsbyblockhash)
+  - [4.17 查询非法交易 with limit(getInvalidTxsWithLimit)](#417-查询非法交易-with-limitgetinvalidtxswithlimit)
+  - [4.18 查询下一页交易(getNextPageTransactions)](#418-查询下一页交易getnextpagetransactions)
+  - [4.19 查询上一页交易(getPrevPageTransactions)](#419-查询上一页交易getprevpagetransactions)
+  - [4.20 查询下一页非法交易(getNextPageInvalidTransactions)](#420-查询下一页非法交易getnextpageinvalidtransactions)
+  - [4.21 查询上一页非法交易(getPrevPageInvalidTransactions)](#421-查询上一页非法交易getprevpageinvalidtransactions)
+  - [4.22 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)](#422-查询区块区间交易数量by-contract-addressgettransactionscountbycontractaddr)
+  - [4.23 查询指定时间区间内的交易数量(getTxsCountByTime)](#423-查询指定时间区间内的交易数量gettxscountbytime)
+  - [4.24 查询指定extraID的交易by extraID(getTxsByExtraID)](#424-查询指定extraid的交易by-extraidgettxsbyextraid)
+  - [4.25 查询指定filter的交易by filter(getTxsByFilter)](#425-查询指定filter的交易by-filtergettxsbyfilter)
 - [第五章. BlockService相关接口](#第五章-blockservice相关接口)
   - [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
   - [5.2 查询区块by block hash(getBlockByHash)](#52-查询区块by-block-hashgetblockbyhash)
@@ -76,6 +80,8 @@
   - [5.4 查询区块平均生成时间(getAvgGenerateTimeByBlockNumber)](#54-查询区块平均生成时间getavggeneratetimebyblocknumber)
   - [5.5 查询最新区块号，即链高(getChainHeight)](#55-查询最新区块号即链高getchainheight)
   - [5.6 查询创世区块号(getChainHeight)](#56-查询创世区块号getchainheight)
+  - [5.7 查询指定区间区块with limit(getBlocksWithLimit)](#57-查询指定区间区块with-limitgetblockswithlimit)
+  - [5.8 查询指定时间区间内的区块数量(getBlocksByTime)](#58-查询指定时间区间内的区块数量getblocksbytime)
 - [第六章. Node相关接口（NodeService）](#第六章-node相关接口nodeservice)
   - [6.1 获取节点信息](#61-获取节点信息)
   - [6.2 获取节点哈希](#62-获取节点哈希)
@@ -95,23 +101,11 @@
   - [8.4 消费MQ信息](#84-消费mq信息)
   - [8.5 停止消费MQ信息](#85-停止消费mq信息)
 - [第九章. ArchiveService相关接口](#第九章-archiveservice相关接口)
-  - [9.1 Hyperchain1.x相关接口](#91-hyperchain1x相关接口)
-    - [9.1.1 制作快照](#911-制作快照)
-    - [9.1.2 查询快照是否存在](#912-查询快照是否存在)
-    - [9.1.3 检查快照是否正确](#913-检查快照是否正确)
-    - [9.1.4 删除快照](#914-删除快照)
-    - [9.1.5 列出所有快照](#915-列出所有快照)
-    - [9.1.6 查看快照](#916-查看快照)
-    - [9.1.7 数据归档（预约归档）](#917-数据归档预约归档)
-    - [9.1.8 数据归档（直接归档）](#918-数据归档直接归档)
-    - [9.1.9 查询归档数据状态](#919-查询归档数据状态)
-    - [9.1.10 查询所有待完成的快照请求](#9110-查询所有待完成的快照请求)
-    - [9.1.11 查询最近一次归档的进度](#9111-查询最近一次归档的进度)
-  - [9.2 Hyperchain2.x相关接口](#92-hyperchain2x相关接口)
-    - [9.2.1 列出所有快照](#921-列出所有快照)
-    - [9.2.2 数据归档（直接归档）](#922-数据归档直接归档)
-    - [9.2.3 查询归档数据状态](#923-查询归档数据状态)
-    - [9.2.4 查询归档数据是否存在](#924-查询归档数据是否存在)
+  - [9.1 列出所有快照](#91-列出所有快照)
+  - [9.2 数据归档（直接归档）](#92-数据归档直接归档)
+  - [9.3 查询归档数据状态](#93-查询归档数据状态)
+  - [9.4 查询归档数据是否存在](#94-查询归档数据是否存在)
+  - [9.5 查询最近一次归档的进度](#95-查询最近一次归档的进度)
 - [第十章. SqlService相关接口](#第十章-sqlservice相关接口)
   - [10.1 创建SQL交易体](#101-创建sql交易体)
   - [10.2 创建数据库](#102-创建数据库)
@@ -673,7 +667,7 @@ public class HVMPayload {
 }
 ```
 
-其中`invokeBeanName`为调用的HVM合约的名字，`nvokeArgs`为调用的参数，`invokeMethods`为调用的合约方法
+其中`invokeBeanName`为调用的HVM合约的名字，`invokeArgs`为调用的参数，`invokeMethods`为调用的合约方法
 
 ### 交易体设置TxVersion
 
@@ -1058,22 +1052,7 @@ Request<TxCountWithTSResponse> getTransactionsCount(int... nodeIds);
 Request<ReceiptResponse> getTransactionReceipt(String txHash, int... nodeIds);
 ```
 
-
-
-### 4.9 查询交易回执信息 with gas(getTransactionReceiptWithGas)
-
-参数：
-
-- txHash 交易hash。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<ReceiptResponse> getTransactionReceiptWithGas(String txHash, int... nodeIds);
-```
-
-
-
-### 4.10 查询上链的交易回执信息(getConfirmedTransactionReceipt)
+### 4.9 查询上链的交易回执信息(getConfirmedTransactionReceipt)
 
 参数：
 
@@ -1086,7 +1065,7 @@ Request<ReceiptResponse> getConfirmedTransactionReceipt(String txHash, int... no
 
 
 
-### 4.11 查询区块交易数量by block hash(getBlockTxCountByHash)
+### 4.10 查询区块交易数量by block hash(getBlockTxCountByHash)
 
 参数：
 
@@ -1099,7 +1078,7 @@ Request<TxCountWithTSResponse> getBlockTxCountByHash(String blockHash, int... no
 
 
 
-### 4.12 查询区块交易数量by block number(getBlockTxCountByNumber)
+### 4.11 查询区块交易数量by block number(getBlockTxCountByNumber)
 
 参数：
 
@@ -1112,43 +1091,232 @@ Request<TxCountWithTSResponse> getBlockTxCountByNumber(String blockNumber, int..
 
 
 
-### 4.13 获取交易签名哈希(getSignHash)
 
-**部署合约时**
+
+### 4.12 查询平台当前的交易版本号(getTxVersion)
+
+getTxVersion接口会在创建ProviderManager对象时调用，并设置全局的TxVersion。
 
 参数：
 
-- from 发起者地址。
-- nonce 16位的随机数，该值必须为十进制整数。
-- extra(可选) 额外信息。
-- payload 字节编码。
-- timestamp 交易时间戳。
+- nodeId 说明请求哪个节点平台的交易版本号
+
+```java
+Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
+```
+
+### 4.13 查询链上所有非法交易交易量(getInvalidTransactionsCount)
+
+参数：
+
 - nodeIds 说明请求向哪些节点发送。
 
 ```java
-Request<TxResponse> getSignHash(String from, BigInteger nonce, String extra, String payload, BigInteger timestamp, int... nodeIds);
-
-Request<TxResponse> getSignHash(String from, BigInteger nonce, String payload, BigInteger timestamp, int... nodeIds);
+Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds);
 ```
 
-**普通交易**
+### 4.14 查询链上指定时间段内的非法交易交易量(getInvalidTxsCountByTime)
 
 参数：
 
-- from 发起者地址。
-- nonce 16位的随机数，该值必须为十进制整数。
-- extra（可选） 额外信息。
-- value 交易值。
-- timestamp 交易时间戳。
+- startTime 开始时间
+- endTime 截止时间
 - nodeIds 说明请求向哪些节点发送。
 
-```
-Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String extra, String value, BigInteger timestamp, int... nodeIds);
-
-Request<TxResponse> getSignHash(String from, String to, BigInteger nonce, String value, BigInteger timestamp, int... nodeIds);
+```java
+Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
 ```
 
-### 4.14 查询指定extraID的交易by extraID(getTxsByExtraID)
+### 4.15 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)
+
+参数：
+
+- blockNumber 区块号
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
+```
+
+### 4.16 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)
+
+参数：
+
+- blockHash 区块哈希
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
+```
+
+
+
+### 4.17 查询非法交易 with limit(getInvalidTxsWithLimit)
+
+参数：
+
+* from 区块区间起点
+* to 区块区间终点
+* metaData 分页相关参数
+* nodeIds 说明请求向哪些节点发送
+
+```java
+Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, int... nodeIds);
+
+Request<TxLimitResponse> getInvalidTxsWithLimit(Integer from, Integer to, int... nodeIds);
+
+```
+
+### 4.18 查询下一页交易(getNextPageTransactions)
+
+注意：当输入的区块范围较大并且这个范围内符合条件的交易数量非常大时，**请求响应延迟将非常高**。存在服务器资源被该请求处理长时间占用的风险，应尽量 避免使用。
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+### 4.19 查询上一页交易(getPrevPageTransactions)
+
+注意：当输入的区块范围较大并且这个范围内符合条件的交易数量非常大时，**请求响应延迟将非常高**。存在服务器资源被该请求处理长时间占用的风险，应尽量 避免使用。
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
+```
+
+
+
+### 4.20 查询下一页非法交易(getNextPageInvalidTransactions)
+
+注意：当输入的区块范围较大并且这个范围内符合条件的交易数量非常大时，**请求响应延迟将非常高**。存在服务器资源被该请求处理长时间占用的风险，应尽量 避免使用。
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
+```
+
+
+
+### 4.21 查询上一页非法交易(getPrevPageInvalidTransactions)
+
+注意：当输入的区块范围较大并且这个范围内符合条件的交易数量非常大时，**请求响应延迟将非常高**。存在服务器资源被该请求处理长时间占用的风险，应尽量 避免使用。
+
+参数：
+
+- blkNumber 从该区块开始计数。
+- txIndex 起始交易在blkNumber号区块的位置偏移量。
+- minBlkNumber 截止计数的最小区块号。
+- maxBlkNumber 截止计数的最大区块号。
+- separated 表示要跳过的交易条数（一般用于跳页查询）。
+- pageSize 表示要返回的交易条数。
+- containCurrent true表示返回的结果中包括blkNumber区块中位置为txIndex的交易，如果该条交易不是合约地址为address合约的交易，则不算入。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
+```
+
+### 4.22 查询区块区间交易数量by contract address(getTransactionsCountByContractAddr)
+
+注意：当输入的区块范围较大并且这个范围内符合条件的交易数量非常大时，**请求响应延迟将非常高**。存在服务器资源被该请求处理长时间占用的风险，应尽量避免使用。
+
+参数：
+
+- from 起始区块号。
+- to 终止区块号。
+- address 合约地址。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getTransactionsCountByContractAddr(String from, String to, String address, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<TxResponse> getTransactionsCountByContractAddr(BigInteger from, BigInteger to, String address, int... nodeIds);
+```
+
+### 4.23 查询指定时间区间内的交易数量(getTxsCountByTime)
+
+注意：当输入的时间范围较大并且这个范围内的区块较多时，**请求响应延迟将升高**。存在服务器资源被该请求处理长时间占用的风险，应尽量避免使用。
+
+参数：
+
+- startTime 起起始时间戳(单位ns)。
+- endTime 结束时间戳(单位ns)。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+### 4.24 查询指定extraID的交易by extraID(getTxsByExtraID)
 
 该接口只要在访问的节点开启数据索引功能时才可用。
 
@@ -1190,7 +1358,7 @@ FilterParam 结构如下：
 Request<TxLimitResponse> getTxsByExtraID(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
 ```
 
-### 4.15 查询指定filter的交易by filter(getTxsByFilter)
+### 4.25 查询指定filter的交易by filter(getTxsByFilter)
 
 该接口只要在访问的节点开启数据索引功能时才可用。
 
@@ -1236,90 +1404,6 @@ FilterParam 结构如下：
 ```java
 Request<TxLimitResponse> getTxsByFilter(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
 ```
-
-
-
-### 4.16 查询平台当前的交易版本号(getTxVersion)
-
-getTxVersion接口会在创建ProviderManager对象时调用，并设置全局的TxVersion。
-
-参数：
-
-- nodeId 说明请求哪个节点平台的交易版本号
-
-```java
-Request<TxVersionResponse> getTxVersion(int nodeId) throws RequestException;
-```
-
-### 4.17 查询链上所有非法交易交易量(getInvalidTransactionsCount)
-
-参数：
-
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxCountWithTSResponse> getInvalidTransactionsCount(int... nodeIds);
-```
-
-### 4.18 查询链上指定时间段内的非法交易交易量(getInvalidTxsCountByTime)
-
-参数：
-
-- startTime 开始时间
-- endTime 截止时间
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxCountResponse> getInvalidTxsCountByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
-```
-
-### 4.19 查询一个区块中的所有非法交易 by block number(getInvalidTxsByBlockNumber)
-
-参数：
-
-- blockNumber 区块号
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getInvalidTxsByBlockNumber(BigInteger blockNumber, int... nodeIds);
-```
-
-### 4.20 查询一个区块中的所有非法交易 by block hash(getInvalidTxsByBlockHash)
-
-参数：
-
-- blockHash 区块哈希
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getInvalidTxsByBlockHash(String blockHash, int... nodeIds);
-```
-
-
-
-### 4.21查询非法交易 with limit(getInvalidTxsWithLimit)
-
-参数：
-
-* from 区块区间起点
-* to 区块区间终点
-* metaData 分页相关参数
-* nodeIds 说明请求向哪些节点发送
-
-```java
-Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, MetaDataParam metaData, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<TxLimitResponse> getInvalidTxsWithLimit(String from, String to, int... nodeIds);
-
-Request<TxLimitResponse> getInvalidTxsWithLimit(Integer from, Integer to, int... nodeIds);
-
-```
-
-
 
 ## 第五章. BlockService相关接口
 
@@ -1422,6 +1506,48 @@ Request<BlockNumberResponse> getChainHeight(int... nodeIds);
 ```java
 Request<BlockNumberResponse> getGenesisBlock(int... nodeIds);
 ```
+
+### 5.7 查询指定区间区块with limit(getBlocksWithLimit)
+
+参数：
+
+- from 起始区块号。
+- to 终止区块号。
+- size 查询的区块数量
+- isPlain  (可选)，默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, int size, boolean isPlain, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockLimitResponse> getBlocksWithLimit(String from, String to, boolean isPlain, int... nodeIds);
+```
+
+### 5.8 查询指定时间区间内的区块数量(getBlocksByTime)
+
+注意：当输入的时间范围较大时，**请求响应延迟将升高**。存在服务器资源被该请求处理长时间占用的风险，应尽量避免使用此接口。
+
+参数：
+
+- startTime 起始时间戳(单位ns)。
+- endTime 结束时间戳(单位ns)。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockCountResponse> getBlocksByTime(BigInteger startTime, BigInteger endTime, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockCountResponse> getBlocksByTime(String startTime, String endTime, int... nodeIds);
+```
+
+
 
 ## 第六章. Node相关接口（NodeService）
 
@@ -1755,61 +1881,7 @@ Request<MQResponse> stopConsume(String queueName, int... nodeIds);
 
 详细结构请参考第十章。
 
-### 9.1 Hyperchain1.x相关接口
-
-以下接口供hyperchain1.x使用，其中部分接口已经在hyperchain2.x中废弃。
-
-#### 9.1.1 制作快照
-
-参数：
-
-+ blockNumber 区块号
-+ nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveFilterIdResponse> snapshot(BigInteger blockNumber, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<ArchiveFilterIdResponse> snapshot(String blockNumber, int... nodeIds);
-```
-
-#### 9.1.2 查询快照是否存在
-
-参数：
-
-+ filterId 快照id
-+ nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveBoolResponse> querySnapshotExist(String filterId, int... nodeIds);
-```
-
-#### 9.1.3 检查快照是否正确
-
-参数：
-
-- filterId 快照id
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveBoolResponse> checkSnapshot(String filterId, int... nodeIds);
-```
-
-#### 9.1.4 删除快照
-
-参数：
-
-- filterId 快照id
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveBoolResponse> deleteSnapshot(String filterId, int... nodeIds);
-```
-
-#### 9.1.5 列出所有快照
+### 9.1 列出所有快照
 
 参数：
 
@@ -1819,30 +1891,7 @@ Request<ArchiveBoolResponse> deleteSnapshot(String filterId, int... nodeIds);
 Request<ArchiveResponse> listSnapshot(int... nodeIds);
 ```
 
-#### 9.1.6 查看快照
-
-参数：
-
-- filterId 快照id
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveResponse> readSnapshot(String filterId, int... nodeIds);
-```
-
-#### 9.1.7 数据归档（预约归档）
-
-参数：
-
-- filterId 快照id
-- sync 是否同步
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeIds);
-```
-
-#### 9.1.8 数据归档（直接归档）
+### 9.2 数据归档（直接归档）
 
 参数：
 
@@ -1853,7 +1902,7 @@ Request<ArchiveBoolResponse> archive(String filterId, boolean sync, int... nodeI
 Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
 ```
 
-#### 9.1.9 查询归档数据状态
+### 9.3 查询归档数据状态
 
 参数：
 
@@ -1864,63 +1913,7 @@ Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nod
 Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 ```
 
-#### 9.1.10 查询所有待完成的快照请求
-
-参数：
-
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveResponse> pending(int... nodeIds);
-```
-
-#### 9.1.11 查询最近一次归档的进度
-
-参数：
-
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds);
-```
-
-### 9.2 Hyperchain2.x相关接口
-
-以下接口供hyperchain2.x使用。
-
-#### 9.2.1 列出所有快照
-
-参数：
-
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveResponse> listSnapshot(int... nodeIds);
-```
-
-#### 9.2.2 数据归档（直接归档）
-
-参数：
-
-- blkNumber 区块号
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveStringResponse> archiveNoPredict(BigInteger blkNumber, int... nodeIds);
-```
-
-#### 9.2.3 查询归档数据状态
-
-参数：
-
-- filterId 快照id
-- nodeIds 说明请求向哪些节点发送
-
-```java
-Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
-```
-
-#### 9.2.4 查询归档数据是否存在
+### 9.4 查询归档数据是否存在
 
 参数：
 
@@ -1929,6 +1922,16 @@ Request<ArchiveStringResponse> queryArchive(String filterId, int... nodeIds);
 
 ```java
 Request<ArchiveBoolResponse> queryArchiveExist(String filterId, int... nodeIds);
+```
+
+### 9.5 查询最近一次归档的进度
+
+参数：
+
+- nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds);
 ```
 
 ## 第十章. SqlService相关接口
