@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0-3](https://git.hyperchain.cn///compare/v1.2.1...v1.3.0-3) (2022-02-23)
+
+
+### Bug Fixes
+
+* **doc:** fix tx interface doc ([f2d9d61](https://git.hyperchain.cn///commit/f2d9d61f4f9d9087631b8cd7249359cd0171c894))
+
+## [1.3.0-2](https://git.hyperchain.cn///compare/v1.3.0-1...v1.3.0-2) (2022-02-15)
+
+
+### Features
+
+* **bvm:** add cert and ca mode operation ([dc3adea](https://git.hyperchain.cn///commit/dc3adea9e8a08edab2a320b36306331de5f79d78))
+* **docs:** add some missing interface doc ([f74c80c](https://git.hyperchain.cn///commit/f74c80c65e4e4051a5aab93aac4f7fc392ac7952))
+
+
+### Bug Fixes
+
+* **providerManager:** fix hand the exception of getTcert ([3d6f181](https://git.hyperchain.cn///commit/3d6f18101c81847ec8e4c9f1fcfb23ae6e3ad1d0))
+
+## [1.3.0-1](https://git.hyperchain.cn///compare/v1.2.0...v1.3.0-1) (2022-01-26)
+
+
+### Features
+
+* support grpc mq ([3d58682](https://git.hyperchain.cn///commit/3d58682dba517de062e52db29f28d888f3d5a05e))
+* **fvm:** after rebase ([19d786d](https://git.hyperchain.cn///commit/19d786d017c9f9189d39dce2056fe28aa5e2f396))
+* **providerManager:** resend tx request to other node when the node can't handle tx ([8198fb5](https://git.hyperchain.cn///commit/8198fb5d2dfcdb86a852f03a1f20d357a261b867))
+
+
+### Bug Fixes
+
+* **providerManager:** fix logic of getTcert when set txversion ([58f9427](https://git.hyperchain.cn///commit/58f94278d15fad1c222c948430ae36ce37a6c895))
+
 ## [1.3.0-2](https://git.hyperchain.cn///compare/v1.3.0-1...v1.3.0-2) (2022-02-15)
 
 
