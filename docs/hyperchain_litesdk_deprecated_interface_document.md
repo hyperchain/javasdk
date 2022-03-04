@@ -5,13 +5,9 @@
     - [2.2 查询所有非法交易(getDiscardTransactions)](#22-查询所有非法交易getdiscardtransactions)
     - [2.3 查询指定时间区间内的交易(getTransactionsByTime)](#23-查询指定时间区间内的交易gettransactionsbytime)
     - [2.4 查询指定时间区间内的非法交易(getDiscardTransactionsByTime)](#24-查询指定时间区间内的非法交易getdiscardtransactionsbytime)
-    - [2.5 查询批量交易by hash list(getBatchTxByHash)](#25-查询批量交易by-hash-listgetbatchtxbyhash)
-    - [2.6 查询批量回执by hash list(getBatchReceipt)](#26-查询批量回执by-hash-listgetbatchreceipt)
-    - [2.7 获取交易签名哈希(getSignHash)](#27-获取交易签名哈希getsignhash)
+    - [2.5 获取交易签名哈希(getSignHash)](#25-获取交易签名哈希getsignhash)
   - [第三章. BlockService相关接口](#第三章-blockservice相关接口)
     - [3.1 查询指定区间的区块(getBlocks)](#31-查询指定区间的区块getblocks)
-    - [3.2 查询批量区块by block hash list(getBatchBlocksByHash)](#32-查询批量区块by-block-hash-listgetbatchblocksbyhash)
-    - [3.3 查询批量区块by block number list(getBatchBlocksByNum)](#33-查询批量区块by-block-number-listgetbatchblocksbynum)
   - [第四章.  ArchiveService相关接口](#第四章--archiveservice相关接口)
     - [4.1恢复某归档数据](#41恢复某归档数据)
     - [4.2 恢复所有归档数据](#42-恢复所有归档数据)
@@ -106,33 +102,7 @@ Request<TxResponse> getDiscardTransactionsByTime(BigInteger startTime, BigIntege
 Request<TxResponse> getDiscardTransactionsByTime(String startTime, String endTime, int... nodeIds);
 ```
 
-### 2.5 查询批量交易by hash list(getBatchTxByHash)
-
-注意：当输入的交易哈希非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getTransactionByHash** 接口替代。
-
-参数：
-
-- txHashList 交易的哈希数组, 哈希值为32字节的十六进制字符串。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeIds);
-```
-
-### 2.6 查询批量回执by hash list(getBatchReceipt)
-
-注意：当输入的交易哈希非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getTransactionReceipt** 接口替代。
-
-参数：
-
-- txHashList  交易的哈希数组, 哈希值为32字节的十六进制字符串。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
-```
-
-### 2.7 获取交易签名哈希(getSignHash)
+### 2.5 获取交易签名哈希(getSignHash)
 
 **部署合约时**
 
@@ -193,46 +163,6 @@ Request<BlockResponse> getBlocks(BigInteger from, BigInteger to, boolean isPlain
 Request<BlockResponse> getBlocks(String from, String to, int... nodeIds);
 
 Request<BlockResponse> getBlocks(String from, String to, boolean isPlain, int... nodeIds);
-```
-
-### 3.2 查询批量区块by block hash list(getBatchBlocksByHash)
-
-注意：当输入的区块哈希非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getBlockByHash** 接口替代。
-
-参数：
-
-- blockHashList 要查询的区块哈希数组，哈希值为32字节的十六进制字符串。
-- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, int... nodeIds);
-
-Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, boolean isPlain, int... nodeIds);
-```
-
-### 3.3 查询批量区块by block number list(getBatchBlocksByNum)
-
-注意：当输入的区块号非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getBlockByNumber** 接口替代。
-
-参数：
-
-- blockNumberList 要查询的区块号数组。
-- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
-- nodeIds 说明请求向哪些节点发送。
-
-```java
-Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, int... nodeIds);
-
-Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, boolean isPlain, int... nodeIds);
-```
-
-重载方法如下：
-
-```java
-Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, int... nodeIds);
-
-Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, boolean isPlain, int... nodeIds);
 ```
 
 ## 第四章.  ArchiveService相关接口
