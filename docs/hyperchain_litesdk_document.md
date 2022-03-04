@@ -68,6 +68,9 @@
   - [4.23 查询指定时间区间内的交易数量(getTxsCountByTime)](#423-查询指定时间区间内的交易数量gettxscountbytime)
   - [4.24 查询指定extraID的交易by extraID(getTxsByExtraID)](#424-查询指定extraid的交易by-extraidgettxsbyextraid)
   - [4.25 查询指定filter的交易by filter(getTxsByFilter)](#425-查询指定filter的交易by-filtergettxsbyfilter)
+  - [4.26 查询批量交易by hash list(getBatchTxByHash)](#426-查询批量交易by-hash-listgetbatchtxbyhash)
+  - [4.27 查询批量回执by hash list(getBatchReceipt)](#427-查询批量回执by-hash-listgetbatchreceipt)
+  - [4.28 查询交易回执信息 with gas(getTransactionReceiptWithGas)](#428-查询交易回执信息-with-gasgettransactionreceiptwithgas)
 - [第五章. BlockService相关接口](#第五章-blockservice相关接口)
   - [5.1 获取最新区块(getLastestBlock)](#51-获取最新区块getlastestblock)
   - [5.2 查询区块by block hash(getBlockByHash)](#52-查询区块by-block-hashgetblockbyhash)
@@ -77,6 +80,8 @@
   - [5.6 查询创世区块号(getChainHeight)](#56-查询创世区块号getchainheight)
   - [5.7 查询指定区间区块with limit(getBlocksWithLimit)](#57-查询指定区间区块with-limitgetblockswithlimit)
   - [5.8 查询指定时间区间内的区块数量(getBlocksByTime)](#58-查询指定时间区间内的区块数量getblocksbytime)
+  - [5.9 查询批量区块by block hash list(getBatchBlocksByHash)](#59-查询批量区块by-block-hash-listgetbatchblocksbyhash)
+  - [5.10 查询批量区块by block number list(getBatchBlocksByNum)](#510-查询批量区块by-block-number-listgetbatchblocksbynum)
 - [第六章. Node相关接口（NodeService）](#第六章-node相关接口nodeservice)
   - [6.1 获取节点信息](#61-获取节点信息)
   - [6.2 获取节点哈希](#62-获取节点哈希)
@@ -1351,6 +1356,43 @@ FilterParam 结构如下：
 Request<TxLimitResponse> getTxsByFilter(int mode, boolean detail, MetaDataParam metaData, FilterParam filter, int... nodeIds);
 ```
 
+### 4.26 查询批量交易by hash list(getBatchTxByHash)
+
+注意：当输入的交易哈希非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getTransactionByHash** 接口替代。
+
+参数：
+
+- txHashList 交易的哈希数组, 哈希值为32字节的十六进制字符串。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<TxResponse> getBatchTxByHash(ArrayList<String> txHashList, int... nodeIds);
+```
+
+### 4.27 查询批量回执by hash list(getBatchReceipt)
+
+注意：当输入的交易哈希非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getTransactionReceipt** 接口替代。
+
+参数：
+
+- txHashList  交易的哈希数组, 哈希值为32字节的十六进制字符串。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<ReceiptListResponse> getBatchReceipt(ArrayList<String> txHashList, int... nodeIds);
+```
+
+### 4.28 查询交易回执信息 with gas(getTransactionReceiptWithGas)
+
+参数：
+
+- txHash 交易hash。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<ReceiptResponse> getTransactionReceiptWithGas(String txHash, int... nodeIds);
+```
+
 ## 第五章. BlockService相关接口
 
 BlockService接口与TxService相似，只是获取的对象是区块信息。同样地，BlockService对象也有很多对应的响应类型：
@@ -1491,6 +1533,46 @@ Request<BlockCountResponse> getBlocksByTime(BigInteger startTime, BigInteger end
 
 ```java
 Request<BlockCountResponse> getBlocksByTime(String startTime, String endTime, int... nodeIds);
+```
+
+### 5.9 查询批量区块by block hash list(getBatchBlocksByHash)
+
+注意：当输入的区块哈希非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getBlockByHash** 接口替代。
+
+参数：
+
+- blockHashList 要查询的区块哈希数组，哈希值为32字节的十六进制字符串。
+- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, int... nodeIds);
+
+Request<BlockResponse> getBatchBlocksByHash(ArrayList<String> blockHashList, boolean isPlain, int... nodeIds);
+```
+
+### 5.10 查询批量区块by block number list(getBatchBlocksByNum)
+
+注意：当输入的区块号非常多时，**请求响应延迟将升高**。如果返回的数据量超过节点所在服务器内存大小时，将导致处理查询请求的节点出现**OOM（Out Of Memory）**风险，可使用 **tx_getBlockByNumber** 接口替代。
+
+参数：
+
+- blockNumberList 要查询的区块号数组。
+- isPlain (可选) 默认为false，表示返回的区块**包括**区块内的交易信息，如果指定为true，表示返回的区块**不包括**区块内的交易。
+- nodeIds 说明请求向哪些节点发送。
+
+```java
+Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, int... nodeIds);
+
+Request<BlockResponse> getBatchBlocksByNum(ArrayList<Integer> blockNumberList, boolean isPlain, int... nodeIds);
+```
+
+重载方法如下：
+
+```java
+Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, int... nodeIds);
+
+Request<BlockResponse> getBatchBlocksByStrNum(ArrayList<String> blockNumberList, boolean isPlain, int... nodeIds);
 ```
 
 
