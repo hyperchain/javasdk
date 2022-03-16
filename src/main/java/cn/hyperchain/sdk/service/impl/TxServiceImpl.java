@@ -625,6 +625,7 @@ public class TxServiceImpl implements TxService {
                 default:
                     throw new RuntimeException("method " + methods.get(i) + " is not supported!");
             }
+            request.setNamespace(providerManager.getNamespace());
             request.setId(i);
             requests.add(request);
         }
