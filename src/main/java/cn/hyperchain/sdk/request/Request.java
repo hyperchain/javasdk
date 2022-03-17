@@ -306,7 +306,8 @@ public abstract class Request<K extends Response> {
         if (usedProviders == null) {
             return false;
         }
-        if (usedProviders.get(httpProvider)) {
+        Boolean used = usedProviders.get(httpProvider);
+        if (used != null && used) {
             return true;
         }
         return false;
