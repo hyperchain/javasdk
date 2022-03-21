@@ -1,4 +1,4 @@
-- [litesdk bvm文档](#litesdk-bvm文档)
+- [LiteSDK bvm文档](#litesdk-bvm文档)
   - [第一章. 前言](#第一章-前言)
   - [第二章.执行BVM提供的合约](#第二章执行bvm提供的合约)
     - [2.1 初始化](#21-初始化)
@@ -48,15 +48,15 @@
     - [3.7 根据合约地址查询合约命名（getNamebyAddress）](#37-根据合约地址查询合约命名getnamebyaddress)
     - [3.8 根据合约命名查询合约地址（getAddressByName）](#38-根据合约命名查询合约地址getaddressbyname)
     - [3.9 查询所有合约地址到合约命名的映射关系（getAllCNS）](#39-查询所有合约地址到合约命名的映射关系getallcns)
-    - [3.10 查询创世配置信息（getGenesisInfo）](#310-查询创世信息getGenesisInfo)
+    - [3.10 查询创世信息（getGenesisInfo）](#310-查询创世信息getgenesisinfo)
   - [第四章 订阅提案信息](#第四章-订阅提案信息)
     - [4.1 订阅提案信息使用示例](#41-订阅提案信息使用示例)
 
-# litesdk bvm文档
+# LiteSDK bvm文档
 
 ## 第一章. 前言
 
-本文档是litesdk的补充文档，提供hyperchain中内置虚拟机（简称bvm）的使用指南。
+本文档是LiteSDK的补充文档，提供hyperchain中内置虚拟机（简称bvm）的使用指南。
 
 ## 第二章.执行BVM提供的合约
 
