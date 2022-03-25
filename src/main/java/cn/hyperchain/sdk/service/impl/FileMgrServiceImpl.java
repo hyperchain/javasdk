@@ -110,12 +110,14 @@ public class FileMgrServiceImpl implements FileMgrService {
             fileUploadResponse = (FileUploadResponse) fileTransferRequest.send();
         } catch (RequestException e) {
             throw new FileMgrException("File upload failed" + e.getMsg());
+        } finally {
+            try {
+                randomAccessFile.close();
+            } catch (IOException e) {
+                logger.warn("close randomAccessFile failed");
+            }
         }
-        try {
-            randomAccessFile.close();
-        } catch (IOException e) {
-            logger.warn("close randomAccessFile failed");
-        }
+
         fileUploadResponse.setTranRequest(fileTransferRequest);
         fileUploadResponse.setFileHash(fileHash);
         fileUploadResponse.setProviderManager(providerManager);
@@ -191,11 +193,12 @@ public class FileMgrServiceImpl implements FileMgrService {
             fileUploadResponse = (FileUploadResponse) fileTransferRequest.send();
         } catch (RequestException e) {
             throw new FileMgrException("File upload failed" + e.getMsg());
-        }
-        try {
-            randomAccessFile.close();
-        } catch (IOException e) {
-            logger.warn("close randomAccessFile failed");
+        } finally {
+            try {
+                randomAccessFile.close();
+            } catch (IOException e) {
+                logger.warn("close randomAccessFile failed");
+            }
         }
         fileUploadResponse.setTranRequest(fileTransferRequest);
         fileUploadResponse.setFileHash(fileHash);
@@ -319,22 +322,22 @@ public class FileMgrServiceImpl implements FileMgrService {
                 }
             }
             return new FileDownloadResponse(e.getCode(), e.getMsg());
-        }
-
-        try {
-            fileLock.release();
-        } catch (IOException e) {
-            logger.warn("release fileLock failed");
-        }
-        try {
-            channel.close();
-        } catch (IOException e) {
-            logger.warn("close file channel failed");
-        }
-        try {
-            randomAccessFile.close();
-        } catch (IOException e) {
-            logger.warn("close randomAccessFile failed");
+        } finally {
+            try {
+                fileLock.release();
+            } catch (IOException e) {
+                logger.warn("release fileLock failed");
+            }
+            try {
+                channel.close();
+            } catch (IOException e) {
+                logger.warn("close file channel failed");
+            }
+            try {
+                randomAccessFile.close();
+            } catch (IOException e) {
+                logger.warn("close randomAccessFile failed");
+            }
         }
         return fileDownloadResponse;
     }
