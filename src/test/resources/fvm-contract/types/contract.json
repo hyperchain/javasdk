@@ -1,0 +1,372 @@
+{
+  "contract": {
+    "name": "MyContract",
+    "constructor": {
+      "input": []
+    }
+  },
+  "methods": [
+    {
+      "name": "make_types",
+      "input": [
+        {
+          "type_id": 0
+        }
+      ],
+      "output": [
+        {
+          "type_id": 0
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "id": 0,
+      "type": "struct",
+      "fields": [
+        {
+          "type_id": 1
+        },
+        {
+          "type_id": 3
+        },
+        {
+          "type_id": 5
+        },
+        {
+          "type_id": 7
+        },
+        {
+          "type_id": 9
+        },
+        {
+          "type_id": 11
+        },
+        {
+          "type_id": 13
+        },
+        {
+          "type_id": 15
+        },
+        {
+          "type_id": 17
+        },
+        {
+          "type_id": 19
+        },
+        {
+          "type_id": 21
+        },
+        {
+          "type_id": 23
+        },
+        {
+          "type_id": 24
+        },
+        {
+          "type_id": 25
+        },
+        {
+          "type_id": 26
+        },
+        {
+          "type_id": 27
+        },
+        {
+          "type_id": 28
+        },
+        {
+          "type_id": 29
+        },
+        {
+          "type_id": 30
+        },
+        {
+          "type_id": 31
+        },
+        {
+          "type_id": 32
+        },
+        {
+          "type_id": 33
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 2
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 2,
+      "type": "primitive",
+      "primitive": "u8"
+    },
+    {
+      "id": 3,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 4
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 4,
+      "type": "primitive",
+      "primitive": "u16"
+    },
+    {
+      "id": 5,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 6
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 6,
+      "type": "primitive",
+      "primitive": "u32"
+    },
+    {
+      "id": 7,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 8
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 8,
+      "type": "primitive",
+      "primitive": "u64"
+    },
+    {
+      "id": 9,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 10
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 10,
+      "type": "primitive",
+      "primitive": "u128"
+    },
+    {
+      "id": 11,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 12
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 12,
+      "type": "primitive",
+      "primitive": "i8"
+    },
+    {
+      "id": 13,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 14
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 14,
+      "type": "primitive",
+      "primitive": "i16"
+    },
+    {
+      "id": 15,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 16
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 16,
+      "type": "primitive",
+      "primitive": "i32"
+    },
+    {
+      "id": 17,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 18
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 18,
+      "type": "primitive",
+      "primitive": "i64"
+    },
+    {
+      "id": 19,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 20
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 20,
+      "type": "primitive",
+      "primitive": "i128"
+    },
+    {
+      "id": 21,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 22
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 22,
+      "type": "primitive",
+      "primitive": "bool"
+    },
+    {
+      "id": 23,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 1
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 24,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 3
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 25,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 5
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 26,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 7
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 27,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 9
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 28,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 11
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 29,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 13
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 30,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 15
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 31,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 17
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 32,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 19
+        }
+      ],
+      "array_len": 1
+    },
+    {
+      "id": 33,
+      "type": "array",
+      "fields": [
+        {
+          "type_id": 21
+        }
+      ],
+      "array_len": 1
+    }
+  ]
+}

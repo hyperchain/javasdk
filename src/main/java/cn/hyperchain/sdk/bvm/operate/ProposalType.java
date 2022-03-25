@@ -5,7 +5,8 @@ public enum ProposalType {
     Permission("PERMISSION"),
     Node("NODE"),
     Contract("CONTRACT"),
-    CNS("CNS");
+    CNS("CNS"),
+    CA("CA");
     private String typ;
 
     ProposalType(String typ) {

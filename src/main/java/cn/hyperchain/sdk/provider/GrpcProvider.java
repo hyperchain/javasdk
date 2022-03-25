@@ -146,12 +146,23 @@ public class GrpcProvider implements HttpProvider {
             } catch (Exception e) {
                 logger.error(e);
             }
+        }
+    }
 
+    private Manager getManager(Request request) throws RequestException {
+        if (GrpcUtil.isSimpleGrpc(request.getMethod())) {
+            request.setJson(true);
+            return new Manager(request.getMethod(), this);
+        } else if (GrpcUtil.isServerStreamGrpc(request.getMethod())) {
+            request.setJson(true);
+            return new ServerStreamManager(request.getMethod(), this);
+        } else {
+            return getStreamManager(request.getMethod());
         }
     }
 
     @Override
-    public String post(Request request) throws RequestException {
+    public Object post(Request request) throws RequestException {
         Map<String, String> headers = request.getHeaders();
         CommonReq commonReq = GrpcUtil.convertRequestToCommonReq(request);
         String tcert = headers.get("tcert") == null ? "" : headers.get("tcert");
@@ -163,9 +174,16 @@ public class GrpcProvider implements HttpProvider {
 
         CommonRes commonRes = null;
         try {
-            StreamManager streamManager = getStreamManager(request.getMethod());
-            commonRes = streamManager.onNext(commonReq);
-            streamManager.setUsed(false);
+            Manager manager = getManager(request);
+            Object object = manager.onNext(commonReq);
+            if (object instanceof CommonRes) {
+                commonRes = (CommonRes) object;
+                if (manager instanceof StreamManager) {
+                    ((StreamManager) manager).setUsed(false);
+                }
+            } else {
+                return object;
+            }
         } catch (RequestException e) {
             if (e.getCode().equals(RequestExceptionCode.GRPC_STREAM_FAILED.getCode())) {
                 this.setStatus(PStatus.ABNORMAL);

@@ -38,6 +38,7 @@ public class Encoder {
 
     /**
      * encode deploy jar, get payload.
+     *
      * @param fis FileinputStream for the given jar file
      * @return payload
      */
@@ -121,7 +122,8 @@ public class Encoder {
 
     /**
      * get deploy payload.
-     * @param fis FileinputStream for the given jar file
+     *
+     * @param fis       FileinputStream for the given jar file
      * @param txVersion transaction txversion
      * @return payload
      */
@@ -129,6 +131,26 @@ public class Encoder {
         if (txVersion.isGreaterOrEqual(TxVersion.TxVersion30)) {
             return encodeJar(fis);
         }
+        return encodeDeployBase(fis);
+    }
+
+    /**
+     * encode wasm.
+     *
+     * @param fis InputStream
+     * @return String
+     */
+    public static String encodeDeployWasm(InputStream fis) {
+        return encodeDeployBase(fis);
+    }
+
+    /**
+     * encode base.
+     *
+     * @param fis InputStream
+     * @return String
+     */
+    public static String encodeDeployBase(InputStream fis) {
         BufferedInputStream bis = null;
         ByteArrayOutputStream baos = null;
 
@@ -275,18 +297,24 @@ public class Encoder {
 
     /**
      * encode topic to hash hex.
+     *
      * @param topic topic
      * @return hash hex
      */
     public static String encodeEventTopic(String topic) {
         byte[] data = new byte[32];
         byte[] topicData = topic.getBytes(Utils.DEFAULT_CHARSET);
-        System.arraycopy(topicData, 0, data, 32 - topicData.length, topicData.length);
+        if (topicData.length > 32) {
+            System.arraycopy(topicData, topicData.length - 32, data, 0, 32);
+        } else {
+            System.arraycopy(topicData, 0, data, 32 - topicData.length, topicData.length);
+        }
         return ByteUtil.toHex(data);
     }
 
     /**
      * encode ProposalContentOperations.
+     *
      * @param ops proposal content operations
      * @return encode byte in payload
      */
@@ -314,6 +342,7 @@ public class Encoder {
 
     /**
      * encode Operation to payload.
+     *
      * @param opt operation
      * @return payload
      */
@@ -326,14 +355,20 @@ public class Encoder {
             bos.write(ByteUtil.intToBytes(b.length));
 
             bos.write(b);
-            bos.write(ByteUtil.intToBytes(opt.getArgs().length));
+            int argLen;
+            if (opt.getArgs() == null) {
+                argLen = 0;
+            } else {
+                argLen = opt.getArgs().length;
+            }
+            bos.write(ByteUtil.intToBytes(argLen));
 
             boolean[] base64Index = null;
             if (opt instanceof BuiltinOperation) {
                 BuiltinOperation bo = (BuiltinOperation) opt;
                 base64Index = bo.getBase64Index();
             }
-            for (int i = 0; i < opt.getArgs().length; i++) {
+            for (int i = 0; i < argLen; i++) {
                 byte[] bytes = base64Index != null && base64Index[i] ? Base64.getDecoder().decode(opt.getArgs()[i]) : opt.getArgs()[i].getBytes();
                 byte[] intToBytes = ByteUtil.intToBytes(bytes.length);
                 bos.write(intToBytes);

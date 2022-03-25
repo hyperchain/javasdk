@@ -3,16 +3,20 @@ package cn.hyperchain.sdk.grpc;
 import cn.hyperchain.sdk.exception.RequestException;
 import cn.hyperchain.sdk.exception.RequestExceptionCode;
 import cn.hyperchain.sdk.request.Request;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.protobuf.ByteString;
 import io.grpc.Channel;
 import io.grpc.stub.StreamObserver;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 
 public class GrpcUtil {
+    public static final String GRPC_PREFIX = "grpc_";
     private static final String GRPC_TX_SENDTRANSACTION = "tx_sendTransaction";
     private static final String GRPC_TX_SENDTRANSACTIONReturnReceipt = "tx_sendTransactionReturnReceipt";
 
@@ -27,6 +31,14 @@ public class GrpcUtil {
 
     private static final String GRPC_DID_SendDIDTransaction = "did_sendDIDTransaction";
     private static final String GRPC_DID_SendDIDTransactionReturnReceipt = "did_sendDIDTransactionReturnReceipt";
+
+    private static final String GRPC_MQ_Register = "mq_register";
+    private static final String GRPC_MQ_UnRegister = "mq_unRegister";
+    private static final String GRPC_MQ_GetAllQueueNames = "mq_getAllQueueNames";
+    private static final String GRPC_MQ_StopConsume = "mq_stopConsume";
+    private static final String GRPC_MQ_Consume = "mq_consume";
+
+    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
 
     /**
@@ -51,6 +63,11 @@ public class GrpcUtil {
             case GRPC_CONTRACT_ManageContractByVoteReturnReceipt:
             case GRPC_DID_SendDIDTransaction:
             case GRPC_DID_SendDIDTransactionReturnReceipt:
+            case GRPC_PREFIX + GRPC_MQ_Register:
+            case GRPC_PREFIX + GRPC_MQ_UnRegister:
+            case GRPC_PREFIX + GRPC_MQ_GetAllQueueNames:
+            case GRPC_PREFIX + GRPC_MQ_StopConsume:
+            case GRPC_PREFIX + GRPC_MQ_Consume:
                 return true;
             default:
                 return false;
@@ -73,10 +90,78 @@ public class GrpcUtil {
             case GRPC_CONTRACT_MaintainContractReturnReceipt:
             case GRPC_CONTRACT_ManageContractByVoteReturnReceipt:
             case GRPC_DID_SendDIDTransactionReturnReceipt:
+            case GRPC_PREFIX + GRPC_MQ_Register:
+            case GRPC_PREFIX + GRPC_MQ_UnRegister:
+            case GRPC_PREFIX + GRPC_MQ_GetAllQueueNames:
+            case GRPC_PREFIX + GRPC_MQ_StopConsume:
+            case GRPC_PREFIX + GRPC_MQ_Consume:
                 return true;
             default:
                 return false;
         }
+    }
+
+    /**
+     * return true if method is simple grpc.
+     * @param method -
+     * @return -
+     */
+    public static boolean isSimpleGrpc(String method) {
+        if (method == null) {
+            return false;
+        }
+        switch (method) {
+            case GRPC_MQ_Register:
+            case GRPC_MQ_UnRegister:
+            case GRPC_MQ_GetAllQueueNames:
+            case GRPC_MQ_StopConsume:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * return true if method is server-side stream grpc.
+     * @param method -
+     * @return -
+     */
+    public static boolean isServerStreamGrpc(String method) {
+        if (method == null) {
+            return false;
+        }
+        switch (method) {
+            case GRPC_MQ_Consume:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * cut method's GRPC prefix.
+     * @param request -
+     */
+    public static void handMethodPrefix(Request request) {
+        if (request.getMethod().startsWith(GRPC_PREFIX)) {
+            request.setMethod(request.getMethod().substring(GRPC_PREFIX.length()));
+        }
+    }
+
+    /**
+     * generate json string to create response.
+     * @param commonRes -
+     * @return json string
+     */
+    public static String generateResponseJson(Transaction.CommonRes commonRes) {
+        String str = commonRes.getResult().toStringUtf8();
+        String result = str == null || str.length() == 0 ? "null" : str;
+        return "{" +
+                "\"code\":" + commonRes.getCode() +
+                ", \"message\":\"" + commonRes.getCodeDesc() + "\"" +
+                ", \"namespace\":\"" + commonRes.getNamespace() + "\"" +
+                ", \"result\":" + result +
+                "}";
     }
 
     /**
@@ -121,6 +206,46 @@ public class GrpcUtil {
     }
 
     /**
+     * hand method which return commonRes.
+     * @param method method name
+     * @param channel -
+     * @param commonReq -
+     * @return -
+     * @throws RequestException -
+     */
+    public static Transaction.CommonRes getCommonResByMethod(String method, Channel channel, Transaction.CommonReq commonReq) throws RequestException {
+        switch (method) {
+            case GRPC_MQ_Register:
+                return GrpcApiMQGrpc.newBlockingStub(channel).register(commonReq);
+            case GRPC_MQ_UnRegister:
+                return GrpcApiMQGrpc.newBlockingStub(channel).unRegister(commonReq);
+            case GRPC_MQ_GetAllQueueNames:
+                return GrpcApiMQGrpc.newBlockingStub(channel).getAllQueueNames(commonReq);
+            case GRPC_MQ_StopConsume:
+                return GrpcApiMQGrpc.newBlockingStub(channel).stopConsume(commonReq);
+            default:
+                throw new RequestException(RequestExceptionCode.GRPC_SERVICE_NOT_FOUND);
+        }
+    }
+
+    /**
+     * hand method for server-side stream.
+     * @param method method name
+     * @param channel -
+     * @param commonReq -
+     * @return -
+     * @throws RequestException -
+     */
+    public static Iterator<Transaction.CommonRes> getServerStreamByMethod(String method, Channel channel, Transaction.CommonReq commonReq) throws RequestException {
+        switch (method) {
+            case GRPC_MQ_Consume:
+                return GrpcApiMQGrpc.newBlockingStub(channel).consume(commonReq);
+            default:
+                throw new RequestException(RequestExceptionCode.GRPC_SERVICE_NOT_FOUND);
+        }
+    }
+
+    /**
      * convert request to grpc CommonReq.
      * @param request request
      * @return {@link Transaction.CommonReq}
@@ -140,7 +265,7 @@ public class GrpcUtil {
         String method = request.getMethod();
         List<Object> params = request.getListParams();
         if (params == null || params.isEmpty()) {
-            return null;
+            return ByteString.EMPTY;
         }
         switch (method) {
             case GRPC_TX_SENDTRANSACTION:
@@ -155,13 +280,19 @@ public class GrpcUtil {
             case GRPC_CONTRACT_ManageContractByVoteReturnReceipt:
             case GRPC_DID_SendDIDTransaction:
             case GRPC_DID_SendDIDTransactionReturnReceipt:
-                return convertRequestParamsToSendTxArgs(params).toByteString();
+                return convertRequestParamsToSendTxArgs(params);
+            case GRPC_MQ_Register:
+            case GRPC_MQ_UnRegister:
+            case GRPC_MQ_GetAllQueueNames:
+            case GRPC_MQ_StopConsume:
+            case GRPC_MQ_Consume:
+                return convertRequestParamToJson(params);
             default:
                 return ByteString.EMPTY;
         }
     }
 
-    private static Transaction.SendTxArgs convertRequestParamsToSendTxArgs(List<Object> params) {
+    private static ByteString convertRequestParamsToSendTxArgs(List<Object> params) {
         Map map = (Map) params.get(0);
         String from = map.get("from") == null ? "" : (String) map.get("from");
         String to = map.get("to") == null ? "" : (String) map.get("to");
@@ -194,6 +325,10 @@ public class GrpcUtil {
                 .addAllExtraIDStringArray(extraIdString)
                 .setCName(cname)
                 .build();
-        return sendTxArgs;
+        return sendTxArgs.toByteString();
+    }
+
+    private static ByteString convertRequestParamToJson(List<Object> params) {
+        return ByteString.copyFromUtf8(gson.toJson(params.get(0)));
     }
 }

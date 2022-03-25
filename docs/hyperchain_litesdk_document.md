@@ -13,18 +13,23 @@
     - [部署合约](#部署合约)
       - [HVM](#hvm)
       - [EVM](#evm)
+      - [FVM](#fvm)
     - [调用合约](#调用合约)
       - [HVM](#hvm-1)
       - [EVM](#evm-1)
+      - [FVM](#fvm-1)
     - [升级合约](#升级合约)
       - [HVM](#hvm-2)
       - [EVM](#evm-2)
+      - [FVM](#fvm-2)
     - [冻结合约](#冻结合约)
       - [HVM](#hvm-3)
       - [EVM](#evm-3)
+      - [FVM](#fvm-3)
     - [解冻合约](#解冻合约)
       - [HVM](#hvm-4)
       - [EVM](#evm-4)
+      - [FVM](#fvm-4)
   - [simulate交易](#simulate交易)
   - [交易体的payload](#交易体的payload)
   - [交易体设置TxVersion](#交易体设置txversion)
@@ -94,6 +99,12 @@
   - [7.5 获取所有队列名称](#75-获取所有队列名称)
   - [7.6 获取所有exchanger名称](#76-获取所有exchanger名称)
   - [7.7 删除exchanger](#77-删除exchanger)
+- [第八章. MQGrpcService相关接口](#第八章-mqgrpcservice相关接口)
+  - [8.1 注册队列](#81-注册队列)
+  - [8.2 注销队列](#82-注销队列)
+  - [8.3 获取所有队列名称](#83-获取所有队列名称)
+  - [8.4 消费MQ信息](#84-消费mq信息)
+  - [8.5 停止消费MQ信息](#85-停止消费mq信息)
 - [第九章. ArchiveService相关接口](#第九章-archiveservice相关接口)
   - [9.1 列出所有快照](#91-列出所有快照)
   - [9.2 数据归档（直接归档）](#92-数据归档直接归档)
@@ -324,7 +335,7 @@ public interface ContractService {
 }
 ```
 
-根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM、BVM三种形式的合约**，这几种也会影响到交易体的创建。
+根据要创建的合约服务不同，封装的`Transaction`交易体也会不同。**并且LiteSDK支持HVM、EVM、BVM、FVM三种形式的合约**，这几种也会影响到交易体的创建。
 
 ### 转账交易
 
@@ -422,7 +433,7 @@ public enum Algo {
 
 #### 交易体创建
 
-**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。HVM、EVM和BVM分别有各自的**Builder**：`HVMBuilder`、`EVMBuilder、BVMBuilder`，继承同一个父类`Builer`。目前**Builder**模式提供了五种交易体的封装，分别对应**部署合约、调用合约、升级合约、冻结合约、解冻合约**，其中前两个服务的交易体分别定义在HVM、EVM、BVM各自的`Builder`子类中，后三者都是**管理合约**这一服务的子服务，定义在父类`Builder`中。
+**LiteSDK**使用**Builder**模式来负责对`Transaction`的创建，通过调用`build()`函数来获取到`Transaction`实例。HVM、EVM、BVM和FVM分别有各自的**Builder**：`HVMBuilder`、`EVMBuilder、BVMBuilder`、`FVMBuilder`，继承同一个父类`Builer`。目前**Builder**模式提供了五种交易体的封装，分别对应**部署合约、调用合约、升级合约、冻结合约、解冻合约**，其中前两个服务的交易体分别定义在HVM、EVM、BVM、FVM各自的`Builder`子类中，后三者都是**管理合约**这一服务的子服务，定义在父类`Builder`中。
 
 ```java
 class Builder {
@@ -482,6 +493,13 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).deplo
 
 创建交易体时需要指定要**部署的合约的bin、abi文件的字符串内容以及合约名**。
 
+##### FVM
+```java
+InputStream inputStream1 = Thread.currentThread().getContextClassLoader().getResourceAsStream("fvm-contract/set_hash/SetHash-gc.wasm");
+Transaction transaction = new Transaction.FVMBuilder(account.getAddress()).deploy(inputStream1).build();
+```
+创建交易体时需要指定要**部署的合约的wasm文件**
+
 #### 调用合约
 
 ##### HVM
@@ -533,6 +551,19 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).invok
 
 创建交易体时需要指定**调用方法**、**abi文件**和**方法参数**。
 
+##### FVM
+```java
+InputStream inputStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream("fvm-contract/set_hash/contract.json");
+String abiStr = FileUtil.readFile(inputStream2);
+FVMAbi abi = FVMAbi.fromJson(abiStr);
+FuncParams params = new FuncParams();
+params.addParams("key001");
+params.addParams("this is the value of 0001");
+Transaction transaction1 = new Transaction.FVMBuilder(account.getAddress()).invoke(contractAddress, "set_hash", abi, params).build();
+```
+创建交易体时需要指定**调用方法，abi以及参数**
+
+
 #### 升级合约
 
 ##### HVM
@@ -551,6 +582,13 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).upgra
 
 创建交易体时需要指定**合约地址**和**升级的新合约的bin文件字符串**。
 
+##### FVM
+```java
+Transaction transaction3 = new Transaction.FVMBuilder(account.getAddress()).upgrade(contractAddress, Encoder.encodeDeployWasm(inputStream3)).build();
+```
+
+创建交易体时需要指定**合约地址**和**升级的新合约的wasm文件**。
+
 #### 冻结合约
 
 ##### HVM
@@ -565,6 +603,13 @@ Transaction transaction = new Transaction.HVMBuilder(account.getAddress()).freez
 
 ```java
 Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).freeze(contractAddress).build();
+```
+
+创建交易体时需要指定**合约地址**。
+
+##### FVM
+```java
+Transaction transaction = new Transaction.FVMBuilder(account.getAddress()).freeze(contractAddress).build();
 ```
 
 创建交易体时需要指定**合约地址**。
@@ -586,6 +631,15 @@ Transaction transaction = new Transaction.EVMBuilder(account.getAddress()).unfre
 ```
 
 创建交易体时需要指定**合约地址**。
+
+##### FVM
+
+```java
+Transaction transaction = new Transaction.FVMBuilder(account.getAddress()).unfreeze(contractAddress).build();
+```
+
+创建交易体时需要指定**合约地址**。
+
 
 ### simulate交易
 
@@ -1768,6 +1822,132 @@ Request<MQResponse> getExchangerName(int... nodeIds);
 
 ```java
 Request<MQResponse> deleteExchanger(String exchangerName, int... nodeIds);
+```
+
+
+
+## 第八章. MQGrpcService相关接口
+
+MQGrpcService依赖grpc服务提供MQ相关功能，无需依赖第三方软件进行消息推送。MQGrpcService的响应类型沿用了MQService的`MQResponse`，同时新增了`MQGrpcConsumeResponse`作为消费接口的响应类型。
+
+注意：在使用此服务时，创建ProviderManager对象时，必须提供grpcProvider。
+
+MQResponse为注册队列、注销队列、获取队列名称、停止消费接口的响应类型
+
+```java
+public class MQResponse extends Response {
+    @Expose
+    private JsonElement result;
+}
+```
+
+`MQGrpcConsumeResponse`为消费MQ信息接口的响应类型，仅提供一个`getResult`方法，返回值为实现了Iterator接口的`ServerStreamManager`对象。用户可以通过`next`方法不停的获取来自平台的MQ消息，如果平台没有新的消息产生，则next方法会阻塞。MQ消息可通过`Decoder.decodeMQMessage`方法进行解析。
+
+注意：队列A，在同一时刻，只能被一个客户端消费。即对于在一号节点注册的队列A，如果客户端甲已经调用consume接口消费了该队列，那么在这个时刻，客户端乙将无法同时消费队列A。只有当客户端甲调用stopConsume接口，停止消费队列A之后，客户端乙才可以消费队列A。
+
+```java
+public class MQGrpcConsumeResponse extends Response {
+    private ServerStreamManager manager;
+    public ServerStreamManager getResult();
+}
+
+public class ServerStreamManager extends Manager implements Iterator {
+    private Iterator<Transaction.CommonRes> commonResIterator;
+  	@Override
+    public boolean hasNext();
+
+    @Override
+    public Object next();
+
+    @Override
+    public void remove();
+}
+
+// mq消费示例
+@Test
+public void testMQ_GRPC_Consume() throws RequestException {
+		Request<MQGrpcConsumeResponse> request = mqGrpcService.consume("queueName", nodeId);
+    MQGrpcConsumeResponse response = request.send();
+    ServerStreamManager manager = response.getResult();
+    while (manager.hasNext()) {
+    	String res = (String) manager.next();
+      System.out.println(Decoder.decodeMQMessage(res));
+      System.out.println(Decoder.decodeMQMessage(res).getBody());
+    }
+}
+```
+
+
+
+### 8.1 注册队列
+
+参数：
+
++ from 调用该接口的账户地址
++ queueName 队列名称
++ routingkeys 想要订阅的消息类型
++ isVerbose 推送区块时是否推送交易列表，true表示是
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> registerQueue(String from, String queueName, List<String> routingkeys, Boolean isVerbose, int... nodeIds);
+```
+
+参数：
+
++ mqParam 注册队列所需参数，除了上述方法中的参数外，新增了合约event事件的相关过滤参数
+
+```java
+Request<MQResponse> registerQueue(MQParam mqParam, int... nodeIds);
+```
+
+### 8.2 注销队列
+
+参数：
+
++ from 调用该接口的账户地址
++ queueName 队列名称
++ exchangerName exchanger 名称
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> unRegisterQueue(String queueName, int... nodeIds);
+```
+
+### 8.3 获取所有队列名称
+
+参数
+
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> getAllQueueNames(int... nodeIds);
+```
+
+### 8.4 消费MQ信息
+
+注意：本消费接口使用完之后，应及时调用停止消费MQ信息接口，不然该队列无法被再次消费。
+
+参数
+
+* queueName 队列名称
+
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQGrpcConsumeResponse> consume(String queueName, int... nodeIds);
+```
+
+### 8.5 停止消费MQ信息
+
+参数
+
+* queueName 队列名称
+
++ nodeIds 说明请求向某个节点发送，nodeIds有且只能有一个
+
+```java
+Request<MQResponse> stopConsume(String queueName, int... nodeIds);
 ```
 
 

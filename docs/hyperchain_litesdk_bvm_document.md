@@ -7,19 +7,23 @@
       - [2. bvm交易体](#2-bvm交易体)
         - [HashContract](#hashcontract)
         - [MPCContract](#mpccontract)
+        - [CertContract](#certcontract)
         - [ProposalContract](#proposalcontract)
           - [配置类](#配置类)
           - [权限类](#权限类)
           - [节点管理类](#节点管理类)
           - [合约命名类](#合约命名类)
           - [合约生命周期管理类](#合约生命周期管理类)
+          - [ca模式类](#ca模式类)
         - [AccountContract](#accountcontract)
+        - [RootCAContract](#rootcacontract)
       - [3. 创建请求](#3-创建请求)
       - [4. 发送交易体](#4-发送交易体)
       - [5. 解析回执](#5-解析回执)
     - [2.3 使用示例](#23-使用示例)
       - [HashContract使用示例](#hashcontract使用示例)
       - [MPCContract使用示例](#mpccontract使用示例)
+      - [CertContract使用示例](#certcontract使用示例)
       - [ProposalContract使用示例](#proposalcontract使用示例)
         - [创建提案](#创建提案)
           - [配置类](#配置类-1)
@@ -27,10 +31,13 @@
           - [节点类](#节点类)
           - [合约命名类](#合约命名类-1)
           - [合约生命周期管理类](#合约生命周期管理类-1)
+          - [ca模式类](#ca模式类-1)
         - [提案投票](#提案投票)
         - [取消提案](#取消提案)
         - [执行提案](#执行提案)
+        - [直接执行提案内容](#直接执行提案内容)
       - [AccountContract使用示例](#accountcontract使用示例)
+      - [RootCAContract使用示例](#rootcacontract使用示例)
   - [第三章. ConfigService相关接口](#第三章-configservice相关接口)
     - [3.1 查询提案（getProposal）](#31-查询提案getproposal)
     - [3.2 查询配置（getConfig）](#32-查询配置getconfig)
@@ -253,6 +260,30 @@ public class MPCOperation extends BuiltinOperation {
 }
 ```
 
+##### CertContract
+
+`CertContract`中提供的合约方法如下：
+
+1. `CertRevoke` : CertRevoke方法用于吊销证书。当ca模式为 `center` 时，链级管理员可以吊销证书；当ca模式为 `none` 时，不可吊销证书。
+
+构造`CertContract`操作的构造器`CertBuilder`提供了`revoke` 方法，分别用于构造`CertContract`合约中的`CertRevoke` 方法，其定义如下：
+
+```java
+
+  public static class MPCBuilder extends BuiltinOperationBuilder {
+
+        /**
+         * create revoke CertOperation to revoke cert.
+         * when ca mode is center, admin can revoke cert directly;
+         * when ca mode is none, no one can revoke any cert;
+         *
+         * @param cert the der cert wait to revoke
+         * @return {@link CertOperation.CertBuilder}
+         */
+        public CertOperation.CertBuilder revoke(String cert); 
+  }
+```
+
 ##### ProposalContract
 
 `ProposalContract`中提供的合约方法如下：
@@ -261,6 +292,8 @@ public class MPCOperation extends BuiltinOperation {
 2. `Vote` : Vote方法接收两个参数，一个是投票的提案id，一个是投赞同票还是反对票，用于对提案进行投票
 3. `Cancel` : Cancel方法接收一个参数，要取消的提案id，用于取消提案
 4. `Execute` : Execute方法接收一个参数，要执行的提案id，用于执行提案
+5. `Direct` : Direct方法接受两个参数，一个是提案内容，一个是提案类型，用于直接执行提案内容，跳过投票。
+目前当ca模式为`center` 或`none` 时可以直接执行节点管理类提案内容；另外，对于提案内容中的`Get` 类操作，即查询类操作也可以直接执行。
 
 注意：
 
@@ -286,8 +319,11 @@ public class MPCOperation extends BuiltinOperation {
 - 节点类，ptype为`node` ，data为节点操作列表；
 - 合约命名类，ptype为`cns` ，data为合约命名操作列表；
 - 合约生命周期管理类，ptype为`contract` ，data为合约生命周期管理操作列表；
+- ca模式类，ptype为 `ca` , data为ca模式操作列表；
 
-构造`ProposalContract`操作的构造器`ProposalBuilder`提供了`createForNode` 、`createForCNS` 、`createForPermission` 、`createForContract` 、`createForConfig` 、`vote` 、`cancel` 和`execute` 方法分别用于创建节点类提案、创建合约命名类提案、创建权限类提案、创建配置类提案、提案投票、取消提案和执行提案的提案操作，其定义如下：
+构造`ProposalContract`操作的构造器`ProposalBuilder`提供了`createForNode` 、 `directForNode` 、`createForCNS` 、`createForPermission` 、
+`createForContract` 、`createForConfig` 、`createForCAMode` 、`directForCAMode` 、 `vote` 、`cancel` 和`execute` 方法分别用于创建节点类提案、直接执行节点类操作、
+创建合约命名类提案、创建权限类提案、创建配置类提案、创建ca模式类提案、直接执行ca模式类操作、提案投票、取消提案和执行提案的提案操作，其定义如下：
 
 ```java
 public static class ProposalBuilder extends BuiltinOperationBuilder {
@@ -356,6 +392,30 @@ public static class ProposalBuilder extends BuiltinOperationBuilder {
          */
         public ProposalBuilder execute(int proposalID);
 
+        /**
+         * create creat ProposalOperation for ca to create ca mode proposal.
+         *
+         * @param opts ca_mode operations, i.e. setCAMode
+         * @return {@link ProposalBuilder}
+         */
+        public ProposalBuilder createForCAMode(CAModeOperation... opts);
+
+        /**
+         * create direct ProposalOperation for ca to execute ca mode operation directly.
+         *
+         * @param opts ca_mode operations, i.e. getCAMode
+         * @return {@link ProposalBuilder}
+         */
+        public ProposalBuilder directForCAMode(CAModeOperation... opts);
+
+        /**
+         * create direct ProposalOperation for node to execute node operation directly.
+         * when ca mode is center or none, admin can execute node operation directly.
+         *
+         * @param opts node operations
+         * @return {@link ProposalBuilder}
+         */
+        public ProposalBuilder directForNode(NodeOperation... opts);
 }
 ```
 
@@ -688,6 +748,44 @@ public static class ContractBuilder {
 }
 ```
 
+
+###### ca模式类
+
+ca模式的操作分以下几种：
+
+- SetCAMode，设置ca模式，即为当前ns设置ca模式。ca模式存在的情况下不能再次设置ca模式，即只有当老版本升级到1.4.0+的版本时，可通过这届操作设置ca模式，设置的ca模式需要与新版启动
+时设置的ca模式相同，否则当前ns将停止运行。
+- GetCAMode，查询ca模式，即返回当前ns设置的ca模式。可通过`ProposalContract` 的`Direct` 操作直接查询，无需投票。
+
+构造合约命名类操作`CAModeOperation` 的构造器`CAModeBuilder` 提供了`setCAMode`、`getCAMode` 和 `build` 方法，其定义如下：
+
+```java
+public static class CAModeBuilder {
+        /**
+         * create CAModeOperation to set ca mode.
+         * when has not set ca mode, can set ca mode.
+         *
+         * @param mode {@link CAMode}
+         * @return {@link CAModeBuilder}
+         */
+        public CAModeBuilder setCAMode(CAMode mode);
+
+        /**
+         * create CAModeOperation to get ca mode.
+         *
+         * @return {@link CAModeBuilder}
+         */
+        public CAModeBuilder getCAMode();
+  
+        /**
+         * return build CNSOperation.
+         *
+         * @return {@link CAModeOperation}
+         */
+        public CAModeOperation build();
+}
+```
+
 ##### AccountContract
 
 `AccountContract`中提供的合约方法如下：
@@ -717,7 +815,35 @@ public static class AccountBuilder extends BuiltinOperationBuilder {
 }
 ```
 
+##### RootCAContract
+`RootCAContract`中提供的合约方法如下：
 
+1. `AddRootCA` : AddRootCA方法接收一个参数，即新增的root.ca文件内容，用于新增root ca，当ca mode为center，即中心ca时，链级管理员（admin用户）可以新增root ca。
+2. `GetRootCAs` : GetRootCAs方法不需要入参，用于查询链上所有的root ca，当ca mode为center时，返回链上所有当root ca。
+
+构造`RootCAContract`操作的构造器`RootCABuilder`提供了`addRootCA`和`getRootCAs`方法，分别用于构造`RootCAContract`合约中的`AddRootCA`和`GetRootCAs`方法，其定义如下：
+
+```java
+public static class RootCABuilder extends BuiltinOperationBuilder{
+        /**
+         * create RootCAOperation to add root ca.
+         * when ca mode is center, admin can add root ca.
+         *
+         * @param rootCA the root ca which will be add.
+         * @return {@link RootCABuilder}
+         */
+        public RootCABuilder addRootCA(String rootCA);
+
+        /**
+         * create RootCAOperation to get root cas.
+         * when ca mode is center, everyone can get root cas.
+         *
+         * @return {@link RootCABuilder}
+         */
+        public RootCABuilder getRootCAs();
+
+}
+```
 
 bvm的合约操作创建好之后，使用`BVMBuilder` 提供的`invoke` 方法构造bvm的交易体，使用`build` 方法构造出交易`transaction` ，并为交易设置`txVersion` 并使用`sign` 方法签名，得到最终可以发送执行的交易体。
 
@@ -929,6 +1055,46 @@ MPCContract中有三个方法可供调用，GetSRSInfo、GetHistory和Beacon方�
   ```
   
 
+#### CertContract使用示例
+
+CertContract中有如下方法可供调用，CertRevoke方法。
+
+- CertRevoke
+  
+  CertRevoke方法用于吊销证书,当ca模式为 `center` 时，链级管理员可以吊销证书；当ca模式为 `none` 时，不可吊销证书。 示例如下：
+
+  ```java
+    public void revokeCert() throws RequestException {
+        String ecert = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICSTCCAfWgAwIBAgIBATAKBggqhkjOPQQDAjB0MQkwBwYDVQQIEwAxCTAHBgNV\n" +
+                "BAcTADEJMAcGA1UECRMAMQkwBwYDVQQREwAxDjAMBgNVBAoTBWZsYXRvMQkwBwYD\n" +
+                "VQQLEwAxDjAMBgNVBAMTBW5vZGUxMQswCQYDVQQGEwJaSDEOMAwGA1UEKhMFZWNl\n" +
+                "cnQwIBcNMjAwNTIyMDUyOTMzWhgPMjEyMDA0MjgwNjI5MzNaMHQxCTAHBgNVBAgT\n" +
+                "ADEJMAcGA1UEBxMAMQkwBwYDVQQJEwAxCTAHBgNVBBETADEOMAwGA1UEChMFZmxh\n" +
+                "dG8xCTAHBgNVBAsTADEOMAwGA1UEAxMFbm9kZTUxCzAJBgNVBAYTAlpIMQ4wDAYD\n" +
+                "VQQqEwVlY2VydDBWMBAGByqGSM49AgEGBSuBBAAKA0IABBI3ewNK21vHNOPG6U3X\n" +
+                "mKJohSNNz72QKDxUpRt0fCJHwaGYfSvY4cnqkbliclfckUTpCkFSRr4cqN6PURCF\n" +
+                "zkWjeTB3MA4GA1UdDwEB/wQEAwIChDAmBgNVHSUEHzAdBggrBgEFBQcDAgYIKwYB\n" +
+                "BQUHAwEGAioDBgOBCwEwDwYDVR0TAQH/BAUwAwEB/zANBgNVHQ4EBgQEAQIDBDAP\n" +
+                "BgNVHSMECDAGgAQBAgMEMAwGAypWAQQFZWNlcnQwCgYIKoZIzj0EAwIDQgB6oSjJ\n" +
+                "ZOANUWYZoGMuJi0qhx7LHOE4aWSvcRtE/8N0R2LC0MSPwVWnoyq1ppcVdoTpHYlh\n" +
+                "UxvXCUo+cOU3lSnRAA==\n" +
+                "-----END CERTIFICATE-----\n";
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new CertOperation.CertBuilder().revoke(ecert).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+  ```
+
+
 
 #### ProposalContract使用示例
 
@@ -1064,6 +1230,25 @@ Account ac = accountService.fromAccountJson(accountJsons[5]);
         System.out.println(result);
 ```
 
+###### ca模式类
+
+创建ca模式类提案时，先使用`CAModeBuilder` 构造ca模式类的操作，然后使用`ProposalBuilder` 提供的`createForCAMode` 构造创建提案的操作，再使用`BVMBuilder` 提供的`invoke` 封装操作到交易中，使用`build` 方法构造交易，然后创建请求、发送请求、解析结果。
+如果当前ns已经设置了ca模式，则无法再次创建。其示例如下：
+
+```java
+Account ac = accountService.fromAccountJson(accountJsons[5]);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new ProposalOperation.ProposalBuilder().createForCAMode(
+                        // set ca mode
+                        new CAModeOperation.CAModeBuilder().setCAMode(CAMode.None).builder()
+                ).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+```
 
 
 ##### 提案投票
@@ -1123,6 +1308,43 @@ Account ac = accountService.fromAccountJson(accountJsons[5]);
         ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
         Result result = Decoder.decodeBVM(receiptResponse.getRet());
         System.out.println(result);
+```
+
+##### 直接执行提案内容
+
+提案类操作只能通过提案合约进行，在一些情况下也可以跳过提案投票，直接执行提案操作。目前当ca模式为 `center` (中心ca)或 `none` (无ca)时，可直接执行节点管理类提案操作；
+另外对于查询类的提案操作也可直接执行，其示例如下：
+```java
+        // remove vp direct
+        public void removeVPDirect() throws RequestException {
+            Account ac = accountService.fromAccountJson(accountJson);
+            Transaction transaction = new Transaction.
+                    BVMBuilder(ac.getAddress()).
+                    invoke(new ProposalOperation.ProposalBuilder().directForNode(new NodeOperation.NodeBuilder().removeVP("node5", "global").build()).build()).
+                    build();
+            transaction.sign(ac);
+            ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+            Result result = Decoder.decodeBVM(receiptResponse.getRet());
+            System.out.println(result);
+            System.out.println(result.getErr());
+            System.out.println(result.getRet());
+        }
+
+    // get ca mode direct
+    public void getRootCA() throws RequestException {
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+        invoke(new RootCAOperation.RootCABuilder().getRootCAs().build()).
+                        build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+
 ```
 
 #### AccountContract使用示例
@@ -1199,6 +1421,68 @@ AccountContract中有两个方法可供调用，Register和Abandon方法。
       Assert.assertTrue(result.isSuccess());
       Assert.assertEquals("", result.getErr());
   }
+  ```
+
+#### RootCAContract使用示例
+
+RootCAContract中有两个方法可供调用，AddRootCA和GetRootCAs方法。
+
+- AddRootCA
+
+  AddRootCA方法接收一个参数，即新增的root.ca文件内容，用于新增root ca，当ca mode为center，即中心ca时，链级管理员（admin用户）可以新增root ca。
+  使用`RootCABuilder` 提供的`addRootCA` 方法构造一个`BuiltinOperation` ，然后使用`BVMBuilder` 提供的`invoke` 方法设置参数，
+  使用`build` 方法构造`Transaction` ，然后使用`ContractService` 提供的`invoke` 方法构造请求，最后将请求发出拿到响应结果，其示例如下：
+
+  ```java
+    public void setRootCA() throws RequestException {
+        String rootCA = "-----BEGIN CERTIFICATE-----\n" +
+                "MIICSTCCAfWgAwIBAgIBATAKBggqhkjOPQQDAjB0MQkwBwYDVQQIEwAxCTAHBgNV\n" +
+                "BAcTADEJMAcGA1UECRMAMQkwBwYDVQQREwAxDjAMBgNVBAoTBWZsYXRvMQkwBwYD\n" +
+                "VQQLEwAxDjAMBgNVBAMTBW5vZGUyMQswCQYDVQQGEwJaSDEOMAwGA1UEKhMFZWNl\n" +
+                "cnQwIBcNMjAwNTIxMDU1ODU2WhgPMjEyMDA0MjcwNjU4NTZaMHQxCTAHBgNVBAgT\n" +
+                "ADEJMAcGA1UEBxMAMQkwBwYDVQQJEwAxCTAHBgNVBBETADEOMAwGA1UEChMFZmxh\n" +
+                "dG8xCTAHBgNVBAsTADEOMAwGA1UEAxMFbm9kZTQxCzAJBgNVBAYTAlpIMQ4wDAYD\n" +
+                "VQQqEwVlY2VydDBWMBAGByqGSM49AgEGBSuBBAAKA0IABBI3ewNK21vHNOPG6U3X\n" +
+                "mKJohSNNz72QKDxUpRt0fCJHwaGYfSvY4cnqkbliclfckUTpCkFSRr4cqN6PURCF\n" +
+                "zkWjeTB3MA4GA1UdDwEB/wQEAwIChDAmBgNVHSUEHzAdBggrBgEFBQcDAgYIKwYB\n" +
+                "BQUHAwEGAioDBgOBCwEwDwYDVR0TAQH/BAUwAwEB/zANBgNVHQ4EBgQEAQIDBDAP\n" +
+                "BgNVHSMECDAGgAQBAgMEMAwGAypWAQQFZWNlcnQwCgYIKoZIzj0EAwIDQgDJibFh\n" +
+                "a1tZ3VhL3WIs36DqOS22aetvcn2dXHH9Pw5/s2XI70Mr3ow3RKqJmdmi0PsmLr+K\n" +
+                "pCFkuMv2bHnkWuiZAQ==\n" +
+                "-----END CERTIFICATE-----";
+        String adminAccount = "";
+        Account ac = accountService.fromAccountJson(adminAccount);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+                invoke(new RootCAOperation.RootCABuilder().addRootCA(rootCA).build()).
+                build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
+  ```
+
+- GetRootCAs
+
+  GetRootCAs方法GetRootCAs方法不需要入参，用于查询链上所有的root ca，当ca mode为center时，返回链上所有当root ca。。其示例如下：
+
+  ```java
+    public void getRootCA() throws RequestException {
+        Account ac = accountService.fromAccountJson(accountJson);
+        Transaction transaction = new Transaction.
+                BVMBuilder(ac.getAddress()).
+        invoke(new RootCAOperation.RootCABuilder().getRootCAs().build()).
+                        build();
+        transaction.sign(ac);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getErr());
+        System.out.println(result.getRet());
+    }
   ```
 
 ## 第三章. ConfigService相关接口

@@ -14,6 +14,7 @@ import cn.hyperchain.sdk.request.NodeRequest;
 import cn.hyperchain.sdk.request.Request;
 import cn.hyperchain.sdk.request.TCertRequest;
 import cn.hyperchain.sdk.request.SendBatchTxsRequest;
+import cn.hyperchain.sdk.request.PollingRequest;
 import cn.hyperchain.sdk.response.TCertResponse;
 import cn.hyperchain.sdk.response.did.DIDResponse;
 import cn.hyperchain.sdk.response.tx.TxVersionResponse;
@@ -215,11 +216,12 @@ public class ProviderManager {
      * @return response string
      * @throws RequestException -
      */
-    public String send(Request request, int... ids) throws RequestException {
+    public Object send(Request request, int... ids) throws RequestException {
         List<HttpProvider> hProviders;
         if (request instanceof FileTransferRequest) {
             hProviders = checkIds(fileMgrHttpProviders, ids);
         } else if (enableGRPC && GrpcUtil.isGRPCMethod(request.getMethod()) && !(request instanceof SendBatchTxsRequest)) {
+            GrpcUtil.handMethodPrefix(request);
             request.setGRPC(true);
             hProviders = checkIds(grpcProviders, ids);
         } else {
@@ -239,7 +241,7 @@ public class ProviderManager {
                 flag = false;
                 continue;
             }
-            if (flag ? hProvider.getStatus() == PStatus.NORMAL : hProvider.getStatus() != PStatus.ABNORMAL) {
+            if ((flag ? hProvider.getStatus() == PStatus.NORMAL : hProvider.getStatus() != PStatus.ABNORMAL) && (request instanceof PollingRequest || !request.isUsedProvider(hProvider))) {
                 logger.debug("[REQUEST] request node id: " + ((startIndex + i) % providerSize + 1));
                 try {
                     request.setNamespace(this.namespace);
@@ -252,6 +254,8 @@ public class ProviderManager {
                         auth.setSignature(ByteUtil.toHex(hProvider.getAccount().sign(sourceData)));
                         request.setAuth(auth);
                     }
+                    request.addProvider(hProvider);
+                    request.setUsedAllProviders(providerSize);
                     return sendTo(request, hProvider);
                 } catch (RequestException e) {
                     //todo grpc在某些情况下也需要重连（等其他接口服务恢复之后添加）
@@ -269,7 +273,7 @@ public class ProviderManager {
         throw new AllNodesBadException("No node to connect!");
     }
 
-    private String sendTo(Request request, HttpProvider provider) throws RequestException {
+    private Object sendTo(Request request, HttpProvider provider) throws RequestException {
         requestCheck(request, provider);
         byte[] bodyBytes;
         if (request.isGRPC()) {
@@ -312,9 +316,9 @@ public class ProviderManager {
         byte[] bodyBytes = body.getBytes(Utils.DEFAULT_CHARSET);
         tCertRequest.addHeader("tcert", sdkCertKeyPair.getPublicKey());
         tCertRequest.addHeader("signature", sdkCertKeyPair.signData(bodyBytes));
-        String response = provider.post(tCertRequest);
+        String response = (String) provider.post(tCertRequest);
         TCertResponse tCertResponse = gson.fromJson(response, TCertResponse.class);
-        if (tCertResponse.getCode() == RequestExceptionCode.METHOD_NOT_FOUND.getCode()) {
+        if (tCertResponse.getCode() != 0) {
             throw new RequestException(tCertResponse.getCode(), tCertResponse.getMessage());
         }
         return tCertResponse.getTCert();
@@ -381,15 +385,12 @@ public class ProviderManager {
             String txVersionResult = "";
             int count = 0;
             for (int i = 1; i <= nodeNum; i++) {
-                if (providerManager.tCertPool != null && !TxVersion.GLOBAL_TX_VERSION.isGreaterOrEqual(TxVersion.TxVersion20) && !providerManager.isCFCA) {
+                if (providerManager.tCertPool != null && !providerManager.isCFCA) {
                     try {
                         String tCert = providerManager.getTCert(providerManager.tCertPool.getUniquePubKey(), providerManager.tCertPool.getSdkCertKeyPair(), providerManager.httpProviders.get(i - 1));
                         providerManager.tCertPool.setTCert(providerManager.httpProviders.get(i - 1).getUrl(), tCert);
                     } catch (RequestException e) {
-                        if (e.getCode().equals(RequestExceptionCode.METHOD_NOT_FOUND.getCode())) {
-                            logger.info(e.getMessage() + ". set txVersion to 2.0.");
-                            TxVersion.setGlobalTxVersion("2.0");
-                        }
+                        logger.info(e.getMessage());
                     }
                 }
                 TxVersionResponse txVersionResponse = txService.getTxVersion(i).send();

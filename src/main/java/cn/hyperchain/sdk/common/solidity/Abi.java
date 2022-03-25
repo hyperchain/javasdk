@@ -37,10 +37,10 @@ public class Abi {
     private ContractType.Fallback fallback;
     private Map<String, ContractType.Function> functions;
     private Map<String, ContractType.Event> events;
-
+    private static Gson gson2 = new Gson();
     private static Gson gson = new GsonBuilder()
             .registerTypeAdapter(SolidityType.class,
-                    (JsonSerializer<SolidityType>) (src, typeOfSrc, context) -> new JsonParser().parse(src.getCanonicalName()))
+                    (JsonSerializer<SolidityType>) (src, typeOfSrc, context) -> new JsonParser().parse(gson2.toJson(src.getCanonicalName())))
             .create();
 
     public Abi() {

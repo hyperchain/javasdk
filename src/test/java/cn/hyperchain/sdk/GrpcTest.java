@@ -30,8 +30,7 @@ import java.util.Random;
 
 
 public class GrpcTest {
-    public static String genesis_accountJson = "{\"address\":\"0x000f1a7a08ccc48e5d30f80850cf1cf283aa3abd\",\"version\":\"4.0\", \"algo\":\"0x03\",\"publicKey\":\"0400ddbadb932a0d276e257c6df50599a425804a3743f40942d031f806bf14ab0c57aed6977b1ad14646672f9b9ce385f2c98c4581267b611f48f4b7937de386ac\",\"privateKey\":\"16acbf6b4f09a476a35ebd4c01e337238b5dceceb6ff55ff0c4bd83c4f91e11b\"}";
-
+    public static String genesis_accountJson = "";
     ProviderManager providerManager;
     AccountService accountService;
 

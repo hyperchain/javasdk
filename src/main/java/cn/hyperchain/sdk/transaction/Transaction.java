@@ -12,6 +12,7 @@ import cn.hyperchain.sdk.common.utils.InvokeDirectlyParams;
 import cn.hyperchain.sdk.common.utils.InvokeHVMAbiParams;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.MethodNameUtil;
+import cn.hyperchain.sdk.common.utils.FVMAbi;
 import cn.hyperchain.sdk.common.utils.Utils;
 import cn.hyperchain.sdk.crypto.HashUtil;
 import cn.hyperchain.sdk.did.DIDCredential;
@@ -708,6 +709,65 @@ public class Transaction {
         }
     }
 
+    public static class FVMBuilder extends Builder {
+        public FVMBuilder(String from) {
+            super(from);
+            super.transaction.setVmType(VMType.FVM);
+        }
+
+        /**
+         * create deployment transaction for {@link VMType} FVM.
+         *
+         * @param fis the file input stream
+         * @return {@link Builder}
+         */
+        public Builder deploy(InputStream fis) {
+            String payload = Encoder.encodeDeployWasm(fis);
+            super.transaction.setTo("0x0");
+            super.transaction.setPayload(payload);
+            return this;
+        }
+
+        /**
+         * create invoking transaction for {@link VMType} FVM.
+         *
+         * @param contractAddress contract address in chain
+         * @param methodName      method name
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String methodName, FVMAbi abi, FuncParams params) {
+            String payload = ByteUtil.toHex(abi.encode(methodName, params.getParams()));
+            System.out.println("payload is:" + payload);
+            super.transaction.setPayload(payload);
+            return invokeContractAddr(contractAddress, false, null);
+        }
+
+        /**
+         * create invoking transaction for {@link VMType} FVM.
+         *
+         * @param contractAddress contract address in chain
+         * @param payload         payload
+         * @param isDID           didAccount invoke
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String payload, boolean isDID, String chainID) {
+            super.transaction.setPayload(payload);
+            return invokeContractAddr(contractAddress, isDID, chainID);
+        }
+
+        /**
+         * create invoking transaction for {@link VMType} FVM.
+         *
+         * @param contractAddress contract address in chain
+         * @param payload user defined payload
+         * @return {@link Builder}
+         */
+        public Builder invoke(String contractAddress, String payload) {
+            super.transaction.setPayload(payload);
+            return invokeContractAddr(contractAddress, false, null);
+        }
+    }
+
     /**
      * setNeedHashString.
      */
@@ -1124,6 +1184,8 @@ public class Transaction {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
         } else if (vmType == VMType.TRANSFER) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
+        } else if (vmType == VMType.FVM) {
+            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.FVM_VALUE);
         } else if (vmType == VMType.KVSQL) {
             input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.KVSQL_VALUE);
         } else if (vmType == VMType.BVM) {

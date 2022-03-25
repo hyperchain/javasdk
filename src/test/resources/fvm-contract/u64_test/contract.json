@@ -1,0 +1,64 @@
+{
+  "contract": {
+    "name": "MyContract",
+    "constructor": {
+      "input": []
+    }
+  },
+  "methods": [
+    {
+      "name": "add",
+      "input": [
+        {
+          "type": "u64"
+        },
+        {
+          "type": "Vec < Vec < i64 > >"
+        }
+      ],
+      "output": [
+        {
+          "type": "Vec < i64 >"
+        }
+      ]
+    },
+    {
+      "name": "sub",
+      "input": [
+        {
+          "type": "u64"
+        }
+      ],
+      "output": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "get",
+      "input": [],
+      "output": [
+        {
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "make_student",
+      "input": [
+        {
+          "type": "Student"
+        },
+        {
+          "type": "Student"
+        }
+      ],
+      "output": [
+        {
+          "type": "u64"
+        }
+      ]
+    }
+  ]
+}

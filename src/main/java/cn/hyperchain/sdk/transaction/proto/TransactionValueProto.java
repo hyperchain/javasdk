@@ -6,4458 +6,17 @@ package cn.hyperchain.sdk.transaction.proto;
 public final class TransactionValueProto {
   private TransactionValueProto() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
+          com.google.protobuf.ExtensionRegistryLite registry) {
   }
 
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
+          com.google.protobuf.ExtensionRegistry registry) {
     registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
+            (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface TransactionOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.Transaction)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>bytes version = 1;</code>
-     * @return The version.
-     */
-    com.google.protobuf.ByteString getVersion();
-
-    /**
-     * <code>bytes from = 2;</code>
-     * @return The from.
-     */
-    com.google.protobuf.ByteString getFrom();
-
-    /**
-     * <code>bytes to = 3;</code>
-     * @return The to.
-     */
-    com.google.protobuf.ByteString getTo();
-
-    /**
-     * <code>bytes value = 4;</code>
-     * @return The value.
-     */
-    com.google.protobuf.ByteString getValue();
-
-    /**
-     * <code>int64 timestamp = 5;</code>
-     * @return The timestamp.
-     */
-    long getTimestamp();
-
-    /**
-     * <code>bytes signature = 6;</code>
-     * @return The signature.
-     */
-    com.google.protobuf.ByteString getSignature();
-
-    /**
-     * <code>uint64 id = 7;</code>
-     * @return The id.
-     */
-    long getId();
-
-    /**
-     * <code>bytes transactionHash = 8;</code>
-     * @return The transactionHash.
-     */
-    com.google.protobuf.ByteString getTransactionHash();
-
-    /**
-     * <code>int64 nonce = 9;</code>
-     * @return The nonce.
-     */
-    long getNonce();
-
-    /**
-     * <code>.protos.NonHash other = 10;</code>
-     * @return Whether the other field is set.
-     */
-    boolean hasOther();
-    /**
-     * <code>.protos.NonHash other = 10;</code>
-     * @return The other.
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash getOther();
-    /**
-     * <code>.protos.NonHash other = 10;</code>
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHashOrBuilder getOtherOrBuilder();
-
-    /**
-     * <code>.protos.Transaction.TxType txType = 11;</code>
-     * @return The enum numeric value on the wire for txType.
-     */
-    int getTxTypeValue();
-    /**
-     * <code>.protos.Transaction.TxType txType = 11;</code>
-     * @return The txType.
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType getTxType();
-
-    /**
-     * <code>bytes cName = 12;</code>
-     * @return The cName.
-     */
-    com.google.protobuf.ByteString getCName();
-  }
-  /**
-   * Protobuf type {@code protos.Transaction}
-   */
-  public static final class Transaction extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.Transaction)
-      TransactionOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Transaction.newBuilder() to construct.
-    private Transaction(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Transaction() {
-      version_ = com.google.protobuf.ByteString.EMPTY;
-      from_ = com.google.protobuf.ByteString.EMPTY;
-      to_ = com.google.protobuf.ByteString.EMPTY;
-      value_ = com.google.protobuf.ByteString.EMPTY;
-      signature_ = com.google.protobuf.ByteString.EMPTY;
-      transactionHash_ = com.google.protobuf.ByteString.EMPTY;
-      txType_ = 0;
-      cName_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new Transaction();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Transaction(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              version_ = input.readBytes();
-              break;
-            }
-            case 18: {
-
-              from_ = input.readBytes();
-              break;
-            }
-            case 26: {
-
-              to_ = input.readBytes();
-              break;
-            }
-            case 34: {
-
-              value_ = input.readBytes();
-              break;
-            }
-            case 40: {
-
-              timestamp_ = input.readInt64();
-              break;
-            }
-            case 50: {
-
-              signature_ = input.readBytes();
-              break;
-            }
-            case 56: {
-
-              id_ = input.readUInt64();
-              break;
-            }
-            case 66: {
-
-              transactionHash_ = input.readBytes();
-              break;
-            }
-            case 72: {
-
-              nonce_ = input.readInt64();
-              break;
-            }
-            case 82: {
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder subBuilder = null;
-              if (other_ != null) {
-                subBuilder = other_.toBuilder();
-              }
-              other_ = input.readMessage(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(other_);
-                other_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 88: {
-              int rawValue = input.readEnum();
-
-              txType_ = rawValue;
-              break;
-            }
-            case 98: {
-
-              cName_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_Transaction_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_Transaction_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder.class);
-    }
-
-    /**
-     * Protobuf enum {@code protos.Transaction.TxType}
-     */
-    public enum TxType
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>NTX = 0;</code>
-       */
-      NTX(0),
-      /**
-       * <code>CTX = 1;</code>
-       */
-      CTX(1),
-      UNRECOGNIZED(-1),
-      ;
-
-      /**
-       * <code>NTX = 0;</code>
-       */
-      public static final int NTX_VALUE = 0;
-      /**
-       * <code>CTX = 1;</code>
-       */
-      public static final int CTX_VALUE = 1;
-
-
-      public final int getNumber() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
-        }
-        return value;
-      }
-
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static TxType valueOf(int value) {
-        return forNumber(value);
-      }
-
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       */
-      public static TxType forNumber(int value) {
-        switch (value) {
-          case 0: return NTX;
-          case 1: return CTX;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<TxType>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          TxType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<TxType>() {
-              public TxType findValueByNumber(int number) {
-                return TxType.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalStateException(
-              "Can't get the descriptor of an unrecognized enum value.");
-        }
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final TxType[] VALUES = values();
-
-      public static TxType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        if (desc.getIndex() == -1) {
-          return UNRECOGNIZED;
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private TxType(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:protos.Transaction.TxType)
-    }
-
-    public static final int VERSION_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString version_;
-    /**
-     * <code>bytes version = 1;</code>
-     * @return The version.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getVersion() {
-      return version_;
-    }
-
-    public static final int FROM_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString from_;
-    /**
-     * <code>bytes from = 2;</code>
-     * @return The from.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getFrom() {
-      return from_;
-    }
-
-    public static final int TO_FIELD_NUMBER = 3;
-    private com.google.protobuf.ByteString to_;
-    /**
-     * <code>bytes to = 3;</code>
-     * @return The to.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getTo() {
-      return to_;
-    }
-
-    public static final int VALUE_FIELD_NUMBER = 4;
-    private com.google.protobuf.ByteString value_;
-    /**
-     * <code>bytes value = 4;</code>
-     * @return The value.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getValue() {
-      return value_;
-    }
-
-    public static final int TIMESTAMP_FIELD_NUMBER = 5;
-    private long timestamp_;
-    /**
-     * <code>int64 timestamp = 5;</code>
-     * @return The timestamp.
-     */
-    @java.lang.Override
-    public long getTimestamp() {
-      return timestamp_;
-    }
-
-    public static final int SIGNATURE_FIELD_NUMBER = 6;
-    private com.google.protobuf.ByteString signature_;
-    /**
-     * <code>bytes signature = 6;</code>
-     * @return The signature.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getSignature() {
-      return signature_;
-    }
-
-    public static final int ID_FIELD_NUMBER = 7;
-    private long id_;
-    /**
-     * <code>uint64 id = 7;</code>
-     * @return The id.
-     */
-    @java.lang.Override
-    public long getId() {
-      return id_;
-    }
-
-    public static final int TRANSACTIONHASH_FIELD_NUMBER = 8;
-    private com.google.protobuf.ByteString transactionHash_;
-    /**
-     * <code>bytes transactionHash = 8;</code>
-     * @return The transactionHash.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getTransactionHash() {
-      return transactionHash_;
-    }
-
-    public static final int NONCE_FIELD_NUMBER = 9;
-    private long nonce_;
-    /**
-     * <code>int64 nonce = 9;</code>
-     * @return The nonce.
-     */
-    @java.lang.Override
-    public long getNonce() {
-      return nonce_;
-    }
-
-    public static final int OTHER_FIELD_NUMBER = 10;
-    private cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash other_;
-    /**
-     * <code>.protos.NonHash other = 10;</code>
-     * @return Whether the other field is set.
-     */
-    @java.lang.Override
-    public boolean hasOther() {
-      return other_ != null;
-    }
-    /**
-     * <code>.protos.NonHash other = 10;</code>
-     * @return The other.
-     */
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash getOther() {
-      return other_ == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.getDefaultInstance() : other_;
-    }
-    /**
-     * <code>.protos.NonHash other = 10;</code>
-     */
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHashOrBuilder getOtherOrBuilder() {
-      return getOther();
-    }
-
-    public static final int TXTYPE_FIELD_NUMBER = 11;
-    private int txType_;
-    /**
-     * <code>.protos.Transaction.TxType txType = 11;</code>
-     * @return The enum numeric value on the wire for txType.
-     */
-    @java.lang.Override public int getTxTypeValue() {
-      return txType_;
-    }
-    /**
-     * <code>.protos.Transaction.TxType txType = 11;</code>
-     * @return The txType.
-     */
-    @java.lang.Override public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType getTxType() {
-      @SuppressWarnings("deprecation")
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType.valueOf(txType_);
-      return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType.UNRECOGNIZED : result;
-    }
-
-    public static final int CNAME_FIELD_NUMBER = 12;
-    private com.google.protobuf.ByteString cName_;
-    /**
-     * <code>bytes cName = 12;</code>
-     * @return The cName.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getCName() {
-      return cName_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!version_.isEmpty()) {
-        output.writeBytes(1, version_);
-      }
-      if (!from_.isEmpty()) {
-        output.writeBytes(2, from_);
-      }
-      if (!to_.isEmpty()) {
-        output.writeBytes(3, to_);
-      }
-      if (!value_.isEmpty()) {
-        output.writeBytes(4, value_);
-      }
-      if (timestamp_ != 0L) {
-        output.writeInt64(5, timestamp_);
-      }
-      if (!signature_.isEmpty()) {
-        output.writeBytes(6, signature_);
-      }
-      if (id_ != 0L) {
-        output.writeUInt64(7, id_);
-      }
-      if (!transactionHash_.isEmpty()) {
-        output.writeBytes(8, transactionHash_);
-      }
-      if (nonce_ != 0L) {
-        output.writeInt64(9, nonce_);
-      }
-      if (other_ != null) {
-        output.writeMessage(10, getOther());
-      }
-      if (txType_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType.NTX.getNumber()) {
-        output.writeEnum(11, txType_);
-      }
-      if (!cName_.isEmpty()) {
-        output.writeBytes(12, cName_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!version_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, version_);
-      }
-      if (!from_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, from_);
-      }
-      if (!to_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, to_);
-      }
-      if (!value_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, value_);
-      }
-      if (timestamp_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(5, timestamp_);
-      }
-      if (!signature_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(6, signature_);
-      }
-      if (id_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(7, id_);
-      }
-      if (!transactionHash_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(8, transactionHash_);
-      }
-      if (nonce_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(9, nonce_);
-      }
-      if (other_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(10, getOther());
-      }
-      if (txType_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType.NTX.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(11, txType_);
-      }
-      if (!cName_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(12, cName_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction)) {
-        return super.equals(obj);
-      }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction) obj;
-
-      if (!getVersion()
-          .equals(other.getVersion())) return false;
-      if (!getFrom()
-          .equals(other.getFrom())) return false;
-      if (!getTo()
-          .equals(other.getTo())) return false;
-      if (!getValue()
-          .equals(other.getValue())) return false;
-      if (getTimestamp()
-          != other.getTimestamp()) return false;
-      if (!getSignature()
-          .equals(other.getSignature())) return false;
-      if (getId()
-          != other.getId()) return false;
-      if (!getTransactionHash()
-          .equals(other.getTransactionHash())) return false;
-      if (getNonce()
-          != other.getNonce()) return false;
-      if (hasOther() != other.hasOther()) return false;
-      if (hasOther()) {
-        if (!getOther()
-            .equals(other.getOther())) return false;
-      }
-      if (txType_ != other.txType_) return false;
-      if (!getCName()
-          .equals(other.getCName())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getVersion().hashCode();
-      hash = (37 * hash) + FROM_FIELD_NUMBER;
-      hash = (53 * hash) + getFrom().hashCode();
-      hash = (37 * hash) + TO_FIELD_NUMBER;
-      hash = (53 * hash) + getTo().hashCode();
-      hash = (37 * hash) + VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + getValue().hashCode();
-      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTimestamp());
-      hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
-      hash = (53 * hash) + getSignature().hashCode();
-      hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getId());
-      hash = (37 * hash) + TRANSACTIONHASH_FIELD_NUMBER;
-      hash = (53 * hash) + getTransactionHash().hashCode();
-      hash = (37 * hash) + NONCE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getNonce());
-      if (hasOther()) {
-        hash = (37 * hash) + OTHER_FIELD_NUMBER;
-        hash = (53 * hash) + getOther().hashCode();
-      }
-      hash = (37 * hash) + TXTYPE_FIELD_NUMBER;
-      hash = (53 * hash) + txType_;
-      hash = (37 * hash) + CNAME_FIELD_NUMBER;
-      hash = (53 * hash) + getCName().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.Transaction}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.Transaction)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_Transaction_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_Transaction_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder.class);
-      }
-
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        version_ = com.google.protobuf.ByteString.EMPTY;
-
-        from_ = com.google.protobuf.ByteString.EMPTY;
-
-        to_ = com.google.protobuf.ByteString.EMPTY;
-
-        value_ = com.google.protobuf.ByteString.EMPTY;
-
-        timestamp_ = 0L;
-
-        signature_ = com.google.protobuf.ByteString.EMPTY;
-
-        id_ = 0L;
-
-        transactionHash_ = com.google.protobuf.ByteString.EMPTY;
-
-        nonce_ = 0L;
-
-        if (otherBuilder_ == null) {
-          other_ = null;
-        } else {
-          other_ = null;
-          otherBuilder_ = null;
-        }
-        txType_ = 0;
-
-        cName_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_Transaction_descriptor;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction(this);
-        result.version_ = version_;
-        result.from_ = from_;
-        result.to_ = to_;
-        result.value_ = value_;
-        result.timestamp_ = timestamp_;
-        result.signature_ = signature_;
-        result.id_ = id_;
-        result.transactionHash_ = transactionHash_;
-        result.nonce_ = nonce_;
-        if (otherBuilder_ == null) {
-          result.other_ = other_;
-        } else {
-          result.other_ = otherBuilder_.build();
-        }
-        result.txType_ = txType_;
-        result.cName_ = cName_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.getDefaultInstance()) return this;
-        if (other.getVersion() != com.google.protobuf.ByteString.EMPTY) {
-          setVersion(other.getVersion());
-        }
-        if (other.getFrom() != com.google.protobuf.ByteString.EMPTY) {
-          setFrom(other.getFrom());
-        }
-        if (other.getTo() != com.google.protobuf.ByteString.EMPTY) {
-          setTo(other.getTo());
-        }
-        if (other.getValue() != com.google.protobuf.ByteString.EMPTY) {
-          setValue(other.getValue());
-        }
-        if (other.getTimestamp() != 0L) {
-          setTimestamp(other.getTimestamp());
-        }
-        if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
-          setSignature(other.getSignature());
-        }
-        if (other.getId() != 0L) {
-          setId(other.getId());
-        }
-        if (other.getTransactionHash() != com.google.protobuf.ByteString.EMPTY) {
-          setTransactionHash(other.getTransactionHash());
-        }
-        if (other.getNonce() != 0L) {
-          setNonce(other.getNonce());
-        }
-        if (other.hasOther()) {
-          mergeOther(other.getOther());
-        }
-        if (other.txType_ != 0) {
-          setTxTypeValue(other.getTxTypeValue());
-        }
-        if (other.getCName() != com.google.protobuf.ByteString.EMPTY) {
-          setCName(other.getCName());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private com.google.protobuf.ByteString version_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes version = 1;</code>
-       * @return The version.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getVersion() {
-        return version_;
-      }
-      /**
-       * <code>bytes version = 1;</code>
-       * @param value The version to set.
-       * @return This builder for chaining.
-       */
-      public Builder setVersion(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        version_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes version = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearVersion() {
-        
-        version_ = getDefaultInstance().getVersion();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString from_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes from = 2;</code>
-       * @return The from.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getFrom() {
-        return from_;
-      }
-      /**
-       * <code>bytes from = 2;</code>
-       * @param value The from to set.
-       * @return This builder for chaining.
-       */
-      public Builder setFrom(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        from_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes from = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearFrom() {
-        
-        from_ = getDefaultInstance().getFrom();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString to_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes to = 3;</code>
-       * @return The to.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getTo() {
-        return to_;
-      }
-      /**
-       * <code>bytes to = 3;</code>
-       * @param value The to to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTo(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        to_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes to = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearTo() {
-        
-        to_ = getDefaultInstance().getTo();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes value = 4;</code>
-       * @return The value.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getValue() {
-        return value_;
-      }
-      /**
-       * <code>bytes value = 4;</code>
-       * @param value The value to set.
-       * @return This builder for chaining.
-       */
-      public Builder setValue(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        value_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes value = 4;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearValue() {
-        
-        value_ = getDefaultInstance().getValue();
-        onChanged();
-        return this;
-      }
-
-      private long timestamp_ ;
-      /**
-       * <code>int64 timestamp = 5;</code>
-       * @return The timestamp.
-       */
-      @java.lang.Override
-      public long getTimestamp() {
-        return timestamp_;
-      }
-      /**
-       * <code>int64 timestamp = 5;</code>
-       * @param value The timestamp to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTimestamp(long value) {
-        
-        timestamp_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int64 timestamp = 5;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearTimestamp() {
-        
-        timestamp_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes signature = 6;</code>
-       * @return The signature.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getSignature() {
-        return signature_;
-      }
-      /**
-       * <code>bytes signature = 6;</code>
-       * @param value The signature to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSignature(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        signature_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes signature = 6;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSignature() {
-        
-        signature_ = getDefaultInstance().getSignature();
-        onChanged();
-        return this;
-      }
-
-      private long id_ ;
-      /**
-       * <code>uint64 id = 7;</code>
-       * @return The id.
-       */
-      @java.lang.Override
-      public long getId() {
-        return id_;
-      }
-      /**
-       * <code>uint64 id = 7;</code>
-       * @param value The id to set.
-       * @return This builder for chaining.
-       */
-      public Builder setId(long value) {
-        
-        id_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint64 id = 7;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearId() {
-        
-        id_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString transactionHash_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes transactionHash = 8;</code>
-       * @return The transactionHash.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getTransactionHash() {
-        return transactionHash_;
-      }
-      /**
-       * <code>bytes transactionHash = 8;</code>
-       * @param value The transactionHash to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTransactionHash(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        transactionHash_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes transactionHash = 8;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearTransactionHash() {
-        
-        transactionHash_ = getDefaultInstance().getTransactionHash();
-        onChanged();
-        return this;
-      }
-
-      private long nonce_ ;
-      /**
-       * <code>int64 nonce = 9;</code>
-       * @return The nonce.
-       */
-      @java.lang.Override
-      public long getNonce() {
-        return nonce_;
-      }
-      /**
-       * <code>int64 nonce = 9;</code>
-       * @param value The nonce to set.
-       * @return This builder for chaining.
-       */
-      public Builder setNonce(long value) {
-        
-        nonce_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int64 nonce = 9;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearNonce() {
-        
-        nonce_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash other_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHashOrBuilder> otherBuilder_;
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       * @return Whether the other field is set.
-       */
-      public boolean hasOther() {
-        return otherBuilder_ != null || other_ != null;
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       * @return The other.
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash getOther() {
-        if (otherBuilder_ == null) {
-          return other_ == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.getDefaultInstance() : other_;
-        } else {
-          return otherBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       */
-      public Builder setOther(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash value) {
-        if (otherBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          other_ = value;
-          onChanged();
-        } else {
-          otherBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       */
-      public Builder setOther(
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder builderForValue) {
-        if (otherBuilder_ == null) {
-          other_ = builderForValue.build();
-          onChanged();
-        } else {
-          otherBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       */
-      public Builder mergeOther(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash value) {
-        if (otherBuilder_ == null) {
-          if (other_ != null) {
-            other_ =
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.newBuilder(other_).mergeFrom(value).buildPartial();
-          } else {
-            other_ = value;
-          }
-          onChanged();
-        } else {
-          otherBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       */
-      public Builder clearOther() {
-        if (otherBuilder_ == null) {
-          other_ = null;
-          onChanged();
-        } else {
-          other_ = null;
-          otherBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder getOtherBuilder() {
-        
-        onChanged();
-        return getOtherFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHashOrBuilder getOtherOrBuilder() {
-        if (otherBuilder_ != null) {
-          return otherBuilder_.getMessageOrBuilder();
-        } else {
-          return other_ == null ?
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.getDefaultInstance() : other_;
-        }
-      }
-      /**
-       * <code>.protos.NonHash other = 10;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHashOrBuilder> 
-          getOtherFieldBuilder() {
-        if (otherBuilder_ == null) {
-          otherBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHashOrBuilder>(
-                  getOther(),
-                  getParentForChildren(),
-                  isClean());
-          other_ = null;
-        }
-        return otherBuilder_;
-      }
-
-      private int txType_ = 0;
-      /**
-       * <code>.protos.Transaction.TxType txType = 11;</code>
-       * @return The enum numeric value on the wire for txType.
-       */
-      @java.lang.Override public int getTxTypeValue() {
-        return txType_;
-      }
-      /**
-       * <code>.protos.Transaction.TxType txType = 11;</code>
-       * @param value The enum numeric value on the wire for txType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTxTypeValue(int value) {
-        
-        txType_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.protos.Transaction.TxType txType = 11;</code>
-       * @return The txType.
-       */
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType getTxType() {
-        @SuppressWarnings("deprecation")
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType.valueOf(txType_);
-        return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType.UNRECOGNIZED : result;
-      }
-      /**
-       * <code>.protos.Transaction.TxType txType = 11;</code>
-       * @param value The txType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTxType(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.TxType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        
-        txType_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.protos.Transaction.TxType txType = 11;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearTxType() {
-        
-        txType_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString cName_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes cName = 12;</code>
-       * @return The cName.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getCName() {
-        return cName_;
-      }
-      /**
-       * <code>bytes cName = 12;</code>
-       * @param value The cName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setCName(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        cName_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes cName = 12;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearCName() {
-        
-        cName_ = getDefaultInstance().getCName();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.Transaction)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.Transaction)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction();
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<Transaction>
-        PARSER = new com.google.protobuf.AbstractParser<Transaction>() {
-      @java.lang.Override
-      public Transaction parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Transaction(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Transaction> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Transaction> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface InvalidTransactionRecordOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.InvalidTransactionRecord)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>.protos.Transaction tx = 1;</code>
-     * @return Whether the tx field is set.
-     */
-    boolean hasTx();
-    /**
-     * <code>.protos.Transaction tx = 1;</code>
-     * @return The tx.
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction getTx();
-    /**
-     * <code>.protos.Transaction tx = 1;</code>
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionOrBuilder getTxOrBuilder();
-
-    /**
-     * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-     * @return The enum numeric value on the wire for errType.
-     */
-    int getErrTypeValue();
-    /**
-     * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-     * @return The errType.
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType getErrType();
-
-    /**
-     * <code>bytes errMsg = 3;</code>
-     * @return The errMsg.
-     */
-    com.google.protobuf.ByteString getErrMsg();
-  }
-  /**
-   * Protobuf type {@code protos.InvalidTransactionRecord}
-   */
-  public static final class InvalidTransactionRecord extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.InvalidTransactionRecord)
-      InvalidTransactionRecordOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use InvalidTransactionRecord.newBuilder() to construct.
-    private InvalidTransactionRecord(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private InvalidTransactionRecord() {
-      errType_ = 0;
-      errMsg_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new InvalidTransactionRecord();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private InvalidTransactionRecord(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder subBuilder = null;
-              if (tx_ != null) {
-                subBuilder = tx_.toBuilder();
-              }
-              tx_ = input.readMessage(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(tx_);
-                tx_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-
-              errType_ = rawValue;
-              break;
-            }
-            case 26: {
-
-              errMsg_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecord_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecord_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder.class);
-    }
-
-    /**
-     * Protobuf enum {@code protos.InvalidTransactionRecord.ErrType}
-     */
-    public enum ErrType
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>OUTOFBALANCE = 0;</code>
-       */
-      OUTOFBALANCE(0),
-      /**
-       * <code>SIGFAILED = 1;</code>
-       */
-      SIGFAILED(1),
-      /**
-       * <code>INVOKE_CONTRACT_FAILED = 2;</code>
-       */
-      INVOKE_CONTRACT_FAILED(2),
-      /**
-       * <code>DEPLOY_CONTRACT_FAILED = 3;</code>
-       */
-      DEPLOY_CONTRACT_FAILED(3),
-      /**
-       * <code>INVALID_PERMISSION = 4;</code>
-       */
-      INVALID_PERMISSION(4),
-      /**
-       * <code>DID_INVOCATION_FAILED = 5;</code>
-       */
-      DID_INVOCATION_FAILED(5),
-      /**
-       * <code>EXEC_KVSQL_FAILED = 6;</code>
-       */
-      EXEC_KVSQL_FAILED(6),
-      UNRECOGNIZED(-1),
-      ;
-
-      /**
-       * <code>OUTOFBALANCE = 0;</code>
-       */
-      public static final int OUTOFBALANCE_VALUE = 0;
-      /**
-       * <code>SIGFAILED = 1;</code>
-       */
-      public static final int SIGFAILED_VALUE = 1;
-      /**
-       * <code>INVOKE_CONTRACT_FAILED = 2;</code>
-       */
-      public static final int INVOKE_CONTRACT_FAILED_VALUE = 2;
-      /**
-       * <code>DEPLOY_CONTRACT_FAILED = 3;</code>
-       */
-      public static final int DEPLOY_CONTRACT_FAILED_VALUE = 3;
-      /**
-       * <code>INVALID_PERMISSION = 4;</code>
-       */
-      public static final int INVALID_PERMISSION_VALUE = 4;
-      /**
-       * <code>DID_INVOCATION_FAILED = 5;</code>
-       */
-      public static final int DID_INVOCATION_FAILED_VALUE = 5;
-      /**
-       * <code>EXEC_KVSQL_FAILED = 6;</code>
-       */
-      public static final int EXEC_KVSQL_FAILED_VALUE = 6;
-
-
-      public final int getNumber() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
-        }
-        return value;
-      }
-
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static ErrType valueOf(int value) {
-        return forNumber(value);
-      }
-
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       */
-      public static ErrType forNumber(int value) {
-        switch (value) {
-          case 0: return OUTOFBALANCE;
-          case 1: return SIGFAILED;
-          case 2: return INVOKE_CONTRACT_FAILED;
-          case 3: return DEPLOY_CONTRACT_FAILED;
-          case 4: return INVALID_PERMISSION;
-          case 5: return DID_INVOCATION_FAILED;
-          case 6: return EXEC_KVSQL_FAILED;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<ErrType>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          ErrType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ErrType>() {
-              public ErrType findValueByNumber(int number) {
-                return ErrType.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalStateException(
-              "Can't get the descriptor of an unrecognized enum value.");
-        }
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final ErrType[] VALUES = values();
-
-      public static ErrType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        if (desc.getIndex() == -1) {
-          return UNRECOGNIZED;
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private ErrType(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:protos.InvalidTransactionRecord.ErrType)
-    }
-
-    public static final int TX_FIELD_NUMBER = 1;
-    private cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction tx_;
-    /**
-     * <code>.protos.Transaction tx = 1;</code>
-     * @return Whether the tx field is set.
-     */
-    @java.lang.Override
-    public boolean hasTx() {
-      return tx_ != null;
-    }
-    /**
-     * <code>.protos.Transaction tx = 1;</code>
-     * @return The tx.
-     */
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction getTx() {
-      return tx_ == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.getDefaultInstance() : tx_;
-    }
-    /**
-     * <code>.protos.Transaction tx = 1;</code>
-     */
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionOrBuilder getTxOrBuilder() {
-      return getTx();
-    }
-
-    public static final int ERRTYPE_FIELD_NUMBER = 2;
-    private int errType_;
-    /**
-     * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-     * @return The enum numeric value on the wire for errType.
-     */
-    @java.lang.Override public int getErrTypeValue() {
-      return errType_;
-    }
-    /**
-     * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-     * @return The errType.
-     */
-    @java.lang.Override public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType getErrType() {
-      @SuppressWarnings("deprecation")
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType.valueOf(errType_);
-      return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType.UNRECOGNIZED : result;
-    }
-
-    public static final int ERRMSG_FIELD_NUMBER = 3;
-    private com.google.protobuf.ByteString errMsg_;
-    /**
-     * <code>bytes errMsg = 3;</code>
-     * @return The errMsg.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getErrMsg() {
-      return errMsg_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (tx_ != null) {
-        output.writeMessage(1, getTx());
-      }
-      if (errType_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType.OUTOFBALANCE.getNumber()) {
-        output.writeEnum(2, errType_);
-      }
-      if (!errMsg_.isEmpty()) {
-        output.writeBytes(3, errMsg_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (tx_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getTx());
-      }
-      if (errType_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType.OUTOFBALANCE.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, errType_);
-      }
-      if (!errMsg_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, errMsg_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord)) {
-        return super.equals(obj);
-      }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord) obj;
-
-      if (hasTx() != other.hasTx()) return false;
-      if (hasTx()) {
-        if (!getTx()
-            .equals(other.getTx())) return false;
-      }
-      if (errType_ != other.errType_) return false;
-      if (!getErrMsg()
-          .equals(other.getErrMsg())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      if (hasTx()) {
-        hash = (37 * hash) + TX_FIELD_NUMBER;
-        hash = (53 * hash) + getTx().hashCode();
-      }
-      hash = (37 * hash) + ERRTYPE_FIELD_NUMBER;
-      hash = (53 * hash) + errType_;
-      hash = (37 * hash) + ERRMSG_FIELD_NUMBER;
-      hash = (53 * hash) + getErrMsg().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.InvalidTransactionRecord}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.InvalidTransactionRecord)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecord_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecord_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder.class);
-      }
-
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        if (txBuilder_ == null) {
-          tx_ = null;
-        } else {
-          tx_ = null;
-          txBuilder_ = null;
-        }
-        errType_ = 0;
-
-        errMsg_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecord_descriptor;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord(this);
-        if (txBuilder_ == null) {
-          result.tx_ = tx_;
-        } else {
-          result.tx_ = txBuilder_.build();
-        }
-        result.errType_ = errType_;
-        result.errMsg_ = errMsg_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.getDefaultInstance()) return this;
-        if (other.hasTx()) {
-          mergeTx(other.getTx());
-        }
-        if (other.errType_ != 0) {
-          setErrTypeValue(other.getErrTypeValue());
-        }
-        if (other.getErrMsg() != com.google.protobuf.ByteString.EMPTY) {
-          setErrMsg(other.getErrMsg());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction tx_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionOrBuilder> txBuilder_;
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       * @return Whether the tx field is set.
-       */
-      public boolean hasTx() {
-        return txBuilder_ != null || tx_ != null;
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       * @return The tx.
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction getTx() {
-        if (txBuilder_ == null) {
-          return tx_ == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.getDefaultInstance() : tx_;
-        } else {
-          return txBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       */
-      public Builder setTx(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction value) {
-        if (txBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          tx_ = value;
-          onChanged();
-        } else {
-          txBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       */
-      public Builder setTx(
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder builderForValue) {
-        if (txBuilder_ == null) {
-          tx_ = builderForValue.build();
-          onChanged();
-        } else {
-          txBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       */
-      public Builder mergeTx(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction value) {
-        if (txBuilder_ == null) {
-          if (tx_ != null) {
-            tx_ =
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.newBuilder(tx_).mergeFrom(value).buildPartial();
-          } else {
-            tx_ = value;
-          }
-          onChanged();
-        } else {
-          txBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       */
-      public Builder clearTx() {
-        if (txBuilder_ == null) {
-          tx_ = null;
-          onChanged();
-        } else {
-          tx_ = null;
-          txBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder getTxBuilder() {
-        
-        onChanged();
-        return getTxFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionOrBuilder getTxOrBuilder() {
-        if (txBuilder_ != null) {
-          return txBuilder_.getMessageOrBuilder();
-        } else {
-          return tx_ == null ?
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.getDefaultInstance() : tx_;
-        }
-      }
-      /**
-       * <code>.protos.Transaction tx = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionOrBuilder> 
-          getTxFieldBuilder() {
-        if (txBuilder_ == null) {
-          txBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.Transaction.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionOrBuilder>(
-                  getTx(),
-                  getParentForChildren(),
-                  isClean());
-          tx_ = null;
-        }
-        return txBuilder_;
-      }
-
-      private int errType_ = 0;
-      /**
-       * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-       * @return The enum numeric value on the wire for errType.
-       */
-      @java.lang.Override public int getErrTypeValue() {
-        return errType_;
-      }
-      /**
-       * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-       * @param value The enum numeric value on the wire for errType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setErrTypeValue(int value) {
-        
-        errType_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-       * @return The errType.
-       */
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType getErrType() {
-        @SuppressWarnings("deprecation")
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType.valueOf(errType_);
-        return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType.UNRECOGNIZED : result;
-      }
-      /**
-       * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-       * @param value The errType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setErrType(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.ErrType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        
-        errType_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.protos.InvalidTransactionRecord.ErrType errType = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearErrType() {
-        
-        errType_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString errMsg_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes errMsg = 3;</code>
-       * @return The errMsg.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getErrMsg() {
-        return errMsg_;
-      }
-      /**
-       * <code>bytes errMsg = 3;</code>
-       * @param value The errMsg to set.
-       * @return This builder for chaining.
-       */
-      public Builder setErrMsg(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        errMsg_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes errMsg = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearErrMsg() {
-        
-        errMsg_ = getDefaultInstance().getErrMsg();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.InvalidTransactionRecord)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.InvalidTransactionRecord)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord();
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<InvalidTransactionRecord>
-        PARSER = new com.google.protobuf.AbstractParser<InvalidTransactionRecord>() {
-      @java.lang.Override
-      public InvalidTransactionRecord parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new InvalidTransactionRecord(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<InvalidTransactionRecord> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<InvalidTransactionRecord> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface InvalidTransactionRecordsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.InvalidTransactionRecords)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    java.util.List<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord> 
-        getRecordsList();
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord getRecords(int index);
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    int getRecordsCount();
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    java.util.List<? extends cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder> 
-        getRecordsOrBuilderList();
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder getRecordsOrBuilder(
-        int index);
-  }
-  /**
-   * Protobuf type {@code protos.InvalidTransactionRecords}
-   */
-  public static final class InvalidTransactionRecords extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.InvalidTransactionRecords)
-      InvalidTransactionRecordsOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use InvalidTransactionRecords.newBuilder() to construct.
-    private InvalidTransactionRecords(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private InvalidTransactionRecords() {
-      records_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new InvalidTransactionRecords();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private InvalidTransactionRecords(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                records_ = new java.util.ArrayList<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              records_.add(
-                  input.readMessage(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.parser(), extensionRegistry));
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          records_ = java.util.Collections.unmodifiableList(records_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecords_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecords_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords.Builder.class);
-    }
-
-    public static final int RECORDS_FIELD_NUMBER = 1;
-    private java.util.List<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord> records_;
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord> getRecordsList() {
-      return records_;
-    }
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder> 
-        getRecordsOrBuilderList() {
-      return records_;
-    }
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    @java.lang.Override
-    public int getRecordsCount() {
-      return records_.size();
-    }
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord getRecords(int index) {
-      return records_.get(index);
-    }
-    /**
-     * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-     */
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder getRecordsOrBuilder(
-        int index) {
-      return records_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      for (int i = 0; i < records_.size(); i++) {
-        output.writeMessage(1, records_.get(i));
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < records_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, records_.get(i));
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords)) {
-        return super.equals(obj);
-      }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords) obj;
-
-      if (!getRecordsList()
-          .equals(other.getRecordsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      if (getRecordsCount() > 0) {
-        hash = (37 * hash) + RECORDS_FIELD_NUMBER;
-        hash = (53 * hash) + getRecordsList().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.InvalidTransactionRecords}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.InvalidTransactionRecords)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordsOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecords_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecords_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords.Builder.class);
-      }
-
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getRecordsFieldBuilder();
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        if (recordsBuilder_ == null) {
-          records_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          recordsBuilder_.clear();
-        }
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvalidTransactionRecords_descriptor;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords(this);
-        int from_bitField0_ = bitField0_;
-        if (recordsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
-            records_ = java.util.Collections.unmodifiableList(records_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.records_ = records_;
-        } else {
-          result.records_ = recordsBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords.getDefaultInstance()) return this;
-        if (recordsBuilder_ == null) {
-          if (!other.records_.isEmpty()) {
-            if (records_.isEmpty()) {
-              records_ = other.records_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureRecordsIsMutable();
-              records_.addAll(other.records_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.records_.isEmpty()) {
-            if (recordsBuilder_.isEmpty()) {
-              recordsBuilder_.dispose();
-              recordsBuilder_ = null;
-              records_ = other.records_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              recordsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getRecordsFieldBuilder() : null;
-            } else {
-              recordsBuilder_.addAllMessages(other.records_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private java.util.List<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord> records_ =
-        java.util.Collections.emptyList();
-      private void ensureRecordsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          records_ = new java.util.ArrayList<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord>(records_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder> recordsBuilder_;
-
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public java.util.List<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord> getRecordsList() {
-        if (recordsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(records_);
-        } else {
-          return recordsBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public int getRecordsCount() {
-        if (recordsBuilder_ == null) {
-          return records_.size();
-        } else {
-          return recordsBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord getRecords(int index) {
-        if (recordsBuilder_ == null) {
-          return records_.get(index);
-        } else {
-          return recordsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder setRecords(
-          int index, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord value) {
-        if (recordsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureRecordsIsMutable();
-          records_.set(index, value);
-          onChanged();
-        } else {
-          recordsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder setRecords(
-          int index, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder builderForValue) {
-        if (recordsBuilder_ == null) {
-          ensureRecordsIsMutable();
-          records_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          recordsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder addRecords(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord value) {
-        if (recordsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureRecordsIsMutable();
-          records_.add(value);
-          onChanged();
-        } else {
-          recordsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder addRecords(
-          int index, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord value) {
-        if (recordsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureRecordsIsMutable();
-          records_.add(index, value);
-          onChanged();
-        } else {
-          recordsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder addRecords(
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder builderForValue) {
-        if (recordsBuilder_ == null) {
-          ensureRecordsIsMutable();
-          records_.add(builderForValue.build());
-          onChanged();
-        } else {
-          recordsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder addRecords(
-          int index, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder builderForValue) {
-        if (recordsBuilder_ == null) {
-          ensureRecordsIsMutable();
-          records_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          recordsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder addAllRecords(
-          java.lang.Iterable<? extends cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord> values) {
-        if (recordsBuilder_ == null) {
-          ensureRecordsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, records_);
-          onChanged();
-        } else {
-          recordsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder clearRecords() {
-        if (recordsBuilder_ == null) {
-          records_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          recordsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public Builder removeRecords(int index) {
-        if (recordsBuilder_ == null) {
-          ensureRecordsIsMutable();
-          records_.remove(index);
-          onChanged();
-        } else {
-          recordsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder getRecordsBuilder(
-          int index) {
-        return getRecordsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder getRecordsOrBuilder(
-          int index) {
-        if (recordsBuilder_ == null) {
-          return records_.get(index);  } else {
-          return recordsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public java.util.List<? extends cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder> 
-           getRecordsOrBuilderList() {
-        if (recordsBuilder_ != null) {
-          return recordsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(records_);
-        }
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder addRecordsBuilder() {
-        return getRecordsFieldBuilder().addBuilder(
-            cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder addRecordsBuilder(
-          int index) {
-        return getRecordsFieldBuilder().addBuilder(
-            index, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protos.InvalidTransactionRecord records = 1;</code>
-       */
-      public java.util.List<cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder> 
-           getRecordsBuilderList() {
-        return getRecordsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder> 
-          getRecordsFieldBuilder() {
-        if (recordsBuilder_ == null) {
-          recordsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecord.Builder, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecordOrBuilder>(
-                  records_,
-                  ((bitField0_ & 0x00000001) != 0),
-                  getParentForChildren(),
-                  isClean());
-          records_ = null;
-        }
-        return recordsBuilder_;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.InvalidTransactionRecords)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.InvalidTransactionRecords)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords();
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<InvalidTransactionRecords>
-        PARSER = new com.google.protobuf.AbstractParser<InvalidTransactionRecords>() {
-      @java.lang.Override
-      public InvalidTransactionRecords parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new InvalidTransactionRecords(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<InvalidTransactionRecords> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<InvalidTransactionRecords> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvalidTransactionRecords getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface TransactionMetaOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.TransactionMeta)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>uint64 BlockIndex = 1;</code>
-     * @return The blockIndex.
-     */
-    long getBlockIndex();
-
-    /**
-     * <code>int64 Index = 2;</code>
-     * @return The index.
-     */
-    long getIndex();
-  }
-  /**
-   * Protobuf type {@code protos.TransactionMeta}
-   */
-  public static final class TransactionMeta extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.TransactionMeta)
-      TransactionMetaOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use TransactionMeta.newBuilder() to construct.
-    private TransactionMeta(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private TransactionMeta() {
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new TransactionMeta();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private TransactionMeta(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              blockIndex_ = input.readUInt64();
-              break;
-            }
-            case 16: {
-
-              index_ = input.readInt64();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionMeta_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionMeta_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta.Builder.class);
-    }
-
-    public static final int BLOCKINDEX_FIELD_NUMBER = 1;
-    private long blockIndex_;
-    /**
-     * <code>uint64 BlockIndex = 1;</code>
-     * @return The blockIndex.
-     */
-    @java.lang.Override
-    public long getBlockIndex() {
-      return blockIndex_;
-    }
-
-    public static final int INDEX_FIELD_NUMBER = 2;
-    private long index_;
-    /**
-     * <code>int64 Index = 2;</code>
-     * @return The index.
-     */
-    @java.lang.Override
-    public long getIndex() {
-      return index_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (blockIndex_ != 0L) {
-        output.writeUInt64(1, blockIndex_);
-      }
-      if (index_ != 0L) {
-        output.writeInt64(2, index_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (blockIndex_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(1, blockIndex_);
-      }
-      if (index_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, index_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta)) {
-        return super.equals(obj);
-      }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta) obj;
-
-      if (getBlockIndex()
-          != other.getBlockIndex()) return false;
-      if (getIndex()
-          != other.getIndex()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + BLOCKINDEX_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getBlockIndex());
-      hash = (37 * hash) + INDEX_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getIndex());
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.TransactionMeta}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.TransactionMeta)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMetaOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionMeta_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionMeta_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta.Builder.class);
-      }
-
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        blockIndex_ = 0L;
-
-        index_ = 0L;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionMeta_descriptor;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta(this);
-        result.blockIndex_ = blockIndex_;
-        result.index_ = index_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta.getDefaultInstance()) return this;
-        if (other.getBlockIndex() != 0L) {
-          setBlockIndex(other.getBlockIndex());
-        }
-        if (other.getIndex() != 0L) {
-          setIndex(other.getIndex());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private long blockIndex_ ;
-      /**
-       * <code>uint64 BlockIndex = 1;</code>
-       * @return The blockIndex.
-       */
-      @java.lang.Override
-      public long getBlockIndex() {
-        return blockIndex_;
-      }
-      /**
-       * <code>uint64 BlockIndex = 1;</code>
-       * @param value The blockIndex to set.
-       * @return This builder for chaining.
-       */
-      public Builder setBlockIndex(long value) {
-        
-        blockIndex_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint64 BlockIndex = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearBlockIndex() {
-        
-        blockIndex_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private long index_ ;
-      /**
-       * <code>int64 Index = 2;</code>
-       * @return The index.
-       */
-      @java.lang.Override
-      public long getIndex() {
-        return index_;
-      }
-      /**
-       * <code>int64 Index = 2;</code>
-       * @param value The index to set.
-       * @return This builder for chaining.
-       */
-      public Builder setIndex(long value) {
-        
-        index_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int64 Index = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearIndex() {
-        
-        index_ = 0L;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.TransactionMeta)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.TransactionMeta)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta();
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<TransactionMeta>
-        PARSER = new com.google.protobuf.AbstractParser<TransactionMeta>() {
-      @java.lang.Override
-      public TransactionMeta parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new TransactionMeta(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<TransactionMeta> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<TransactionMeta> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionMeta getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface TransactionWrapperOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.TransactionWrapper)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>bytes transactionVersion = 1;</code>
-     * @return The transactionVersion.
-     */
-    com.google.protobuf.ByteString getTransactionVersion();
-
-    /**
-     * <code>bytes transaction = 2;</code>
-     * @return The transaction.
-     */
-    com.google.protobuf.ByteString getTransaction();
-  }
-  /**
-   * Protobuf type {@code protos.TransactionWrapper}
-   */
-  public static final class TransactionWrapper extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.TransactionWrapper)
-      TransactionWrapperOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use TransactionWrapper.newBuilder() to construct.
-    private TransactionWrapper(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private TransactionWrapper() {
-      transactionVersion_ = com.google.protobuf.ByteString.EMPTY;
-      transaction_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new TransactionWrapper();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private TransactionWrapper(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              transactionVersion_ = input.readBytes();
-              break;
-            }
-            case 18: {
-
-              transaction_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionWrapper_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionWrapper_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper.Builder.class);
-    }
-
-    public static final int TRANSACTIONVERSION_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString transactionVersion_;
-    /**
-     * <code>bytes transactionVersion = 1;</code>
-     * @return The transactionVersion.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getTransactionVersion() {
-      return transactionVersion_;
-    }
-
-    public static final int TRANSACTION_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString transaction_;
-    /**
-     * <code>bytes transaction = 2;</code>
-     * @return The transaction.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getTransaction() {
-      return transaction_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!transactionVersion_.isEmpty()) {
-        output.writeBytes(1, transactionVersion_);
-      }
-      if (!transaction_.isEmpty()) {
-        output.writeBytes(2, transaction_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!transactionVersion_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, transactionVersion_);
-      }
-      if (!transaction_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, transaction_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper)) {
-        return super.equals(obj);
-      }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper) obj;
-
-      if (!getTransactionVersion()
-          .equals(other.getTransactionVersion())) return false;
-      if (!getTransaction()
-          .equals(other.getTransaction())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TRANSACTIONVERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getTransactionVersion().hashCode();
-      hash = (37 * hash) + TRANSACTION_FIELD_NUMBER;
-      hash = (53 * hash) + getTransaction().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.TransactionWrapper}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.TransactionWrapper)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapperOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionWrapper_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionWrapper_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper.Builder.class);
-      }
-
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        transactionVersion_ = com.google.protobuf.ByteString.EMPTY;
-
-        transaction_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionWrapper_descriptor;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper(this);
-        result.transactionVersion_ = transactionVersion_;
-        result.transaction_ = transaction_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper.getDefaultInstance()) return this;
-        if (other.getTransactionVersion() != com.google.protobuf.ByteString.EMPTY) {
-          setTransactionVersion(other.getTransactionVersion());
-        }
-        if (other.getTransaction() != com.google.protobuf.ByteString.EMPTY) {
-          setTransaction(other.getTransaction());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private com.google.protobuf.ByteString transactionVersion_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes transactionVersion = 1;</code>
-       * @return The transactionVersion.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getTransactionVersion() {
-        return transactionVersion_;
-      }
-      /**
-       * <code>bytes transactionVersion = 1;</code>
-       * @param value The transactionVersion to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTransactionVersion(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        transactionVersion_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes transactionVersion = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearTransactionVersion() {
-        
-        transactionVersion_ = getDefaultInstance().getTransactionVersion();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString transaction_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes transaction = 2;</code>
-       * @return The transaction.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getTransaction() {
-        return transaction_;
-      }
-      /**
-       * <code>bytes transaction = 2;</code>
-       * @param value The transaction to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTransaction(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        transaction_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes transaction = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearTransaction() {
-        
-        transaction_ = getDefaultInstance().getTransaction();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.TransactionWrapper)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.TransactionWrapper)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper();
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<TransactionWrapper>
-        PARSER = new com.google.protobuf.AbstractParser<TransactionWrapper>() {
-      @java.lang.Override
-      public TransactionWrapper parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new TransactionWrapper(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<TransactionWrapper> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<TransactionWrapper> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionWrapper getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   public interface TransactionValueOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.TransactionValue)
-      com.google.protobuf.MessageOrBuilder {
+          // @@protoc_insertion_point(interface_extends:protos.TransactionValue)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>int64 price = 1;</code>
@@ -4510,7 +69,7 @@ public final class TransactionValueProto {
      * <code>.protos.TransactionValue.Opcode op = 8;</code>
      * @return The op.
      */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode getOp();
+    TransactionValue.Opcode getOp();
 
     /**
      * <code>bytes extra = 9;</code>
@@ -4533,16 +92,16 @@ public final class TransactionValueProto {
      * <code>.protos.TransactionValue.VmType vmType = 11;</code>
      * @return The vmType.
      */
-    cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType getVmType();
+    TransactionValue.VmType getVmType();
   }
   /**
    * Protobuf type {@code protos.TransactionValue}
    */
   public static final class TransactionValue extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.TransactionValue)
-      TransactionValueOrBuilder {
-  private static final long serialVersionUID = 0L;
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:protos.TransactionValue)
+          TransactionValueOrBuilder {
+    private static final long serialVersionUID = 0L;
     // Use TransactionValue.newBuilder() to construct.
     private TransactionValue(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -4558,28 +117,28 @@ public final class TransactionValueProto {
       vmType_ = 0;
     }
 
-    @java.lang.Override
+    @Override
     @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
+    protected Object newInstance(
+            UnusedPrivateParameter unused) {
       return new TransactionValue();
     }
 
-    @java.lang.Override
+    @Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
     }
     private TransactionValue(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
+        throw new NullPointerException();
       }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
+              com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -4647,7 +206,7 @@ public final class TransactionValueProto {
             }
             default: {
               if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
+                      input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -4658,30 +217,30 @@ public final class TransactionValueProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+                e).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionValue_descriptor;
+    getDescriptor() {
+      return TransactionValueProto.internal_static_protos_TransactionValue_descriptor;
     }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionValue_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Builder.class);
+    @Override
+    protected FieldAccessorTable
+    internalGetFieldAccessorTable() {
+      return TransactionValueProto.internal_static_protos_TransactionValue_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                      TransactionValue.class, Builder.class);
     }
 
     /**
      * Protobuf enum {@code protos.TransactionValue.Opcode}
      */
     public enum Opcode
-        implements com.google.protobuf.ProtocolMessageEnum {
+            implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <code>NORMAL = 0;</code>
        */
@@ -4746,6 +305,14 @@ public final class TransactionValueProto {
        * <code>DIDCREDENTIAL_ABANDON = 208;</code>
        */
       DIDCREDENTIAL_ABANDON(208),
+      /**
+       * <code>DID_SETEXTRA = 209;</code>
+       */
+      DID_SETEXTRA(209),
+      /**
+       * <code>DID_GETEXTRA = 210;</code>
+       */
+      DID_GETEXTRA(210),
       UNRECOGNIZED(-1),
       ;
 
@@ -4813,12 +380,20 @@ public final class TransactionValueProto {
        * <code>DIDCREDENTIAL_ABANDON = 208;</code>
        */
       public static final int DIDCREDENTIAL_ABANDON_VALUE = 208;
+      /**
+       * <code>DID_SETEXTRA = 209;</code>
+       */
+      public static final int DID_SETEXTRA_VALUE = 209;
+      /**
+       * <code>DID_GETEXTRA = 210;</code>
+       */
+      public static final int DID_GETEXTRA_VALUE = 210;
 
 
       public final int getNumber() {
         if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
+          throw new IllegalArgumentException(
+                  "Can't get the number of an unknown enum value.");
         }
         return value;
       }
@@ -4828,7 +403,7 @@ public final class TransactionValueProto {
        * @return The enum associated with the given numeric wire value.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
-      @java.lang.Deprecated
+      @Deprecated
       public static Opcode valueOf(int value) {
         return forNumber(value);
       }
@@ -4855,46 +430,48 @@ public final class TransactionValueProto {
           case 206: return DIDCREDENTIAL_UPLOAD;
           case 207: return DIDCREDENTIAL_DOWNLOAD;
           case 208: return DIDCREDENTIAL_ABANDON;
+          case 209: return DID_SETEXTRA;
+          case 210: return DID_GETEXTRA;
           default: return null;
         }
       }
 
       public static com.google.protobuf.Internal.EnumLiteMap<Opcode>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          Opcode> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<Opcode>() {
-              public Opcode findValueByNumber(int number) {
-                return Opcode.forNumber(number);
-              }
-            };
+              Opcode> internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<Opcode>() {
+                public Opcode findValueByNumber(int number) {
+                  return Opcode.forNumber(number);
+                }
+              };
 
       public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalStateException(
-              "Can't get the descriptor of an unrecognized enum value.");
+          throw new IllegalStateException(
+                  "Can't get the descriptor of an unrecognized enum value.");
         }
         return getDescriptor().getValues().get(ordinal());
       }
       public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.getDescriptor().getEnumTypes().get(0);
+      getDescriptor() {
+        return TransactionValue.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Opcode[] VALUES = values();
 
       public static Opcode valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+              com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+          throw new IllegalArgumentException(
+                  "EnumValueDescriptor is not for this type.");
         }
         if (desc.getIndex() == -1) {
           return UNRECOGNIZED;
@@ -4915,7 +492,7 @@ public final class TransactionValueProto {
      * Protobuf enum {@code protos.TransactionValue.VmType}
      */
     public enum VmType
-        implements com.google.protobuf.ProtocolMessageEnum {
+            implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <code>EVM = 0;</code>
        */
@@ -4940,6 +517,10 @@ public final class TransactionValueProto {
        * <code>KVSQL = 5;</code>
        */
       KVSQL(5),
+      /**
+       * <code>FVM = 6;</code>
+       */
+      FVM(6),
       UNRECOGNIZED(-1),
       ;
 
@@ -4967,12 +548,16 @@ public final class TransactionValueProto {
        * <code>KVSQL = 5;</code>
        */
       public static final int KVSQL_VALUE = 5;
+      /**
+       * <code>FVM = 6;</code>
+       */
+      public static final int FVM_VALUE = 6;
 
 
       public final int getNumber() {
         if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
+          throw new IllegalArgumentException(
+                  "Can't get the number of an unknown enum value.");
         }
         return value;
       }
@@ -4982,7 +567,7 @@ public final class TransactionValueProto {
        * @return The enum associated with the given numeric wire value.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
-      @java.lang.Deprecated
+      @Deprecated
       public static VmType valueOf(int value) {
         return forNumber(value);
       }
@@ -4999,46 +584,47 @@ public final class TransactionValueProto {
           case 3: return BVM;
           case 4: return TRANSFER;
           case 5: return KVSQL;
+          case 6: return FVM;
           default: return null;
         }
       }
 
       public static com.google.protobuf.Internal.EnumLiteMap<VmType>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          VmType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<VmType>() {
-              public VmType findValueByNumber(int number) {
-                return VmType.forNumber(number);
-              }
-            };
+              VmType> internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<VmType>() {
+                public VmType findValueByNumber(int number) {
+                  return VmType.forNumber(number);
+                }
+              };
 
       public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalStateException(
-              "Can't get the descriptor of an unrecognized enum value.");
+          throw new IllegalStateException(
+                  "Can't get the descriptor of an unrecognized enum value.");
         }
         return getDescriptor().getValues().get(ordinal());
       }
       public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.getDescriptor().getEnumTypes().get(1);
+      getDescriptor() {
+        return TransactionValue.getDescriptor().getEnumTypes().get(1);
       }
 
       private static final VmType[] VALUES = values();
 
       public static VmType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+              com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+          throw new IllegalArgumentException(
+                  "EnumValueDescriptor is not for this type.");
         }
         if (desc.getIndex() == -1) {
           return UNRECOGNIZED;
@@ -5061,7 +647,7 @@ public final class TransactionValueProto {
      * <code>int64 price = 1;</code>
      * @return The price.
      */
-    @java.lang.Override
+    @Override
     public long getPrice() {
       return price_;
     }
@@ -5072,7 +658,7 @@ public final class TransactionValueProto {
      * <code>int64 gasLimit = 2;</code>
      * @return The gasLimit.
      */
-    @java.lang.Override
+    @Override
     public long getGasLimit() {
       return gasLimit_;
     }
@@ -5083,7 +669,7 @@ public final class TransactionValueProto {
      * <code>int64 amount = 3;</code>
      * @return The amount.
      */
-    @java.lang.Override
+    @Override
     public long getAmount() {
       return amount_;
     }
@@ -5094,7 +680,7 @@ public final class TransactionValueProto {
      * <code>bytes payload = 4;</code>
      * @return The payload.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString getPayload() {
       return payload_;
     }
@@ -5105,7 +691,7 @@ public final class TransactionValueProto {
      * <code>bytes encryptedAmount = 5;</code>
      * @return The encryptedAmount.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString getEncryptedAmount() {
       return encryptedAmount_;
     }
@@ -5116,7 +702,7 @@ public final class TransactionValueProto {
      * <code>bytes homomorphicAmount = 6;</code>
      * @return The homomorphicAmount.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString getHomomorphicAmount() {
       return homomorphicAmount_;
     }
@@ -5127,7 +713,7 @@ public final class TransactionValueProto {
      * <code>bytes homomorphicBalance = 7;</code>
      * @return The homomorphicBalance.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString getHomomorphicBalance() {
       return homomorphicBalance_;
     }
@@ -5138,17 +724,17 @@ public final class TransactionValueProto {
      * <code>.protos.TransactionValue.Opcode op = 8;</code>
      * @return The enum numeric value on the wire for op.
      */
-    @java.lang.Override public int getOpValue() {
+    @Override public int getOpValue() {
       return op_;
     }
     /**
      * <code>.protos.TransactionValue.Opcode op = 8;</code>
      * @return The op.
      */
-    @java.lang.Override public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode getOp() {
+    @Override public Opcode getOp() {
       @SuppressWarnings("deprecation")
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode.valueOf(op_);
-      return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode.UNRECOGNIZED : result;
+      Opcode result = Opcode.valueOf(op_);
+      return result == null ? Opcode.UNRECOGNIZED : result;
     }
 
     public static final int EXTRA_FIELD_NUMBER = 9;
@@ -5157,7 +743,7 @@ public final class TransactionValueProto {
      * <code>bytes extra = 9;</code>
      * @return The extra.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString getExtra() {
       return extra_;
     }
@@ -5168,7 +754,7 @@ public final class TransactionValueProto {
      * <code>bytes extraId = 10;</code>
      * @return The extraId.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString getExtraId() {
       return extraId_;
     }
@@ -5179,21 +765,21 @@ public final class TransactionValueProto {
      * <code>.protos.TransactionValue.VmType vmType = 11;</code>
      * @return The enum numeric value on the wire for vmType.
      */
-    @java.lang.Override public int getVmTypeValue() {
+    @Override public int getVmTypeValue() {
       return vmType_;
     }
     /**
      * <code>.protos.TransactionValue.VmType vmType = 11;</code>
      * @return The vmType.
      */
-    @java.lang.Override public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType getVmType() {
+    @Override public VmType getVmType() {
       @SuppressWarnings("deprecation")
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType.valueOf(vmType_);
-      return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType.UNRECOGNIZED : result;
+      VmType result = VmType.valueOf(vmType_);
+      return result == null ? VmType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
-    @java.lang.Override
+    @Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -5203,9 +789,9 @@ public final class TransactionValueProto {
       return true;
     }
 
-    @java.lang.Override
+    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+            throws java.io.IOException {
       if (price_ != 0L) {
         output.writeInt64(1, price_);
       }
@@ -5227,7 +813,7 @@ public final class TransactionValueProto {
       if (!homomorphicBalance_.isEmpty()) {
         output.writeBytes(7, homomorphicBalance_);
       }
-      if (op_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode.NORMAL.getNumber()) {
+      if (op_ != Opcode.NORMAL.getNumber()) {
         output.writeEnum(8, op_);
       }
       if (!extra_.isEmpty()) {
@@ -5236,13 +822,13 @@ public final class TransactionValueProto {
       if (!extraId_.isEmpty()) {
         output.writeBytes(10, extraId_);
       }
-      if (vmType_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType.EVM.getNumber()) {
+      if (vmType_ != VmType.EVM.getNumber()) {
         output.writeEnum(11, vmType_);
       }
       unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
+    @Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -5250,88 +836,88 @@ public final class TransactionValueProto {
       size = 0;
       if (price_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, price_);
+                .computeInt64Size(1, price_);
       }
       if (gasLimit_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, gasLimit_);
+                .computeInt64Size(2, gasLimit_);
       }
       if (amount_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(3, amount_);
+                .computeInt64Size(3, amount_);
       }
       if (!payload_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, payload_);
+                .computeBytesSize(4, payload_);
       }
       if (!encryptedAmount_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, encryptedAmount_);
+                .computeBytesSize(5, encryptedAmount_);
       }
       if (!homomorphicAmount_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(6, homomorphicAmount_);
+                .computeBytesSize(6, homomorphicAmount_);
       }
       if (!homomorphicBalance_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(7, homomorphicBalance_);
+                .computeBytesSize(7, homomorphicBalance_);
       }
-      if (op_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode.NORMAL.getNumber()) {
+      if (op_ != Opcode.NORMAL.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(8, op_);
+                .computeEnumSize(8, op_);
       }
       if (!extra_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(9, extra_);
+                .computeBytesSize(9, extra_);
       }
       if (!extraId_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(10, extraId_);
+                .computeBytesSize(10, extraId_);
       }
-      if (vmType_ != cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType.EVM.getNumber()) {
+      if (vmType_ != VmType.EVM.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(11, vmType_);
+                .computeEnumSize(11, vmType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue)) {
+      if (!(obj instanceof TransactionValue)) {
         return super.equals(obj);
       }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue) obj;
+      TransactionValue other = (TransactionValue) obj;
 
       if (getPrice()
-          != other.getPrice()) return false;
+              != other.getPrice()) return false;
       if (getGasLimit()
-          != other.getGasLimit()) return false;
+              != other.getGasLimit()) return false;
       if (getAmount()
-          != other.getAmount()) return false;
+              != other.getAmount()) return false;
       if (!getPayload()
-          .equals(other.getPayload())) return false;
+              .equals(other.getPayload())) return false;
       if (!getEncryptedAmount()
-          .equals(other.getEncryptedAmount())) return false;
+              .equals(other.getEncryptedAmount())) return false;
       if (!getHomomorphicAmount()
-          .equals(other.getHomomorphicAmount())) return false;
+              .equals(other.getHomomorphicAmount())) return false;
       if (!getHomomorphicBalance()
-          .equals(other.getHomomorphicBalance())) return false;
+              .equals(other.getHomomorphicBalance())) return false;
       if (op_ != other.op_) return false;
       if (!getExtra()
-          .equals(other.getExtra())) return false;
+              .equals(other.getExtra())) return false;
       if (!getExtraId()
-          .equals(other.getExtraId())) return false;
+              .equals(other.getExtraId())) return false;
       if (vmType_ != other.vmType_) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
 
-    @java.lang.Override
+    @Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -5340,13 +926,13 @@ public final class TransactionValueProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + PRICE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getPrice());
+              getPrice());
       hash = (37 * hash) + GASLIMIT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getGasLimit());
+              getGasLimit());
       hash = (37 * hash) + AMOUNT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getAmount());
+              getAmount());
       hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
       hash = (53 * hash) + getPayload().hashCode();
       hash = (37 * hash) + ENCRYPTEDAMOUNT_FIELD_NUMBER;
@@ -5368,93 +954,93 @@ public final class TransactionValueProto {
       return hash;
     }
 
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static TransactionValue parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static TransactionValue parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static TransactionValue parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static TransactionValue parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static TransactionValue parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static TransactionValue parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+    public static TransactionValue parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static TransactionValue parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+    public static TransactionValue parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+              .parseDelimitedWithIOException(PARSER, input);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static TransactionValue parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+    public static TransactionValue parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static TransactionValue parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @java.lang.Override
+    @Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue prototype) {
+    public static Builder newBuilder(TransactionValue prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
+    @Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @java.lang.Override
+    @Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -5462,29 +1048,29 @@ public final class TransactionValueProto {
      * Protobuf type {@code protos.TransactionValue}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.TransactionValue)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValueOrBuilder {
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:protos.TransactionValue)
+            TransactionValueOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionValue_descriptor;
+      getDescriptor() {
+        return TransactionValueProto.internal_static_protos_TransactionValue_descriptor;
       }
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionValue_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Builder.class);
+      @Override
+      protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+        return TransactionValueProto.internal_static_protos_TransactionValue_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        TransactionValue.class, Builder.class);
       }
 
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.newBuilder()
+      // Construct using cn.hyperchain.sdk.transaction.proto.Transaction.TransactionValue.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+              BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -5493,7 +1079,7 @@ public final class TransactionValueProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
+      @Override
       public Builder clear() {
         super.clear();
         price_ = 0L;
@@ -5521,29 +1107,29 @@ public final class TransactionValueProto {
         return this;
       }
 
-      @java.lang.Override
+      @Override
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_TransactionValue_descriptor;
+      getDescriptorForType() {
+        return TransactionValueProto.internal_static_protos_TransactionValue_descriptor;
       }
 
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.getDefaultInstance();
+      @Override
+      public TransactionValue getDefaultInstanceForType() {
+        return TransactionValue.getDefaultInstance();
       }
 
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue result = buildPartial();
+      @Override
+      public TransactionValue build() {
+        TransactionValue result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue(this);
+      @Override
+      public TransactionValue buildPartial() {
+        TransactionValue result = new TransactionValue(this);
         result.price_ = price_;
         result.gasLimit_ = gasLimit_;
         result.amount_ = amount_;
@@ -5559,50 +1145,50 @@ public final class TransactionValueProto {
         return result;
       }
 
-      @java.lang.Override
+      @Override
       public Builder clone() {
         return super.clone();
       }
-      @java.lang.Override
+      @Override
       public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.setField(field, value);
       }
-      @java.lang.Override
+      @Override
       public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-      @java.lang.Override
+      @Override
       public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-      @java.lang.Override
+      @Override
       public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
         return super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
+      @Override
       public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.addRepeatedField(field, value);
       }
-      @java.lang.Override
+      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue)other);
+        if (other instanceof TransactionValue) {
+          return mergeFrom((TransactionValue)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.getDefaultInstance()) return this;
+      public Builder mergeFrom(TransactionValue other) {
+        if (other == TransactionValue.getDefaultInstance()) return this;
         if (other.getPrice() != 0L) {
           setPrice(other.getPrice());
         }
@@ -5641,21 +1227,21 @@ public final class TransactionValueProto {
         return this;
       }
 
-      @java.lang.Override
+      @Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
+      @Override
       public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue parsedMessage = null;
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+        TransactionValue parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue) e.getUnfinishedMessage();
+          parsedMessage = (TransactionValue) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -5670,7 +1256,7 @@ public final class TransactionValueProto {
        * <code>int64 price = 1;</code>
        * @return The price.
        */
-      @java.lang.Override
+      @Override
       public long getPrice() {
         return price_;
       }
@@ -5680,7 +1266,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder setPrice(long value) {
-        
+
         price_ = value;
         onChanged();
         return this;
@@ -5690,7 +1276,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearPrice() {
-        
+
         price_ = 0L;
         onChanged();
         return this;
@@ -5701,7 +1287,7 @@ public final class TransactionValueProto {
        * <code>int64 gasLimit = 2;</code>
        * @return The gasLimit.
        */
-      @java.lang.Override
+      @Override
       public long getGasLimit() {
         return gasLimit_;
       }
@@ -5711,7 +1297,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder setGasLimit(long value) {
-        
+
         gasLimit_ = value;
         onChanged();
         return this;
@@ -5721,7 +1307,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearGasLimit() {
-        
+
         gasLimit_ = 0L;
         onChanged();
         return this;
@@ -5732,7 +1318,7 @@ public final class TransactionValueProto {
        * <code>int64 amount = 3;</code>
        * @return The amount.
        */
-      @java.lang.Override
+      @Override
       public long getAmount() {
         return amount_;
       }
@@ -5742,7 +1328,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder setAmount(long value) {
-        
+
         amount_ = value;
         onChanged();
         return this;
@@ -5752,7 +1338,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearAmount() {
-        
+
         amount_ = 0L;
         onChanged();
         return this;
@@ -5763,7 +1349,7 @@ public final class TransactionValueProto {
        * <code>bytes payload = 4;</code>
        * @return The payload.
        */
-      @java.lang.Override
+      @Override
       public com.google.protobuf.ByteString getPayload() {
         return payload_;
       }
@@ -5774,9 +1360,9 @@ public final class TransactionValueProto {
        */
       public Builder setPayload(com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         payload_ = value;
         onChanged();
         return this;
@@ -5786,7 +1372,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearPayload() {
-        
+
         payload_ = getDefaultInstance().getPayload();
         onChanged();
         return this;
@@ -5797,7 +1383,7 @@ public final class TransactionValueProto {
        * <code>bytes encryptedAmount = 5;</code>
        * @return The encryptedAmount.
        */
-      @java.lang.Override
+      @Override
       public com.google.protobuf.ByteString getEncryptedAmount() {
         return encryptedAmount_;
       }
@@ -5808,9 +1394,9 @@ public final class TransactionValueProto {
        */
       public Builder setEncryptedAmount(com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         encryptedAmount_ = value;
         onChanged();
         return this;
@@ -5820,7 +1406,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearEncryptedAmount() {
-        
+
         encryptedAmount_ = getDefaultInstance().getEncryptedAmount();
         onChanged();
         return this;
@@ -5831,7 +1417,7 @@ public final class TransactionValueProto {
        * <code>bytes homomorphicAmount = 6;</code>
        * @return The homomorphicAmount.
        */
-      @java.lang.Override
+      @Override
       public com.google.protobuf.ByteString getHomomorphicAmount() {
         return homomorphicAmount_;
       }
@@ -5842,9 +1428,9 @@ public final class TransactionValueProto {
        */
       public Builder setHomomorphicAmount(com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         homomorphicAmount_ = value;
         onChanged();
         return this;
@@ -5854,7 +1440,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearHomomorphicAmount() {
-        
+
         homomorphicAmount_ = getDefaultInstance().getHomomorphicAmount();
         onChanged();
         return this;
@@ -5865,7 +1451,7 @@ public final class TransactionValueProto {
        * <code>bytes homomorphicBalance = 7;</code>
        * @return The homomorphicBalance.
        */
-      @java.lang.Override
+      @Override
       public com.google.protobuf.ByteString getHomomorphicBalance() {
         return homomorphicBalance_;
       }
@@ -5876,9 +1462,9 @@ public final class TransactionValueProto {
        */
       public Builder setHomomorphicBalance(com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         homomorphicBalance_ = value;
         onChanged();
         return this;
@@ -5888,7 +1474,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearHomomorphicBalance() {
-        
+
         homomorphicBalance_ = getDefaultInstance().getHomomorphicBalance();
         onChanged();
         return this;
@@ -5899,7 +1485,7 @@ public final class TransactionValueProto {
        * <code>.protos.TransactionValue.Opcode op = 8;</code>
        * @return The enum numeric value on the wire for op.
        */
-      @java.lang.Override public int getOpValue() {
+      @Override public int getOpValue() {
         return op_;
       }
       /**
@@ -5908,7 +1494,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder setOpValue(int value) {
-        
+
         op_ = value;
         onChanged();
         return this;
@@ -5917,22 +1503,22 @@ public final class TransactionValueProto {
        * <code>.protos.TransactionValue.Opcode op = 8;</code>
        * @return The op.
        */
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode getOp() {
+      @Override
+      public Opcode getOp() {
         @SuppressWarnings("deprecation")
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode.valueOf(op_);
-        return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode.UNRECOGNIZED : result;
+        Opcode result = Opcode.valueOf(op_);
+        return result == null ? Opcode.UNRECOGNIZED : result;
       }
       /**
        * <code>.protos.TransactionValue.Opcode op = 8;</code>
        * @param value The op to set.
        * @return This builder for chaining.
        */
-      public Builder setOp(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.Opcode value) {
+      public Builder setOp(Opcode value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        
+
         op_ = value.getNumber();
         onChanged();
         return this;
@@ -5942,7 +1528,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearOp() {
-        
+
         op_ = 0;
         onChanged();
         return this;
@@ -5953,7 +1539,7 @@ public final class TransactionValueProto {
        * <code>bytes extra = 9;</code>
        * @return The extra.
        */
-      @java.lang.Override
+      @Override
       public com.google.protobuf.ByteString getExtra() {
         return extra_;
       }
@@ -5964,9 +1550,9 @@ public final class TransactionValueProto {
        */
       public Builder setExtra(com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         extra_ = value;
         onChanged();
         return this;
@@ -5976,7 +1562,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearExtra() {
-        
+
         extra_ = getDefaultInstance().getExtra();
         onChanged();
         return this;
@@ -5987,7 +1573,7 @@ public final class TransactionValueProto {
        * <code>bytes extraId = 10;</code>
        * @return The extraId.
        */
-      @java.lang.Override
+      @Override
       public com.google.protobuf.ByteString getExtraId() {
         return extraId_;
       }
@@ -5998,9 +1584,9 @@ public final class TransactionValueProto {
        */
       public Builder setExtraId(com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         extraId_ = value;
         onChanged();
         return this;
@@ -6010,7 +1596,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearExtraId() {
-        
+
         extraId_ = getDefaultInstance().getExtraId();
         onChanged();
         return this;
@@ -6021,7 +1607,7 @@ public final class TransactionValueProto {
        * <code>.protos.TransactionValue.VmType vmType = 11;</code>
        * @return The enum numeric value on the wire for vmType.
        */
-      @java.lang.Override public int getVmTypeValue() {
+      @Override public int getVmTypeValue() {
         return vmType_;
       }
       /**
@@ -6030,7 +1616,7 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder setVmTypeValue(int value) {
-        
+
         vmType_ = value;
         onChanged();
         return this;
@@ -6039,22 +1625,22 @@ public final class TransactionValueProto {
        * <code>.protos.TransactionValue.VmType vmType = 11;</code>
        * @return The vmType.
        */
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType getVmType() {
+      @Override
+      public VmType getVmType() {
         @SuppressWarnings("deprecation")
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType result = cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType.valueOf(vmType_);
-        return result == null ? cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType.UNRECOGNIZED : result;
+        VmType result = VmType.valueOf(vmType_);
+        return result == null ? VmType.UNRECOGNIZED : result;
       }
       /**
        * <code>.protos.TransactionValue.VmType vmType = 11;</code>
        * @param value The vmType to set.
        * @return This builder for chaining.
        */
-      public Builder setVmType(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue.VmType value) {
+      public Builder setVmType(VmType value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        
+
         vmType_ = value.getNumber();
         onChanged();
         return this;
@@ -6064,20 +1650,20 @@ public final class TransactionValueProto {
        * @return This builder for chaining.
        */
       public Builder clearVmType() {
-        
+
         vmType_ = 0;
         onChanged();
         return this;
       }
-      @java.lang.Override
+      @Override
       public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
-      @java.lang.Override
+      @Override
       public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -6086,22 +1672,22 @@ public final class TransactionValueProto {
     }
 
     // @@protoc_insertion_point(class_scope:protos.TransactionValue)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue DEFAULT_INSTANCE;
+    private static final TransactionValue DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue();
+      DEFAULT_INSTANCE = new TransactionValue();
     }
 
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue getDefaultInstance() {
+    public static TransactionValue getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<TransactionValue>
-        PARSER = new com.google.protobuf.AbstractParser<TransactionValue>() {
-      @java.lang.Override
+            PARSER = new com.google.protobuf.AbstractParser<TransactionValue>() {
+      @Override
       public TransactionValue parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
         return new TransactionValue(input, extensionRegistry);
       }
     };
@@ -6110,1841 +1696,63 @@ public final class TransactionValueProto {
       return PARSER;
     }
 
-    @java.lang.Override
+    @Override
     public com.google.protobuf.Parser<TransactionValue> getParserForType() {
       return PARSER;
     }
 
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.TransactionValue getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface InvokeArgsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.InvokeArgs)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>bytes code = 1;</code>
-     * @return The code.
-     */
-    com.google.protobuf.ByteString getCode();
-
-    /**
-     * <code>string methodName = 2;</code>
-     * @return The methodName.
-     */
-    java.lang.String getMethodName();
-    /**
-     * <code>string methodName = 2;</code>
-     * @return The bytes for methodName.
-     */
-    com.google.protobuf.ByteString
-        getMethodNameBytes();
-
-    /**
-     * <code>repeated bytes args = 3;</code>
-     * @return A list containing the args.
-     */
-    java.util.List<com.google.protobuf.ByteString> getArgsList();
-    /**
-     * <code>repeated bytes args = 3;</code>
-     * @return The count of args.
-     */
-    int getArgsCount();
-    /**
-     * <code>repeated bytes args = 3;</code>
-     * @param index The index of the element to return.
-     * @return The args at the given index.
-     */
-    com.google.protobuf.ByteString getArgs(int index);
-  }
-  /**
-   * Protobuf type {@code protos.InvokeArgs}
-   */
-  public static final class InvokeArgs extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.InvokeArgs)
-      InvokeArgsOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use InvokeArgs.newBuilder() to construct.
-    private InvokeArgs(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private InvokeArgs() {
-      code_ = com.google.protobuf.ByteString.EMPTY;
-      methodName_ = "";
-      args_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new InvokeArgs();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private InvokeArgs(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              code_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              methodName_ = s;
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                args_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              args_.add(input.readBytes());
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          args_ = java.util.Collections.unmodifiableList(args_); // C
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvokeArgs_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvokeArgs_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs.Builder.class);
-    }
-
-    public static final int CODE_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString code_;
-    /**
-     * <code>bytes code = 1;</code>
-     * @return The code.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getCode() {
-      return code_;
-    }
-
-    public static final int METHODNAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object methodName_;
-    /**
-     * <code>string methodName = 2;</code>
-     * @return The methodName.
-     */
-    @java.lang.Override
-    public java.lang.String getMethodName() {
-      java.lang.Object ref = methodName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        methodName_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string methodName = 2;</code>
-     * @return The bytes for methodName.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getMethodNameBytes() {
-      java.lang.Object ref = methodName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        methodName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ARGS_FIELD_NUMBER = 3;
-    private java.util.List<com.google.protobuf.ByteString> args_;
-    /**
-     * <code>repeated bytes args = 3;</code>
-     * @return A list containing the args.
-     */
-    @java.lang.Override
-    public java.util.List<com.google.protobuf.ByteString>
-        getArgsList() {
-      return args_;
-    }
-    /**
-     * <code>repeated bytes args = 3;</code>
-     * @return The count of args.
-     */
-    public int getArgsCount() {
-      return args_.size();
-    }
-    /**
-     * <code>repeated bytes args = 3;</code>
-     * @param index The index of the element to return.
-     * @return The args at the given index.
-     */
-    public com.google.protobuf.ByteString getArgs(int index) {
-      return args_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!code_.isEmpty()) {
-        output.writeBytes(1, code_);
-      }
-      if (!getMethodNameBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, methodName_);
-      }
-      for (int i = 0; i < args_.size(); i++) {
-        output.writeBytes(3, args_.get(i));
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!code_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, code_);
-      }
-      if (!getMethodNameBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, methodName_);
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < args_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(args_.get(i));
-        }
-        size += dataSize;
-        size += 1 * getArgsList().size();
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs)) {
-        return super.equals(obj);
-      }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs) obj;
-
-      if (!getCode()
-          .equals(other.getCode())) return false;
-      if (!getMethodName()
-          .equals(other.getMethodName())) return false;
-      if (!getArgsList()
-          .equals(other.getArgsList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + CODE_FIELD_NUMBER;
-      hash = (53 * hash) + getCode().hashCode();
-      hash = (37 * hash) + METHODNAME_FIELD_NUMBER;
-      hash = (53 * hash) + getMethodName().hashCode();
-      if (getArgsCount() > 0) {
-        hash = (37 * hash) + ARGS_FIELD_NUMBER;
-        hash = (53 * hash) + getArgsList().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.InvokeArgs}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.InvokeArgs)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgsOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvokeArgs_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvokeArgs_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs.Builder.class);
-      }
-
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        code_ = com.google.protobuf.ByteString.EMPTY;
-
-        methodName_ = "";
-
-        args_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_InvokeArgs_descriptor;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs(this);
-        int from_bitField0_ = bitField0_;
-        result.code_ = code_;
-        result.methodName_ = methodName_;
-        if (((bitField0_ & 0x00000001) != 0)) {
-          args_ = java.util.Collections.unmodifiableList(args_);
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.args_ = args_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs.getDefaultInstance()) return this;
-        if (other.getCode() != com.google.protobuf.ByteString.EMPTY) {
-          setCode(other.getCode());
-        }
-        if (!other.getMethodName().isEmpty()) {
-          methodName_ = other.methodName_;
-          onChanged();
-        }
-        if (!other.args_.isEmpty()) {
-          if (args_.isEmpty()) {
-            args_ = other.args_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureArgsIsMutable();
-            args_.addAll(other.args_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private com.google.protobuf.ByteString code_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes code = 1;</code>
-       * @return The code.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getCode() {
-        return code_;
-      }
-      /**
-       * <code>bytes code = 1;</code>
-       * @param value The code to set.
-       * @return This builder for chaining.
-       */
-      public Builder setCode(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        code_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes code = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearCode() {
-        
-        code_ = getDefaultInstance().getCode();
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object methodName_ = "";
-      /**
-       * <code>string methodName = 2;</code>
-       * @return The methodName.
-       */
-      public java.lang.String getMethodName() {
-        java.lang.Object ref = methodName_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          methodName_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string methodName = 2;</code>
-       * @return The bytes for methodName.
-       */
-      public com.google.protobuf.ByteString
-          getMethodNameBytes() {
-        java.lang.Object ref = methodName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          methodName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string methodName = 2;</code>
-       * @param value The methodName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setMethodName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        methodName_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string methodName = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearMethodName() {
-        
-        methodName_ = getDefaultInstance().getMethodName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string methodName = 2;</code>
-       * @param value The bytes for methodName to set.
-       * @return This builder for chaining.
-       */
-      public Builder setMethodNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        methodName_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.util.List<com.google.protobuf.ByteString> args_ = java.util.Collections.emptyList();
-      private void ensureArgsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          args_ = new java.util.ArrayList<com.google.protobuf.ByteString>(args_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-      /**
-       * <code>repeated bytes args = 3;</code>
-       * @return A list containing the args.
-       */
-      public java.util.List<com.google.protobuf.ByteString>
-          getArgsList() {
-        return ((bitField0_ & 0x00000001) != 0) ?
-                 java.util.Collections.unmodifiableList(args_) : args_;
-      }
-      /**
-       * <code>repeated bytes args = 3;</code>
-       * @return The count of args.
-       */
-      public int getArgsCount() {
-        return args_.size();
-      }
-      /**
-       * <code>repeated bytes args = 3;</code>
-       * @param index The index of the element to return.
-       * @return The args at the given index.
-       */
-      public com.google.protobuf.ByteString getArgs(int index) {
-        return args_.get(index);
-      }
-      /**
-       * <code>repeated bytes args = 3;</code>
-       * @param index The index to set the value at.
-       * @param value The args to set.
-       * @return This builder for chaining.
-       */
-      public Builder setArgs(
-          int index, com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureArgsIsMutable();
-        args_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated bytes args = 3;</code>
-       * @param value The args to add.
-       * @return This builder for chaining.
-       */
-      public Builder addArgs(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureArgsIsMutable();
-        args_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated bytes args = 3;</code>
-       * @param values The args to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAllArgs(
-          java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
-        ensureArgsIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, args_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated bytes args = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearArgs() {
-        args_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.InvokeArgs)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.InvokeArgs)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs();
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<InvokeArgs>
-        PARSER = new com.google.protobuf.AbstractParser<InvokeArgs>() {
-      @java.lang.Override
-      public InvokeArgs parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new InvokeArgs(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<InvokeArgs> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<InvokeArgs> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.InvokeArgs getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface NonHashOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.NonHash)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>bytes nodeHash = 1;</code>
-     * @return The nodeHash.
-     */
-    com.google.protobuf.ByteString getNodeHash();
-
-    /**
-     * <code>bytes privateTxHash = 2;</code>
-     * @return The privateTxHash.
-     */
-    com.google.protobuf.ByteString getPrivateTxHash();
-
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @return A list containing the collection.
-     */
-    java.util.List<java.lang.String>
-        getCollectionList();
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @return The count of collection.
-     */
-    int getCollectionCount();
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @param index The index of the element to return.
-     * @return The collection at the given index.
-     */
-    java.lang.String getCollection(int index);
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the collection at the given index.
-     */
-    com.google.protobuf.ByteString
-        getCollectionBytes(int index);
-
-    /**
-     * <code>uint64 nonce = 4;</code>
-     * @return The nonce.
-     */
-    long getNonce();
-  }
-  /**
-   * Protobuf type {@code protos.NonHash}
-   */
-  public static final class NonHash extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.NonHash)
-      NonHashOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use NonHash.newBuilder() to construct.
-    private NonHash(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private NonHash() {
-      nodeHash_ = com.google.protobuf.ByteString.EMPTY;
-      privateTxHash_ = com.google.protobuf.ByteString.EMPTY;
-      collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new NonHash();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private NonHash(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              nodeHash_ = input.readBytes();
-              break;
-            }
-            case 18: {
-
-              privateTxHash_ = input.readBytes();
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                collection_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              collection_.add(s);
-              break;
-            }
-            case 32: {
-
-              nonce_ = input.readUInt64();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          collection_ = collection_.getUnmodifiableView();
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_NonHash_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_NonHash_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder.class);
-    }
-
-    public static final int NODEHASH_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString nodeHash_;
-    /**
-     * <code>bytes nodeHash = 1;</code>
-     * @return The nodeHash.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getNodeHash() {
-      return nodeHash_;
-    }
-
-    public static final int PRIVATETXHASH_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString privateTxHash_;
-    /**
-     * <code>bytes privateTxHash = 2;</code>
-     * @return The privateTxHash.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getPrivateTxHash() {
-      return privateTxHash_;
-    }
-
-    public static final int COLLECTION_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList collection_;
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @return A list containing the collection.
-     */
-    public com.google.protobuf.ProtocolStringList
-        getCollectionList() {
-      return collection_;
-    }
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @return The count of collection.
-     */
-    public int getCollectionCount() {
-      return collection_.size();
-    }
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @param index The index of the element to return.
-     * @return The collection at the given index.
-     */
-    public java.lang.String getCollection(int index) {
-      return collection_.get(index);
-    }
-    /**
-     * <code>repeated string collection = 3;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the collection at the given index.
-     */
-    public com.google.protobuf.ByteString
-        getCollectionBytes(int index) {
-      return collection_.getByteString(index);
-    }
-
-    public static final int NONCE_FIELD_NUMBER = 4;
-    private long nonce_;
-    /**
-     * <code>uint64 nonce = 4;</code>
-     * @return The nonce.
-     */
-    @java.lang.Override
-    public long getNonce() {
-      return nonce_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!nodeHash_.isEmpty()) {
-        output.writeBytes(1, nodeHash_);
-      }
-      if (!privateTxHash_.isEmpty()) {
-        output.writeBytes(2, privateTxHash_);
-      }
-      for (int i = 0; i < collection_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, collection_.getRaw(i));
-      }
-      if (nonce_ != 0L) {
-        output.writeUInt64(4, nonce_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!nodeHash_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, nodeHash_);
-      }
-      if (!privateTxHash_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, privateTxHash_);
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < collection_.size(); i++) {
-          dataSize += computeStringSizeNoTag(collection_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getCollectionList().size();
-      }
-      if (nonce_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(4, nonce_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash)) {
-        return super.equals(obj);
-      }
-      cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash other = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash) obj;
-
-      if (!getNodeHash()
-          .equals(other.getNodeHash())) return false;
-      if (!getPrivateTxHash()
-          .equals(other.getPrivateTxHash())) return false;
-      if (!getCollectionList()
-          .equals(other.getCollectionList())) return false;
-      if (getNonce()
-          != other.getNonce()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + NODEHASH_FIELD_NUMBER;
-      hash = (53 * hash) + getNodeHash().hashCode();
-      hash = (37 * hash) + PRIVATETXHASH_FIELD_NUMBER;
-      hash = (53 * hash) + getPrivateTxHash().hashCode();
-      if (getCollectionCount() > 0) {
-        hash = (37 * hash) + COLLECTION_FIELD_NUMBER;
-        hash = (53 * hash) + getCollectionList().hashCode();
-      }
-      hash = (37 * hash) + NONCE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getNonce());
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.NonHash}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.NonHash)
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHashOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_NonHash_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_NonHash_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.class, cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.Builder.class);
-      }
-
-      // Construct using cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        nodeHash_ = com.google.protobuf.ByteString.EMPTY;
-
-        privateTxHash_ = com.google.protobuf.ByteString.EMPTY;
-
-        collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        nonce_ = 0L;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.internal_static_protos_NonHash_descriptor;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash getDefaultInstanceForType() {
-        return cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash build() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash buildPartial() {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash result = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash(this);
-        int from_bitField0_ = bitField0_;
-        result.nodeHash_ = nodeHash_;
-        result.privateTxHash_ = privateTxHash_;
-        if (((bitField0_ & 0x00000001) != 0)) {
-          collection_ = collection_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.collection_ = collection_;
-        result.nonce_ = nonce_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash) {
-          return mergeFrom((cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash other) {
-        if (other == cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash.getDefaultInstance()) return this;
-        if (other.getNodeHash() != com.google.protobuf.ByteString.EMPTY) {
-          setNodeHash(other.getNodeHash());
-        }
-        if (other.getPrivateTxHash() != com.google.protobuf.ByteString.EMPTY) {
-          setPrivateTxHash(other.getPrivateTxHash());
-        }
-        if (!other.collection_.isEmpty()) {
-          if (collection_.isEmpty()) {
-            collection_ = other.collection_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureCollectionIsMutable();
-            collection_.addAll(other.collection_);
-          }
-          onChanged();
-        }
-        if (other.getNonce() != 0L) {
-          setNonce(other.getNonce());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private com.google.protobuf.ByteString nodeHash_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes nodeHash = 1;</code>
-       * @return The nodeHash.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getNodeHash() {
-        return nodeHash_;
-      }
-      /**
-       * <code>bytes nodeHash = 1;</code>
-       * @param value The nodeHash to set.
-       * @return This builder for chaining.
-       */
-      public Builder setNodeHash(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        nodeHash_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes nodeHash = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearNodeHash() {
-        
-        nodeHash_ = getDefaultInstance().getNodeHash();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString privateTxHash_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes privateTxHash = 2;</code>
-       * @return The privateTxHash.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getPrivateTxHash() {
-        return privateTxHash_;
-      }
-      /**
-       * <code>bytes privateTxHash = 2;</code>
-       * @param value The privateTxHash to set.
-       * @return This builder for chaining.
-       */
-      public Builder setPrivateTxHash(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        privateTxHash_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes privateTxHash = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearPrivateTxHash() {
-        
-        privateTxHash_ = getDefaultInstance().getPrivateTxHash();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.LazyStringList collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureCollectionIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          collection_ = new com.google.protobuf.LazyStringArrayList(collection_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @return A list containing the collection.
-       */
-      public com.google.protobuf.ProtocolStringList
-          getCollectionList() {
-        return collection_.getUnmodifiableView();
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @return The count of collection.
-       */
-      public int getCollectionCount() {
-        return collection_.size();
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @param index The index of the element to return.
-       * @return The collection at the given index.
-       */
-      public java.lang.String getCollection(int index) {
-        return collection_.get(index);
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @param index The index of the value to return.
-       * @return The bytes of the collection at the given index.
-       */
-      public com.google.protobuf.ByteString
-          getCollectionBytes(int index) {
-        return collection_.getByteString(index);
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @param index The index to set the value at.
-       * @param value The collection to set.
-       * @return This builder for chaining.
-       */
-      public Builder setCollection(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureCollectionIsMutable();
-        collection_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @param value The collection to add.
-       * @return This builder for chaining.
-       */
-      public Builder addCollection(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureCollectionIsMutable();
-        collection_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @param values The collection to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAllCollection(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureCollectionIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, collection_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearCollection() {
-        collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string collection = 3;</code>
-       * @param value The bytes of the collection to add.
-       * @return This builder for chaining.
-       */
-      public Builder addCollectionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        ensureCollectionIsMutable();
-        collection_.add(value);
-        onChanged();
-        return this;
-      }
-
-      private long nonce_ ;
-      /**
-       * <code>uint64 nonce = 4;</code>
-       * @return The nonce.
-       */
-      @java.lang.Override
-      public long getNonce() {
-        return nonce_;
-      }
-      /**
-       * <code>uint64 nonce = 4;</code>
-       * @param value The nonce to set.
-       * @return This builder for chaining.
-       */
-      public Builder setNonce(long value) {
-        
-        nonce_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint64 nonce = 4;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearNonce() {
-        
-        nonce_ = 0L;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.NonHash)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.NonHash)
-    private static final cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash();
-    }
-
-    public static cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<NonHash>
-        PARSER = new com.google.protobuf.AbstractParser<NonHash>() {
-      @java.lang.Override
-      public NonHash parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new NonHash(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<NonHash> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<NonHash> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public cn.hyperchain.sdk.transaction.proto.TransactionValueProto.NonHash getDefaultInstanceForType() {
+    @Override
+    public TransactionValue getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_Transaction_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_Transaction_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_InvalidTransactionRecord_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_InvalidTransactionRecord_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_InvalidTransactionRecords_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_InvalidTransactionRecords_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_TransactionMeta_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_TransactionMeta_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_TransactionWrapper_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_TransactionWrapper_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_TransactionValue_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_TransactionValue_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_InvokeArgs_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_InvokeArgs_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_NonHash_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_NonHash_fieldAccessorTable;
+          internal_static_protos_TransactionValue_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_protos_TransactionValue_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
   private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+          descriptor;
   static {
-    java.lang.String[] descriptorData = {
-      "\n\021transaction.proto\022\006protos\"\230\002\n\013Transact" +
-      "ion\022\017\n\007version\030\001 \001(\014\022\014\n\004from\030\002 \001(\014\022\n\n\002to" +
-      "\030\003 \001(\014\022\r\n\005value\030\004 \001(\014\022\021\n\ttimestamp\030\005 \001(\003" +
-      "\022\021\n\tsignature\030\006 \001(\014\022\n\n\002id\030\007 \001(\004\022\027\n\017trans" +
-      "actionHash\030\010 \001(\014\022\r\n\005nonce\030\t \001(\003\022\036\n\005other" +
-      "\030\n \001(\0132\017.protos.NonHash\022*\n\006txType\030\013 \001(\0162" +
-      "\032.protos.Transaction.TxType\022\r\n\005cName\030\014 \001" +
-      "(\014\"\032\n\006TxType\022\007\n\003NTX\020\000\022\007\n\003CTX\020\001\"\265\002\n\030Inval" +
-      "idTransactionRecord\022\037\n\002tx\030\001 \001(\0132\023.protos" +
-      ".Transaction\0229\n\007errType\030\002 \001(\0162(.protos.I" +
-      "nvalidTransactionRecord.ErrType\022\016\n\006errMs" +
-      "g\030\003 \001(\014\"\254\001\n\007ErrType\022\020\n\014OUTOFBALANCE\020\000\022\r\n" +
-      "\tSIGFAILED\020\001\022\032\n\026INVOKE_CONTRACT_FAILED\020\002" +
-      "\022\032\n\026DEPLOY_CONTRACT_FAILED\020\003\022\026\n\022INVALID_" +
-      "PERMISSION\020\004\022\031\n\025DID_INVOCATION_FAILED\020\005\022" +
-      "\025\n\021EXEC_KVSQL_FAILED\020\006\"N\n\031InvalidTransac" +
-      "tionRecords\0221\n\007records\030\001 \003(\0132 .protos.In" +
-      "validTransactionRecord\"4\n\017TransactionMet" +
-      "a\022\022\n\nBlockIndex\030\001 \001(\004\022\r\n\005Index\030\002 \001(\003\"E\n\022" +
-      "TransactionWrapper\022\032\n\022transactionVersion" +
-      "\030\001 \001(\014\022\023\n\013transaction\030\002 \001(\014\"\232\005\n\020Transact" +
-      "ionValue\022\r\n\005price\030\001 \001(\003\022\020\n\010gasLimit\030\002 \001(" +
-      "\003\022\016\n\006amount\030\003 \001(\003\022\017\n\007payload\030\004 \001(\014\022\027\n\017en" +
-      "cryptedAmount\030\005 \001(\014\022\031\n\021homomorphicAmount" +
-      "\030\006 \001(\014\022\032\n\022homomorphicBalance\030\007 \001(\014\022+\n\002op" +
-      "\030\010 \001(\0162\037.protos.TransactionValue.Opcode\022" +
-      "\r\n\005extra\030\t \001(\014\022\017\n\007extraId\030\n \001(\014\022/\n\006vmTyp" +
-      "e\030\013 \001(\0162\037.protos.TransactionValue.VmType" +
-      "\"\256\002\n\006Opcode\022\n\n\006NORMAL\020\000\022\n\n\006UPDATE\020\001\022\n\n\006F" +
-      "REEZE\020\002\022\014\n\010UNFREEZE\020\003\022\n\n\006SKIPVM\020\004\022\013\n\007DES" +
-      "TROY\020\005\022\013\n\007ARCHIVE\020d\022\021\n\014DID_REGISTER\020\310\001\022\017" +
-      "\n\nDID_FREEZE\020\311\001\022\021\n\014DID_UNFREEZE\020\312\001\022\020\n\013DI" +
-      "D_ABANDON\020\313\001\022\030\n\023DID_UPDATEPUBLICKEY\020\314\001\022\025" +
-      "\n\020DID_UPDATEADMINS\020\315\001\022\031\n\024DIDCREDENTIAL_U" +
-      "PLOAD\020\316\001\022\033\n\026DIDCREDENTIAL_DOWNLOAD\020\317\001\022\032\n" +
-      "\025DIDCREDENTIAL_ABANDON\020\320\001\"E\n\006VmType\022\007\n\003E" +
-      "VM\020\000\022\007\n\003JVM\020\001\022\007\n\003HVM\020\002\022\007\n\003BVM\020\003\022\014\n\010TRANS" +
-      "FER\020\004\022\t\n\005KVSQL\020\005\"<\n\nInvokeArgs\022\014\n\004code\030\001" +
-      " \001(\014\022\022\n\nmethodName\030\002 \001(\t\022\014\n\004args\030\003 \003(\014\"U" +
-      "\n\007NonHash\022\020\n\010nodeHash\030\001 \001(\014\022\025\n\rprivateTx" +
-      "Hash\030\002 \001(\014\022\022\n\ncollection\030\003 \003(\t\022\r\n\005nonce\030" +
-      "\004 \001(\004B<\n#cn.hyperchain.sdk.transaction.p" +
-      "rotoB\025TransactionValueProtob\006proto3"
+    String[] descriptorData = {
+            "\n\021transaction.proto\022\006protos\"\311\005\n\020Transact" +
+                    "ionValue\022\r\n\005price\030\001 \001(\003\022\020\n\010gasLimit\030\002 \001(" +
+                    "\003\022\016\n\006amount\030\003 \001(\003\022\017\n\007payload\030\004 \001(\014\022\027\n\017en" +
+                    "cryptedAmount\030\005 \001(\014\022\031\n\021homomorphicAmount" +
+                    "\030\006 \001(\014\022\032\n\022homomorphicBalance\030\007 \001(\014\022+\n\002op" +
+                    "\030\010 \001(\0162\037.protos.TransactionValue.Opcode\022" +
+                    "\r\n\005extra\030\t \001(\014\022\017\n\007extraId\030\n \001(\014\022/\n\006vmTyp" +
+                    "e\030\013 \001(\0162\037.protos.TransactionValue.VmType" +
+                    "\"\324\002\n\006Opcode\022\n\n\006NORMAL\020\000\022\n\n\006UPDATE\020\001\022\n\n\006F" +
+                    "REEZE\020\002\022\014\n\010UNFREEZE\020\003\022\n\n\006SKIPVM\020\004\022\013\n\007DES" +
+                    "TROY\020\005\022\013\n\007ARCHIVE\020d\022\021\n\014DID_REGISTER\020\310\001\022\017" +
+                    "\n\nDID_FREEZE\020\311\001\022\021\n\014DID_UNFREEZE\020\312\001\022\020\n\013DI" +
+                    "D_ABANDON\020\313\001\022\030\n\023DID_UPDATEPUBLICKEY\020\314\001\022\025" +
+                    "\n\020DID_UPDATEADMINS\020\315\001\022\031\n\024DIDCREDENTIAL_U" +
+                    "PLOAD\020\316\001\022\033\n\026DIDCREDENTIAL_DOWNLOAD\020\317\001\022\032\n" +
+                    "\025DIDCREDENTIAL_ABANDON\020\320\001\022\021\n\014DID_SETEXTR" +
+                    "A\020\321\001\022\021\n\014DID_GETEXTRA\020\322\001\"N\n\006VmType\022\007\n\003EVM" +
+                    "\020\000\022\007\n\003JVM\020\001\022\007\n\003HVM\020\002\022\007\n\003BVM\020\003\022\014\n\010TRANSFE" +
+                    "R\020\004\022\t\n\005KVSQL\020\005\022\007\n\003FVM\020\006B%\n#cn.hyperchain" +
+                    ".sdk.transaction.protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_protos_Transaction_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_protos_Transaction_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_Transaction_descriptor,
-        new java.lang.String[] { "Version", "From", "To", "Value", "Timestamp", "Signature", "Id", "TransactionHash", "Nonce", "Other", "TxType", "CName", });
-    internal_static_protos_InvalidTransactionRecord_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_protos_InvalidTransactionRecord_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_InvalidTransactionRecord_descriptor,
-        new java.lang.String[] { "Tx", "ErrType", "ErrMsg", });
-    internal_static_protos_InvalidTransactionRecords_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_protos_InvalidTransactionRecords_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_InvalidTransactionRecords_descriptor,
-        new java.lang.String[] { "Records", });
-    internal_static_protos_TransactionMeta_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_protos_TransactionMeta_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_TransactionMeta_descriptor,
-        new java.lang.String[] { "BlockIndex", "Index", });
-    internal_static_protos_TransactionWrapper_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_protos_TransactionWrapper_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_TransactionWrapper_descriptor,
-        new java.lang.String[] { "TransactionVersion", "Transaction", });
+            .internalBuildGeneratedFileFrom(descriptorData,
+                    new com.google.protobuf.Descriptors.FileDescriptor[] {
+                    });
     internal_static_protos_TransactionValue_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(0);
     internal_static_protos_TransactionValue_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_TransactionValue_descriptor,
-        new java.lang.String[] { "Price", "GasLimit", "Amount", "Payload", "EncryptedAmount", "HomomorphicAmount", "HomomorphicBalance", "Op", "Extra", "ExtraId", "VmType", });
-    internal_static_protos_InvokeArgs_descriptor =
-      getDescriptor().getMessageTypes().get(6);
-    internal_static_protos_InvokeArgs_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_InvokeArgs_descriptor,
-        new java.lang.String[] { "Code", "MethodName", "Args", });
-    internal_static_protos_NonHash_descriptor =
-      getDescriptor().getMessageTypes().get(7);
-    internal_static_protos_NonHash_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_NonHash_descriptor,
-        new java.lang.String[] { "NodeHash", "PrivateTxHash", "Collection", "Nonce", });
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_protos_TransactionValue_descriptor,
+            new String[] { "Price", "GasLimit", "Amount", "Payload", "EncryptedAmount", "HomomorphicAmount", "HomomorphicBalance", "Op", "Extra", "ExtraId", "VmType", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
