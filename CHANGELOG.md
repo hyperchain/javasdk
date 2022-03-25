@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://git.hyperchain.cn///compare/v1.3.0-3...v1.3.0) (2022-03-25)
+
+
+### Bug Fixes
+
+* **Abi:** fix Abi's toJson method ([470374e](https://git.hyperchain.cn///commit/470374ee299df5ce2c3696d265a71d898c395449))
+* **doc:** fix tx and block interface doc ([677671e](https://git.hyperchain.cn///commit/677671e5f93bf6658a95281cd4867758f02cee58))
+* **request:** fix NullPointEx for isUsedProvider method ([e0bed09](https://git.hyperchain.cn///commit/e0bed09bcf1b2a7c989dec2d17ae7e9f269a91c5))
+* **TxService:** set ns for sendBatchTxs ([a352ad3](https://git.hyperchain.cn///commit/a352ad36edaa5266782b7fd97ab87cd2f68603d9))
+
 ## [1.3.0-3](https://git.hyperchain.cn///compare/v1.2.1...v1.3.0-3) (2022-02-23)
 
 
