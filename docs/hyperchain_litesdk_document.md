@@ -111,6 +111,7 @@
   - [9.3 查询归档数据状态](#93-查询归档数据状态)
   - [9.4 查询归档数据是否存在](#94-查询归档数据是否存在)
   - [9.5 查询最近一次归档的进度](#95-查询最近一次归档的进度)
+  - [9.6 制作快照](#96-制作快照)
 - [第十章. SqlService相关接口](#第十章-sqlservice相关接口)
   - [10.1 创建SQL交易体](#101-创建sql交易体)
   - [10.2 创建数据库](#102-创建数据库)
@@ -132,6 +133,7 @@
     - [解码](#解码)
   - [附录B 直接调用HVM合约方法的参数封装](#附录b-直接调用hvm合约方法的参数封装)
   - [附录C 平台错误码和对应原因](#附录c-平台错误码和对应原因)
+
 ## 第一章. 前言 
 
 **LiteSDK**是一个**轻量JavaSDK工具**，提供与Hyperchain区块链平台交互的接口以及一些处理工具。该文档⾯向Hyperchain区块链平台的应⽤开发者，提供hyperchain Java SDK的 使⽤指南。
@@ -316,10 +318,13 @@ LiteSDK的合约接口较特殊，交易相关的接口目前提供了**部署�
 
 ```java
 public interface ContractService {
+    // 部署合约
     Request<TxHashResponse> deploy(Transaction transaction, int... nodeIds);
 
+    // 调用合约
     Request<TxHashResponse> invoke(Transaction transaction, int... nodeIds);
 
+    // 管理合约，包括升级，冻结，解冻
     Request<TxHashResponse> maintain(Transaction transaction, int... nodeIds);
   
     Request<TxHashResponse> manageContractByVote(Transaction transaction, int... nodeIds);
@@ -330,7 +335,7 @@ public interface ContractService {
   
     Request<ReceiptResponse> grpcMaintainReturnReceipt(Transaction transaction, int... nodeIds);
 
-	  Request<ReceiptResponse> grpcManageContractByVoteReturnReceipt(Transaction transaction, int... nodeIds);
+    Request<ReceiptResponse> grpcManageContractByVoteReturnReceipt(Transaction transaction, int... nodeIds);
 
 }
 ```
@@ -566,6 +571,8 @@ Transaction transaction1 = new Transaction.FVMBuilder(account.getAddress()).invo
 
 #### 升级合约
 
+升级合约使用ContractService的maintain接口。
+
 ##### HVM
 
 ```java
@@ -591,6 +598,8 @@ Transaction transaction3 = new Transaction.FVMBuilder(account.getAddress()).upgr
 
 #### 冻结合约
 
+冻结合约使用ContractService的maintain接口。
+
 ##### HVM
 
 ```java
@@ -615,6 +624,8 @@ Transaction transaction = new Transaction.FVMBuilder(account.getAddress()).freez
 创建交易体时需要指定**合约地址**。
 
 #### 解冻合约
+
+解冻合约使用ContractService的maintain接口。
 
 ##### HVM
 
@@ -2014,6 +2025,17 @@ Request<ArchiveBoolResponse> queryArchiveExist(String filterId, int... nodeIds);
 
 ```java
 Request<ArchiveLatestResponse> queryLatestArchive(int... nodeIds);
+```
+
+### 9.6 制作快照
+
+参数：
+
++ blockNumber 区块号
++ nodeIds 说明请求向哪些节点发送
+
+```java
+Request<ArchiveFilterIdResponse> snapshot(BigInteger blockNumber, int... nodeIds);
 ```
 
 ## 第十章. SqlService相关接口

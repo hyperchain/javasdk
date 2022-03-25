@@ -1,4 +1,4 @@
-- [litesdk bvm文档](#litesdk-bvm文档)
+- [LiteSDK bvm文档](#litesdk-bvm文档)
   - [第一章. 前言](#第一章-前言)
   - [第二章.执行BVM提供的合约](#第二章执行bvm提供的合约)
     - [2.1 初始化](#21-初始化)
@@ -48,15 +48,15 @@
     - [3.7 根据合约地址查询合约命名（getNamebyAddress）](#37-根据合约地址查询合约命名getnamebyaddress)
     - [3.8 根据合约命名查询合约地址（getAddressByName）](#38-根据合约命名查询合约地址getaddressbyname)
     - [3.9 查询所有合约地址到合约命名的映射关系（getAllCNS）](#39-查询所有合约地址到合约命名的映射关系getallcns)
-    - [3.10 查询创世配置信息（getGenesisInfo）](#310-查询创世信息getGenesisInfo)
+    - [3.10 查询创世信息（getGenesisInfo）](#310-查询创世信息getgenesisinfo)
   - [第四章 订阅提案信息](#第四章-订阅提案信息)
     - [4.1 订阅提案信息使用示例](#41-订阅提案信息使用示例)
 
-# litesdk bvm文档
+# LiteSDK bvm文档
 
 ## 第一章. 前言
 
-本文档是litesdk的补充文档，提供hyperchain中内置虚拟机（简称bvm）的使用指南。
+本文档是LiteSDK的补充文档，提供hyperchain中内置虚拟机（简称bvm）的使用指南。
 
 ## 第二章.执行BVM提供的合约
 
@@ -847,6 +847,41 @@ public static class RootCABuilder extends BuiltinOperationBuilder{
 
 bvm的合约操作创建好之后，使用`BVMBuilder` 提供的`invoke` 方法构造bvm的交易体，使用`build` 方法构造出交易`transaction` ，并为交易设置`txVersion` 并使用`sign` 方法签名，得到最终可以发送执行的交易体。
 
+##### HashChangeContract
+
+``HashChangeContract``中提供的合约方法如下：
+
+1. `ChangeHashAlgo` : 该方法接收一个参数，即变更的算法，包括hash算法和加密算法。
+2. `GetHashAlgo` : 该方法不需要入参，用于查询链上所有的哈希算法和加密算法的变更记录。
+3. ``GetSupportHashAlgo``：该方法不需要入参，用于查询链上当前支持的哈希算法和加密算法。
+
+构造`HashChangeContract`操作的构造器`HashChangeBuilder`提供了`ChangeHashAlgo`、`GetHashAlgo`和``GetSupportHashAlgo``方法，分别用于构造`HashChangeContract`合约中的方法，其定义如下：
+
+```java
+public static class HashChangeBuilder extends BuiltinOperationBuilder {
+
+    /**
+     * change algo : eg. hash or encrypt.
+     * @param algoSet -
+     * @return success or failed
+     */
+    public HashChangeBuilder ChangeHashAlgo(AlgoSet algoSet);
+
+    /**
+     * get change algo record.
+     * @return all record
+     */
+    public HashChangeBuilder GetHashAlgo();
+
+    /**
+     * get support algo now.
+     * @return hash and encrypt algo
+     */
+    public HashChangeBuilder GetSupportHashAlgo();
+
+}
+```
+
 
 
 #### 3. 创建请求
@@ -1483,6 +1518,73 @@ RootCAContract中有两个方法可供调用，AddRootCA和GetRootCAs方法。
         System.out.println(result.getErr());
         System.out.println(result.getRet());
     }
+  ```
+
+#### HashChangeContract使用示例
+
+HashChangeContract有三个方法可调用，ChangeHashAlgo、GetHashAlgo和GetSupportHashAlgo方法。
+
+* ChangeHashAlgo：该方法接收一个参数，即变更的算法，包括hash算法和加密算法，示例如下：
+
+  ```java
+  @Test
+  public void testHashChange() throws RequestException {
+      Account genesisAccount = accountService.fromAccountJson(genesisAccountJsons);
+      Transaction transaction = new Transaction.BVMBuilder(genesisAccount.getAddress()).
+                  invoke(new HashChangeOperation.
+                          HashChangeBuilder().
+                          ChangeHashAlgo(new AlgoSet(AlgoSet.HashAlgo.KECCAK_224.getAlgo(), AlgoSet.EncryptAlgo.DES3_CBC.getAlgo())).
+                          build()).
+                  build();
+          transaction.sign(genesisAccount);
+          ReceiptResponse receiptResponse = contractService.invoke(transaction2).send().polling();
+          Result result = Decoder.decodeBVM(receiptResponse.getRet());
+          System.out.println(result);
+    			System.out.println(result.getErr());
+     	    System.out.println(result.getRet());
+  }
+  ```
+
+* GetHashAlgo：该方法不需要入参，用于查询链上所有的哈希算法和加密算法的变更记录，示例如下：
+
+  ```java
+  @Test
+  public void testHashChange() throws RequestException {
+      Account genesisAccount = accountService.fromAccountJson(genesisAccountJsons);
+      Transaction transaction = new Transaction.BVMBuilder(genesisAccount.getAddress()).
+                  invoke(new HashChangeOperation.
+                          HashChangeBuilder().
+                          GetHashAlgo().
+                          build()).
+                  build();
+          transaction.sign(genesisAccount);
+          ReceiptResponse receiptResponse = contractService.invoke(transaction2).send().polling();
+          Result result = Decoder.decodeBVM(receiptResponse.getRet());
+          System.out.println(result);
+    			System.out.println(result.getErr());
+     	    System.out.println(result.getRet());
+  }
+  ```
+
+* GetSupportHashAlgo：该方法不需要入参，用于查询链上当前支持的哈希算法和加密算法，示例如下：
+
+  ```java
+  @Test
+  public void testHashChange() throws RequestException {
+      Account genesisAccount = accountService.fromAccountJson(genesisAccountJsons);
+      Transaction transaction = new Transaction.BVMBuilder(genesisAccount.getAddress()).
+                  invoke(new HashChangeOperation.
+                          HashChangeBuilder().
+                          GetSupportHashAlgo().
+                          build()).
+                  build();
+          transaction.sign(genesisAccount);
+          ReceiptResponse receiptResponse = contractService.invoke(transaction2).send().polling();
+          Result result = Decoder.decodeBVM(receiptResponse.getRet());
+          System.out.println(result);
+    			System.out.println(result.getErr());
+     	    System.out.println(result.getRet());
+  }
   ```
 
 ## 第三章. ConfigService相关接口
