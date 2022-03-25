@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0-1](https://git.hyperchain.cn///compare/v1.3.0...v1.4.0-1) (2022-03-25)
+
+
+### Features
+
+* **hashChange:** suport hashChangeContract of bvm ([18ff8db](https://git.hyperchain.cn///commit/18ff8db2d168501b656c6d6322da370d0f8aa986))
+* **proof:** add tx, account and state proof ([f332bce](https://git.hyperchain.cn///commit/f332bceb9720fb2e9e6359a0508e398e70f7cd93))
+
+
+### Bug Fixes
+
+* **Abi:** fix Abi's toJson method ([368961d](https://git.hyperchain.cn///commit/368961d6807428aa515b3e73b9c3670097f67ac6))
+* **request:** fix NullPointEx for isUsedProvider method ([b3b6e73](https://git.hyperchain.cn///commit/b3b6e734abf061b379d7daab0281c6b86050f942))
+* **TxService:** set ns for sendBatchTxs ([966868e](https://git.hyperchain.cn///commit/966868ef312d9f46eed93c78cabecf109c1235f8))
+
 ## [1.3.0](https://git.hyperchain.cn///compare/v1.3.0-3...v1.3.0) (2022-03-25)
 
 
