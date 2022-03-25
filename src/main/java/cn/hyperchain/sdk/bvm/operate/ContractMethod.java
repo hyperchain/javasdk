@@ -55,6 +55,10 @@ public enum ContractMethod {
 
     RootCAAdd("AddRootCA"),
     RootCAGet("GetRootCAs"),
+
+    HashChangeChangeHashAlgo("ChangeHashAlgo"),
+    HashChangeGetHashAlgo("GetHashAlgo"),
+    HashChangeGetSupportHashAlgo("GetSupportHashAlgo"),
     ;
     private String methodName;
 
