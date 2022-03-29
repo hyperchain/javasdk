@@ -22,7 +22,7 @@ public class ArchiveServiceImpl implements ArchiveService {
 
     @Override
     public Request<ArchiveFilterIdResponse> snapshot(BigInteger blockNumber, int... nodeIds) {
-        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "snapshot", providerManager, ArchiveFilterIdResponse.class, nodeIds);
+        ArchiveRequest archiveRequest = new ArchiveRequest(ARCHIVE_PRE + "makeSnapshot4Flato", providerManager, ArchiveFilterIdResponse.class, nodeIds);
         archiveRequest.addParams(blockNumber);
         return archiveRequest;
     }
