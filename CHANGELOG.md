@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0-2](https://git.hyperchain.cn///compare/v1.4.0-1...v1.4.0-2) (2022-03-29)
+
+
+### Bug Fixes
+
+* **snapshot:** change flato version snapshot() underlying call as archive_makeSnapshot4Flato ([c896e46](https://git.hyperchain.cn///commit/c896e465ccff00a09d3e2f3f7a5d6e0fc39ef6a3))
+
 ## [1.4.0-1](https://git.hyperchain.cn///compare/v1.3.0...v1.4.0-1) (2022-03-25)
 
 
