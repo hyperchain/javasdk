@@ -19,6 +19,7 @@ import cn.hyperchain.sdk.did.DIDCredential;
 import cn.hyperchain.sdk.did.DIDDocument;
 import cn.hyperchain.sdk.did.DIDPublicKey;
 import cn.hyperchain.sdk.transaction.proto.TransactionValueProto;
+import cn.hyperchain.sdk.transaction.proto.TransactionValueProto0;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -1157,44 +1158,79 @@ public class Transaction {
      * @return transaction hash
      */
     public String getTransactionHash(long gasLimit) {
-        TransactionValueProto.TransactionValue.Builder input = TransactionValueProto.TransactionValue.newBuilder();
-        int defaultGasPrice = 10000; // default
-        input.setPrice(defaultGasPrice);
-        input.setGasLimit(gasLimit);
-        input.setAmount(this.value);
-        if (!"".equals(payload)) {
-            input.setPayload(ByteString.copyFrom(ByteUtil.fromHex(payload)));
-        }
-        input.setOpValue(opCode);
-        input.setExtra(ByteString.copyFromUtf8(extra));
-        ArrayList<Object> extraID = new ArrayList<Object>();
-        if (extraIdLong != null) {
-            extraID.addAll(extraIdLong);
-        }
-        if (extraIdString != null) {
-            extraID.addAll(extraIdString);
-        }
-        if (extraID.size() > 0) {
-            input.setExtraId(ByteString.copyFromUtf8(gson.toJson(extraID.toArray())));
-        }
+        byte[] valueBytes = null;
+        if (txVersion.isGreaterOrEqual(TxVersion.TxVersion20)) {
+            TransactionValueProto.TransactionValue.Builder input = TransactionValueProto.TransactionValue.newBuilder();
+            int defaultGasPrice = 10000; // default
+            input.setPrice(defaultGasPrice);
+            input.setGasLimit(gasLimit);
+            input.setAmount(this.value);
+            if (!"".equals(payload)) {
+                input.setPayload(ByteString.copyFrom(ByteUtil.fromHex(payload)));
+            }
+            input.setOpValue(opCode);
+            input.setExtra(ByteString.copyFromUtf8(extra));
+            ArrayList<Object> extraID = new ArrayList<Object>();
+            if (extraIdLong != null) {
+                extraID.addAll(extraIdLong);
+            }
+            if (extraIdString != null) {
+                extraID.addAll(extraIdString);
+            }
+            if (extraID.size() > 0) {
+                input.setExtraId(ByteString.copyFromUtf8(gson.toJson(extraID.toArray())));
+            }
 
-        if (vmType == VMType.EVM) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
-        } else if (vmType == VMType.HVM) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
-        } else if (vmType == VMType.TRANSFER) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
-        } else if (vmType == VMType.FVM) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.FVM_VALUE);
-        } else if (vmType == VMType.KVSQL) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.KVSQL_VALUE);
-        } else if (vmType == VMType.BVM) {
-            input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.BVM_VALUE);
+            if (vmType == VMType.EVM) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
+            } else if (vmType == VMType.HVM) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
+            } else if (vmType == VMType.TRANSFER) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
+            } else if (vmType == VMType.FVM) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.FVM_VALUE);
+            } else if (vmType == VMType.KVSQL) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.KVSQL_VALUE);
+            } else if (vmType == VMType.BVM) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.BVM_VALUE);
+            } else {
+                throw new RuntimeException("unKnow vmType");
+            }
+
+            valueBytes = input.build().toByteArray();
         } else {
-            throw new RuntimeException("unKnow vmType");
-        }
+            TransactionValueProto0.TransactionValue.Builder input = TransactionValueProto0.TransactionValue.newBuilder();
 
-        byte[] valueBytes = input.build().toByteArray();
+            int defaultGasPrice = 10000; // default
+            input.setPrice(defaultGasPrice);
+            input.setGasLimit(gasLimit);
+            input.setAmount(this.value);
+            if (!"".equals(payload)) {
+                input.setPayload(ByteString.copyFrom(ByteUtil.fromHex(payload)));
+            }
+            input.setOpValue(opCode);
+            input.setExtra(ByteString.copyFromUtf8(extra));
+            ArrayList<Object> extraID = new ArrayList<Object>();
+            if (extraIdLong != null) {
+                extraID.addAll(extraIdLong);
+            }
+            if (extraIdString != null) {
+                extraID.addAll(extraIdString);
+            }
+
+            if (vmType == VMType.EVM) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.EVM_VALUE);
+            } else if (vmType == VMType.HVM) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.HVM_VALUE);
+            } else if (vmType == VMType.TRANSFER) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.TRANSFER_VALUE);
+            } else if (vmType == VMType.BVM) {
+                input.setVmTypeValue(TransactionValueProto.TransactionValue.VmType.BVM_VALUE);
+            } else {
+                throw new RuntimeException("unKnow vmType");
+            }
+            valueBytes = input.build().toByteArray();
+        }
         Object[] transactionHash = new Object[6];
         transactionHash[0] = ByteUtil.hex2Base64(from);
         if (!"0x0".equals(to)) {
