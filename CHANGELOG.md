@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0-3](https://git.hyperchain.cn///compare/v1.4.0-2...v1.4.0-3) (2022-04-06)
+
+
+### Bug Fixes
+
+* **transactionHash:** #QAGC-161, fix getTransaction method for hyperchain ([0870517](https://git.hyperchain.cn///commit/0870517bba5fa5960f10107b2db92ac9121cecc0))
+
 ## [1.4.0-2](https://git.hyperchain.cn///compare/v1.4.0-1...v1.4.0-2) (2022-03-29)
 
 
