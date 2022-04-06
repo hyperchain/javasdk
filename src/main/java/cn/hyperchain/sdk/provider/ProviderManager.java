@@ -407,6 +407,9 @@ public class ProviderManager {
                 logger.warn("the TxVersion of nodes is different, the platform's TxVersion is " + TxVersion.GLOBAL_TX_VERSION);
             }
         } catch (RequestException e) {
+            if (e.getCode().equals(RequestExceptionCode.METHOD_NOT_FOUND.getCode())) {
+                TxVersion.setGlobalTxVersion(TxVersion.TxVersion10);
+            }
             logger.info(e.toString());
         }
     }
