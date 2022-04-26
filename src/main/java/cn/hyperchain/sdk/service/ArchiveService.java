@@ -14,7 +14,6 @@ public interface ArchiveService {
     /**
      * @see ArchiveService#snapshot(String, int...)
      */
-    @Deprecated
     Request<ArchiveFilterIdResponse> snapshot(BigInteger blockNumber, int... nodeIds);
 
     /**

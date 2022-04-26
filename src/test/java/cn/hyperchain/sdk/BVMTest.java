@@ -17,9 +17,11 @@ import cn.hyperchain.sdk.bvm.operate.NodeOperation;
 import cn.hyperchain.sdk.bvm.operate.PermissionOperation;
 import cn.hyperchain.sdk.bvm.operate.ProposalOperation;
 import cn.hyperchain.sdk.bvm.operate.RootCAOperation;
+import cn.hyperchain.sdk.bvm.operate.HashChangeOperation;
 import cn.hyperchain.sdk.bvm.operate.params.GenesisInfo;
 import cn.hyperchain.sdk.bvm.operate.params.GenesisNode;
 import cn.hyperchain.sdk.bvm.operate.params.NsFilterRule;
+import cn.hyperchain.sdk.bvm.operate.params.AlgoSet;
 import cn.hyperchain.sdk.common.solidity.Abi;
 import cn.hyperchain.sdk.common.utils.ByteUtil;
 import cn.hyperchain.sdk.common.utils.Decoder;
@@ -81,6 +83,39 @@ public class BVMTest {
 
     // 3. build transaction
     private Account account = accountService.fromAccountJson(accountJson);
+
+    @Test
+    @Ignore
+    public void testHashChange() throws RequestException {
+        Account genesisAccount = accountService.fromAccountJson(accountJsons[0]);
+        Transaction transaction1 = new Transaction.BVMBuilder(genesisAccount.getAddress()).
+                invoke(new HashChangeOperation.HashChangeBuilder().getSupportHashAlgo().build()).
+                build();
+        transaction1.sign(genesisAccount);
+        ReceiptResponse receiptResponse1 = contractService.invoke(transaction1).send().polling();
+        Result result1 = Decoder.decodeBVM(receiptResponse1.getRet());
+        System.out.println(result1);
+
+        Transaction transaction2 = new Transaction.BVMBuilder(genesisAccount.getAddress()).
+                invoke(new HashChangeOperation.
+                        HashChangeBuilder().
+                        changeHashAlgo(new AlgoSet(AlgoSet.HashAlgo.KECCAK_224.getAlgo(), AlgoSet.EncryptAlgo.DES3_CBC.getAlgo())).
+                        build()).
+                build();
+        transaction2.sign(genesisAccount);
+        ReceiptResponse receiptResponse2 = contractService.invoke(transaction2).send().polling();
+        Result result2 = Decoder.decodeBVM(receiptResponse2.getRet());
+        System.out.println(result2);
+        System.out.println(result2.getRet());
+        Transaction transaction = new Transaction.BVMBuilder(genesisAccount.getAddress()).
+                invoke(new HashChangeOperation.HashChangeBuilder().getHashAlgo().build()).
+                build();
+        transaction.sign(genesisAccount);
+        ReceiptResponse receiptResponse = contractService.invoke(transaction).send().polling();
+        Result result = Decoder.decodeBVM(receiptResponse.getRet());
+        System.out.println(result);
+        System.out.println(result.getRet());
+    }
 
     @Test
     @Ignore
