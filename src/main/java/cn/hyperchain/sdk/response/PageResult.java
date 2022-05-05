@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PageResult<T> {
     @Expose
-    private String hasmore;
+    private boolean hasmore;
     @Expose
     private JsonElement data;
     Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -40,6 +40,10 @@ public class PageResult<T> {
             results.add(block);
         }
         return results;
+    }
+
+    public boolean getHasmore() {
+        return hasmore;
     }
 
     @Override

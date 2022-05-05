@@ -14,6 +14,10 @@ public class BlockLimitResponse extends Response {
         return result.parseResult(BlockResponse.Block.class);
     }
 
+    public boolean hasMore() {
+        return result.getHasmore();
+    }
+
     @Override
     public String toString() {
         return "BlockLimitResponse{" +

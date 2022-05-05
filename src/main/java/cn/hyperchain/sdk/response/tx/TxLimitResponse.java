@@ -14,6 +14,10 @@ public class TxLimitResponse extends Response {
         return result.parseResult(TxResponse.Transaction.class);
     }
 
+    public boolean hasMore() {
+        return result.getHasmore();
+    }
+
     @Override
     public String toString() {
         return "TxLimitResponse{" +

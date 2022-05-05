@@ -273,13 +273,13 @@
             <id>maven-releases</id>
             <name>Nexus Releases</name>
             <!-- releases address in maven repository -->
-            <url>http://nexus.hyperchain.cn/repository/maven-releases/</url>
+            <url>https://nexus.hyperchain.cn/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>maven-snapshots</id>
             <name>Nexus Snapshots</name>
             <!-- snapshots address in maven repository -->
-            <url>http://nexus.hyperchain.cn/repository/maven-snapshots/</url>
+            <url>https://nexus.hyperchain.cn/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
