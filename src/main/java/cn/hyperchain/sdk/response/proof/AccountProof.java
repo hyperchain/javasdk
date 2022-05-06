@@ -15,7 +15,7 @@ public class AccountProof {
     @Override
     public String toString() {
         return "AccountProofResponse{" +
-                "accountPath=" + accountProof +
+                "accountProof=" + accountProof +
                 '}';
     }
 }
