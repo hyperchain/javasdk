@@ -26,6 +26,10 @@ public class FileExtraFromFileHashResponse extends Response {
         return FileExtra.fromJson(extra);
     }
 
+    public boolean hasMore() {
+        return result.getHasmore();
+    }
+
     @Override
     public String toString() {
         return "FileExtraFromFileHashResponse{" +

@@ -53,6 +53,8 @@ public class TxResponse extends Response {
         private String vmType;
         @Expose
         private ArrayList<Object> extraId;
+        @Expose
+        private String invalidMsg;
 
         public String getBlockNumber() {
             return blockNumber;
@@ -130,6 +132,10 @@ public class TxResponse extends Response {
             return vmType;
         }
 
+        public String getInvalidMsg() {
+            return invalidMsg;
+        }
+
         @Override
         public String toString() {
             return "Transaction{" +
@@ -151,6 +157,7 @@ public class TxResponse extends Response {
                     ", blockWriteTime='" + blockWriteTime + '\'' +
                     ", op=" + op +
                     ", vmType='" + vmType + '\'' +
+                    ", invalidMsg='" + invalidMsg + '\'' +
                     ", extraId=" + extraId +
                     '}';
         }
