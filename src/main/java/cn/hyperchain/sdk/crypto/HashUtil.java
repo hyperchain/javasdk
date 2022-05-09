@@ -54,4 +54,22 @@ public class HashUtil {
         byte[] hash = sha2_256(input);
         return copyOfRange(hash, 12, hash.length);
     }
+
+    /**
+     * 利用java原生的类实现SHA1加密.
+     * @param data data for hash
+     * @return encodeData
+     */
+    public static byte[] sha1(byte[] data) {
+        byte[] encodeData = null;
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.update(data);
+            encodeData = messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return encodeData;
+    }
 }

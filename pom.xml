@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <litesdk.version>1.4.0</litesdk.version>
+        <litesdk.version>1.4.1</litesdk.version>
         <maven.checkstyle.version>3.0.0</maven.checkstyle.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
 
@@ -273,13 +273,13 @@
             <id>maven-releases</id>
             <name>Nexus Releases</name>
             <!-- releases address in maven repository -->
-            <url>http://nexus.hyperchain.cn/repository/maven-releases/</url>
+            <url>https://nexus.hyperchain.cn/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>maven-snapshots</id>
             <name>Nexus Snapshots</name>
             <!-- snapshots address in maven repository -->
-            <url>http://nexus.hyperchain.cn/repository/maven-snapshots/</url>
+            <url>https://nexus.hyperchain.cn/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

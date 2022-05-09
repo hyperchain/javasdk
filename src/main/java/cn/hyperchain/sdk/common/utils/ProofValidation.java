@@ -102,7 +102,7 @@ public class ProofValidation {
                 buffer.append(currentHash);
             }
         }
-        byte[] bs = HashUtil.sha3(ByteUtil.fromHex(buffer.toString()));
+        byte[] bs = HashUtil.sha1(ByteUtil.fromHex(buffer.toString()));
         return ByteUtil.toHex(bs);
     }
 

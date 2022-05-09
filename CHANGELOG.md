@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://git.hyperchain.cn///compare/v1.4.1-1...v1.4.1) (2022-05-09)
+
+### [1.4.1-1](https://git.hyperchain.cn///compare/v1.4.0...v1.4.1-1) (2022-05-07)
+
+
+### Bug Fixes
+
+* **proof:** #QAGC-164, add sha1 hash function to support vidb proof ([f28011b](https://git.hyperchain.cn///commit/f28011b824b44b8b79679a052580b3ac5358b9b0)), closes [#QAGC-164](https://git.hyperchain.cn///issues/QAGC-164)
+* **response:** #QAGC-163, add hasMore func for limitResponse and add invalidMsg for transaction response. ([3dfa854](https://git.hyperchain.cn///commit/3dfa854debb67be56d1fa74eb3d20bc02c8ba5d4)), closes [#QAGC-163](https://git.hyperchain.cn///issues/QAGC-163)
+
 ## [1.4.0](https://git.hyperchain.cn///compare/v1.4.0-3...v1.4.0) (2022-04-26)
 
 ## [1.4.0-3](https://git.hyperchain.cn///compare/v1.4.0-2...v1.4.0-3) (2022-04-06)
