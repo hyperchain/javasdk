@@ -422,45 +422,49 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds) {
-        return getNextPageTransactions(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, nodeIds);
+        return getNextPageTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
+        return getNextPageTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, cName, nodeIds);
     }
 
 
     @Override
     public Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds) {
+        return getNextPageTransactions(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
         TxRequest txRequest = new TxRequest(TX_PREFIX + "getNextPageTransactions", providerManager, TxResponse.class, nodeIds);
 
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("blkNumber", blkNumber);
-        params.put("txIndex", txIndex);
-        params.put("minBlkNumber", minBlkNumber);
-        params.put("maxBlkNumber", maxBlkNumber);
-        params.put("separated", separated);
-        params.put("pageSize", pageSize);
-        params.put("containCurrent", containCurrent);
-        params.put("address", address);
+        HashMap<String, Object> params = generateParamsForPageTx(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, cName, nodeIds);
         txRequest.addParams(params);
-
         return txRequest;
     }
 
     @Override
     public Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds) {
-        return getNextPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, nodeIds);
+        return getNextPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, null, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
+        return getNextPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, cName, nodeIds);
     }
 
     @Override
     public Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds) {
+        return getNextPageInvalidTransactions(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, null, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
         TxRequest txRequest = new TxRequest(TX_PREFIX + "getNextPageInvalidTransactions", providerManager, TxResponse.class, nodeIds);
 
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("blkNumber", blkNumber);
-        params.put("txIndex", txIndex);
-        params.put("minBlkNumber", minBlkNumber);
-        params.put("maxBlkNumber", maxBlkNumber);
-        params.put("separated", separated);
-        params.put("pageSize", pageSize);
-        params.put("containCurrent", containCurrent);
+        HashMap<String, Object> params = generateParamsForPageTx(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, cName, nodeIds);
         txRequest.addParams(params);
 
         return txRequest;
@@ -468,23 +472,25 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds) {
-        return getPrevPageTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, nodeIds);
+        return getPrevPageTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
+        return getPrevPageTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, cName, nodeIds);
     }
 
 
     @Override
     public Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds) {
+        return getPrevPageTransactions(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
         TxRequest txRequest = new TxRequest(TX_PREFIX + "getPrevPageTransactions", providerManager, TxResponse.class, nodeIds);
 
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("blkNumber", blkNumber);
-        params.put("txIndex", txIndex);
-        params.put("minBlkNumber", minBlkNumber);
-        params.put("maxBlkNumber", maxBlkNumber);
-        params.put("separated", separated);
-        params.put("pageSize", pageSize);
-        params.put("containCurrent", containCurrent);
-        params.put("address", address);
+        HashMap<String, Object> params = generateParamsForPageTx(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, cName, nodeIds);
         txRequest.addParams(params);
 
         return txRequest;
@@ -492,13 +498,30 @@ public class TxServiceImpl implements TxService {
 
     @Override
     public Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds) {
-        return getPrevPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent,nodeIds);
+        return getPrevPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, null, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
+        return getPrevPageInvalidTransactions(blkNumber.toString(), txIndex.toString(), minBlkNumber.toString(), maxBlkNumber.toString(), separated.toString(), pageSize.toString(), containCurrent, address, cName, nodeIds);
     }
 
     @Override
     public Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds) {
+        return getPrevPageInvalidTransactions(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, null, null, nodeIds);
+    }
+
+    @Override
+    public Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
         TxRequest txRequest = new TxRequest(TX_PREFIX + "getPrevPageInvalidTransactions", providerManager, TxResponse.class, nodeIds);
 
+        HashMap<String, Object> params = generateParamsForPageTx(blkNumber, txIndex, minBlkNumber, maxBlkNumber, separated, pageSize, containCurrent, address, cName, nodeIds);
+        txRequest.addParams(params);
+
+        return txRequest;
+    }
+
+    private HashMap<String, Object> generateParamsForPageTx(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds) {
         HashMap<String, Object> params = new HashMap<>();
         params.put("blkNumber", blkNumber);
         params.put("txIndex", txIndex);
@@ -507,9 +530,13 @@ public class TxServiceImpl implements TxService {
         params.put("separated", separated);
         params.put("pageSize", pageSize);
         params.put("containCurrent", containCurrent);
-        txRequest.addParams(params);
-
-        return txRequest;
+        if (address != null) {
+            params.put("address", address);
+        }
+        if (cName != null) {
+            params.put("cName", cName);
+        }
+        return params;
     }
 
     @Override
