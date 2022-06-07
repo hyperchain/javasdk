@@ -387,9 +387,33 @@ public interface TxService {
     Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
 
     /**
+     * get next page transactions.
+     *
+     * @param blkNumber      block number
+     * @param txIndex        transaction index in the block
+     * @param minBlkNumber   minimum block number
+     * @param maxBlkNumber   maximum block number
+     * @param separated      the number of transactions to skip
+     * @param pageSize       the number of transactions to return
+     * @param containCurrent true ndicates that the returned result includes the transaction with the position txIndex in the blkNumber block. If the transaction is not a transaction with the contract address of the address contract, it is not counted
+     * @param address        contract address
+     * @param cName          contract name
+     * @param nodeIds        specific ids
+     * @return {@link Request} of {@link TxResponse}
+     */
+    Request<TxResponse> getNextPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds);
+
+
+    /**
      * @see TxService#getNextPageTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, int...)
      */
     Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
+
+    /**
+     * @see TxService#getNextPageTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, String, int...)
+     */
+    Request<TxResponse> getNextPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds);
+
 
     /**
      * get next page invalid transactions.
@@ -407,9 +431,33 @@ public interface TxService {
     Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
 
     /**
-     * @see TxService#getNextPageTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, int...)
+     * get next page invalid transactions.
+     *
+     * @param blkNumber      block number
+     * @param txIndex        transaction index in the block
+     * @param minBlkNumber   minimum block number
+     * @param maxBlkNumber   maximum block number
+     * @param separated      the number of transactions to skip
+     * @param pageSize       the number of transactions to return
+     * @param containCurrent true ndicates that the returned result includes the transaction with the position txIndex in the blkNumber block. If the transaction is not a transaction with the contract address of the address contract, it is not counted
+     * @param address        contract address
+     * @param cName          contract name
+     * @param nodeIds        specific ids
+     * @return {@link Request} of {@link TxResponse}
+     */
+    Request<TxResponse> getNextPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds);
+
+
+    /**
+     * @see TxService#getNextPageInvalidTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, int...)
      */
     Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+
+
+    /**
+     * @see TxService#getNextPageInvalidTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, String, int...)
+     */
+    Request<TxResponse> getNextPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds);
 
 
     /**
@@ -429,9 +477,33 @@ public interface TxService {
     Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, int... nodeIds);
 
     /**
-     * @see TxService#getPrevPageTransactions(String, String, String, String, String, String, boolean, String, int...)
+     * get previous page transactions.
+     *
+     * @param blkNumber      block number
+     * @param txIndex        transaction index in the block
+     * @param minBlkNumber   minimum block number
+     * @param maxBlkNumber   maximum block number
+     * @param separated      the number of transactions to skip
+     * @param pageSize       the number of transactions to return
+     * @param containCurrent true ndicates that the returned result includes the transaction with the position txIndex in the blkNumber block. If the transaction is not a transaction with the contract address of the address contract, it is not counted
+     * @param address        contract address
+     * @param cName          contract name
+     * @param nodeIds        specific ids
+     * @return {@link Request} of {@link TxResponse}
+     */
+    Request<TxResponse> getPrevPageTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds);
+
+
+    /**
+     * @see TxService#getPrevPageTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, int...)
      */
     Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, int... nodeIds);
+
+    /**
+     * @see TxService#getPrevPageTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, String, int...)
+     */
+    Request<TxResponse> getPrevPageTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, String address, String cName, int... nodeIds);
+
 
     /**
      * get previous page transactions.
@@ -450,10 +522,36 @@ public interface TxService {
     Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, int... nodeIds);
 
     /**
-     * @see TxService#getPrevPageTransactions(String, String, String, String, String, String, boolean, String, int...)
+     * get previous page transactions.
+     *
+     * @param blkNumber      block number
+     * @param txIndex        transaction index in the block
+     * @param minBlkNumber   minimum block number
+     * @param maxBlkNumber   maximum block number
+     * @param separated      the number of transactions to skip
+     * @param pageSize       the number of transactions to return
+     * @param containCurrent true ndicates that the returned result includes the transaction with the position txIndex in the blkNumber block. If the transaction is not a transaction with the contract address of the address contract, it is not counted
+     * @param address        contract address
+     * @param cName          contract name
+     * @param nodeIds        specific ids
+     * @return {@link Request} of {@link TxResponse}
+     */
+    @Deprecated
+    Request<TxResponse> getPrevPageInvalidTransactions(BigInteger blkNumber, BigInteger txIndex, BigInteger minBlkNumber, BigInteger maxBlkNumber, BigInteger separated, BigInteger pageSize, boolean containCurrent, String address, String cName, int... nodeIds);
+
+
+    /**
+     * @see TxService#getPrevPageInvalidTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, int...)
      */
     @Deprecated
     Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent, int... nodeIds);
+
+    /**
+     * @see TxService#getPrevPageInvalidTransactions(BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, BigInteger, boolean, String, String, int...)
+     */
+    @Deprecated
+    Request<TxResponse> getPrevPageInvalidTransactions(String blkNumber, String txIndex, String minBlkNumber, String maxBlkNumber, String separated, String pageSize, boolean containCurrent,  String address, String cName, int... nodeIds);
+
 
 
     /**
