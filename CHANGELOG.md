@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://git.hyperchain.cn///compare/v1.4.2-2...v1.4.2) (2022-06-10)
+
+### [1.4.2-2](https://git.hyperchain.cn///compare/v1.4.2-1...v1.4.2-2) (2022-06-07)
+
+
+### Bug Fixes
+
+* **TxService:** #QAGC-165, add cName and address param for getPageTransaction interface ([111fa9d](https://git.hyperchain.cn///commit/111fa9dc91a190ac09121db59cefcf428ce44caa)), closes [#QAGC-165](https://git.hyperchain.cn///issues/QAGC-165)
+
+### [1.4.2-1](https://git.hyperchain.cn///compare/v1.4.1...v1.4.2-1) (2022-05-27)
+
+
+### Features
+
+* **params:** add contractName field for filterParam. ([424ec48](https://git.hyperchain.cn///commit/424ec48a8225f2c7c9d5ae5d6d93664981b5ecc6))
+
 ### [1.4.1](https://git.hyperchain.cn///compare/v1.4.1-1...v1.4.1) (2022-05-09)
 
 ### [1.4.1-1](https://git.hyperchain.cn///compare/v1.4.0...v1.4.1-1) (2022-05-07)

@@ -1,6 +1,7 @@
 package cn.hyperchain.sdk.service.params;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ public class FilterParam {
     private String txFrom;
     @Expose
     private String txTo;
+    @Expose
+    @SerializedName("txName")
+    private String contractName;
     @Expose
     private ArrayList<Object> extraId;
 
@@ -57,6 +61,14 @@ public class FilterParam {
 
     public void setTxTo(String txTo) {
         this.txTo = txTo;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
     }
 
     public ArrayList<Object> getExtraId() {
@@ -135,6 +147,16 @@ public class FilterParam {
          */
         public Builder txTo(String txTo) {
             params.txTo = txTo;
+            return this;
+        }
+
+        /**
+         * set contractName.
+         * @param contractName contractName
+         * @return Builder instance
+         */
+        public Builder contractName(String contractName) {
+            params.contractName = contractName;
             return this;
         }
 
