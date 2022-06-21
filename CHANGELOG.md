@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3-1](https://git.hyperchain.cn///compare/v1.4.2...v1.4.3-1) (2022-06-21)
+
+
+### Features
+
+* **pom:** upgrade log4j and gson version ([c2f3fcb](https://git.hyperchain.cn///commit/c2f3fcb1b0db6602116a3d5e942fe66720787353))
+
 ### [1.4.2](https://git.hyperchain.cn///compare/v1.4.2-2...v1.4.2) (2022-06-10)
 
 ### [1.4.2-2](https://git.hyperchain.cn///compare/v1.4.2-1...v1.4.2-2) (2022-06-07)
