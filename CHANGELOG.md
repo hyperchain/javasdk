@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://git.hyperchain.cn///compare/v1.4.3-1...v1.4.3) (2022-06-21)
+
 ### [1.4.3-1](https://git.hyperchain.cn///compare/v1.4.2...v1.4.3-1) (2022-06-21)
 
 
